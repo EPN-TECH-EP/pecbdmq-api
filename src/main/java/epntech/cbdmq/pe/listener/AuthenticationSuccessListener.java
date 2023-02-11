@@ -9,12 +9,12 @@ import epntech.cbdmq.pe.dominio.UserPrincipal;
 import epntech.cbdmq.pe.servicio.IntentoLoginService;
 
 @Component
-public class AutenticacionExitosaListener {
-    private IntentoLoginService loginAttemptService;
+public class AuthenticationSuccessListener {
+    private IntentoLoginService intentoLogin;
 
     @Autowired
-    public AutenticacionExitosaListener(IntentoLoginService loginAttemptService) {
-        this.loginAttemptService = loginAttemptService;
+    public AuthenticationSuccessListener(IntentoLoginService loginAttemptService) {
+        this.intentoLogin = loginAttemptService;
     }
 
     @EventListener
@@ -22,7 +22,7 @@ public class AutenticacionExitosaListener {
         Object principal = event.getAuthentication().getPrincipal();
         if(principal instanceof UserPrincipal) {
             UserPrincipal user = (UserPrincipal) event.getAuthentication().getPrincipal();
-            loginAttemptService.retirarUsuarioDeCache(user.getUsername());
+            intentoLogin.retirarUsuarioDeCache(user.getUsername());
         }
     }
 }
