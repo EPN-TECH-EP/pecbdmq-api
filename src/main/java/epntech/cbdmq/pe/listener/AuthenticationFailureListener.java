@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 import epntech.cbdmq.pe.servicio.IntentoLoginService;
 
 @Component
-public class AutenticacionFalloListener {
-    private IntentoLoginService loginAttemptService;
+public class AuthenticationFailureListener {
+    private IntentoLoginService intentoLogin;
 
     @Autowired
-    public AutenticacionFalloListener(IntentoLoginService loginAttemptService) {
-        this.loginAttemptService = loginAttemptService;
+    public AuthenticationFailureListener(IntentoLoginService loginAttemptService) {
+        this.intentoLogin = loginAttemptService;
     }
 
     @EventListener
@@ -21,7 +21,7 @@ public class AutenticacionFalloListener {
         Object principal = event.getAuthentication().getPrincipal();
         if(principal instanceof String) {
             String username = (String) event.getAuthentication().getPrincipal();
-            loginAttemptService.agregarUsuarioACache(username);
+            intentoLogin.agregarUsuarioACache(username);
         }
 
     }
