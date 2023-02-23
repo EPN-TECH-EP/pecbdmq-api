@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
+@Entity(name = "gen_dato_personal")
 @Table(name = "gen_dato_personal")
 @Data
 public class DatoPersonal {
@@ -19,10 +19,8 @@ public class DatoPersonal {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen_dato_personal_cod_datos_personales_seq")
 	@Column(nullable = false, updatable = false, name = "cod_datos_personales")
 	private Integer cod_datos_personales;
-	@Column(name = "cod_periodo_evaluacion")
-	private Integer cod_periodo_evaluacion;
-	@Column(name = "cod_periodo_academico")
-	private Integer cod_periodo_academico;
+	@Column(name = "cod_estacion")
+	private Integer cod_estacion; 
 	@Column(name = "cedula")
 	private String cedula;
 	@Column(name = "nombre")

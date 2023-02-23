@@ -153,4 +153,9 @@ public class GestorExcepciones implements ErrorController {
 //    public String getErrorPath() {
 //        return ERROR_PATH;
 //    }
+    
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<HttpResponse> dataException(DataException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
 }
