@@ -33,4 +33,11 @@ public class PeriodoEvaluacion {
 	@Column(name = "fecha_fin_periodo_eval")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime fechaFin;
+
+	@Column(name = "is_active")
+	private Boolean estado;
+	
+	@Column(name = "descripcion")
+	private String descripcion;
+	
 }

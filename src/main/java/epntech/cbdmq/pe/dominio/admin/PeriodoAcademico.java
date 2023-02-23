@@ -37,5 +37,11 @@ public class PeriodoAcademico {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime fechaFin;
 	
+	@Column(name = "is_active")
+	private Boolean estado;
+	
+	@Column(name = "descripcion")
+	private String descripcion;
+	
 
 }

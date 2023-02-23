@@ -17,5 +17,7 @@ public interface UnidadGestionService {
 	Optional<UnidadGestion> getUnidadGestionById(int codigo);
 	
 	UnidadGestion updateUnidadGestion(UnidadGestion objActualizado) throws DataException;
+	
+	void deleteUnidadGestion(int id);
 
 }

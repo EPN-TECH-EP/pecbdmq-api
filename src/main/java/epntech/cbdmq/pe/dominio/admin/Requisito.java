@@ -29,4 +29,7 @@ public class Requisito {
 	
 	@Column(name = "descripcion_requisito")
 	private String descripcion;
+	
+	@Column(name = "is_active")
+	private Boolean estado;
 }
