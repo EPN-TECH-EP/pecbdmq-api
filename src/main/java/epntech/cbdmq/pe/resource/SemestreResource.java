@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Semestre;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.SemestreServiceImpl;
 
 @RestController
@@ -60,9 +64,14 @@ public class SemestreResource {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
 		objService.deleteById(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
+	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 
 }

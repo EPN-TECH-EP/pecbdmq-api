@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.servicio.DatoPersonalService;
 
@@ -19,7 +22,14 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 	private DatoPersonalRepository repo;
 	
 	@Override
-	public DatoPersonal saveDatosPersonales(DatoPersonal obj) {
+	public DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException {
+		if(obj.getNombre().trim().isEmpty())
+			throw new DataException(REGISTRO_VACIO);
+		Optional<DatoPersonal> objGuardado = repo.findOneByCedula(obj.getCedula());
+		if (objGuardado.isPresent()) {
+			throw new DataException(CEDULA_YA_EXISTE);
+		}
+		
         return repo.save(obj);
 	}
 
@@ -52,8 +62,8 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 	}
 
 	@Override
-	public DatoPersonal updateDatosPersonales(DatoPersonal objActualizado) {
-		// TODO Auto-generated method stub
+	public DatoPersonal updateDatosPersonales(DatoPersonal objActualizado) throws DataException {
+		
 		return repo.save(objActualizado);
 	}
 	
@@ -70,8 +80,11 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
     }
 
 	@Override
-	public void deleteById(int id) {
-		// TODO Auto-generated method stub
+	public void deleteById(int id) throws DataException {
+		Optional<?> objGuardado = repo.findById(id);
+		if (objGuardado.isEmpty()) {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
 		repo.deleteById(id);
 	}
 }

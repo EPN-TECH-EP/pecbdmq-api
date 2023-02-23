@@ -16,5 +16,5 @@ public interface TipoDocumentoService {
 	
 	TipoDocumento update(TipoDocumento objActualizado);
 	
-	void delete(int id);
+	void delete(int id) throws DataException;
 }

@@ -1,12 +1,16 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
 import epntech.cbdmq.pe.servicio.ConvocatoriaService;
 
@@ -17,8 +21,13 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 	private ConvocatoriaRepository repo;
 	
 	@Override
-	public Convocatoria saveData(Convocatoria obj) {
-		// TODO Auto-generated method stub
+	public Convocatoria saveData(Convocatoria obj) throws DataException {
+		if(obj.getNombre().trim().isEmpty())
+			throw new DataException(REGISTRO_VACIO);
+		Optional<?> objGuardado = repo.findByNombre(obj.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(obj);
 	}
 
@@ -41,8 +50,11 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 	}
 
 	@Override
-	public void deleteData(int id) {
-		// TODO Auto-generated method stub
+	public void deleteData(int id) throws DataException {
+		Optional<?> objGuardado = repo.findById(id);
+		if (objGuardado.isEmpty()) {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
 		repo.deleteById(id);
 	}
 

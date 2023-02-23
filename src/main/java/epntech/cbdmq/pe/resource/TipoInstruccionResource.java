@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.*;
@@ -7,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.TipoInstruccion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.TipoInstruccionServiceImpl;
 
 @RestController
@@ -51,8 +55,13 @@ public class TipoInstruccionResource {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
 		objService.delete(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
+	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 }

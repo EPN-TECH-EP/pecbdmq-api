@@ -45,20 +45,16 @@ public class AulaServiceImpl implements AulaService{
 
 	@Override
 	public Aula update(Aula objActualizado) throws DataException{
-		// TODO Auto-generated method stub
-		if(objActualizado.getNombre().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<Aula> objGuardado = repo.findByNombre(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
 		
 		return repo.save(objActualizado);
 	}
 
 	@Override
-	public void delete(int id) {
-		// TODO Auto-generated method stub
+	public void delete(int id) throws DataException {
+		Optional<?> objGuardado = repo.findById(id);
+		if (objGuardado.isEmpty()) {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
 		repo.deleteById(id);
 	}
 

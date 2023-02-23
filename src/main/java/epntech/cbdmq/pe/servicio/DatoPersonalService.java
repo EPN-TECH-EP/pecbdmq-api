@@ -19,10 +19,10 @@ public interface DatoPersonalService {
 	
 	Optional<DatoPersonal> getDatosPersonalesById(Integer codigo);
 	
-	DatoPersonal updateDatosPersonales(DatoPersonal objActualizado);
+	DatoPersonal updateDatosPersonales(DatoPersonal objActualizado) throws DataException;
 	
 	Page<DatoPersonal> search(String filtro, Pageable pageable) throws Exception;
 	
-	void deleteById(int id);
+	void deleteById(int id) throws DataException;
 	
 }

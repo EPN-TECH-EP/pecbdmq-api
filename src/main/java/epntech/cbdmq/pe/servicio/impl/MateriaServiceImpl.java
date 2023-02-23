@@ -47,18 +47,16 @@ public class MateriaServiceImpl implements MateriaService {
 
 	@Override
 	public Materia update(Materia objActualizado) throws DataException {
-		if(objActualizado.getNombreMateria().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<Materia> objGuardado = repo.findByNombreMateria(objActualizado.getNombreMateria());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
+		
 		return repo.save(objActualizado);
 	}
 
 	@Override
-	public void delete(int id) {
-		// TODO Auto-generated method stub
+	public void delete(int id) throws DataException {
+		Optional<?> objGuardado = repo.findById(id);
+		if (objGuardado.isEmpty()) {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
 		repo.deleteById(id);
 	}
 	

@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.*;
 
@@ -31,11 +32,11 @@ public class PeriodoAcademico {
 	
 	@Column(name = "fecha_inicio_periodo_acad")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime fechaInicio;
+	private Date fechaInicio;
 	
 	@Column(name = "fecha_fin_periodo_acad")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime fechaFin;
+	private Date fechaFin;
 	
 	@Column(name = "is_active")
 	private Boolean estado;

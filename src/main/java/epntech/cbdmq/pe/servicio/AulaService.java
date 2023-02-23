@@ -16,5 +16,5 @@ public interface AulaService {
 	
 	Aula update(Aula objActualizado) throws DataException;
 
-	void delete(int id);
+	void delete(int id) throws DataException;
 }

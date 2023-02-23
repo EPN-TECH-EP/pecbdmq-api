@@ -18,6 +18,6 @@ public interface UnidadGestionService {
 	
 	UnidadGestion updateUnidadGestion(UnidadGestion objActualizado) throws DataException;
 	
-	void deleteUnidadGestion(int id);
+	void deleteUnidadGestion(int id) throws DataException;
 
 }
