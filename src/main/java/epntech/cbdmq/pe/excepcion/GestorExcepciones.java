@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
@@ -142,4 +143,9 @@ public class GestorExcepciones implements ErrorController {
 //    public String getErrorPath() {
 //        return ERROR_PATH;
 //    }
+    
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<HttpResponse> dataException(DataException exception) {
+        return createHttpResponse(BAD_REQUEST, exception.getMessage());
+    }
 }

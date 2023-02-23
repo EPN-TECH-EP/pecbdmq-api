@@ -14,7 +14,7 @@ public interface AulaService {
 	
 	Optional<Aula> getById(int id);
 	
-	Aula update(Aula objActualizado);
+	Aula update(Aula objActualizado) throws DataException;
 
 	void delete(int id);
 }

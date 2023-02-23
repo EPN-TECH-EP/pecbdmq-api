@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.admin.Aula;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.AulaServiceImpl;
 
 @RestController
@@ -20,7 +21,7 @@ public class AulaResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody Aula obj){
+	public ResponseEntity<?> guardar(@RequestBody Aula obj) throws DataException{
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(objService.save(obj));
 
@@ -41,7 +42,7 @@ public class AulaResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Aula> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Aula obj) {
+	public ResponseEntity<Aula> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Aula obj) throws DataException{
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setCapacidad(obj.getCapacidad());
@@ -53,7 +54,13 @@ public class AulaResource {
 			datosGuardados.setInstructor(obj.getInstructor());
 			datosGuardados.setSalaOcupada(obj.getSalaOcupada());
 
-			Aula datosActualizados = objService.update(datosGuardados);
+			Aula datosActualizados = null;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
