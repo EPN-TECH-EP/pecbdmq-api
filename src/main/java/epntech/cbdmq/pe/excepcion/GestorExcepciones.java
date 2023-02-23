@@ -7,6 +7,8 @@ import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -24,10 +26,12 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
@@ -115,6 +119,13 @@ public class GestorExcepciones implements ErrorController {
         LOGGER.error(exception.getMessage());
         return createHttpResponse(BAD_REQUEST, exception.getMessage());
     }
+    
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<HttpResponse> archivoMuyGrandeException(MaxUploadSizeExceededException exception) {
+        LOGGER.error(exception.getMessage());
+        return createHttpResponse(BAD_REQUEST, ARCHIVO_MUY_GRANDE);
+    }
+    
 
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> notFoundException(NoResultException exception) {

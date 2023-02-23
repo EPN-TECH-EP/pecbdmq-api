@@ -175,5 +175,29 @@ public class UsuarioResource extends GestorExcepciones {
     private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
+    
+    @PostMapping("/guardarArchivo")
+    public HttpResponse guardarArchivo(@RequestParam(value = "nombreArchivo") String nombreArchivo, @RequestParam(value = "archivo") MultipartFile archivo) throws IOException {
+        
+    	try {
+    		usuarioService.guardarArchivo(nombreArchivo, archivo);
+    		return new HttpResponse(HttpStatus.OK.value(), HttpStatus.OK, "OK", "Archivo cargado con éxito");
+		} catch (Exception e) {
+			return new HttpResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e.getMessage());
+		}        
+    }
+    
+    @PostMapping("/maxArchivo")
+    public long tamañoMáximoArchivo() {
+        
+    	try {    		
+    		return usuarioService.tamañoMáximoArchivo();
+		} catch (Exception e) {
+			this.LOGGER.error(e.getMessage());
+			return -1;
+		}        
+    }
+    
+    
 }
 
