@@ -54,6 +54,7 @@ public class PeriodoEvaluacionResource {
 			datosGuardados.setCodPeriodoEvaluacion(obj.getCodModulo());
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
 			datosGuardados.setFechaFin(obj.getFechaFin());
+			datosGuardados.setDescripcion(obj.getDescripcion());
 
 			PeriodoEvaluacion datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

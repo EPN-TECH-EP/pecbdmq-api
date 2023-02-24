@@ -34,13 +34,8 @@ public class RequisitoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody Requisito obj){
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(objService.save(obj));
-
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-		}
+	public ResponseEntity<?> guardar(@RequestBody Requisito obj) throws DataException{
+		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
 	@GetMapping("/listar")
