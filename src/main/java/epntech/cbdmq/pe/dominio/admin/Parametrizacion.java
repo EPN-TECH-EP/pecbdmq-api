@@ -13,15 +13,15 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
-@Entity(name = "gen_parametrizacion_fecha")
-@Table(name = "gen_parametrizacion_fecha")
+@Entity(name = "gen_parametriza_fecha")
+@Table(name = "gen_parametriza_fecha")
 public class Parametrizacion {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_parametriza")
 	private Integer codparametriza;
-	@Column(name = "cod_tipo_prueba")
+	/*@Column(name = "cod_tipo_prueba")
 	private Integer codtipoprueba;
 	@Column(name = "cod_periodo_academico")
 	private Integer codperiodoacademico;
@@ -32,7 +32,7 @@ public class Parametrizacion {
 	@Column(name = "cod_curso_especializacion")
 	private Integer codcursoespecializacion;
 	@Column(name = "cod_tipo_fecha")
-	private Integer codtipofecha;
+	private Integer codtipofecha;*/
 	@Column(name = "fecha_inicio_param")
 	private Date fechainicioparam;
 	@Column(name = "fecha_fin_param")

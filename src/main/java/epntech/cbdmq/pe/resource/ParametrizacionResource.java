@@ -20,7 +20,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ParametrizacionServiceImpl;
 
 @RestController
-@RequestMapping("/Parametrizacionfecha")
+@RequestMapping("/parametrizacionfecha")
 public class ParametrizacionResource {
 		
 	@Autowired
