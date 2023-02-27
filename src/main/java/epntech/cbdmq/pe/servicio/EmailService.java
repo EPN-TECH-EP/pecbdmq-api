@@ -3,13 +3,11 @@ package epntech.cbdmq.pe.servicio;
 import static epntech.cbdmq.pe.constante.EmailConst.DEFAULT_PORT;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SMTP_SERVER;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT;
-import static epntech.cbdmq.pe.constante.EmailConst.PASSWORD;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_AUTH;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_HOST;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_PORT;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_ENABLE;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_REQUIRED;
-import static epntech.cbdmq.pe.constante.EmailConst.USERNAME;
 
 import java.util.Properties;
 
@@ -20,6 +18,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.configuracion.ConfigProperties;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 
@@ -31,6 +30,8 @@ public class EmailService {
 
 	@Value("${pecb.email.password}")
 	private String PASSWORD;
+	
+	private String FROM_EMAIL = USERNAME;
 
 	public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException {
 		/*

@@ -1,6 +1,15 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.*;
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_GUARDADO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.ArchivoConst.CARPETA_USUARIO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.DIRECTORIO_CREADO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.EXTENSION_JPG;
+import static epntech.cbdmq.pe.constante.ArchivoConst.FORWARD_SLASH;
+import static epntech.cbdmq.pe.constante.ArchivoConst.NO_ES_ARCHIVO_IMAGEN;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_DEFECTO_IMAGEN_USUARIO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_IMAGEN_USUARIO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PUNTO;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_ENCONTRADO;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NO_EXISTE_USUARIO;
@@ -34,6 +43,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -65,6 +75,9 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
+
+	@Value("${spring.servlet.multipart.max-file-size}")	
+	public DataSize TAMAÑO_MÁXIMO;
 
 	@Autowired
 	public UsuarioServiceImpl(UsuarioRepository userRepository, BCryptPasswordEncoder passwordEncoder,
@@ -241,8 +254,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 			Files.copy(profileImage.getInputStream(),
 					userFolder.resolve(user.getNombreUsuario() + PUNTO + EXTENSION_JPG),
 					REPLACE_EXISTING);
-			//user.setUrlImagenPerfil(setProfileImageUrl(user.getNombreUsuario()));
-			//userRepository.save(user);
+			// user.setUrlImagenPerfil(setProfileImageUrl(user.getNombreUsuario()));
+			// userRepository.save(user);
 			LOGGER.info(ARCHIVO_GUARDADO +
 					profileImage.getOriginalFilename());
 		}
@@ -319,9 +332,9 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	public void guardarArchivo(String nombreArchivo, MultipartFile archivo)
-			throws IOException, ArchivoMuyGrandeExcepcion { 
-		
-		if (archivo.getSize() > Long.parseLong(TAMAÑO_MÁXIMO)) {
+			throws IOException, ArchivoMuyGrandeExcepcion {
+
+		if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
 			throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
 		}
 
@@ -333,9 +346,9 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		Files.copy(archivo.getInputStream(), ruta.resolve(nombreArchivo), StandardCopyOption.REPLACE_EXISTING);
 		LOGGER.info("Archivo guardado: " + ARCHIVOS_RUTA + nombreArchivo);
 	}
-	
+
 	public long tamañoMáximoArchivo() {
-		return Long.parseLong(TAMAÑO_MÁXIMO);
+		return TAMAÑO_MÁXIMO.toBytes();
 	}
 
 }
