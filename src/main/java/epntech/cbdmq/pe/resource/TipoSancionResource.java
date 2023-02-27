@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,17 +61,9 @@ public class TipoSancionResource {
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/eliminar/{}id")
-    public ResponseEntity<TipoSancion> eliminarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoSancion obj) {
-        return objServices.getById(codigo).map(datosGuardados -> {
-            datosGuardados.setSancion(obj.getSancion());
-            TipoSancion datosActualizados = objServices.update(datosGuardados);
-            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @RequestMapping("/api")
-    public String home(HttpServletRequest request) throws Exception {
-        return String.format("Servicio (%s)", request.getRequestURL());
-    }
+    @DeleteMapping("/{id}")
+	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
+		objServices.delete(codigo);
+		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+	}
 }
