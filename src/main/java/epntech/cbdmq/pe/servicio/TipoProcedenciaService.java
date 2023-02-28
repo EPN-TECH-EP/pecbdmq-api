@@ -16,5 +16,5 @@ public interface TipoProcedenciaService {
 	
 	TipoProcedencia update(TipoProcedencia objActualizado) throws DataException;
 	
-	TipoProcedencia delete(int codigo);
+	void delete(int codigo) throws DataException;
 }

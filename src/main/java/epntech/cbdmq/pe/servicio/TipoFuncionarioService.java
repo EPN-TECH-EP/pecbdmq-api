@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.TipoFuncionario;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 
 public interface TipoFuncionarioService {
-	TipoFuncionario save(TipoFuncionario obj);
+	TipoFuncionario save(TipoFuncionario obj) throws DataException;
 	
 	List<TipoFuncionario> getAll();
 	
@@ -15,6 +16,6 @@ public interface TipoFuncionarioService {
 	
 	TipoFuncionario update(TipoFuncionario objActualizado);
 	
-	void delete(int id);
+	void delete(int id) throws DataException;
 
 }

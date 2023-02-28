@@ -16,5 +16,5 @@ public interface MateriaService {
 	
 	Materia update(Materia objActualizado) throws DataException;
 	
-	void delete(int id);
+	void delete(int id) throws DataException;
 }
