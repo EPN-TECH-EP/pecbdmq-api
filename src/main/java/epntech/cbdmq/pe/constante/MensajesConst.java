@@ -8,5 +8,6 @@ public class MensajesConst {
 	public static final String CORREO_YA_EXISTE = "Correo ya existe";
 	public static final String REGISTRO_ELIMINADO_EXITO = "Registro eliminado con éxito";
 	public static final String FECHAS_YA_EXISTE = "Ya se encuentran registradas esas fechas";
+	public static final String DATOS_RELACIONADOS = "No se puede eliminar, existen datos relacionados";
 
 }

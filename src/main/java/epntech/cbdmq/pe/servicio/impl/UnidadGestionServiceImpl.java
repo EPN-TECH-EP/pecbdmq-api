@@ -55,6 +55,12 @@ public class UnidadGestionServiceImpl implements UnidadGestionService {
 		if (objGuardado.isEmpty()) {
 			throw new DataException(REGISTRO_NO_EXISTE);
 		}
-		repo.deleteById(id);
+		try {
+			repo.deleteById(id);
+		} catch (Exception e) {
+			if (e.getMessage().contains("constraint")) {
+				throw new DataException(DATOS_RELACIONADOS);
+			}
+		}
 	}
 }

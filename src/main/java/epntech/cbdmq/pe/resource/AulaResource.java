@@ -67,7 +67,7 @@ public class AulaResource {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
-		objService.delete(codigo);
+			objService.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	

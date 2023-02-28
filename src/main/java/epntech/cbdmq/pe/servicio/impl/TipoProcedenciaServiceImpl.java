@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
@@ -56,6 +57,13 @@ public class TipoProcedenciaServiceImpl implements TipoProcedenciaService {
 		Optional<?> objGuardado = repo.findById(id);
 		if (objGuardado.isEmpty()) {
 			throw new DataException(REGISTRO_NO_EXISTE);
+		}
+		try {
+			repo.deleteById(id);
+		} catch (Exception e) {
+			if (e.getMessage().contains("constraint")) {
+				throw new DataException(DATOS_RELACIONADOS);
+			}
 		}
 	}
 
