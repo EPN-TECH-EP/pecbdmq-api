@@ -20,5 +20,5 @@ public class DocumentoHabilitante {
 	private Integer codDocumentoHabilitante;
 	
 	@Column(name = "lista_documentos")
-	private String listaDocumentos;
+	private String nombre;
 }

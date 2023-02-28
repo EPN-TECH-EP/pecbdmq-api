@@ -13,15 +13,15 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 @Service
-public class AulaServiceImpl implements AulaService{
+public class AulaServiceImpl implements AulaService {
 
 	@Autowired
 	private AulaRepository repo;
-	
+
 	@Override
-	public Aula save(Aula obj) throws DataException{
+	public Aula save(Aula obj) throws DataException {
 		// TODO Auto-generated method stub
-		if(obj.getNombre().trim().isEmpty())
+		if (obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
 		Optional<Aula> objGuardado = repo.findByNombre(obj.getNombre());
 		if (objGuardado.isPresent()) {
@@ -44,22 +44,24 @@ public class AulaServiceImpl implements AulaService{
 	}
 
 	@Override
-	public Aula update(Aula objActualizado) throws DataException{
-		// TODO Auto-generated method stub
-		if(objActualizado.getNombre().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<Aula> objGuardado = repo.findByNombre(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-		
+	public Aula update(Aula objActualizado) throws DataException {
+
 		return repo.save(objActualizado);
 	}
 
 	@Override
-	public void delete(int id) {
-		// TODO Auto-generated method stub
-		repo.deleteById(id);
+	public void delete(int id) throws DataException {
+		Optional<?> objGuardado = repo.findById(id);
+		if (objGuardado.isEmpty()) {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
+		try {
+			repo.deleteById(id);
+		} catch (Exception e) {
+			if (e.getMessage().contains("constraint")) {
+				throw new DataException(DATOS_RELACIONADOS);
+			}
+		}
 	}
 
 }

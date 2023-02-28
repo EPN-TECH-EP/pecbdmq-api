@@ -13,7 +13,6 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
 
 	//@Value("${spring.jpa.properties.hibernate.default_schema}")
 	
-	
 	Optional<DatoPersonal> findOneByCedula(String Cedula);
 	
 	Page<DatoPersonal> findByNombreContainingOrApellidoContaining(String nombre, String apellido, Pageable pageable);

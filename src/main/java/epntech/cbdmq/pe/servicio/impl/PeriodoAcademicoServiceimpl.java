@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 
@@ -17,8 +20,17 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	private PeriodoAcademicoRepository repo;
 	
 	@Override
-	public PeriodoAcademico save(PeriodoAcademico obj) {
-		// TODO Auto-generated method stub
+	public PeriodoAcademico save(PeriodoAcademico obj) throws DataException {
+		if(obj.getDescripcion().trim().isEmpty())
+			throw new DataException(REGISTRO_VACIO);
+		Optional<PeriodoAcademico> objGuardado = repo.findByDescripcion(obj.getDescripcion());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
+		Optional<PeriodoAcademico> objGuardado1 = repo.findByFechaInicioAndFechaFin(obj.getFechaInicio(), obj.getFechaFin());
+		if (objGuardado1.isPresent()) {
+			throw new DataException(FECHAS_YA_EXISTE);
+		}
 		return repo.save(obj);
 	}
 
@@ -35,15 +47,24 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	}
 
 	@Override
-	public PeriodoAcademico update(PeriodoAcademico objActualizado) {
-		// TODO Auto-generated method stub
+	public PeriodoAcademico update(PeriodoAcademico objActualizado) throws DataException {
+		
 		return repo.save(objActualizado);
 	}
 
 	@Override
-	public void deleteById(int id) {
-		// TODO Auto-generated method stub
-		repo.deleteById(id);
+	public void deleteById(int id) throws DataException {
+		Optional<?> objGuardado = repo.findById(id);
+		if (objGuardado.isEmpty()) {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
+		try {
+			repo.deleteById(id);
+		} catch (Exception e) {
+			if (e.getMessage().contains("constraint")) {
+				throw new DataException(DATOS_RELACIONADOS);
+			}
+		}
 	}
 
 	
