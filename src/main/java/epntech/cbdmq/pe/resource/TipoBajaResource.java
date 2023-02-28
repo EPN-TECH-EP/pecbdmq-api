@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.TipoBaja;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.TipoBajaServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -34,12 +36,8 @@ public class TipoBajaResource {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> guardar(@RequestBody TipoBaja obj) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(objServices.save(obj));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-        }
+    public ResponseEntity<?> guardar(@RequestBody TipoBaja obj) throws DataException {
+    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 
     @GetMapping("/listar")
@@ -66,4 +64,8 @@ public class TipoBajaResource {
 		objServices.delete(codigo);
 		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
 	}
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 }

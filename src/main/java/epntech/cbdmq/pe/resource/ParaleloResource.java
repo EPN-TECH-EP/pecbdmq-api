@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ParaleloServiceImpl;
@@ -30,12 +31,7 @@ public class ParaleloResource  {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Paralelo obj) throws DataException{
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(objService.save(obj));
-
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-		}
+		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
 	@GetMapping("/listar")
@@ -70,6 +66,11 @@ public class ParaleloResource  {
 		objService.delete(codigo);
 		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
 	}
+	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 	
 
 }

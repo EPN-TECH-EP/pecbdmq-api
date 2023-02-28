@@ -3,6 +3,7 @@
  */
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.TipoNota;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.TipoNotaServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+
 
 /**
  * @author EPN TECH
@@ -34,12 +38,8 @@ public class TipoNotaResource {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> guardar(@RequestBody TipoNota obj) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(objServices.save(obj));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-        }
+    public ResponseEntity<?> guardar(@RequestBody TipoNota obj) throws DataException {
+    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 
     @GetMapping("/listar")
@@ -62,8 +62,13 @@ public class TipoNotaResource {
     }
 
     @DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
-		objServices.delete(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
+    	objServices.delete(codigo);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
+    
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 }

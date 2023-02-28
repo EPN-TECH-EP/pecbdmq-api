@@ -3,13 +3,18 @@
  */
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.dominio.admin.Modulo;
 import epntech.cbdmq.pe.dominio.admin.TipoBaja;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.TipoBajaRepository;
 import epntech.cbdmq.pe.servicio.TipoBajaService;
 
@@ -24,10 +29,16 @@ public class TipoBajaServiceImpl implements TipoBajaService {
 
     /**
      * {@inheritDoc}
+     * @throws DataException 
      */
     @Override
-    public TipoBaja save(TipoBaja obj) {
-        // TODO Auto-generated method stub
+    public TipoBaja save(TipoBaja obj) throws DataException {
+    	if(obj.getBaja().trim().isEmpty())
+			throw new DataException(REGISTRO_VACIO);
+		Optional<TipoBaja> objGuardado = repo.findByBaja(obj.getBaja());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
         return repo.save(obj);
     }
 
