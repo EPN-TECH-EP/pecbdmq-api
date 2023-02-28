@@ -9,10 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import epntech.cbdmq.pe.dominio.admin.TipoFecha;
 
-/**
- * @author EPN TECH
- * @version $Revision: $
- */
+
 public interface TipoFechaRepository extends JpaRepository<TipoFecha, String> {
-    Optional<TipoFecha> findByFecha(String fecha);
+    
+	Optional<TipoFecha> findByFecha(String fecha);
 }

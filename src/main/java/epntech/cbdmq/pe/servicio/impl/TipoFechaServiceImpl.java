@@ -3,6 +3,9 @@
  */
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.TipoFecha;
+import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.TipoFechaRepository;
 import epntech.cbdmq.pe.servicio.TipoFechaService;
@@ -28,7 +32,12 @@ public class TipoFechaServiceImpl implements TipoFechaService {
      */
     @Override
     public TipoFecha save(TipoFecha obj) throws DataException {
-        // TODO Auto-generated method stub
+    	if(obj.getFecha().trim().isEmpty())
+			throw new DataException(REGISTRO_VACIO);
+		Optional<TipoFecha> objGuardado = repo.findByFecha(obj.getFecha());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
         return repo.save(obj);
     }
 
