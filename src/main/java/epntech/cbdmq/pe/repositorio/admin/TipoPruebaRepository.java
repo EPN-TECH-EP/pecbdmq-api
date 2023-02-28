@@ -14,6 +14,6 @@ import epntech.cbdmq.pe.dominio.admin.TipoPrueba;
  * @version $Revision: $
  */
 public interface TipoPruebaRepository extends JpaRepository<TipoPrueba, Integer> {
-    @Override
-    Optional<TipoPrueba> findById(Integer Prueba);
+    
+    Optional<TipoPrueba> findByPrueba(String Prueba);
 }
