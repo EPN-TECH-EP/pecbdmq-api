@@ -17,5 +17,5 @@ public interface ConvocatoriaService {
 	
 	Convocatoria updateData(Convocatoria objActualizado);
 	
-	void deleteData(int id);
+	void deleteData(int id) throws DataException;
 }

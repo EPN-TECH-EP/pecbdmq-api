@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import epntech.cbdmq.pe.dominio.admin.UnidadGestion;
 import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.UnidadGestionServiceImpl;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 
 
@@ -57,10 +59,16 @@ public class UnidadGestionResource extends GestorExcepciones{
 		return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 	}
 	
-	@PutMapping("/eliminar/{id}")
+	/*@PutMapping("/eliminar/{id}")
 	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
 		objService.deleteUnidadGestion(codigo);
 		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+	}*/
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
+		objService.deleteUnidadGestion(codigo);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

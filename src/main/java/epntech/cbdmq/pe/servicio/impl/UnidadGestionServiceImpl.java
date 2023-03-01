@@ -45,20 +45,22 @@ public class UnidadGestionServiceImpl implements UnidadGestionService {
 
 	@Override
 	public UnidadGestion updateUnidadGestion(UnidadGestion objActualizado) throws DataException {
-		// TODO Auto-generated method stub
-		if(objActualizado.getNombre().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<UnidadGestion> objGuardado = repo.findByNombre(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
 		
 		return repo.save(objActualizado);
 	}
 
 	@Override
-	public void deleteUnidadGestion(int id) {
-		// TODO Auto-generated method stub
-		repo.deleteById(id);
+	public void deleteUnidadGestion(int id) throws DataException{
+		Optional<?> objGuardado = repo.findById(id);
+		if (objGuardado.isEmpty()) {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
+		try {
+			repo.deleteById(id);
+		} catch (Exception e) {
+			if (e.getMessage().contains("constraint")) {
+				throw new DataException(DATOS_RELACIONADOS);
+			}
+		}
 	}
 }

@@ -16,5 +16,5 @@ public interface PeriodoEvaluacionService {
 	
 	PeriodoEvaluacion update(PeriodoEvaluacion objActualizado);
 	
-	void delete(int id);
+	void delete(int id) throws DataException;
 }
