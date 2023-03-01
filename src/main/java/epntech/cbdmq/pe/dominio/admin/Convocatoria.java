@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
@@ -24,6 +28,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity(name = "gen_convocatoria")
 @Table(name = "gen_convocatoria")
+@SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class Convocatoria {
 
 	@Id

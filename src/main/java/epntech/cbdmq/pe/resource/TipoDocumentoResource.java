@@ -43,6 +43,7 @@ public class TipoDocumentoResource {
 	public ResponseEntity<TipoDocumento> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoDocumento obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setTipoDocumento(obj.getTipoDocumento());
+			datosGuardados.setEstado(obj.getEstado());
 
 			TipoDocumento datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

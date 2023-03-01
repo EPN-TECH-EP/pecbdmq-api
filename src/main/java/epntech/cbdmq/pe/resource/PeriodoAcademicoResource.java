@@ -49,6 +49,7 @@ public class PeriodoAcademicoResource {
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
 			datosGuardados.setFechaFin(obj.getFechaFin());
 			datosGuardados.setDescripcion(obj.getDescripcion());
+			datosGuardados.setEstado(obj.getEstado());
 
 			PeriodoAcademico datosActualizados = null;
 			try {
