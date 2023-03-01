@@ -24,6 +24,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.TipoPruebaServiceImpl;
 
 
+
 /**
  * @author EPN TECH
  * @version $Revision: $

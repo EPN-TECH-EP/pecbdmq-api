@@ -43,8 +43,8 @@ public class Instructor {
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_instructor_materia",
-            joinColumns = @JoinColumn(name = "cod_materia"),
-            inverseJoinColumns = @JoinColumn(name = "cod_instructor")
+            joinColumns = @JoinColumn(name = "cod_instructor"),
+            inverseJoinColumns = @JoinColumn(name = "cod_materia")
     )
 	private List<Materia> materia = new ArrayList<>();
 }
