@@ -52,6 +52,7 @@ public class ParaleloResource  {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCodParalelo(obj.getCodParalelo());
 			datosGuardados.setNombreParalelo(obj.getNombreParalelo());
+			datosGuardados.setEstado(obj.getEstado());
 			Paralelo datosActualizados = null;
 			try {
 				datosActualizados = objService.update(datosGuardados);
