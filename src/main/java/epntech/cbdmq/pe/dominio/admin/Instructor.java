@@ -30,8 +30,6 @@ public class Instructor {
 	private Integer cod_datos_personales;
 	@Column(name = "cod_tipo_procedencia")
 	private Integer cod_tipo_procedencia;
-	@Column(name = "cod_materia")
-	private Integer cod_materia;
 	@Column(name = "cod_tipo_instructor")
 	private Integer cod_tipo_instructor;
 	@Column(name = "cod_periodo_academico")

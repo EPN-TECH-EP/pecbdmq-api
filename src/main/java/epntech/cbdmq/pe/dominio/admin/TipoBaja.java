@@ -3,6 +3,10 @@
  */
 package epntech.cbdmq.pe.dominio.admin;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,8 +20,11 @@ import lombok.Data;
  * @version $Revision: $
  */
 @Data
+
 @Entity(name = "gen_tipo_baja")
 @Table(name = "gen_tipo_baja")
+@SQLDelete(sql = "UPDATE {h-schema}gen_tipo_baja SET estado = 'ELIMINADO' WHERE cod_tipo_baja = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class TipoBaja {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +32,6 @@ public class TipoBaja {
     private Integer cod_tipo_baja;
     @Column(name = "tipo_baja")
     private String baja;
+    @Column(name = "estado")
+	private String estado;
 }

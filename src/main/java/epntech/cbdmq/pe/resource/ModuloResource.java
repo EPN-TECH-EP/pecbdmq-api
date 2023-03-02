@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Modulo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ModuloServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/modulo")
@@ -48,16 +51,17 @@ public class ModuloResource {
         return objService.getById(codigo).map(datosGuardados -> {
             datosGuardados.setEtiqueta(obj.getEtiqueta());
             datosGuardados.setDescripcion(obj.getDescripcion());
+            datosGuardados.setEstado(obj.getEstado());
             Modulo datosActualizados = objService.update(datosGuardados);
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
-        objService.delete(codigo);
-        return new ResponseEntity<String>("Registro eliminado exitosamente", HttpStatus.OK);
-    }
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
+		objService.delete(codigo);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
     
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
