@@ -14,6 +14,7 @@ import epntech.cbdmq.pe.dominio.admin.TipoNota;
  * @version $Revision: $
  */
 public interface TipoNotaRepository extends JpaRepository<TipoNota, Integer> {
-    @Override
-    Optional<TipoNota> findById(Integer nota);
+    
+   
+    Optional<TipoNota> findByNota(String nota);
 }

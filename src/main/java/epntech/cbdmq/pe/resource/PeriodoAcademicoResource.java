@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.*;
@@ -7,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.PeriodoAcademicoServiceimpl;
 
 @RestController
@@ -20,13 +24,9 @@ public class PeriodoAcademicoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj){
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(objService.save(obj));
-
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-		}
+	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException{
+		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
+		
 	}
 	
 	@GetMapping("/listar")
@@ -40,22 +40,36 @@ public class PeriodoAcademicoResource {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
-	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo, @RequestBody PeriodoAcademico obj) {
-		return objService.getById(codigo).map(datosGuardados -> {
+	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo, @RequestBody PeriodoAcademico obj) throws DataException {
+		return (ResponseEntity<PeriodoAcademico>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setModulo(obj.getModulo());
 			datosGuardados.setSemestre(obj.getSemestre());
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
 			datosGuardados.setFechaFin(obj.getFechaFin());
+			datosGuardados.setDescripcion(obj.getDescripcion());
 
-			PeriodoAcademico datosActualizados = objService.update(datosGuardados);
+			PeriodoAcademico datosActualizados = null;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
 		objService.deleteById(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
+	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 }

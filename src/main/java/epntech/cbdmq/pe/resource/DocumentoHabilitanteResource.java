@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.DocumentoHabilitante;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DocumentoHabilitanteServiceImpl;
 
 @RestController
@@ -29,13 +33,8 @@ public class DocumentoHabilitanteResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody DocumentoHabilitante obj){
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(objService.save(obj));
-
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-		}
+	public ResponseEntity<?> guardar(@RequestBody DocumentoHabilitante obj) throws DataException{
+		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
 	@GetMapping("/listar")
@@ -52,17 +51,28 @@ public class DocumentoHabilitanteResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<DocumentoHabilitante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody DocumentoHabilitante obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setListaDocumentos(obj.getListaDocumentos());
+			datosGuardados.setNombre(obj.getNombre());
 			
-			DocumentoHabilitante datosActualizados = objService.update(datosGuardados);
+			DocumentoHabilitante datosActualizados = null;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
 		objService.delete(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
+	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 
 }

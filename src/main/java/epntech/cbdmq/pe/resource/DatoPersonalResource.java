@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DatoPersonalServiceImpl;
 import jakarta.servlet.http.*;
 
@@ -30,12 +34,8 @@ public class DatoPersonalResource {
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(objService.saveDatosPersonales(obj));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-		}
+	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) throws DataException {
+		return new ResponseEntity<>(objService.saveDatosPersonales(obj), HttpStatus.OK);
 	}
 
 	@GetMapping("/listar")
@@ -51,8 +51,7 @@ public class DatoPersonalResource {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(objService.getAllDatosPersonales(pageable));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("{\"error\":\"Error. Por favor intente más tarde.\"}");
+			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
 		}
 	}
 
@@ -62,8 +61,7 @@ public class DatoPersonalResource {
 			return objService.getDatosPersonalesById(codigo).map(ResponseEntity::ok)
 					.orElseGet(() -> ResponseEntity.notFound().build());
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("{\"error\":\"Error. Por favor intente más tarde.\"}");
+			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
 		}
 	}
 	
@@ -76,7 +74,7 @@ public class DatoPersonalResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<DatoPersonal> actualizarDatos(@PathVariable("id") Integer codigo,
 			@RequestBody DatoPersonal obj) {
-		return objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<DatoPersonal>) objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
 			datosGuardados.setCod_estacion(obj.getCod_estacion());
 			datosGuardados.setCedula(obj.getCedula());
 			datosGuardados.setNombre(obj.getNombre());
@@ -91,7 +89,14 @@ public class DatoPersonalResource {
 			datosGuardados.setEstado(obj.getEstado());
 			datosGuardados.setProvincia(obj.getProvincia());
 
-			DatoPersonal datosActualizados = objService.updateDatosPersonales(datosGuardados);
+			DatoPersonal datosActualizados = null;
+			try {
+				datosActualizados = objService.updateDatosPersonales(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -102,7 +107,13 @@ public class DatoPersonalResource {
 		return objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
 			datosGuardados.setEstado(obj.getEstado());
 
-			DatoPersonal datosActualizados = objService.updateDatosPersonales(datosGuardados);
+			DatoPersonal datosActualizados = null;
+			try {
+				datosActualizados = objService.updateDatosPersonales(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -121,13 +132,18 @@ public class DatoPersonalResource {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(objService.search(filtro, pageable));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
+			return response(HttpStatus.NOT_FOUND, e.getMessage() );
 		}
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
 		objService.deleteById(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
+	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 }

@@ -16,5 +16,5 @@ public interface TipoInstruccionService {
 	
 	TipoInstruccion update(TipoInstruccion objActualizado);
 	
-	void delete(int id);
+	void delete(int id) throws DataException;
 }
