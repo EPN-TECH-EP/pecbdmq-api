@@ -1,18 +1,9 @@
 package epntech.cbdmq.pe.constante;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class EmailConst {
-    public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL = "smtps";
     
-    @Value("${pecb.email.username}")
-    public static String USERNAME; // = "dmoreno@tech.epn.edu.ec";
+	public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL = "smtps";    
     
-    @Value("${pecb.email.password}")
-    public static String PASSWORD; // = "0998211494Demr";
-    
-    
-    public static final String FROM_EMAIL = USERNAME;
     public static final String CC_EMAIL = "";
     public static final String EMAIL_SUBJECT = "Plataforma Educativa CBDMQ - Nuevo password";
     public static final String EMAIL_SMTP_SERVER = "smtp.office365.com";

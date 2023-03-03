@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 
 public interface ParaleloRepository extends JpaRepository<Paralelo, Integer>{
-	Optional<Paralelo> findBynombreParalelo(String Nombre);
+	Optional<Paralelo> findByNombreParalelo(String Nombre);
 
 }

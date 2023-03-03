@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.Usuario;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
@@ -41,4 +42,8 @@ public interface UsuarioService {
 
 	Usuario actualizarImagenPerfil(String username, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
 			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion;
+	
+	void guardarArchivo(String nombreArchivo, MultipartFile archivo) throws IOException, ArchivoMuyGrandeExcepcion;
+	
+	long tamañoMáximoArchivo();
 }

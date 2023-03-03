@@ -56,6 +56,7 @@ public class TipoNotaResource {
     public ResponseEntity<TipoNota> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoNota obj) {
         return objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setNota(obj.getNota());
+            datosGuardados.setEstado(obj.getEstado());
             TipoNota datosActualizados = objServices.update(datosGuardados);
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
