@@ -39,7 +39,7 @@ import lombok.Data;
 		+ " and  "
 		+ "	mr.cod_menu  = m.cod_menu  "
 		+ " order by "
-		+ "	padre.factor + coalesce(m.orden, 0) desc",
+		+ "	padre.factor + coalesce(m.orden, 0)  + (case when m.menu_padre is null then 1000 else 0 end) desc",
 		resultSetMapping = "MenuPermisos"
 		)	
 
