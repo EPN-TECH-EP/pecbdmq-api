@@ -3,11 +3,15 @@
  */
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+
 import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
+
 import epntech.cbdmq.pe.servicio.impl.ComponenteNotaServiceImpl;
-import jakarta.servlet.http.HttpServletRequest;
+
 
 /**
  * @author EPN TECH
@@ -55,22 +64,29 @@ public class ComponenteNotaResource {
     public ResponseEntity<ComponenteNota> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody ComponenteNota obj) {
         return objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
+            datosGuardados.setComponentenota(obj.getComponentenota());
             ComponenteNota datosActualizados = objServices.update(datosGuardados);
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/eliminar/{}id")
-    public ResponseEntity<ComponenteNota> eliminarDatos(@PathVariable("id") Integer codigo, @RequestBody ComponenteNota obj) {
-        return objServices.getById(codigo).map(datosGuardados -> {
-            datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
-            ComponenteNota datosActualizados = objServices.update(datosGuardados);
-            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+    @DeleteMapping("/{id}")
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) throws DataException {
+		objServices.delete(codigo);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
+	
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message){
+    	return new ResponseEntity<>(new HttpResponse(
+    			httpStatus.value(), 
+    			httpStatus, 
+    			httpStatus.
+    			getReasonPhrase().
+    			toUpperCase(),
+                message), 
+    			httpStatus);
+
     }
 
-    @RequestMapping("/api")
-    public String home(HttpServletRequest request) throws Exception {
-        return String.format("Servicio (%s)", request.getRequestURL());
-    }
+   
 }
