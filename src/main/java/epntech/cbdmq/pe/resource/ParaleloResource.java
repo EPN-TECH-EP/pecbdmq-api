@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,7 @@ public class ParaleloResource  {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCodParalelo(obj.getCodParalelo());
 			datosGuardados.setNombreParalelo(obj.getNombreParalelo());
+			datosGuardados.setEstado(obj.getEstado());
 			Paralelo datosActualizados = null;
 			try {
 				datosActualizados = objService.update(datosGuardados);
@@ -62,9 +65,9 @@ public class ParaleloResource  {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
 		objService.delete(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

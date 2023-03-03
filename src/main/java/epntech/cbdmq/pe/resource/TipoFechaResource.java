@@ -56,6 +56,7 @@ public class TipoFechaResource {
     public ResponseEntity<TipoFecha> actualizarDatos(@PathVariable("id") String fecha, @RequestBody TipoFecha obj) {
         return objServices.getById(fecha).map(datosGuardados -> {
             datosGuardados.setFecha(obj.getFecha());
+            datosGuardados.setEstado(obj.getEstado());
             TipoFecha datosActualizados = objServices.update(datosGuardados);
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());

@@ -1,7 +1,5 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,67 +16,58 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.EspCurso;
+import epntech.cbdmq.pe.dominio.admin.Instructor;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.impl.EspCursoServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.InstructorServiceImpl;
 
 @RestController
-@RequestMapping("/espcurso")
-public class EspCursoResource {
+@RequestMapping("/instructor")
+public class InstructorResource {
 
-	
 	@Autowired
-	private EspCursoServiceImpl objService;
+	private InstructorServiceImpl objService;
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody EspCurso obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody Instructor obj) throws DataException{
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
 	@GetMapping("/listar")
-	public List<EspCurso> listar() {
+	public List<Instructor> listar() {
 		return objService.getAll();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<EspCurso> obtenerPorId(@PathVariable("id") Integer codigo) {
+	public ResponseEntity<Instructor> obtenerPorId(@PathVariable("id") Integer codigo) {
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<EspCurso> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EspCurso obj) throws DataException{
+	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Instructor obj) throws DataException{
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodcursoespecializacion(obj.getCodcursoespecializacion());
-			datosGuardados.setNombrecursoespecializacion(obj.getNombrecursoespecializacion());
-			datosGuardados.setNumerocupo(obj.getNumerocupo());
-			datosGuardados.setAdjuntoplanificacion(obj.getAdjuntoplanificacion());
-			datosGuardados.setTipocurso(obj.getTipocurso());
-			datosGuardados.setFechainiciocurso(obj.getFechainiciocurso());
-			datosGuardados.setFechafincurso(obj.getFechafincurso());
-			datosGuardados.setFechainiciocarganota(obj.getFechainiciocarganota());
-			datosGuardados.setFechafincarganota(obj.getFechafincarganota());
-			datosGuardados.setEstado(obj.getEstado());
-			EspCurso datosActualizados = null;
-			try {
-				datosActualizados = objService.update(datosGuardados);
-			} catch (DataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			datosGuardados.setCod_instructor(obj.getCod_instructor());
+			datosGuardados.setCod_tipo_procedencia(obj.getCod_tipo_procedencia());
+			datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
+			datosGuardados.setCod_periodo_academico(obj.getCod_tipo_instructor());
+			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
+			Instructor datosActualizados = null;
+			datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
+	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
 		objService.delete(codigo);
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
 	}
 	
 	 private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 	                message), httpStatus);
 	    }
+	
+	
 }

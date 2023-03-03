@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,7 @@ public class ParametrizacionResource {
 			datosGuardados.setHorainicioparam(obj.getHorainicioparam());
 			datosGuardados.setHorafinparam(obj.getHorafinparam());
 			datosGuardados.setObservacionparametriza(obj.getObservacionparametriza());
-			
+			datosGuardados.setEstado(obj.getEstado());
 			
 			Parametrizacion datosActualizados = null;
 			try {
@@ -67,9 +69,9 @@ public class ParametrizacionResource {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
 		objService.delete(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

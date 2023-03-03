@@ -9,53 +9,52 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Aula;
-import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.admin.EspCurso;
+import epntech.cbdmq.pe.dominio.admin.Ponderacion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.admin.ParaleloRepository;
-import epntech.cbdmq.pe.servicio.ParaleloService;
+
+import epntech.cbdmq.pe.repositorio.admin.PonderacionRepository;
+import epntech.cbdmq.pe.servicio.PonderacionService;
 
 @Service
-public class ParaleloServiceImpl implements ParaleloService{
+public class PonderacionServiceImpl implements PonderacionService {
 
 	@Autowired
-	private ParaleloRepository repo;
+	private PonderacionRepository repo;
 	
 	@Override
-	public Paralelo save(Paralelo obj) throws DataException{
-		// TODO Auto-generated method stub
-		if(obj.getNombreParalelo().trim().isEmpty())
+	public Ponderacion save(Ponderacion obj) throws DataException {
+		if (obj.getTiponotaponderacion().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Paralelo> objGuardado = repo.findByNombreParalelo(obj.getNombreParalelo());
+		// Optional<EspCurso> objGuardado =
+		// repo.findBynombrecursoespecializacion(obj.getNombrecursoespecializacion());
+		Optional<Ponderacion> objGuardado = repo.findByTiponotaponderacion(obj.getTiponotaponderacion());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
-
 		return repo.save(obj);
 	}
 
 	@Override
-	public List<Paralelo> getAll() {
+	public List<Ponderacion> getAll() {
 		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
 
 	@Override
-	public Optional<Paralelo> getById(Integer codigo) {
+	public Optional<Ponderacion> getById(Integer codigo) {
 		// TODO Auto-generated method stub
 		return repo.findById(codigo);
 	}
 
 	@Override
-	public Paralelo update(Paralelo objActualizado) throws DataException {
-		// TODO Auto-generated method stub
-		if(objActualizado.getNombreParalelo().trim().isEmpty())
+	public Ponderacion update(Ponderacion objActualizado) throws DataException {
+		if (objActualizado.getTiponotaponderacion().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Paralelo> objGuardado = repo.findByNombreParalelo(objActualizado.getNombreParalelo());
+		Optional<Ponderacion> objGuardado = repo.findByTiponotaponderacion(objActualizado.getTiponotaponderacion());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
-		
 		return repo.save(objActualizado);
 	}
 
@@ -64,5 +63,5 @@ public class ParaleloServiceImpl implements ParaleloService{
 		// TODO Auto-generated method stub
 		repo.deleteById(codigo);
 	}
-	
+
 }
