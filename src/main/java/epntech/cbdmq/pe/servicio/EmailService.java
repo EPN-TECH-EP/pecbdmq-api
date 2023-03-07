@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.servicio;
 import static epntech.cbdmq.pe.constante.EmailConst.DEFAULT_PORT;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SMTP_SERVER;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT;
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT1;
 import static epntech.cbdmq.pe.constante.EmailConst.PASSWORD;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_AUTH;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_HOST;
@@ -99,6 +100,20 @@ public class EmailService {
 		props.put("mail.debug", "true");
 
 		return mailSender;
+	}
+	
+	private SimpleMailMessage validateEmail(String firstName, String codigo, String email)
+			throws MessagingException {
+
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom(USERNAME);
+		message.setTo(email);
+		message.setSubject(EMAIL_SUBJECT1);
+		message.setText("Hola " + firstName + ", \n \n Tu código de confirmación es: " + codigo
+				+ "\n \n Plataforma educativa - CBDMQ");
+
+		return message;
 	}
 
 }

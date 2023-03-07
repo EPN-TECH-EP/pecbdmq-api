@@ -80,7 +80,7 @@ public class DatoPersonalResource {
 			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setApellido(obj.getApellido());
 			datosGuardados.setFecha_nacimiento(obj.getFecha_nacimiento());
-			datosGuardados.setCorreo(obj.getCorreo());
+			datosGuardados.setCorreo_personal(obj.getCorreo_personal());
 			datosGuardados.setValidacion_correo(obj.getValidacion_correo());
 			datosGuardados.setNum_telef(obj.getNum_telef());
 			datosGuardados.setCiudad(obj.getCiudad());

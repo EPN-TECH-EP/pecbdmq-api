@@ -88,7 +88,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
     @Override
     //public Usuario registrar(String firstName, String lastName, String username, String email) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException {
     public Usuario registrar(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException {
-        validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo());
+        validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo_personal());
         
         // datos de usuario
         Usuario user = new Usuario();
@@ -108,7 +108,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
         DatoPersonal datos = new DatoPersonal();
         datos.setNombre(usuario.getCodDatosPersonales().getNombre());
         datos.setApellido(usuario.getCodDatosPersonales().getApellido());
-        datos.setCorreo(usuario.getCodDatosPersonales().getCorreo());
+        datos.setCorreo_personal(usuario.getCodDatosPersonales().getCorreo_personal());
         
         // asocia datos personales con usuario
         user.setCodDatosPersonales(datos);
@@ -117,7 +117,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
         
         userRepository.flush();
 
-        emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password, usuario.getCodDatosPersonales().getCorreo());
+        emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password, usuario.getCodDatosPersonales().getCorreo_personal());
         return user;
     }
 

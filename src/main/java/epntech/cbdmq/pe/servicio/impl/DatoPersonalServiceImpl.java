@@ -34,10 +34,6 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 		if (objGuardado.isPresent()) {
 			throw new DataException(CEDULA_YA_EXISTE);
 		}
-		Optional<DatoPersonal> objGuardado1 = repo.findOneByCorreo(obj.getCorreo());
-		if (objGuardado1.isPresent()) {
-			throw new DataException(CORREO_YA_EXISTE);
-		}
 
 		obj.setValidacion_correo(BCrypt.hashpw(getRandomCode(), BCrypt.gensalt()));
 		return repo.save(obj);

@@ -36,7 +36,7 @@ public class DatoPersonal {
 	@Column(name = "fecha_nacimiento")
 	private LocalDateTime fecha_nacimiento;
 	@Column(name = "correo_personal")
-	private String correo;
+	private String correo_personal;
 	@Column(name = "validacion_correo")
 	private String validacion_correo;
 	@Column(name = "num_telef")
