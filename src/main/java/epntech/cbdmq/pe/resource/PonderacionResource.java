@@ -18,49 +18,49 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.EspCurso;
+import epntech.cbdmq.pe.dominio.admin.Ponderacion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.impl.EspCursoServiceImpl;
+
+import epntech.cbdmq.pe.servicio.impl.PonderacionServiceImpl;
+
 
 @RestController
-@RequestMapping("/espcurso")
-public class EspCursoResource {
+@RequestMapping("/ponderacion")
+public class PonderacionResource {
 
-	
 	@Autowired
-	private EspCursoServiceImpl objService;
+	private PonderacionServiceImpl objService;
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody EspCurso obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody Ponderacion obj) throws DataException{
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
 	@GetMapping("/listar")
-	public List<EspCurso> listar() {
+	public List<Ponderacion> listar() {
 		return objService.getAll();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<EspCurso> obtenerPorId(@PathVariable("id") Integer codigo) {
+	public ResponseEntity<Ponderacion> obtenerPorId(@PathVariable("id") Integer codigo) {
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<EspCurso> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EspCurso obj) throws DataException{
+	public ResponseEntity<Ponderacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Ponderacion obj) throws DataException{
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodcursoespecializacion(obj.getCodcursoespecializacion());
-			datosGuardados.setNombrecursoespecializacion(obj.getNombrecursoespecializacion());
-			datosGuardados.setNumerocupo(obj.getNumerocupo());
-			datosGuardados.setAdjuntoplanificacion(obj.getAdjuntoplanificacion());
-			datosGuardados.setTipocurso(obj.getTipocurso());
-			datosGuardados.setFechainiciocurso(obj.getFechainiciocurso());
-			datosGuardados.setFechafincurso(obj.getFechafincurso());
-			datosGuardados.setFechainiciocarganota(obj.getFechainiciocarganota());
-			datosGuardados.setFechafincarganota(obj.getFechafincarganota());
+			datosGuardados.setComponentenotamateria(obj.getCod_ponderacion());
+			datosGuardados.setTiponotaponderacion(obj.getTiponotaponderacion());
+			datosGuardados.setPorcentajefinalponderacion(obj.getPorcentajefinalponderacion());
+			datosGuardados.setComponentenotamateria(obj.getComponentenotamateria());
+			datosGuardados.setFechainiciovigencia(obj.getFechainiciovigencia());
+			datosGuardados.setFechainiciovigencia(obj.getFechafinvigencia());
 			datosGuardados.setEstado(obj.getEstado());
-			EspCurso datosActualizados = null;
+			
+			
+			Ponderacion datosActualizados = null;
 			try {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
@@ -81,4 +81,6 @@ public class EspCursoResource {
 	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 	                message), httpStatus);
 	    }
+	
+	
 }

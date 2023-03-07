@@ -65,6 +65,7 @@ public class ComponenteNotaResource {
         return objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
             datosGuardados.setComponentenota(obj.getComponentenota());
+            datosGuardados.setEstado(obj.getEstado());
             ComponenteNota datosActualizados = objServices.update(datosGuardados);
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());

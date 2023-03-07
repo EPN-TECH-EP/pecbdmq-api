@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +25,8 @@ import lombok.Data;
 
 @Entity(name = "esp_curso")
 @Table(name = "esp_curso")
-
+@SQLDelete(sql = "UPDATE {h-schema}esp_curso SET estado = 'ELIMINADO' WHERE cod_curso_especializacion = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class EspCurso {
 
 	@Id
@@ -44,6 +49,8 @@ public class EspCurso {
 	private LocalDateTime fechainiciocarganota;
 	@Column(name = "fecha_fin_carga_nota")
 	private LocalDateTime fechafincarganota;
+	@Column(name = "estado")
+	private String estado;
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinTable(name = "gen_paralelo_curso", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), 
