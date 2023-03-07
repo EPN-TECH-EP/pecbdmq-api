@@ -27,7 +27,7 @@ public class ParametrizacionServiceImpl implements ParametrizaService {
 	public Parametrizacion save(Parametrizacion obj) throws DataException {
 		if(obj.getObservacionparametriza().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Parametrizacion> objGuardado = repo.findByObservacion(obj.getObservacionparametriza());
+		Optional<Parametrizacion> objGuardado = repo.findByObservacionparametriza(obj.getObservacionparametriza());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}

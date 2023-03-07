@@ -36,7 +36,7 @@ public class DatoPersonal {
 	@Column(name = "fecha_nacimiento")
 	private LocalDateTime fecha_nacimiento;
 	@Column(name = "correo_personal")
-	private String correo_personal;
+	private String correo;
 	@Column(name = "validacion_correo")
 	private String validacion_correo;
 	@Column(name = "num_telef")
@@ -45,11 +45,11 @@ public class DatoPersonal {
 	private String ciudad;
 	@Column(name = "tipo_sangre")
 	private String tipo_sangre;
-	@Column(name = "unidad")
-	private String unidad;
+	@Column(name = "cod_unidad_gestion")
+	private Integer unidad;
 	@Column(name = "estado")
 	private String estado;
-	@Column(name = "provincia")
-	private String provincia;
+	@Column(name = "cod_provincia")
+	private Integer provincia;
 
 }

@@ -10,15 +10,15 @@ import lombok.*;
 
 @Data
 @Entity
-@Table(name = "gen_ciudad")
-@SQLDelete(sql = "UPDATE {h-schema}gen_ciudad SET estado = 'ELIMINADO' WHERE cod_ciudad = ?", check = ResultCheckStyle.COUNT)
+@Table(name = "gen_parroquia")
+@SQLDelete(sql = "UPDATE {h-schema}gen_parroquia SET estado = 'ELIMINADO' WHERE cod_parroquia = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-public class Ciudad {
+public class Parroquia {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include()
-	@Column(name = "cod_ciudad")
+	@Column(name = "cod_parroquia")
 	private Integer codigo;
 	
 	@Column(name = "nombre")
@@ -27,8 +27,8 @@ public class Ciudad {
 	@Column(name = "estado")
 	private String estado;
 
-	@Column(name = "cod_provincia")
-	private Integer codProvincia;
+	@Column(name = "cod_canton")
+	private Integer codCanton;
     
 		
 }

@@ -31,5 +31,5 @@ public class Provincia {
 
     
 	@OneToMany(mappedBy="codProvincia")
-    private Set<Ciudad> ciudades;
+    private Set<Canton> cantones;
 }

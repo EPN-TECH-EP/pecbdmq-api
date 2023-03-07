@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.*;
@@ -14,6 +15,8 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
 	//@Value("${spring.jpa.properties.hibernate.default_schema}")
 	
 	Optional<DatoPersonal> findOneByCedula(String Cedula);
+	
+	Optional<DatoPersonal> findOneByCorreo(String correo);
 	
 	Page<DatoPersonal> findByNombreContainingOrApellidoContaining(String nombre, String apellido, Pageable pageable);
 	

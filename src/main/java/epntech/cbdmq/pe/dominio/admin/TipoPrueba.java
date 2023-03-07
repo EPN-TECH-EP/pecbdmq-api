@@ -31,5 +31,5 @@ public class TipoPrueba {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cod_tipo_prueba;
     @Column(name = "tipo_prueba")
-    private String Prueba;
+    private String prueba;
 }
