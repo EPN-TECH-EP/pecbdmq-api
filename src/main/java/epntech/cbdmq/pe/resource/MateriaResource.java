@@ -56,6 +56,7 @@ public class MateriaResource {
 			datosGuardados.setObservacionMateria(obj.getObservacionMateria());
 			datosGuardados.setPesoMateria(obj.getPesoMateria());
 			datosGuardados.setNotaMinima(obj.getNotaMinima());
+			datosGuardados.setEstado(obj.getEstado());
 
 			Materia datosActualizados = null;
 			

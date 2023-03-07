@@ -51,6 +51,10 @@ public class EspCurso {
 	private LocalDateTime fechafincarganota;
 	@Column(name = "estado")
 	private String estado;
+	@Column(name = "nota_minima")
+	private Integer notaminima;
+	@Column(name = "resultado")
+	private boolean resultado;
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinTable(name = "gen_paralelo_curso", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), 

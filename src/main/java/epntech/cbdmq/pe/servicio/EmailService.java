@@ -18,7 +18,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.configuracion.ConfigProperties;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 

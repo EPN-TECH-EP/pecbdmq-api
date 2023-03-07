@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,6 +27,8 @@ import lombok.EqualsAndHashCode;
 
 @Entity(name = "gen_materia")
 @Table(name ="gen_materia")
+@SQLDelete(sql = "UPDATE {h-schema}gen_materia SET estado = 'ELIMINADO' WHERE cod_materia = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class Materia {
 
 	@Id
@@ -41,6 +47,8 @@ public class Materia {
 	private Integer pesoMateria;
 	@Column(name = "nota_minima")
 	private Integer notaMinima;
+	@Column(name = "estado")
+   	private String estado;
 	
 	//@ManyToMany(mappedBy = "materias", cascade = CascadeType.ALL)
 	//public Set<Aula> aulas;
