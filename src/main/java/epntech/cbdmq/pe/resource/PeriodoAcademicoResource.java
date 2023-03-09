@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.PeriodoAcademicoServiceimpl;
 
@@ -73,4 +74,9 @@ public class PeriodoAcademicoResource {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
+	
+	@GetMapping("/listartodo")
+	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
+		return objService.getAllPeriodoAcademico();
+	}
 }

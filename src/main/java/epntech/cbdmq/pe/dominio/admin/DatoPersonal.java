@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -51,5 +53,8 @@ public class DatoPersonal {
 	private String estado;
 	@Column(name = "cod_provincia")
 	private Integer provincia;
+	
+	@OneToMany(mappedBy="codDatoPersonal")
+    private Set<Documento> documentos;
 
 }

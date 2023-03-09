@@ -16,17 +16,23 @@ import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.servicio.DatoPersonalService;
+import epntech.cbdmq.pe.servicio.EmailService;
+import jakarta.mail.MessagingException;
 
 @Service
 public class DatoPersonalServiceImpl implements DatoPersonalService {
 
 	@Autowired
 	private DatoPersonalRepository repo;
+	@Autowired
+	private EmailService emailService;
 
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
 	@Override
-	public DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException {
+	public DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException {
+		String code = "";
+		
 		if (obj.getNombre() == null || obj.getCedula() == null || obj.getNombre().isEmpty()
 				|| obj.getCedula().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
@@ -35,7 +41,9 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 			throw new DataException(CEDULA_YA_EXISTE);
 		}
 
-		obj.setValidacion_correo(BCrypt.hashpw(getRandomCode(), BCrypt.gensalt()));
+		code = getRandomCode();
+		obj.setValidacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
+		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreo_personal());
 		return repo.save(obj);
 	}
 

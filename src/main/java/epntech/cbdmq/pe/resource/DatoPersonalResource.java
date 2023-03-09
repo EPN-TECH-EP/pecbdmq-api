@@ -23,6 +23,7 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DatoPersonalServiceImpl;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.*;
 
 @RestController
@@ -34,7 +35,7 @@ public class DatoPersonalResource {
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) throws DataException {
+	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) throws DataException, MessagingException {
 		return new ResponseEntity<>(objService.saveDatosPersonales(obj), HttpStatus.OK);
 	}
 
