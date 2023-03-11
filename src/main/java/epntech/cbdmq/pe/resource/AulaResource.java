@@ -52,6 +52,7 @@ public class AulaResource {
 			datosGuardados.setProyectores(obj.getProyectores());
 			datosGuardados.setInstructor(obj.getInstructor());
 			datosGuardados.setSalaOcupada(obj.getSalaOcupada());
+			datosGuardados.setEstado(obj.getEstado());
 
 			Aula datosActualizados = null;
 			try {

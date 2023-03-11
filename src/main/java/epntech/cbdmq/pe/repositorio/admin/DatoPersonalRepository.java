@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.*;

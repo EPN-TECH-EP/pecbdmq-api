@@ -52,6 +52,7 @@ public class DocumentoHabilitanteResource {
 	public ResponseEntity<DocumentoHabilitante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody DocumentoHabilitante obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setEstado(obj.getEstado());
 			
 			DocumentoHabilitante datosActualizados = null;
 			try {

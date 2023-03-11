@@ -53,6 +53,7 @@ public class TipoFuncionarioResource {
 	public ResponseEntity<TipoFuncionario> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoFuncionario obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setEstado(obj.getEstado());
 
 			TipoFuncionario datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
