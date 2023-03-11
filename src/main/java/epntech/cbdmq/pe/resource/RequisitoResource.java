@@ -53,6 +53,11 @@ public class RequisitoResource {
 	public ResponseEntity<Requisito> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Requisito obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setCodConvocatoria(obj.getCodConvocatoria());
+			datosGuardados.setCodFuncionario(obj.getCodFuncionario());
+			datosGuardados.setCodDocumentoHabilitante(obj.getCodDocumentoHabilitante());
+			datosGuardados.setDescripcion(obj.getDescripcion());
+			datosGuardados.setEstado(obj.getEstado());
 
 			Requisito datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

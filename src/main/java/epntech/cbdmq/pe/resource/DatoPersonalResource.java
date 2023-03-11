@@ -1,6 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DatoPersonalServiceImpl;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.*;
 
 @RestController
@@ -34,7 +35,7 @@ public class DatoPersonalResource {
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) throws DataException {
+	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) throws DataException, MessagingException {
 		return new ResponseEntity<>(objService.saveDatosPersonales(obj), HttpStatus.OK);
 	}
 
@@ -64,7 +65,7 @@ public class DatoPersonalResource {
 			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
 		}
 	}
-	
+
 	@GetMapping("/cedula/{cedula}")
 	public ResponseEntity<DatoPersonal> obtenerPorCedula(@PathVariable("cedula") String cedula) {
 		return objService.getByCedula(cedula).map(ResponseEntity::ok)
@@ -124,7 +125,7 @@ public class DatoPersonalResource {
 		// Thread.sleep(random.nextInt(2000));
 
 		return String.format("Servicio (%s)", request.getRequestURL());
-		//return new ResponseEntity<>(request.getRequestURL(), HttpStatus.OK);
+		// return new ResponseEntity<>(request.getRequestURL(), HttpStatus.OK);
 	}
 
 	@GetMapping("/buscarpaginado")
@@ -132,7 +133,7 @@ public class DatoPersonalResource {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(objService.search(filtro, pageable));
 		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, e.getMessage() );
+			return response(HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
 
@@ -141,9 +142,24 @@ public class DatoPersonalResource {
 		objService.deleteById(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
-	
+
+	@GetMapping("/codematch")
+	public ResponseEntity<HttpResponse> getPasswordMatches(@RequestParam("id") int id, @RequestParam("codigo") String codigo)
+			throws DataException {
+		DatoPersonal dato;
+
+		try {
+			dato = objService.getDatosPersonalesById(id).get();
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
+		}
+			
+		return response(HttpStatus.OK, Boolean.toString(objService.isPasswordMatches(codigo, dato.getValidacion_correo())));
+	}
+
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
-    }
+		return new ResponseEntity<>(
+				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+				httpStatus);
+	}
 }

@@ -1,18 +1,26 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity(name = "gen_dato_personal")
 @Table(name = "gen_dato_personal")
 @Data
+@SQLDelete(sql = "UPDATE {h-schema}gen_dato_personal SET estado = 'ELIMINADO' WHERE cod_datos_personales = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class DatoPersonal {
 
 	@Id
@@ -39,11 +47,14 @@ public class DatoPersonal {
 	private String ciudad;
 	@Column(name = "tipo_sangre")
 	private String tipo_sangre;
-	//@Column(name = "unidad")
-	//private String unidad;
+	@Column(name = "cod_unidad_gestion")
+	private Integer unidad;
 	@Column(name = "estado")
 	private String estado;
-	//@Column(name = "provincia")
-	//private String provincia;
+	@Column(name = "cod_provincia")
+	private Integer provincia;
+	
+	@OneToMany(mappedBy="codDatoPersonal")
+    private Set<Documento> documentos;
 
 }

@@ -35,6 +35,8 @@ public class TipoPrueba {
     private Integer cod_tipo_prueba;
     @Column(name = "tipo_prueba")
     private String prueba;
+
     @Column(name = "estado")
 	private String estado;
+
 }

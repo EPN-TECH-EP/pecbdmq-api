@@ -172,3 +172,4 @@ public class GestorExcepciones implements ErrorController {
 		return createHttpResponse(BAD_REQUEST, exception.getMessage());
 	}
 }
+

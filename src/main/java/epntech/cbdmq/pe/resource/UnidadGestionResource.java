@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.UnidadGestion;
 import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -55,15 +56,21 @@ public class UnidadGestionResource extends GestorExcepciones{
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<UnidadGestion> actualizarDatos(@PathVariable("id") int codigo, @RequestBody UnidadGestion obj) throws DataException {
-		UnidadGestion datosActualizados = objService.updateUnidadGestion(obj);
-		return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+		return (ResponseEntity<UnidadGestion>) objService.getUnidadGestionById(codigo).map(datosGuardados -> {
+			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setEstado(obj.getEstado());
+				UnidadGestion datosActualizados = null;
+				try {
+					datosActualizados = objService.updateUnidadGestion(datosGuardados);
+				} catch (DataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+				}
+			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
-	/*@PutMapping("/eliminar/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") int codigo) {
-		objService.deleteUnidadGestion(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
-	}*/
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
