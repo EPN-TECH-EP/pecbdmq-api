@@ -52,7 +52,7 @@ public class InstructorResource {
 			datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
-			Instructor datosActualizados = null;
+			Instructor datosActualizados = objService.update(datosGuardados);
 			datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

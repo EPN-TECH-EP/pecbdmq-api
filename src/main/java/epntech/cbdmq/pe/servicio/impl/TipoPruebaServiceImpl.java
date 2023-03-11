@@ -34,7 +34,7 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
     public TipoPrueba save(TipoPrueba obj) throws DataException {
     	if(obj.getPrueba().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoPrueba> objGuardado = repo.findByPrueba(obj.getPrueba());
+		Optional<TipoPrueba> objGuardado = repo.findByprueba(obj.getPrueba());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
