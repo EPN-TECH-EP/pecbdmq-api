@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PeriodoAcademicoService {
@@ -17,4 +18,6 @@ public interface PeriodoAcademicoService {
 	PeriodoAcademico update(PeriodoAcademico objActualizado) throws DataException;
 	
 	void deleteById(int id) throws DataException;
+	
+	List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico();
 }

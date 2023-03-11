@@ -8,10 +8,11 @@ import org.springframework.data.domain.Pageable;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import jakarta.mail.MessagingException;
 
 public interface DatoPersonalService {
 
-	DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException;
+	DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException;
 	
 	List<DatoPersonal> getAllDatosPersonales();
 	
@@ -24,5 +25,6 @@ public interface DatoPersonalService {
 	Page<DatoPersonal> search(String filtro, Pageable pageable) throws Exception;
 	
 	void deleteById(int id) throws DataException;
+	
 	
 }

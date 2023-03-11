@@ -1,8 +1,10 @@
+
 package epntech.cbdmq.pe.servicio;
 
 import static epntech.cbdmq.pe.constante.EmailConst.DEFAULT_PORT;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SMTP_SERVER;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT;
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT1;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_AUTH;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_HOST;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_PORT;
@@ -17,8 +19,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 
@@ -102,4 +102,25 @@ public class EmailService {
 		return mailSender;
 	}
 
+	private SimpleMailMessage /* Message */ validateEmail(String firstName, String codigo, String email)
+			throws MessagingException {
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom(USERNAME);
+		message.setTo(email);
+		message.setSubject(EMAIL_SUBJECT1);
+		message.setText("Hola " + firstName + ", \n \n El código de validación es: " + codigo
+				+ "\n \n Plataforma educativa - CBDMQ");
+
+		return message;
+	}
+	
+	public void validateCodeEmail(String firstName, String codigo, String email) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		SimpleMailMessage message = this.validateEmail(firstName, codigo, email);
+
+		emailSender.send(message);
+
+	}
 }
+

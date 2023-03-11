@@ -3,6 +3,10 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -17,6 +21,8 @@ import lombok.Data;
 
 @Entity(name = "epo_periodo_evaluacion")
 @Table(name = "epo_periodo_evaluacion")
+@SQLDelete(sql = "UPDATE {h-schema}epo_periodo_evaluacion SET estado = 'ELIMINADO' WHERE cod_periodo_evaluacion = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class PeriodoEvaluacion {
 
 	@Id
@@ -35,8 +41,8 @@ public class PeriodoEvaluacion {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechaFin;
 
-	@Column(name = "is_active")
-	private Boolean estado;
+	@Column(name = "estado")
+	private String estado;
 	
 	@Column(name = "descripcion")
 	private String descripcion;
