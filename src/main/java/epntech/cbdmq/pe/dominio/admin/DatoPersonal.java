@@ -39,11 +39,11 @@ public class DatoPersonal {
 	private String ciudad;
 	@Column(name = "tipo_sangre")
 	private String tipo_sangre;
-	@Column(name = "unidad")
-	private String unidad;
+	//@Column(name = "unidad")
+	//private String unidad;
 	@Column(name = "estado")
 	private String estado;
-	@Column(name = "provincia")
-	private String provincia;
+	//@Column(name = "provincia")
+	//private String provincia;
 
 }

@@ -172,17 +172,22 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public Usuario actualizarUsuario(String currentUsername, String newFirstName, String newLastName,
-			String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive,
-			MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
+	public Usuario actualizarUsuario(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
 			EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-		Usuario currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
+		Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo_personal());
+		
+		currentUser.setActive(usuario.isActive());
+		currentUser.setNotLocked(usuario.isNotLocked());
+		
+		
+		// TODO: validar campos actualizables
+		
 		// currentUser.setNombres(newFirstName);
 		// currentUser.setApellidos(newLastName);
-		currentUser.setNombreUsuario(newUsername);
+//		currentUser.setNombreUsuario(usuario);
 		// currentUser.setEmail(newEmail);
-		currentUser.setActive(isActive);
-		currentUser.setNotLocked(isNonLocked);
+//		currentUser.setActive(isActive);
+//		currentUser.setNotLocked(isNonLocked);
 		userRepository.save(currentUser);
 		// saveProfileImage(currentUser, profileImage);
 		return currentUser;

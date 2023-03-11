@@ -85,9 +85,9 @@ public class DatoPersonalResource {
 			datosGuardados.setNum_telef(obj.getNum_telef());
 			datosGuardados.setCiudad(obj.getCiudad());
 			datosGuardados.setTipo_sangre(obj.getTipo_sangre());
-			datosGuardados.setUnidad(obj.getUnidad());
+			//datosGuardados.setUnidad(obj.getUnidad());
 			datosGuardados.setEstado(obj.getEstado());
-			datosGuardados.setProvincia(obj.getProvincia());
+			//datosGuardados.setProvincia(obj.getProvincia());
 
 			DatoPersonal datosActualizados = null;
 			try {
