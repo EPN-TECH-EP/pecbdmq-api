@@ -27,9 +27,7 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
     @Autowired
     TipoPruebaRepository repo;
 
-    /**
-     * {@inheritDoc}
-     */
+   
     @Override
     public TipoPrueba save(TipoPrueba obj) throws DataException {
     	if(obj.getPrueba().trim().isEmpty())
@@ -39,6 +37,7 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(obj);
+        
     }
 
     /**

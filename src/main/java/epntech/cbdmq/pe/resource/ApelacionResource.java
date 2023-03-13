@@ -18,64 +18,63 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Baja;
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
+import epntech.cbdmq.pe.dominio.admin.Apelacion;
+
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.impl.BajaServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.ApelacionServiceImpl;
+
 
 @RestController
-@RequestMapping("/baja")
-public class BajaResource {
-	 @Autowired
-	    private BajaServiceImpl objServices;
+@RequestMapping("/apelacion")
+public class ApelacionResource {
 
-	 @PostMapping("/crear")
-	    @ResponseStatus(HttpStatus.CREATED)
-	    public ResponseEntity<?> guardar(@RequestBody Baja obj) throws DataException {
-	    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
-	    }
 	
-	 @GetMapping("/listar")
-	    public List<Baja> listar() {
-	        return objServices.getAll();
-	    }
-	 
+	@Autowired
+    private ApelacionServiceImpl objServices;
+	
+	@PostMapping("/crear")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardar(@RequestBody Apelacion obj) throws DataException {
+    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
+    }
+	
+	@GetMapping("/listar")
+    public List<Apelacion> listar() {
+        return objServices.getAll();
+    }
+	
 	 @GetMapping("/{id}")
-	    public ResponseEntity<Baja> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
+	    public ResponseEntity<Apelacion> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
 	        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	    }
 	 
 	 @PutMapping("/{id}")
-	    public ResponseEntity<Baja> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Baja obj) {
+	    public ResponseEntity<Apelacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Apelacion obj) {
 	        return objServices.getById(codigo).map(datosGuardados -> {
-	            /*datosGuardados.setCod_baja(obj.getCod_baja());
-	            datosGuardados.setCod_modulo(obj.getCod_modulo());
-	            datosGuardados.setCod_baja(obj.getCod_baja());*/
-	            datosGuardados.setFechacreabaja(obj.getFechabaja());
-	            datosGuardados.setDescripcionbaja(obj.getDescripcionbaja());
-	            datosGuardados.setUsuariocreabaja(obj.getUsuariocreabaja());
-	            datosGuardados.setFechacreabaja(obj.getFechacreabaja());
-	            datosGuardados.setHoracreabaja(obj.getHoracreabaja());
-	            datosGuardados.setUsuariomodbaja(obj.getUsuariomodbaja());
-	            datosGuardados.setFechamodbaja(obj.getFechamodbaja());
-	            datosGuardados.setHoramodbaja(obj.getHoramodbaja());
-	            datosGuardados.setRutaadjuntobaja(obj.getRutaadjuntobaja());
-	            datosGuardados.setCod_baja(obj.getCod_baja());           
+	            datosGuardados.setFechasolicitud(obj.getFechasolicitud());
+	            datosGuardados.setNombrepruebarevision(obj.getNombrepruebarevision());
+	            datosGuardados.setObservacionaspirante(obj.getObservacionaspirante());
+	            datosGuardados.setObservaciondocente(obj.getObservaciondocente());
+	            datosGuardados.setAprobacion(obj.getAprobacion());
+	            datosGuardados.setNotaactual(obj.getNotaactual());
+	            datosGuardados.setNotanueva(obj.getNotanueva());
+	            datosGuardados.setRespuesta(obj.getRespuesta());
 	            datosGuardados.setEstado(obj.getEstado());
-	            Baja datosActualizados = objServices.update(datosGuardados);
+	            Apelacion datosActualizados = objServices.update(datosGuardados);
 	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 	        }).orElseGet(() -> ResponseEntity.notFound().build());
 	    }
+	 
 	 
 	 @DeleteMapping("/{id}")
 		public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
 			objServices.delete(codigo);
 			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 		}
-	    
 	    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 	                message), httpStatus);
 	    }
+	
 	
 }
