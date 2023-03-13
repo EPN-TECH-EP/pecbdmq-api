@@ -48,7 +48,7 @@ public class Materia {
 	@Column(name = "nota_minima")
 	private Integer notaMinima;
 	@Column(name = "estado")
-   	private String estado;
+	private String estado;
 	
 	//@ManyToMany(mappedBy = "materias", cascade = CascadeType.ALL)
 	//public Set<Aula> aulas;

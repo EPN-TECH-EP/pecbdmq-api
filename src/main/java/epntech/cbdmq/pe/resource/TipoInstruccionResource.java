@@ -43,6 +43,7 @@ public class TipoInstruccionResource {
 	public ResponseEntity<TipoInstruccion> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoInstruccion obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setTipoInstruccion(obj.getTipoInstruccion());
+			datosGuardados.setEstado(obj.getEstado());
 
 			TipoInstruccion datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

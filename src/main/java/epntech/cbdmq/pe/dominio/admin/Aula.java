@@ -3,13 +3,19 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 
 @Data
-@Entity(name = "gen_aula")
+@Entity
 @Table(name = "gen_aula")
+@SQLDelete(sql = "UPDATE {h-schema}gen_aula SET estado = 'ELIMINADO' WHERE cod_aula = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class Aula {
 
 	@Id
@@ -44,6 +50,9 @@ public class Aula {
 	
 	@Column(name = "sala_ocupada")
 	private String salaOcupada;
+	
+	@Column(name = "estado")
+	private String estado;
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_materia_aula",

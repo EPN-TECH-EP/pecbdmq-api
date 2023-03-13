@@ -52,6 +52,7 @@ public class SemestreResource {
 	public ResponseEntity<Semestre> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Semestre obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setSemestre(obj.getSemestre());
+			datosGuardados.setEstado(obj.getEstado());
 
 			Semestre datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

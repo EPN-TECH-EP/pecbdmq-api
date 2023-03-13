@@ -51,6 +51,7 @@ public class TipoProcedenciaResource {
 	public ResponseEntity<TipoProcedencia> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoProcedencia obj) {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setEstado(obj.getEstado());
 
 			TipoProcedencia datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

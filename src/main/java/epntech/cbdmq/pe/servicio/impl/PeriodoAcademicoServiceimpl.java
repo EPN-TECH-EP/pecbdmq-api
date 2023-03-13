@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoMSRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 
@@ -18,6 +20,8 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Autowired
 	private PeriodoAcademicoRepository repo;
+	@Autowired
+	private PeriodoAcademicoMSRepository repo1;
 	
 	@Override
 	public PeriodoAcademico save(PeriodoAcademico obj) throws DataException {
@@ -65,6 +69,12 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 				throw new DataException(DATOS_RELACIONADOS);
 			}
 		}
+	}
+
+	@Override
+	public List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico() {
+		// TODO Auto-generated method stub
+		return repo1.getPeriodoAcademico();
 	}
 
 	
