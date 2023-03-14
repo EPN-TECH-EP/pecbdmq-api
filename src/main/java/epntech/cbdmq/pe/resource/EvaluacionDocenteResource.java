@@ -51,8 +51,7 @@ public class EvaluacionDocenteResource {
 	    @PutMapping("/{id}")
 	    public ResponseEntity<EvaluacionDocente> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EvaluacionDocente obj) {
 	        return objServices.getById(codigo).map(datosGuardados -> {
-	            datosGuardados.setCod_evaluacion_docente(obj.getCod_evaluacion_docente());
-	            
+	            //datosGuardados.setCod_evaluacion_docente(obj.getCod_evaluacion_docente());
 	            datosGuardados.setPregunta(obj.getPregunta());
 	            datosGuardados.setEstado(obj.getEstado());
 	            EvaluacionDocente datosActualizados = objServices.update(datosGuardados);
