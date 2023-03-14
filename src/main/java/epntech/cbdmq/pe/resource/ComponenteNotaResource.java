@@ -63,7 +63,7 @@ public class ComponenteNotaResource {
     @PutMapping("/{id}")
     public ResponseEntity<ComponenteNota> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody ComponenteNota obj) {
         return objServices.getById(codigo).map(datosGuardados -> {
-            datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
+           // datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
             datosGuardados.setComponentenota(obj.getComponentenota());
             datosGuardados.setEstado(obj.getEstado());
             ComponenteNota datosActualizados = objServices.update(datosGuardados);
