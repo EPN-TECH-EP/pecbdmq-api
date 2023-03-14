@@ -105,20 +105,28 @@ public class UsuarioResource extends GestorExcepciones {
 		return new ResponseEntity<>(newUser, OK);
 	}
 
+//	@PostMapping("/actualizar")
+//	public ResponseEntity<Usuario> update(@RequestParam("currentUsername") String currentUsername,
+//			@RequestParam("firstName") String firstName,
+//			@RequestParam("lastName") String lastName,
+//			@RequestParam("username") String username,
+//			@RequestParam("email") String email,
+//			@RequestParam("role") String role,
+//			@RequestParam("isActive") String isActive,
+//			@RequestParam("isNonLocked") String isNonLocked,
+//			@RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
+//			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException,
+//			NoEsArchivoImagenExcepcion {
+//		Usuario updatedUser = usuarioService.actualizarUsuario(currentUsername, firstName, lastName, username, email,
+//				role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
+//		return new ResponseEntity<>(updatedUser, OK);
+//	}
+	
 	@PostMapping("/actualizar")
-	public ResponseEntity<Usuario> update(@RequestParam("currentUsername") String currentUsername,
-			@RequestParam("firstName") String firstName,
-			@RequestParam("lastName") String lastName,
-			@RequestParam("username") String username,
-			@RequestParam("email") String email,
-			@RequestParam("role") String role,
-			@RequestParam("isActive") String isActive,
-			@RequestParam("isNonLocked") String isNonLocked,
-			@RequestParam(value = "profileImage", required = false) MultipartFile profileImage)
+	public ResponseEntity<Usuario> update(@RequestBody Usuario usuario)
 			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException,
 			NoEsArchivoImagenExcepcion {
-		Usuario updatedUser = usuarioService.actualizarUsuario(currentUsername, firstName, lastName, username, email,
-				role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
+		Usuario updatedUser = usuarioService.actualizarUsuario(usuario);
 		return new ResponseEntity<>(updatedUser, OK);
 	}
 
@@ -142,7 +150,7 @@ public class UsuarioResource extends GestorExcepciones {
 	}
 
 	@DeleteMapping("/eliminar/{username}")
-	@PreAuthorize("hasAnyAuthority('user:delete')")
+	//@PreAuthorize("hasAnyAuthority('user:delete')")
 	public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
 		usuarioService.eliminarUsuario(username);
 		return response(OK, USUARIO_ELIMINADO_EXITO);

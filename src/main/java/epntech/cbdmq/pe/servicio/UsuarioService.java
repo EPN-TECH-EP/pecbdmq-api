@@ -17,7 +17,8 @@ import jakarta.mail.MessagingException;
 
 public interface UsuarioService {
 
-	//Usuario registrar(String firstName, String lastName, String username, String email)
+	// Usuario registrar(String firstName, String lastName, String username, String
+	// email)
 	Usuario registrar(Usuario usuario)
 			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException;
 
@@ -25,14 +26,15 @@ public interface UsuarioService {
 
 	Usuario findUserByUsername(String username);
 
-	//Usuario findUserByEmail(String email);
+	// Usuario findUserByEmail(String email);
 
-	Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role, boolean isNonLocked,
-			boolean isActive, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
+	Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role,
+			boolean isNonLocked,
+			boolean isActive, MultipartFile profileImage)
+			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
 			EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion;
 
-	Usuario actualizarUsuario(String currentUsername, String newFirstName, String newLastName, String newUsername,
-			String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage)
+	Usuario actualizarUsuario(Usuario usuario)
 			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException,
 			NoEsArchivoImagenExcepcion;
 
@@ -42,8 +44,8 @@ public interface UsuarioService {
 
 	Usuario actualizarImagenPerfil(String username, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
 			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion;
-	
+
 	void guardarArchivo(String nombreArchivo, MultipartFile archivo) throws IOException, ArchivoMuyGrandeExcepcion;
-	
+
 	long tamañoMáximoArchivo();
 }
