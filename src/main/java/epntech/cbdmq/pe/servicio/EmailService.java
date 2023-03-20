@@ -5,12 +5,15 @@ import static epntech.cbdmq.pe.constante.EmailConst.DEFAULT_PORT;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SMTP_SERVER;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT1;
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT2;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_AUTH;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_HOST;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_PORT;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_ENABLE;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_REQUIRED;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -118,6 +121,27 @@ public class EmailService {
 	public void validateCodeEmail(String firstName, String codigo, String email) throws MessagingException {
 		JavaMailSender emailSender = this.getJavaMailSender();
 		SimpleMailMessage message = this.validateEmail(firstName, codigo, email);
+
+		emailSender.send(message);
+
+	}
+	
+	private SimpleMailMessage /* Message */ notificacionSendEmail(Date fecha, String mensaje, String email)
+			throws MessagingException {
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom(USERNAME);
+		message.setTo(email);
+		message.setSubject(EMAIL_SUBJECT2);
+		message.setText("Para el dia " + fecha + ", \n \n " + mensaje
+				+ "\n \n Plataforma educativa - CBDMQ");
+
+		return message;
+	}
+	
+	public void notificacionEmail(Date fecha, String mensaje, String email) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		SimpleMailMessage message = this.notificacionSendEmail(fecha, mensaje, email);
 
 		emailSender.send(message);
 
