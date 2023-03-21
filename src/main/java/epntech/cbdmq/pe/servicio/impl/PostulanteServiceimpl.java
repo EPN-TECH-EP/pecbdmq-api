@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.admin.PostulanteDatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.PostulanteDPRepository;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteRepository;
 import epntech.cbdmq.pe.servicio.PostulanteService;
 
@@ -16,6 +18,9 @@ public class PostulanteServiceimpl implements PostulanteService {
 
 	@Autowired
 	private PostulanteRepository repo;
+	
+	@Autowired
+	private PostulanteDPRepository repo1;
 	
 	@Override
 	public Postulante save(Postulante obj, String proceso) {
@@ -42,5 +47,8 @@ public class PostulanteServiceimpl implements PostulanteService {
 		repo.deleteById(id);
 	}
 
+	public Optional<PostulanteDatoPersonal> getByCedula(String cedula){
+		return repo1.getByCedula(cedula);
+	}
 	
 }

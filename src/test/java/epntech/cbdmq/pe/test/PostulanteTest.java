@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.repositorio.admin.PostulanteDPRepository;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteRepository;
 
 
@@ -31,6 +32,9 @@ public class PostulanteTest {
 
 	@Autowired
 	private PostulanteRepository repo;
+	
+	@Autowired
+	private PostulanteDPRepository repo1;
 	
 	@Test
 	@Order(1)
@@ -62,56 +66,11 @@ public class PostulanteTest {
 
 		repo.save(obj);
 
-		Optional<?> obj1 = repo.getByCedula("123");
+		Optional<?> obj1 = repo1.getByCedula("123");
 
 		System.out.println("obj: " + obj1.get().getClass());
 		//assertThat(obj1.get().getClass().get).isEqualTo("123");
 	}
 
-	/*@Test
-	@Order(3)
-	public void testActualizar() {
-		String nombre = "Test";
-
-		EstacionTrabajo obj = new EstacionTrabajo();
-		obj.setNombre(nombre);
-		obj.setEstado("activo");
-
-		repo.save(obj);
-
-		Optional<EstacionTrabajo> obj1 = repo.findByNombre("Test");
-
-		String datoNuevo = "NombreNuevo";
-
-		obj.setNombre(datoNuevo);
-		obj.setCodigo(obj1.get().getCodigo());
-
-		Optional<EstacionTrabajo> objModificado = repo.findByNombre(datoNuevo);
-		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
-	}
-
-	@Test
-	@Order(4)
-	public void testListar() {
-		List<EstacionTrabajo> lista = repo.findAll();
-		assertThat(lista).size().isGreaterThan(0);
-	}
-
-	@Test
-	@Order(5)
-	public void testEliminar() {
-		String nombre = "Test";
-
-		EstacionTrabajo obj = new EstacionTrabajo();
-		obj.setNombre(nombre);
-		obj.setEstado("activo");
-		repo.save(obj);
-
-		int id = repo.findByNombre("Test").get().getCodigo();
-		repo.deleteById(id);
-
-		boolean noExiste = repo.findById(id).isPresent();
-
-		assertFalse(noExiste);
-	}*/
+	
 }
