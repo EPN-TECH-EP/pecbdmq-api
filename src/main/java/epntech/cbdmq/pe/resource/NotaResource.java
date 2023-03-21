@@ -52,7 +52,7 @@ public class NotaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Notas> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Notas obj) throws DataException{
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCod_nota_formacion(obj.getCod_nota_formacion());
+			
 			datosGuardados.setCod_instructor(obj.getCod_instructor());
 			datosGuardados.setCod_curso_especializacion(obj.getCod_curso_especializacion());
 			datosGuardados.setCod_ponderacion(obj.getCod_ponderacion());
@@ -62,7 +62,7 @@ public class NotaResource {
 			datosGuardados.setNotafinalformacion(obj.getNotafinalformacion());
 			datosGuardados.setFechacreanota(obj.getFechacreanota());
 			datosGuardados.setHoracreanota(obj.getHoracreanota());			
-			datosGuardados.setUsuariomodnota(obj.getUsuariocreanota());
+			datosGuardados.setUsuariomodnota(obj.getUsuariomodnota());
 			datosGuardados.setFechamodnota(obj.getFechamodnota());
 			datosGuardados.setHoramodnota(obj.getHoramodnota());
 			datosGuardados.setEstado(obj.getEstado());

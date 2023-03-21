@@ -54,7 +54,7 @@ public class ResultadoPrueba {
 	@Column(name = "resultado")
 	private Integer resultado;
 	@Column(name = "cumple_prueba")
-	private String cumpleprueba;
+	private String cumpleprueba; 
 	@Column(name = "estado")
 	private String estado;
 	
