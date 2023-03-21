@@ -7,5 +7,4 @@ public class PecbAppTests {
 	@Test
 	void contextLoads() {
 	}
-	
 }
