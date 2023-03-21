@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,35 +17,32 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
-
-
-import epntech.cbdmq.pe.repositorio.admin.TipoSancionRepository;
+import epntech.cbdmq.pe.dominio.admin.TipoBaja;
+import epntech.cbdmq.pe.dominio.admin.TipoNota;
+import epntech.cbdmq.pe.dominio.admin.TipoPrueba;
+import epntech.cbdmq.pe.repositorio.admin.TipoNotaRepository;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class TipoSancionTest {
-
-	@Autowired
-	private TipoSancionRepository repo;
+public class TipoNotaTest {
 	
+	@Autowired
+	private TipoNotaRepository repo;
+
 	@Test
 	@Order(1)
 	void testGuardar() {
-		
-        
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
-		
-		obj.setSancion("texto");
+	 
+		TipoNota obj = new TipoNota();
+		obj.setCod_tipo_nota(1);		
+		obj.setNota("texto");
 		obj.setEstado("activo");
 
-		TipoSancion datos = repo.save(obj);
+		TipoNota datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getSancion());
+		assertEquals("texto", datos.getNota());
 		
 		assertEquals("activo", datos.getEstado());
 	}
@@ -55,71 +51,67 @@ public class TipoSancionTest {
 	@Order(2)
 	public void testBuscar() {
 		
-
-        
-        TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
 		
-		obj.setSancion("texto");
+		TipoNota obj = new TipoNota();
+		obj.setCod_tipo_nota(1);		
+		obj.setNota("texto");
 		obj.setEstado("activo");
+
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("texto");
+		Optional<TipoNota> obj1 = repo.findByNota("texto");
 
-		assertThat(obj1.get().getSancion()).isEqualTo("texto");
+		assertThat(obj1.get().getNota()).isEqualTo("texto");
 	}
+	
 	
 	@Test
 	@Order(3)
 	public void testActualizar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("NombreNuevo");
+		TipoNota obj = new TipoNota();
+		obj.setCod_tipo_nota(1);		
+		obj.setNota("texto");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("NombreNuevo");
+		Optional<TipoNota> obj1 = repo.findByNota("texto");
 
-		String datoNuevo = "NombreNuevo";
+		String datoNuevo = "texto";
 
-		obj.setSancion(datoNuevo);
-		obj.setCod_tipo_sancion(obj1.get().getCod_tipo_sancion());
+		obj.setNota(datoNuevo);
+		obj.setCod_tipo_nota(obj1.get().getCod_tipo_nota());
 
-		Optional<TipoSancion> objModificado = repo.findBysancion("NombreNuevo");
-		assertThat(objModificado.get().getSancion()).isEqualTo(datoNuevo);
+		Optional<TipoNota> objModificado = repo.findByNota("texto");
+		assertThat(objModificado.get().getNota()).isEqualTo(datoNuevo);
 	}
-	
-	@Test
 	@Order(4)
 	public void testListar() {
-		List<TipoSancion> lista = repo.findAll();
+		List<TipoNota> lista = repo.findAll();
 		assertThat(lista).size().isGreaterThan(0);
 	}
-	
 	
 	@Test
 	@Order(5)
 	public void testEliminar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("texto");
+		TipoNota obj = new TipoNota();
+		obj.setCod_tipo_nota(1);		
+		obj.setNota("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findBysancion("texto").get().getCod_tipo_sancion();
+		int id = repo.findByNota("texto").get().getCod_tipo_nota();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();
 
 		assertFalse(noExiste);
 	}
-	
 }

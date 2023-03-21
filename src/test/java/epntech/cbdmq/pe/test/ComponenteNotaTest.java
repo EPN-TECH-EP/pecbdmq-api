@@ -18,103 +18,100 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
 
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
+import epntech.cbdmq.pe.repositorio.admin.ComponenteNotaRepository;
 
-
-import epntech.cbdmq.pe.repositorio.admin.TipoSancionRepository;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class TipoSancionTest {
+public class ComponenteNotaTest {
 
+	
 	@Autowired
-	private TipoSancionRepository repo;
+	private ComponenteNotaRepository repo;
 	
 	@Test
 	@Order(1)
 	void testGuardar() {
-		
-        
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
-		
-		obj.setSancion("texto");
+	 
+		ComponenteNota obj = new ComponenteNota();
+		obj.setCod_componente_nota(2);		
+		obj.setComponentenota("texto");
 		obj.setEstado("activo");
 
-		TipoSancion datos = repo.save(obj);
+		ComponenteNota datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getSancion());
+		assertEquals("texto", datos.getComponentenota());
 		
 		assertEquals("activo", datos.getEstado());
 	}
+
 	
 	@Test
 	@Order(2)
 	public void testBuscar() {
 		
-
-        
-        TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
 		
-		obj.setSancion("texto");
+		ComponenteNota obj = new ComponenteNota();
+		obj.setCod_componente_nota(2);		
+		obj.setComponentenota("texto");
 		obj.setEstado("activo");
+
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("texto");
+		Optional<ComponenteNota> obj1 = repo.findByComponentenota("texto");
 
-		assertThat(obj1.get().getSancion()).isEqualTo("texto");
+		assertThat(obj1.get().getComponentenota()).isEqualTo("texto");
 	}
-	
+
 	@Test
 	@Order(3)
 	public void testActualizar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("NombreNuevo");
+		ComponenteNota obj = new ComponenteNota();
+		obj.setCod_componente_nota(2);		
+		obj.setComponentenota("texto");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("NombreNuevo");
+		Optional<ComponenteNota> obj1 = repo.findByComponentenota("texto");
 
-		String datoNuevo = "NombreNuevo";
+		String datoNuevo = "texto";
 
-		obj.setSancion(datoNuevo);
-		obj.setCod_tipo_sancion(obj1.get().getCod_tipo_sancion());
+		obj.setComponentenota(datoNuevo);
+		obj.setCod_componente_nota(obj1.get().getCod_componente_nota());
 
-		Optional<TipoSancion> objModificado = repo.findBysancion("NombreNuevo");
-		assertThat(objModificado.get().getSancion()).isEqualTo(datoNuevo);
+		Optional<ComponenteNota> objModificado = repo.findByComponentenota("texto");
+		assertThat(objModificado.get().getComponentenota()).isEqualTo(datoNuevo);
 	}
 	
 	@Test
 	@Order(4)
 	public void testListar() {
-		List<TipoSancion> lista = repo.findAll();
+		List<ComponenteNota> lista = repo.findAll();
 		assertThat(lista).size().isGreaterThan(0);
 	}
-	
 	
 	@Test
 	@Order(5)
 	public void testEliminar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("texto");
+		ComponenteNota obj = new ComponenteNota();
+		obj.setCod_componente_nota(2);		
+		obj.setComponentenota("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findBysancion("texto").get().getCod_tipo_sancion();
+		int id = repo.findByComponentenota("texto").get().getCod_componente_nota();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

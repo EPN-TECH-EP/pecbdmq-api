@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,56 +17,54 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import epntech.cbdmq.pe.dominio.admin.Apelacion;
 
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
-
-
-import epntech.cbdmq.pe.repositorio.admin.TipoSancionRepository;
+import epntech.cbdmq.pe.repositorio.admin.ApelacionRepository;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class TipoSancionTest {
+public class ApelacionTest {
 
 	@Autowired
-	private TipoSancionRepository repo;
+	private ApelacionRepository repo;
 	
 	@Test
 	@Order(1)
 	void testGuardar() {
-		
-        
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
-		
-		obj.setSancion("texto");
+	 
+		Apelacion obj = new Apelacion();
+		obj.setCod_apelacion(5);		
+		obj.setObservacionaspirante("texto");
 		obj.setEstado("activo");
 
-		TipoSancion datos = repo.save(obj);
+		Apelacion datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getSancion());
+		assertEquals("texto", datos.getObservacionaspirante());
 		
 		assertEquals("activo", datos.getEstado());
 	}
+	
+	
 	
 	@Test
 	@Order(2)
 	public void testBuscar() {
 		
-
-        
-        TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
 		
-		obj.setSancion("texto");
+		Apelacion obj = new Apelacion();
+		obj.setCod_apelacion(5);		
+		obj.setObservacionaspirante("texto");
+		obj.setAprobacion("texto");
 		obj.setEstado("activo");
+
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("texto");
+		Optional<Apelacion> obj1 = repo.findByaprobacion("texto");
 
-		assertThat(obj1.get().getSancion()).isEqualTo("texto");
+		assertThat(obj1.get().getAprobacion()).isEqualTo("texto");
 	}
 	
 	@Test
@@ -75,51 +72,50 @@ public class TipoSancionTest {
 	public void testActualizar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("NombreNuevo");
+		Apelacion obj = new Apelacion();
+		obj.setCod_apelacion(5);		
+		obj.setObservacionaspirante("texto");
+		obj.setAprobacion("texto");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("NombreNuevo");
+		Optional<Apelacion> obj1 = repo.findByaprobacion("texto");
 
-		String datoNuevo = "NombreNuevo";
+		String datoNuevo = "texto";
 
-		obj.setSancion(datoNuevo);
-		obj.setCod_tipo_sancion(obj1.get().getCod_tipo_sancion());
+		obj.setAprobacion(datoNuevo);
+		obj.setCod_apelacion(obj1.get().getCod_apelacion());
 
-		Optional<TipoSancion> objModificado = repo.findBysancion("NombreNuevo");
-		assertThat(objModificado.get().getSancion()).isEqualTo(datoNuevo);
+		Optional<Apelacion> objModificado = repo.findByaprobacion("texto");
+		assertThat(objModificado.get().getAprobacion()).isEqualTo(datoNuevo);
 	}
-	
 	@Test
 	@Order(4)
 	public void testListar() {
-		List<TipoSancion> lista = repo.findAll();
+		List<Apelacion> lista = repo.findAll();
 		assertThat(lista).size().isGreaterThan(0);
 	}
-	
 	
 	@Test
 	@Order(5)
 	public void testEliminar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("texto");
+		Apelacion obj = new Apelacion();
+		obj.setCod_apelacion(5);		
+		obj.setObservacionaspirante("texto");
+		obj.setAprobacion("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findBysancion("texto").get().getCod_tipo_sancion();
+		int id = repo.findByaprobacion("texto").get().getCod_apelacion();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();
 
 		assertFalse(noExiste);
 	}
-	
 }

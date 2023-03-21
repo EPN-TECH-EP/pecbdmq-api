@@ -21,7 +21,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
+import epntech.cbdmq.pe.dominio.admin.Modulo;
 import epntech.cbdmq.pe.dominio.admin.Notas;
 import epntech.cbdmq.pe.repositorio.admin.NotaRepository;
 
@@ -108,6 +108,25 @@ public class NotaTest {
 		assertThat(lista).size().isGreaterThan(0);
 	}
 	
-	
+	@Test
+	@Order(5)
+	public void testEliminar() {
+		String nombre = "Test";
+
+		Notas obj = new Notas();
+		obj.setCod_nota_formacion(1);
+		obj.setUsuariocreanota("texto");
+		obj.setUsuariomodnota("amigo");
+		obj.setEstado("activo");
+
+		repo.save(obj);
+
+		int id = repo.findByusuariocreanota("texto").get().getCod_nota_formacion();
+		repo.deleteById(id);
+
+		boolean noExiste = repo.findById(id).isPresent();
+
+		assertFalse(noExiste);
+	}
 	
 }

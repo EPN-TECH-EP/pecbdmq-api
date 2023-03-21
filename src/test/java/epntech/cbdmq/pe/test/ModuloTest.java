@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -18,35 +17,33 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
+import epntech.cbdmq.pe.dominio.admin.Modulo;
+import epntech.cbdmq.pe.dominio.admin.TipoPrueba;
 import epntech.cbdmq.pe.dominio.admin.TipoSancion;
+import epntech.cbdmq.pe.repositorio.admin.ModuloRepository;
 
-
-import epntech.cbdmq.pe.repositorio.admin.TipoSancionRepository;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class TipoSancionTest {
+public class ModuloTest {
 
 	@Autowired
-	private TipoSancionRepository repo;
+	private  ModuloRepository repo;
 	
 	@Test
 	@Order(1)
 	void testGuardar() {
-		
-        
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
-		
-		obj.setSancion("texto");
+	 
+		Modulo obj = new Modulo();
+		obj.setCod_modulo(1);		
+		obj.setDescripcion("texto");
 		obj.setEstado("activo");
 
-		TipoSancion datos = repo.save(obj);
+		Modulo datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getSancion());
+		assertEquals("texto", datos.getDescripcion());
 		
 		assertEquals("activo", datos.getEstado());
 	}
@@ -55,19 +52,19 @@ public class TipoSancionTest {
 	@Order(2)
 	public void testBuscar() {
 		
-
-        
-        TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
 		
-		obj.setSancion("texto");
+		Modulo obj = new Modulo();
+		obj.setCod_modulo(1);	
+		obj.setEtiqueta("texto");
+		obj.setDescripcion("texto");
 		obj.setEstado("activo");
+
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("texto");
+		Optional<Modulo> obj1 = repo.findByEtiqueta("texto");
 
-		assertThat(obj1.get().getSancion()).isEqualTo("texto");
+		assertThat(obj1.get().getDescripcion()).isEqualTo("texto");
 	}
 	
 	@Test
@@ -75,29 +72,30 @@ public class TipoSancionTest {
 	public void testActualizar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("NombreNuevo");
+		Modulo obj = new Modulo();
+		obj.setCod_modulo(1);	
+		obj.setEtiqueta("texto");
+		obj.setDescripcion("texto");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("NombreNuevo");
+		Optional<Modulo> obj1 = repo.findByEtiqueta("texto");
 
-		String datoNuevo = "NombreNuevo";
+		String datoNuevo = "texto";
 
-		obj.setSancion(datoNuevo);
-		obj.setCod_tipo_sancion(obj1.get().getCod_tipo_sancion());
+		obj.setEtiqueta(datoNuevo);
+		obj.setCod_modulo(obj1.get().getCod_modulo());
 
-		Optional<TipoSancion> objModificado = repo.findBysancion("NombreNuevo");
-		assertThat(objModificado.get().getSancion()).isEqualTo(datoNuevo);
+		Optional<Modulo> objModificado = repo.findByEtiqueta("texto");
+		assertThat(objModificado.get().getEtiqueta()).isEqualTo(datoNuevo);
 	}
 	
 	@Test
 	@Order(4)
 	public void testListar() {
-		List<TipoSancion> lista = repo.findAll();
+		List<Modulo> lista = repo.findAll();
 		assertThat(lista).size().isGreaterThan(0);
 	}
 	
@@ -107,19 +105,19 @@ public class TipoSancionTest {
 	public void testEliminar() {
 		String nombre = "Test";
 
-		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
-		obj.setSancion("texto");
+		Modulo obj = new Modulo();
+		obj.setCod_modulo(1);	
+		obj.setEtiqueta("texto");
+		obj.setDescripcion("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findBysancion("texto").get().getCod_tipo_sancion();
+		int id = repo.findByEtiqueta("texto").get().getCod_modulo();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();
 
 		assertFalse(noExiste);
 	}
-	
 }
