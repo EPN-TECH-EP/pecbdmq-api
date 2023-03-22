@@ -1,14 +1,19 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.servicio.ProvinciaService;
+import epntech.cbdmq.pe.dominio.admin.Excel;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.helper.ExcelHelper;
+import epntech.cbdmq.pe.helper.ProvinciaHelper;
 import epntech.cbdmq.pe.repositorio.admin.ProvinciaRepository;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
@@ -64,5 +69,15 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 			}
 		}
 	}
+	
+	public void saveExcel(MultipartFile file) {
+	    try {
+	      List<Provincia> datos = ProvinciaHelper.excelToDatos(file.getInputStream());
+	     
+	      repo.saveAll(datos);
+	    } catch (IOException e) {
+	      throw new RuntimeException("Error al guardar los datos de excel: " + e.getMessage());
+	    }
+	  }
 
 }
