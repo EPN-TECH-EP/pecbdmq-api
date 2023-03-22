@@ -1,9 +1,9 @@
 package epntech.cbdmq.pe.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +18,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import epntech.cbdmq.pe.dominio.admin.Modulo;
-import epntech.cbdmq.pe.dominio.admin.TipoPrueba;
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
 import epntech.cbdmq.pe.repositorio.admin.ModuloRepository;
 
 
@@ -70,7 +68,6 @@ public class ModuloTest {
 	@Test
 	@Order(3)
 	public void testActualizar() {
-		String nombre = "Test";
 
 		Modulo obj = new Modulo();
 		obj.setCod_modulo(1);	
@@ -103,7 +100,6 @@ public class ModuloTest {
 	@Test
 	@Order(5)
 	public void testEliminar() {
-		String nombre = "Test";
 
 		Modulo obj = new Modulo();
 		obj.setCod_modulo(1);	
