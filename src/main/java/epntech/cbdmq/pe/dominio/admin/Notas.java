@@ -1,7 +1,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.sql.Time;
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -45,13 +46,13 @@ public class Notas {
 	@Column(name = "usuario_crea_nota")
 	private String usuariocreanota;
 	@Column(name = "fecha_crea_nota")
-	private LocalDateTime fechacreanota;
+	private Date fechacreanota;
 	@Column(name = "hora_crea_nota")
 	private Time horacreanota;
 	@Column(name = "usuario_mod_nota")
 	private String usuariomodnota;
 	@Column(name = "fecha_mod_nota")
-	private LocalDateTime fechamodnota;
+	private Date fechamodnota;
 	@Column(name = "hora_mod_nota")
 	private Time horamodnota;
 	@Column(name = "estado")
