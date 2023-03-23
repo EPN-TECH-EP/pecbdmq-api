@@ -221,7 +221,7 @@ public class UsuarioResource extends GestorExcepciones {
 		}
 	}
 
-	@PostMapping("/maxArchivo")
+	@GetMapping("/maxArchivo")
 	public long tamañoMáximoArchivo() {
 
 		try {

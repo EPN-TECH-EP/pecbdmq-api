@@ -26,5 +26,8 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
     )
     Page<DatoPersonal> searchNativo(@Param("filtro") String filtro, Pageable pageable);
 	
+	@EntityGraph(attributePaths = "documentos")
+	List<DatoPersonal> findAll();
+	
 	
 }
