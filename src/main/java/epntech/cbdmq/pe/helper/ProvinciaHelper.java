@@ -19,101 +19,101 @@ import epntech.cbdmq.pe.dominio.admin.Excel;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
 
 public class ProvinciaHelper {
-  public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-  static String[] HEADERs = { "ID", "NOMBRE", "APELLIDO", "CEDULA" };
-  static String SHEET = "Hoja1";
+	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+	static String[] HEADERs = { "ID", "NOMBRE", "APELLIDO", "CEDULA" };
+	static String SHEET = "Hoja1";
 
-  public static boolean hasExcelFormat(MultipartFile file) {
+	public static boolean hasExcelFormat(MultipartFile file) {
 
-    if (!TYPE.equals(file.getContentType())) {
-      return false;
-    }
+		if (!TYPE.equals(file.getContentType())) {
+			return false;
+		}
 
-    return true;
-  }
+		return true;
+	}
 
-  public static ByteArrayInputStream datosToExcel(List<Excel> datos) {
+	public static ByteArrayInputStream datosToExcel(List<Excel> datos) {
 
-    try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-      Sheet sheet = workbook.createSheet(SHEET);
+		try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+			Sheet sheet = workbook.createSheet(SHEET);
 
-      // Header
-      Row headerRow = sheet.createRow(0);
+			// Header
+			Row headerRow = sheet.createRow(0);
 
-      for (int col = 0; col < HEADERs.length; col++) {
-        Cell cell = headerRow.createCell(col);
-        cell.setCellValue(HEADERs[col]);
-      }
+			for (int col = 0; col < HEADERs.length; col++) {
+				Cell cell = headerRow.createCell(col);
+				cell.setCellValue(HEADERs[col]);
+			}
 
-      int rowIdx = 1;
-      for (Excel dato : datos) {
-        Row row = sheet.createRow(rowIdx++);
+			int rowIdx = 1;
+			for (Excel dato : datos) {
+				Row row = sheet.createRow(rowIdx++);
 
-        row.createCell(0).setCellValue(dato.getId());
-        row.createCell(1).setCellValue(dato.getNombre());
-        row.createCell(2).setCellValue(dato.getApellido());
-        row.createCell(3).setCellValue(dato.getCedula());
-      }
+				row.createCell(0).setCellValue(dato.getId());
+				row.createCell(1).setCellValue(dato.getNombre());
+				row.createCell(2).setCellValue(dato.getApellido());
+				row.createCell(3).setCellValue(dato.getCedula());
+			}
 
-      workbook.write(out);
-      return new ByteArrayInputStream(out.toByteArray());
-    } catch (IOException e) {
-      throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
-    }
-  }
+			workbook.write(out);
+			return new ByteArrayInputStream(out.toByteArray());
+		} catch (IOException e) {
+			throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
+		}
+	}
 
-  public static List<Provincia> excelToDatos(InputStream is) {
-    try {
-      Workbook workbook = new XSSFWorkbook(is);
+	public static List<Provincia> excelToDatos(InputStream is) {
+		try {
+			Workbook workbook = new XSSFWorkbook(is);
 
-      Sheet sheet = workbook.getSheet(SHEET);
-      Iterator<Row> rows = sheet.iterator();
+			Sheet sheet = workbook.getSheet(SHEET);
+			Iterator<Row> rows = sheet.iterator();
 
-      List<Provincia> datos = new ArrayList<Provincia>();
+			List<Provincia> datos = new ArrayList<Provincia>();
 
-      int rowNumber = 0;
-      while (rows.hasNext()) {
-        Row currentRow = rows.next();
+			int rowNumber = 0;
+			while (rows.hasNext()) {
+				Row currentRow = rows.next();
 
-        // skip header
-        if (rowNumber == 0) {
-          rowNumber++;
-          continue;
-        }
+				// skip header
+				if (rowNumber == 0) {
+					rowNumber++;
+					continue;
+				}
 
-        Iterator<Cell> cellsInRow = currentRow.iterator();
+				Iterator<Cell> cellsInRow = currentRow.iterator();
 
-        Provincia dato = new Provincia();
+				Provincia dato = new Provincia();
 
-        int cellIdx = 0;
-        while (cellsInRow.hasNext()) {
-          Cell currentCell = cellsInRow.next();
-          
-          switch (cellIdx) {
+				int cellIdx = 0;
+				while (cellsInRow.hasNext()) {
+					Cell currentCell = cellsInRow.next();
 
-          case 0:
-            dato.setNombre(currentCell.getStringCellValue());
-            break;
+					switch (cellIdx) {
 
-          case 1:
-            dato.setEstado(currentCell.getStringCellValue());
-            break;
+					case 0:
+						dato.setNombre(currentCell.getStringCellValue());
+						break;
 
-          default:
-            break;
-          }
+					case 1:
+						dato.setEstado(currentCell.getStringCellValue());
+						break;
 
-          cellIdx++;
-        }
+					default:
+						break;
+					}
 
-        datos.add(dato);
-      }
+					cellIdx++;
+				}
 
-      workbook.close();
+				datos.add(dato);
+			}
 
-      return datos;
-    } catch (IOException e) {
-      throw new RuntimeException("No se puede analizar el archivo de Excel: " + e.getMessage());
-    }
-  }
+			workbook.close();
+
+			return datos;
+		} catch (IOException e) {
+			throw new RuntimeException("No se puede analizar el archivo de Excel: " + e.getMessage());
+		}
+	}
 }
