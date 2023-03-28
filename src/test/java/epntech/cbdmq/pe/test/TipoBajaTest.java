@@ -1,9 +1,13 @@
 package epntech.cbdmq.pe.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +23,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
 import epntech.cbdmq.pe.dominio.admin.TipoBaja;
-import epntech.cbdmq.pe.dominio.admin.TipoPrueba;
+
 import epntech.cbdmq.pe.repositorio.admin.TipoBajaRepository;
 
 

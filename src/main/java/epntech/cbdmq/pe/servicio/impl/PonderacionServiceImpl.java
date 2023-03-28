@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.EspCurso;
 import epntech.cbdmq.pe.dominio.admin.Ponderacion;
+import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-
+import epntech.cbdmq.pe.repositorio.admin.PonderacionModuloRepository;
 import epntech.cbdmq.pe.repositorio.admin.PonderacionRepository;
 import epntech.cbdmq.pe.servicio.PonderacionService;
 
@@ -21,17 +22,12 @@ public class PonderacionServiceImpl implements PonderacionService {
 
 	@Autowired
 	private PonderacionRepository repo;
+	@Autowired
+	private PonderacionModuloRepository repo1;
 	
 	@Override
 	public Ponderacion save(Ponderacion obj) throws DataException {
-		if (obj.getTiponotaponderacion().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		// Optional<EspCurso> objGuardado =
-		// repo.findBynombrecursoespecializacion(obj.getNombrecursoespecializacion());
-		Optional<Ponderacion> objGuardado = repo.findByTiponotaponderacion(obj.getTiponotaponderacion());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
+		
 		return repo.save(obj);
 	}
 
@@ -49,12 +45,7 @@ public class PonderacionServiceImpl implements PonderacionService {
 
 	@Override
 	public Ponderacion update(Ponderacion objActualizado) throws DataException {
-		if (objActualizado.getTiponotaponderacion().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<Ponderacion> objGuardado = repo.findByTiponotaponderacion(objActualizado.getTiponotaponderacion());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
+		
 		return repo.save(objActualizado);
 	}
 
@@ -62,6 +53,12 @@ public class PonderacionServiceImpl implements PonderacionService {
 	public void delete(Integer codigo) {
 		// TODO Auto-generated method stub
 		repo.deleteById(codigo);
+	}
+
+	@Override
+	public List<PonderacionModulos> getPonderacionModulos() {
+		// TODO Auto-generated method stub
+		return repo1.getPonderacionModulos();
 	}
 
 }

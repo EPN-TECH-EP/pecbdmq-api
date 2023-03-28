@@ -8,6 +8,6 @@ import epntech.cbdmq.pe.dominio.admin.Ponderacion;
 
 public interface PonderacionRepository extends JpaRepository<Ponderacion, Integer> {
 	
-	Optional<Ponderacion> findByTiponotaponderacion(String tiponotaponderacion);
+	
 
 }
