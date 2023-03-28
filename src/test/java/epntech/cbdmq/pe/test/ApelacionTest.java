@@ -1,9 +1,13 @@
 package epntech.cbdmq.pe.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 import java.util.List;
@@ -33,12 +37,12 @@ public class ApelacionTest {
 	@Order(1)
 	void testGuardar() {
 	 
-		Apelacion obj = new Apelacion();
-		obj.setCod_apelacion(5);		
-		obj.setObservacionaspirante("texto");
-		obj.setEstado("activo");
+		Apelacion apelacion = new Apelacion();
+		apelacion.setCod_apelacion(5);		
+		apelacion.setObservacionaspirante("texto");
+		apelacion.setEstado("activo");
 
-		Apelacion datos = repo.save(obj);
+		Apelacion datos = repo.save(apelacion);
 		assertNotNull(datos);
 
 		assertEquals("texto", datos.getObservacionaspirante());
