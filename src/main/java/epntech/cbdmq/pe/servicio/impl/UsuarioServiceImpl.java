@@ -191,6 +191,11 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 //		currentUser.setNotLocked(isNonLocked);
 		userRepository.save(currentUser);
 		// saveProfileImage(currentUser, profileImage);
+		
+		
+		//TODO: eliminar log
+		LOGGER.info("Actualizar usuario ejecutado");
+		
 		return currentUser;
 	}
 
