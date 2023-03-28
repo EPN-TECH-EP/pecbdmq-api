@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.dominio.admin.Ponderacion;
+import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 import epntech.cbdmq.pe.servicio.impl.PonderacionServiceImpl;
@@ -51,10 +53,13 @@ public class PonderacionResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Ponderacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Ponderacion obj) throws DataException{
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setComponentenotamateria(obj.getCod_ponderacion());
-			datosGuardados.setTiponotaponderacion(obj.getTiponotaponderacion());
+			datosGuardados.setCod_modulo(obj.getCod_modulo());
+			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
+			datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
+			datosGuardados.setCod_tipo_nota(obj.getCod_tipo_nota());
+			
 			datosGuardados.setPorcentajefinalponderacion(obj.getPorcentajefinalponderacion());
-			datosGuardados.setComponentenotamateria(obj.getComponentenotamateria());
+			
 			datosGuardados.setFechainiciovigencia(obj.getFechainiciovigencia());
 			datosGuardados.setFechainiciovigencia(obj.getFechafinvigencia());
 			datosGuardados.setEstado(obj.getEstado());
@@ -81,6 +86,11 @@ public class PonderacionResource {
 	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 	                message), httpStatus);
 	    }
+	 
+	 @GetMapping("/listartodo")
+		public List<PonderacionModulos> listarTodo() {
+			return objService.getPonderacionModulos();
+		}
 	
-	
+	 
 }

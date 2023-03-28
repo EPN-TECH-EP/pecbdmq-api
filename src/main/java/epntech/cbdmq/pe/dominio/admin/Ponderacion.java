@@ -26,20 +26,16 @@ public class Ponderacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_ponderacion")
 	private Integer cod_ponderacion;
-	/*@Column(name = "cod_modulo")
+	@Column(name = "cod_modulo")
 	private Integer cod_modulo;
 	@Column(name = "cod_periodo_academico")
 	private Integer cod_periodo_academico;
 	@Column(name = "cod_componente_nota")
 	private Integer cod_componente_nota;
 	@Column(name = "cod_tipo_nota")
-	private Integer cod_tipo_nota;*/
-	@Column(name = "tipo_nota_ponderacion")
-	private String tiponotaponderacion;
+	private Integer cod_tipo_nota;
 	@Column(name = "porcentaje_final_ponderacion")
 	private Integer porcentajefinalponderacion;
-	@Column(name = "componente_nota_materia")
-	private Integer componentenotamateria;
 	@Column(name = "porcentaje_nota_materia")
 	private Integer porcentajenotamateria;
 	@Column(name = "fecha_inicio_vigencia")
