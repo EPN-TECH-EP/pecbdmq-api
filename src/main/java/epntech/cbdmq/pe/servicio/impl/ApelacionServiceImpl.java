@@ -1,7 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 
-import static epntech.cbdmq.pe.constante.MensajesConst.APELACION_NO_EXITE;
+import static epntech.cbdmq.pe.constante.MensajesConst.APELACION_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.APELACION_CURSO;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ApelacionServiceImpl implements ApelacionService{
 	public Apelacion save(Apelacion obj) throws DataException {
 		// TODO Auto-generated method stub
 		if(obj.getAprobacion().trim().isEmpty())
-			throw new DataException(APELACION_NO_EXITE);
+			throw new DataException(APELACION_NO_EXISTE);
 		Optional<Apelacion> objGuardado = repo.findByaprobacion(obj.getAprobacion());
 		if (objGuardado.isPresent()) {
 			throw new DataException(APELACION_CURSO);

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +74,6 @@ public class ApelacionTest {
 	@Test
 	@Order(3)
 	public void testActualizar() {
-		String nombre = "Test";
 
 		Apelacion obj = new Apelacion();
 		obj.setCod_apelacion(5);		
@@ -104,7 +104,6 @@ public class ApelacionTest {
 	@Test
 	@Order(5)
 	public void testEliminar() {
-		String nombre = "Test";
 
 		Apelacion obj = new Apelacion();
 		obj.setCod_apelacion(5);		
