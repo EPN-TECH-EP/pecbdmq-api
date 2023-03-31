@@ -58,6 +58,8 @@ public class ConvocatoriaResource {
 			datosGuardados.setFechaFinConvocatoria(obj.getFechaFinConvocatoria());
 			datosGuardados.setHoraInicioConvocatoria(obj.getHoraInicioConvocatoria());
 			datosGuardados.setHoraFinConvocatoria(obj.getHoraFinConvocatoria());
+			datosGuardados.setCupoHombres(obj.getCupoHombres());
+			datosGuardados.setCupoMujeres(obj.getCupoMujeres());
 
 			Convocatoria datosActualizados = objService.updateData(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

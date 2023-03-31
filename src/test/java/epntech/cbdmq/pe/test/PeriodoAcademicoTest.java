@@ -40,8 +40,7 @@ public class PeriodoAcademicoTest {
         
         PeriodoAcademico obj = new PeriodoAcademico();
 		obj.setDescripcion("Test");
-		obj.setModulo(1);
-		obj.setSemestre(1);
+		obj.setModuloEstados(1);
 		obj.setFechaInicio(date);
 		obj.setEstado("activo");
 
@@ -49,7 +48,7 @@ public class PeriodoAcademicoTest {
 		assertNotNull(datos);
 
 		assertEquals("Test", datos.getDescripcion());
-		assertEquals(1, datos.getModulo());
+		assertEquals(1, datos.getModuloEstados());
 		assertEquals(date, datos.getFechaInicio());
 		assertEquals("activo", datos.getEstado());
 	}
@@ -61,8 +60,7 @@ public class PeriodoAcademicoTest {
 
 		PeriodoAcademico obj = new PeriodoAcademico();
 		obj.setDescripcion("Test");
-		obj.setModulo(1);
-		obj.setSemestre(1);
+		obj.setModuloEstados(1);
 		obj.setEstado("activo");
 
 		repo.save(obj);
@@ -79,8 +77,7 @@ public class PeriodoAcademicoTest {
 
 		PeriodoAcademico obj = new PeriodoAcademico();
 		obj.setDescripcion("Test");
-		obj.setModulo(1);
-		obj.setSemestre(1);
+		obj.setModuloEstados(1);
 		obj.setEstado("activo");
 
 		repo.save(obj);
@@ -110,8 +107,7 @@ public class PeriodoAcademicoTest {
 
 		PeriodoAcademico obj = new PeriodoAcademico();
 		obj.setDescripcion("Test");
-		obj.setModulo(1);
-		obj.setSemestre(1);
+		obj.setModuloEstados(1);
 		obj.setEstado("activo");
 		repo.save(obj);
 

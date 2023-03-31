@@ -71,10 +71,19 @@ public class Convocatoria {
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime horaFinConvocatoria;
 	
+	@Column(name = "codigo_unico_convocatoria")
+	private String codigoUnico;
+	
+	@Column(name = "cupo_hombres")
+	private Integer cupoHombres;
+	
+	@Column(name = "cupo_mujeres")
+	private Integer cupoMujeres;
+	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_convocatoria_documento",
             joinColumns = @JoinColumn(name = "cod_convocatoria"),
             inverseJoinColumns = @JoinColumn(name = "cod_documento")
     )
-	private List<ConvocatoriaDocumento> documentos = new ArrayList<>();
+	private List<Documento> documentos = new ArrayList<>();
 }
