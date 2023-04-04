@@ -28,10 +28,7 @@ public class Documento {
 	private String area;
 	
 	@Column(name = "autorizacion")
-	private String autorizacion;
-	
-	@Column(name = "cod_datos_personales")
-	private Integer codDatoPersonal;
+	private String autorizacion;	
 	
 	@Column(name = "cod_modulo")
 	private Integer codModulo;
