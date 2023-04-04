@@ -39,9 +39,9 @@ public class DocumentoTest {
         
         Documento obj = new Documento();
 		obj.setNombre("Test");
-		obj.setArea("Area");
+		
 		obj.setAutorizacion("Autorizacion");
-		obj.setCodModulo(1);
+		
 		obj.setDescripcion("test-abc");
 		obj.setNombre("Test");
 		obj.setRuta("c:\\documentos");
@@ -51,7 +51,7 @@ public class DocumentoTest {
 		assertNotNull(datos);
 
 		assertEquals("Test", datos.getNombre());
-		assertEquals(1, datos.getCodModulo());
+		
 		assertEquals("activo", datos.getEstado());
 	}
 
