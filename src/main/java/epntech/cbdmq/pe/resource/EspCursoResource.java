@@ -50,7 +50,7 @@ public class EspCursoResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<EspCurso> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EspCurso obj) throws DataException{
 		return objService.getById(codigo).map(datosGuardados -> {
-			//datosGuardados.setCodcursoespecializacion(obj.getCodcursoespecializacion());
+			datosGuardados.setCodcursoespecializacion(obj.getCodcursoespecializacion());
 			datosGuardados.setNombrecursoespecializacion(obj.getNombrecursoespecializacion());
 			datosGuardados.setNumerocupo(obj.getNumerocupo());
 			datosGuardados.setAdjuntoplanificacion(obj.getAdjuntoplanificacion());
@@ -60,6 +60,8 @@ public class EspCursoResource {
 			datosGuardados.setFechainiciocarganota(obj.getFechainiciocarganota());
 			datosGuardados.setFechafincarganota(obj.getFechafincarganota());
 			datosGuardados.setEstado(obj.getEstado());
+			datosGuardados.setNotaminima(obj.getNotaminima());
+			
 			EspCurso datosActualizados = null;
 			try {
 				datosActualizados = objService.update(datosGuardados);
