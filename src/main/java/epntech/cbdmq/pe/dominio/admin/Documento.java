@@ -24,17 +24,15 @@ public class Documento {
 	@Column(name = "cod_documento")
 	private Integer codigo;
 	
-	@Column(name = "area_doc")
-	private String area;
 	
 	@Column(name = "autorizacion")
 	private String autorizacion;
 	
-	@Column(name = "cod_datos_personales")
-	private Integer codDatoPersonal;
+	/*@Column(name = "cod_datos_personales")
+	private Integer codDatoPersonal;*/
 	
-	@Column(name = "cod_modulo")
-	private Integer codModulo;
+	/*@Column(name = "cod_modulo")
+	private Integer codModulo;*/
 	
 	@Column(name = "cod_tipo_documento")
 	private Integer tipo;
@@ -45,8 +43,7 @@ public class Documento {
 	@Column(name = "estado_validacion")
 	private String estadoValidacion;
 	
-	@Column(name = "id_documento")
-	private String idDocumento;
+	
 	
 	@Column(name = "nombre_documento")
 	private String nombre;
