@@ -59,6 +59,7 @@ public class NotaResource {
 			datosGuardados.setCod_estudiante(obj.getCod_estudiante());
 			datosGuardados.setCod_materia(obj.getCod_materia());
 			datosGuardados.setAporteexamen(obj.getAporteexamen());
+			datosGuardados.setAporteacademico(obj.getAporteacademico());
 			datosGuardados.setNotafinalformacion(obj.getNotafinalformacion());
 			datosGuardados.setFechacreanota(obj.getFechacreanota());
 			datosGuardados.setHoracreanota(obj.getHoracreanota());			

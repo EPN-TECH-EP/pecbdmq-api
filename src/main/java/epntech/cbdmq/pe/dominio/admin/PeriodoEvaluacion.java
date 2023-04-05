@@ -1,4 +1,4 @@
-package epntech.cbdmq.pe.dominio.admin;
+ package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalDateTime;
 import java.util.Date;

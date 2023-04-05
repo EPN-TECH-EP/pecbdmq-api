@@ -59,7 +59,7 @@ public class PonderacionResource {
 			datosGuardados.setCod_tipo_nota(obj.getCod_tipo_nota());
 			
 			datosGuardados.setPorcentajefinalponderacion(obj.getPorcentajefinalponderacion());
-			
+			datosGuardados.setPorcentajenotamateria(obj.getPorcentajenotamateria());
 			datosGuardados.setFechainiciovigencia(obj.getFechainiciovigencia());
 			datosGuardados.setFechainiciovigencia(obj.getFechafinvigencia());
 			datosGuardados.setEstado(obj.getEstado());

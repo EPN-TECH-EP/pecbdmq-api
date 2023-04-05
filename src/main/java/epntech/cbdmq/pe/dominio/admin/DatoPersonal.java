@@ -56,7 +56,4 @@ public class DatoPersonal {
 	private String estado;
 	@Column(name = "cod_provincia")
 	private Integer provincia;
-
-	/*@OneToMany(mappedBy="codDatoPersonal")
-    private Set<Documento> documentos;*/
 }

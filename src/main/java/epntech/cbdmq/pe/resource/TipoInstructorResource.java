@@ -18,58 +18,49 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Baja;
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
+import epntech.cbdmq.pe.dominio.admin.TipoInstructor;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.impl.BajaServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.TipoInstructorServiceImpl;
+
 
 @RestController
-@RequestMapping("/baja")
-public class BajaResource {
-	 @Autowired
-	    private BajaServiceImpl objServices;
+@RequestMapping("/tipoinstructor")
+public class TipoInstructorResource {
 
+	
+	 @Autowired
+	    private TipoInstructorServiceImpl objServices;
+	 
+	 
 	 @PostMapping("/crear")
 	    @ResponseStatus(HttpStatus.CREATED)
-	    public ResponseEntity<?> guardar(@RequestBody Baja obj) throws DataException {
+	    public ResponseEntity<?> guardar(@RequestBody TipoInstructor obj) throws DataException {
 	    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
 	    }
-	
-	 @GetMapping("/listar")
-	    public List<Baja> listar() {
+
+	    @GetMapping("/listar")
+	    public List<TipoInstructor> listar() {
 	        return objServices.getAll();
 	    }
-	 
-	 @GetMapping("/{id}")
-	    public ResponseEntity<Baja> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
+
+	    @GetMapping("/{id}")
+	    public ResponseEntity<TipoInstructor> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
 	        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	    }
-	 
-	 @PutMapping("/{id}")
-	    public ResponseEntity<Baja> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Baja obj) {
+
+	    @PutMapping("/{id}")
+	    public ResponseEntity<TipoInstructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoInstructor obj) {
 	        return objServices.getById(codigo).map(datosGuardados -> {
-	            
-	            datosGuardados.setCod_modulo(obj.getCod_modulo());
-	            datosGuardados.setCod_baja(obj.getCod_baja());
-	            datosGuardados.setFechacreabaja(obj.getFechabaja());
-	            datosGuardados.setDescripcionbaja(obj.getDescripcionbaja());
-	            datosGuardados.setUsuariocreabaja(obj.getUsuariocreabaja());
-	            datosGuardados.setFechacreabaja(obj.getFechacreabaja());
-	            datosGuardados.setHoracreabaja(obj.getHoracreabaja());
-	            datosGuardados.setUsuariomodbaja(obj.getUsuariomodbaja());
-	            datosGuardados.setFechamodbaja(obj.getFechamodbaja());
-	            datosGuardados.setHoramodbaja(obj.getHoramodbaja());
-	            datosGuardados.setRutaadjuntobaja(obj.getRutaadjuntobaja());
-	            datosGuardados.setCod_baja(obj.getCod_baja());           
+	            datosGuardados.setNombretipoinstructor(obj.getNombretipoinstructor());
 	            datosGuardados.setEstado(obj.getEstado());
-	            Baja datosActualizados = objServices.update(datosGuardados);
+	            TipoInstructor datosActualizados = objServices.update(datosGuardados);
 	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 	        }).orElseGet(() -> ResponseEntity.notFound().build());
 	    }
-	 
-	 @DeleteMapping("/{id}")
+
+	    @DeleteMapping("/{id}")
 		public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
-			objServices.delete(codigo);
+	    	objServices.delete(codigo);
 			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 		}
 	    
