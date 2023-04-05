@@ -48,7 +48,7 @@ public class EstadosResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int id, @RequestBody Estados obj) {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int id, @RequestBody Estados obj) throws DataException {
 		Optional<Estados> dato = objService.getById(id);
 
         if (dato.isPresent()) {

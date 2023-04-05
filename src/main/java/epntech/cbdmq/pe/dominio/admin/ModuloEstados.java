@@ -4,6 +4,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Column;
@@ -17,6 +19,7 @@ import lombok.Data;
 @Data
 @Entity(name = "gen_modulo_estados")
 @Table(name = "gen_modulo_estados")
+@SQLDelete(sql = "UPDATE {h-schema}gen_modulo_estados SET estado = 'ELIMINADO' WHERE cod_modulo_estados = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
 public class ModuloEstados {
     @Id
