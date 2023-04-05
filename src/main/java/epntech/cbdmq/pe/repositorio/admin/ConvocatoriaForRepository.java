@@ -5,13 +5,16 @@ import java.util.Date;
 import java.util.Set;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 @Repository
+@Transactional
 public class ConvocatoriaForRepository {
 
 	
@@ -22,13 +25,13 @@ public class ConvocatoriaForRepository {
     private EntityManager entityManager;
 	
 	public void insertarConvocatoriaConDocumentos(Integer periodo, Integer modulo,  String nombre, String estado, Date fechaInicio, Date fechaFin, LocalTime horaInicio, LocalTime horaFin, String codigoUnico, Integer cupoHombres, Integer cupoMujeres,  Set<DocumentoFor> documentos) {
-        String sqlConvocatoria = "INSERT INTO gen_convocatoria (cod_periodo_academico, cod_modulo, nombre_convocaria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres) " 
+        String sqlConvocatoria = "INSERT INTO cbdmq.gen_convocatoria (cod_periodo_academico, cod_modulo, nombre_convocaria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres) " 
         						+"VALUES (:periodo, :modulo, :nombre, :estado, :fechaInicio, :fechaFin, :horaInicio, :horaFin, :codigoUnico, :cupoHombres, :cupoMujeres)";
-        /*String sqlDocumento = "INSERT INTO gen_documento (autorizacion, cod_tipo_documento, descripcion, estado_validacion, codigo_unico_documento, nombre_documento, observaciones, ruta, estado) " 
-        					+"VALUES (:autorizacion, :tipo, :descripcion, :estado_Validacion, :codigo_Unico, :nombre, :observaciones, :ruta, :estado)";
-        String sqlConvocatoriaDocumento = "INSERT INTO gen_convocatoria_documento (usuario_id, rol_id) " +
-                               			"VALUES (:cod_convocatoria, :cod_documento)";*/
-
+        String sqlDocumento = "INSERT INTO cbdmq.gen_documento (autorizacion, cod_tipo_documento, descripcion, estado_validacion, codigo_unico_documento, nombre_documento, observaciones, ruta, estado) " 
+        					+"VALUES (:autorizacion, :tipo, :descripcion, :estadoValidacion, :codigoUnico, :nombre, :observaciones, :ruta, :estado)";
+        String sqlConvocatoriaDocumento = "INSERT INTO cbdmq.gen_convocatoria_documento (cod_convocatoria, cod_documento) " +
+                               			"VALUES (:cod_convocatoria, :cod_documento)";
+        
         ConvocatoriaFor convocatoria = new ConvocatoriaFor();
         convocatoria.setCodPeriodoAcademico(periodo);
         convocatoria.setCodModulo(modulo);
@@ -41,9 +44,8 @@ public class ConvocatoriaForRepository {
         convocatoria.setCodigoUnico(codigoUnico);
         convocatoria.setCupoHombres(cupoHombres);
         convocatoria.setCupoMujeres(cupoMujeres);
-        
         convocatoria.setDocumentos(documentos);
-
+        
         entityManager.createNativeQuery(sqlConvocatoria)
                      .setParameter("periodo", convocatoria.getCodPeriodoAcademico())
                      .setParameter("modulo", convocatoria.getCodModulo())
@@ -55,10 +57,11 @@ public class ConvocatoriaForRepository {
                      .setParameter("horaFin", convocatoria.getHoraFinConvocatoria())
                      .setParameter("codigoUnico", convocatoria.getCodigoUnico())
                      .setParameter("cupoHombres", convocatoria.getCupoHombres())
-                     .setParameter("cupoMujeres", convocatoria.getCupoMujeres())
-                     .executeUpdate();
+                     .setParameter("cupoMujeres", convocatoria.getCupoMujeres());
 
-        /*for (DocumentoFor documento : convocatoria.getDocumentos()) {
+        
+        for (DocumentoFor documento : convocatoria.getDocumentos()) {
+        	
             entityManager.createNativeQuery(sqlDocumento)
 			            .setParameter("autorizacion", documento.getAutorizacion())
 			            .setParameter("tipo", documento.getTipo())
@@ -68,15 +71,37 @@ public class ConvocatoriaForRepository {
 			            .setParameter("nombre", documento.getNombre())
 			            .setParameter("observaciones", documento.getObservaciones())
 			            .setParameter("ruta", documento.getRuta())
-			            .setParameter("estado", documento.getEstado())
-                        .executeUpdate();
+			            .setParameter("estado", documento.getEstado());
+            entityManager.persist(documento);
         }
 
+        entityManager.persist(convocatoria);
+        
         for (DocumentoFor documento : convocatoria.getDocumentos()) {
             entityManager.createNativeQuery(sqlConvocatoriaDocumento)
                          .setParameter("cod_convocatoria", convocatoria.getCodConvocatoria())
-                         .setParameter("cod_documento", documento.getCodigo())
-                         .executeUpdate();
-        }*/
+                         .setParameter("cod_documento", documento.getCodigoDocumento());
+        }
+        
+        insertarPeriodoAcademico();
+    }
+	
+	public void insertarPeriodoAcademico() {
+		String estado = "ACTIVO";
+		String descripcion = "formacion";
+		
+		String sqlQuery = "INSERT INTO cbdmq.gen_periodo_academico(estado, descripcion) " 
+        						+"VALUES (:estado, :descripcion)";
+       
+        PeriodoAcademico periodo = new PeriodoAcademico();
+        periodo.setEstado(estado);
+        periodo.setDescripcion(descripcion);
+        
+        entityManager.createNativeQuery(sqlQuery)
+                     .setParameter("estado", periodo.getEstado())
+                     .setParameter("descripcion", periodo.getDescripcion());
+
+        entityManager.persist(periodo);
+        
     }
 }
