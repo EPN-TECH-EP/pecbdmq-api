@@ -101,10 +101,10 @@ public class DescargarDocumentoResourse {
     }*/
 	
 	
-	/*private ResponseEntity<HttpResponse> response(HttpStatus httpStatus , String message){
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus , String message){
 		return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
 		
-	}*/
+	}
 	 
 }
