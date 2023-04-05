@@ -1,9 +1,9 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -11,7 +11,6 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +20,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,11 +29,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "gen_convocatoria")
+@Entity
 @Table(name = "gen_convocatoria")
 @SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado_convocatoria = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado_convocatoria <> 'ELIMINADO'")
-public class Convocatoria {
+public class ConvocatoriaFor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,10 +81,11 @@ public class Convocatoria {
 	@Column(name = "cupo_mujeres")
 	private Integer cupoMujeres;
 	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_convocatoria_documento",
-            joinColumns = @JoinColumn(name = "cod_convocatoria"),
-            inverseJoinColumns = @JoinColumn(name = "cod_documento")
+	@ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "gen_convocatoria_documento",
+        joinColumns = @JoinColumn(name = "cod_convocatoria"),
+        inverseJoinColumns = @JoinColumn(name = "cod_documento")
     )
-	private List<Documento> documentos = new ArrayList<>();
+    private Set<DocumentoFor> documentos = new HashSet<>();
 }

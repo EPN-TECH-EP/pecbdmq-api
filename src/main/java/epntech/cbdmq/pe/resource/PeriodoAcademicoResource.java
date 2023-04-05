@@ -2,8 +2,13 @@ package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.query.sqm.tree.update.SqmUpdateStatement;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +30,12 @@ public class PeriodoAcademicoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException, ParseException{
+		Date date = new Date();
+		SimpleDateFormat formato1 = new SimpleDateFormat("yyyy-MM-dd");
+		Date fecha = formato1.parse(formato1.format(date));
+		
+		obj.setFechaInicio(fecha);
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 		
 	}
@@ -45,8 +55,7 @@ public class PeriodoAcademicoResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo, @RequestBody PeriodoAcademico obj) throws DataException {
 		return (ResponseEntity<PeriodoAcademico>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setModulo(obj.getModulo());
-			datosGuardados.setSemestre(obj.getSemestre());
+			datosGuardados.setModuloEstados(obj.getModuloEstados());
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
 			datosGuardados.setFechaFin(obj.getFechaFin());
 			datosGuardados.setDescripcion(obj.getDescripcion());

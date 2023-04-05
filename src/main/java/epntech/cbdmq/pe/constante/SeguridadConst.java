@@ -11,6 +11,6 @@ public class SeguridadConst {
     public static final String ACCESO_RESTRINGIDO = "Requiere identificarse para acceder a esta página";
     public static final String ACCESO_DENEGADO = "No tiene permisos para acceder a esta página";
     public static final String METOD_HTTP_OPTIONS = "OPTIONS";
-    public static final String[] URLS_PUBLICAS = { "/usuario/login", "/usuario/registro", "/usuario/imagen/**", "/usuario/guardarArchivo", "/usuario/maxArchivo" };
+    public static final String[] URLS_PUBLICAS = { "/usuario/login", "/usuario/registro", "/usuario/imagen/**", "/usuario/guardarArchivo", "/usuario/maxArchivo", "/apis/test/informes/**", "/link/**" };
     //public static final String[] PUBLIC_URLS = { "**" };
 }
