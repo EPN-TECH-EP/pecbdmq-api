@@ -14,25 +14,27 @@ import lombok.Data;
 public class PonderacionModulos {
 
 	@Id
-	private Integer codigo;
+	private Integer cod_ponderacion;
 	
-	private String modulo;
+	private String cod_modulo;
 	
-	private String Periodo;
+	private String cod_periodo_academico;
 	
-	private String componente;
+	private String cod_componente_nota;
 	
-	private String tiponota;
+	private String cod_tipo_nota;
 	
-	private Integer porcentajefinal;
+	private Integer porcentajefinalponderacion;
 	
-	private Integer porcentajenota;
+	private Integer porcentajenotamateria;
 
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date fechaInicioVigencia;
+	private Date fechainiciovigencia;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date fechaFinVigencia;
+	private Date fechafinvigencia;
+	
+	private String estado;
 	
 	
 	

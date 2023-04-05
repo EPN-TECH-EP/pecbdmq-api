@@ -49,6 +49,7 @@ public class DocumentoTest {
 		assertNotNull(datos);
 
 		assertEquals("Test", datos.getNombre());
+
 		assertEquals("activo", datos.getEstado());
 	}
 
