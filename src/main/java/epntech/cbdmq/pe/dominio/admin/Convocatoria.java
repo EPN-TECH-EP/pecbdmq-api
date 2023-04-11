@@ -71,6 +71,9 @@ public class Convocatoria {
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime horaFinConvocatoria;
 	
+	
+
+	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_convocatoria_documento",
             joinColumns = @JoinColumn(name = "cod_convocatoria"),
