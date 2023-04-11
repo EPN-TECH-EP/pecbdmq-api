@@ -1,6 +1,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -26,14 +28,12 @@ public class PeriodoAcademico {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include()
 	@Column(name = "cod_periodo_academico")
 	private Integer codigo;
 	
-	@Column(name = "cod_modulo")
-	private Integer modulo;
-	
-	@Column(name = "cod_semestre")
-	private Integer semestre;
+	@Column(name = "cod_modulo_estados")
+	private Integer moduloEstados;
 	
 	@Column(name = "fecha_inicio_periodo_acad")
 	@JsonFormat(pattern = "yyyy-MM-dd")
@@ -49,5 +49,11 @@ public class PeriodoAcademico {
 	@Column(name = "descripcion")
 	private String descripcion;
 	
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "gen_periodo_academico_documento",
+            joinColumns = @JoinColumn(name = "cod_periodo_academico"),
+            inverseJoinColumns = @JoinColumn(name = "cod_documento")
+    )
+	private List<Documento> documentos = new ArrayList<>();
 
 }

@@ -33,6 +33,7 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
+		obj.setCodigoUnico(repo.getId("C"));
 		return repo.save(obj);
 	}
 

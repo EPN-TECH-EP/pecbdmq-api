@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.util.ArrayList;
@@ -32,3 +33,4 @@ public class Estados {
 	private String estado;
 	
 }
+

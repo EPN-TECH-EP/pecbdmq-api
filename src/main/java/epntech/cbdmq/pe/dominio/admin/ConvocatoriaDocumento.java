@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.dominio.admin;
 
 import jakarta.persistence.Column;
@@ -39,3 +40,6 @@ public class ConvocatoriaDocumento {
 
 	
 }
+
+
+

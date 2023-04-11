@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.repositorio.admin;
 
 import java.time.LocalTime;
@@ -80,3 +81,4 @@ public class ConvocatoriaForRepository {
         }*/
     }
 }
+

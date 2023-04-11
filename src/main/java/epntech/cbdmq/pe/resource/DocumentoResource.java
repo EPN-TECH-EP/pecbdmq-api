@@ -71,13 +71,18 @@ public class DocumentoResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Documento> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Documento obj) throws DataException{
-		return (ResponseEntity<Documento>) objService.getById(codigo).map(
-				
-			datosGuardados -> {
+
+	
 			
+
+		return (ResponseEntity<Documento>) objService.getById(codigo).map(datosGuardados -> {
+
+      datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setTipo(obj.getTipo());
+
 			datosGuardados.setAutorizacion(obj.getAutorizacion());
-			
-			datosGuardados.setDescripcion(obj.getDescripcion());
+
+      datosGuardados.setDescripcion(obj.getDescripcion());
 			                         
 			datosGuardados.setObservaciones(obj.getObservaciones());
 			datosGuardados.setRuta(obj.getRuta());

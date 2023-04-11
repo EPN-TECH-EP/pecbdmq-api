@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.servicio;
 
 import java.util.List;
@@ -19,3 +20,4 @@ public interface EstadosService {
 	void delete(int id);
 	
 }
+

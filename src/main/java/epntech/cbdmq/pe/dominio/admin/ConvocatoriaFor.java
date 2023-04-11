@@ -89,3 +89,8 @@ public class ConvocatoriaFor {
     )
     private Set<DocumentoFor> documentos = new HashSet<>();
 }
+
+
+
+
+
