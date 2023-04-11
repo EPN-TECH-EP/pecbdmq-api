@@ -1,15 +1,32 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import java.time.LocalTime;
-import java.util.Date;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataSize;
+import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
+import epntech.cbdmq.pe.dominio.admin.DocumentoRequisitoFor;
+import epntech.cbdmq.pe.dominio.admin.DatosFile;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
+import epntech.cbdmq.pe.dominio.admin.Requisito;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaForRepository;
 import epntech.cbdmq.pe.servicio.ConvocatoriaForService;
+
+import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 
 @Service
 public class ConvocatoriaForServiceImpl implements ConvocatoriaForService {
@@ -18,13 +35,9 @@ public class ConvocatoriaForServiceImpl implements ConvocatoriaForService {
 	private ConvocatoriaForRepository repo;
 
 	@Override
-	public void insertarConvocatoriaConDocumentos(Integer periodo, Integer modulo, String nombre, String estado,
-			Date fechaInicio, Date fechaFin, LocalTime horaInicio, LocalTime horaFin, String codigoUnico,
-			Integer cupoHombres, Integer cupoMujeres, Set<DocumentoFor> documentos) {
+	public PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria, Set<Requisito> requisito, List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion {
 
-		repo.insertarConvocatoriaConDocumentos(periodo, modulo, nombre, estado, fechaInicio, fechaFin, horaInicio,
-				horaFin, codigoUnico, cupoHombres, cupoMujeres, documentos);
+		return repo.insertarConvocatoriaConDocumentos(convocatoria, requisito, docsPeriodoAcademico, docsConvocatoria);
 
 	}
-
 }

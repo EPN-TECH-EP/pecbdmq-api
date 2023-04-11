@@ -1,14 +1,24 @@
 package epntech.cbdmq.pe.servicio;
 
-import java.time.LocalTime;
-import java.util.Date;
+import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
-import jakarta.transaction.Transactional;
+import epntech.cbdmq.pe.dominio.admin.DocumentoRequisitoFor;
+import epntech.cbdmq.pe.dominio.admin.DatosFile;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
+import epntech.cbdmq.pe.dominio.admin.Requisito;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 
 public interface ConvocatoriaForService {	
 
-    @Transactional
-    void insertarConvocatoriaConDocumentos(Integer periodo, Integer modulo,  String nombre, String estado, Date fechaInicio, Date fechaFin, LocalTime horaInicio, LocalTime horaFin, String codigoUnico, Integer cupoHombres, Integer cupoMujeres, Set<DocumentoFor> documentos);
+	//ConvocatoriaFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria, Set<DocumentoFor> documentos, Set<Requisito> requisito, Set<DocumentoRequisitoFor> documentosRequisito);
+	
+	PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria, Set<Requisito> requisito, 
+			List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion;
+
 }
