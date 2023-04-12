@@ -120,10 +120,6 @@ public class DescargarDocumentoResourse {
                 message), httpStatus);
 		
 	}
-	
-	
-
-    }
-	
+}
 	 
 

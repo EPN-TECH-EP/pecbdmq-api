@@ -26,12 +26,6 @@ public class PeriodoAcademicoSemestreModulo {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechaFin;
 	
-	//private Integer codModulo;
-	
-	//private Integer codSemestre;
-	
-	private String modulo;
-	
-	private String semestre;
+	private String estadoProceso;
 
 }

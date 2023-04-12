@@ -19,7 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
+
 import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
+
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisistoDocumento;
+
 import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ConvocatoriaServicieImpl;
@@ -62,6 +66,10 @@ public class ConvocatoriaResource {
 			datosGuardados.setHoraFinConvocatoria(obj.getHoraFinConvocatoria());
 			
 
+			datosGuardados.setCupoHombres(obj.getCupoHombres());
+			datosGuardados.setCupoMujeres(obj.getCupoMujeres());
+
+
 			Convocatoria datosActualizados = objService.updateData(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
@@ -79,8 +87,10 @@ public class ConvocatoriaResource {
     }
 	
 	@GetMapping("/listarconvocatorias")
+
 	public List<Convocatorialistar> listarTodo() {
 		return objService.getConvocatorialistar();
+
 	}
 	
 }

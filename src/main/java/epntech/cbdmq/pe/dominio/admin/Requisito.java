@@ -1,5 +1,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -18,6 +21,7 @@ public class Requisito {
 
 	@Id
 	@GeneratedValue(strategy  = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include()
 	@Column(name = "cod_requisito")
 	private Integer codigo;
 	
@@ -26,8 +30,7 @@ public class Requisito {
 	@Column(name = "cod_funcionario")
 	private Integer codFuncionario;
 	
-	
-	
+
 	@Column(name = "nombre_requisito")
 	private String nombre;
 	
@@ -39,4 +42,12 @@ public class Requisito {
 	
 	@Column(name = "estado")
 	private String estado;
+	
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "gen_requisito_documento",
+            joinColumns = @JoinColumn(name = "cod_requisito"),
+            inverseJoinColumns = @JoinColumn(name = "cod_documento")
+    )
+	private List<Documento> documentos = new ArrayList<>();
+
 }

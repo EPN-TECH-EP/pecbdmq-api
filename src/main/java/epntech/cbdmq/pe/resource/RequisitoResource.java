@@ -55,7 +55,7 @@ public class RequisitoResource {
 			datosGuardados.setNombre(obj.getNombre());
 			//datosGuardados.setCodConvocatoria(obj.getCodConvocatoria());
 			datosGuardados.setCodFuncionario(obj.getCodFuncionario());
-			
+
 			datosGuardados.setDescripcion(obj.getDescripcion());
 			datosGuardados.setEstado(obj.getEstado());
 
