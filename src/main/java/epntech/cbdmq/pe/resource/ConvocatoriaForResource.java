@@ -1,14 +1,10 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 import java.io.IOException;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -16,32 +12,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
-import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.DatosFile;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.servicio.impl.ConvocatoriaForServiceImpl;
 
 @RestController
-@RequestMapping("/convocatoriafor")
+@RequestMapping(path = "/convocatoriafor")
 public class ConvocatoriaForResource {
 
 	@Autowired
 	private ConvocatoriaForServiceImpl objService;
 
 	@PostMapping("/crear")
-	public ResponseEntity<?> crear(@RequestBody ConvocatoriaFor convocatoria, @RequestParam List<MultipartFile> docsPeriodoAcademico, @RequestParam List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion {
+	public ResponseEntity<?> crear(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam("docsPeriodoAcademico") List<MultipartFile> docsPeriodoAcademico, @RequestParam("docsConvocatoria") List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion {
 
 		//Set<DocumentoFor> documentos = convocatoria.getDocumentos();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		ConvocatoriaFor convocatoria = objectMapper.readValue(datosConvocatoria, ConvocatoriaFor.class);
+
+		
 		Set<Requisito> requisitos = convocatoria.getRequisitos();
 		//Set<DocumentoRequisitoFor> documentosRequisito = null;
 
