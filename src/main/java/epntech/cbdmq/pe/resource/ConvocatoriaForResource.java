@@ -27,6 +27,7 @@ import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.servicio.impl.ConvocatoriaForServiceImpl;
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping(path = "/convocatoriafor")
@@ -36,7 +37,7 @@ public class ConvocatoriaForResource {
 	private ConvocatoriaForServiceImpl objService;
 
 	@PostMapping("/crear")
-	public ResponseEntity<?> crear(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam("docsPeriodoAcademico") List<MultipartFile> docsPeriodoAcademico, @RequestParam("docsConvocatoria") List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion {
+	public ResponseEntity<?> crear(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam("docsPeriodoAcademico") List<MultipartFile> docsPeriodoAcademico, @RequestParam("docsConvocatoria") List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
 
 		//Set<DocumentoFor> documentos = convocatoria.getDocumentos();
 		

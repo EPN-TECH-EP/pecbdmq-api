@@ -146,5 +146,25 @@ public class EmailService {
 		emailSender.send(message);
 
 	}
+	
+	private SimpleMailMessage /* Message */ sendEmail(String email, String subject, String texto)
+			throws MessagingException {
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom(USERNAME);
+		message.setTo(email);
+		message.setSubject(subject);
+		message.setText(texto);
+
+		return message;
+	}
+	
+	public void enviarEmail(String email, String subject, String texto) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		SimpleMailMessage message = this.sendEmail(email, subject, texto);
+
+		emailSender.send(message);
+
+	}
 }
 

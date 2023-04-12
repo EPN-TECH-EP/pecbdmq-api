@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
 import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Repository;
@@ -30,6 +32,8 @@ import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.servicio.EmailService;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
@@ -41,16 +45,26 @@ public class ConvocatoriaForRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
 
 	@Value("${spring.servlet.multipart.max-file-size}")
 	public DataSize TAMAÑO_MÁXIMO;
+	
+	@Value("${server.port}")
+	public String SERVER_PORT;
+
+	@Value("${eureka.instance.hostname}")
+	public String HOSTNAME;
+
 
 	public PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
 			Set<Requisito> requisitos, List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria)
-			throws IOException, ArchivoMuyGrandeExcepcion {
+			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
 		String sqlConvocatoria = "INSERT INTO cbdmq.gen_convocatoria (cod_periodo_academico, nombre_convocatoria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres, correo) "
 				+ "VALUES (:periodo, :nombre, :estado, :fechaInicio, :fechaFin, :horaInicio, :horaFin, :codigoUnico, :cupoHombres, :cupoMujeres, :correo)";
 		String sqlDocumento = "INSERT INTO cbdmq.gen_documento (autorizacion, cod_tipo_documento, descripcion, estado_validacion, codigo_unico_documento, nombre_documento, observaciones, ruta, estado) "
@@ -152,6 +166,7 @@ public class ConvocatoriaForRepository {
 		}
 
 		Integer codConvocatoria = convocatoria.getCodConvocatoria();
+		Integer codigoDocumento = 0;
 		
 		for (DocumentoFor elemento : documentos) {
 			ConvocatoriaDocumentoFor convocatoriaDocumentoFor = new ConvocatoriaDocumentoFor();
@@ -162,6 +177,7 @@ public class ConvocatoriaForRepository {
 			convocatoriaDocumentoFor.setCod_convocatoria(codConvocatoria);
 			convocatoriaDocumentoFor.setCod_documento(elemento.getCodigoDocumento());
 			entityManager.persist(convocatoriaDocumentoFor);
+			codigoDocumento = elemento.getCodigoDocumento();
 		}		
 		
 
@@ -177,8 +193,10 @@ public class ConvocatoriaForRepository {
 		}
 
 		Set<DocumentoFor> dPeriodoAcademico = new HashSet<>();
-		DocumentoFor dd1 = new DocumentoFor();
+		
 		for (DatosFile datosFile : archivosPA) {
+			DocumentoFor dd1 = new DocumentoFor();
+			
 			dd1.setEstado("ACTIVO");
 			dd1.setNombre(datosFile.getNombre());
 			dd1.setRuta(datosFile.getRuta());
@@ -188,6 +206,8 @@ public class ConvocatoriaForRepository {
 		Set<DocumentoFor> docPA = new HashSet<>();
 		for (DocumentoFor documento : dPeriodoAcademico) {
 
+			DocumentoFor documentoFor = new DocumentoFor();
+			
 			entityManager.createNativeQuery(sqlDocumento).setParameter("autorizacion", documento.getAutorizacion())
 					.setParameter("tipo", documento.getTipo()).setParameter("descripcion", documento.getDescripcion())
 					.setParameter("estadoValidacion", documento.getEstadoValidacion())
@@ -196,7 +216,8 @@ public class ConvocatoriaForRepository {
 					.setParameter("observaciones", documento.getObservaciones())
 					.setParameter("ruta", documento.getRuta()).setParameter("estado", documento.getEstado());
 			entityManager.persist(documento);
-			docPA.add(documento);
+			documentoFor = documento;
+			docPA.add(documentoFor);
 		}
 
 		entityManager.persist(periodo);
@@ -252,6 +273,12 @@ public class ConvocatoriaForRepository {
 		 * .setParameter("codRequisito", elemento.getCodigoRequisito())
 		 * .setParameter("codDocumento", elemento.getDocumentosRequisito()); }
 		 */
+		
+		String link = HOSTNAME + ":" + SERVER_PORT + "/link/" + codigoDocumento;
+		
+		String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
+		
+		emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
 		
 		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
 
