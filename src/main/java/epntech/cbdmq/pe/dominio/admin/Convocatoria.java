@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "gen_convocatoria")
 @Table(name = "gen_convocatoria")
 @SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado_convocatoria = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
@@ -52,7 +55,7 @@ public class Convocatoria {
 	@Column(name = "nombre_convocaria")
 	private String nombre;
 	
-	@Column(name = "estado_convocatoria")
+	@Column(name = "estado")
 	private String estado;
 	
 	@Column(name = "fecha_inicio_convocatoria")
@@ -71,10 +74,21 @@ public class Convocatoria {
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime horaFinConvocatoria;
 	
+
+	@Column(name = "codigo_unico_convocatoria")
+	private String codigoUnico;
+	
+	@Column(name = "cupo_hombres")
+	private Integer cupoHombres;
+	
+	@Column(name = "cupo_mujeres")
+	private Integer cupoMujeres;
+
+	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_convocatoria_documento",
             joinColumns = @JoinColumn(name = "cod_convocatoria"),
             inverseJoinColumns = @JoinColumn(name = "cod_documento")
     )
-	private List<ConvocatoriaDocumento> documentos = new ArrayList<>();
+	private List<Documento> documentos = new ArrayList<>();
 }
