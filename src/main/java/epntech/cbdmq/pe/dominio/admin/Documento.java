@@ -28,11 +28,6 @@ public class Documento {
 	@Column(name = "autorizacion")
 	private String autorizacion;
 	
-	/*@Column(name = "cod_datos_personales")
-	private Integer codDatoPersonal;*/
-	
-	/*@Column(name = "cod_modulo")
-	private Integer codModulo;*/
 	
 	@Column(name = "cod_tipo_documento")
 	private Integer tipo;
@@ -43,8 +38,6 @@ public class Documento {
 	@Column(name = "estado_validacion")
 	private String estadoValidacion;
 	
-	
-	
 	@Column(name = "nombre_documento")
 	private String nombre;
 	
@@ -52,8 +45,11 @@ public class Documento {
 	private String observaciones;
 	
 	@Column(name = "ruta")
-	private String ruta;
+	private String ruta= "temp/";
 	
 	@Column(name = "estado")
 	private String estado;
+	
+	
+	
 }
