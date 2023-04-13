@@ -1,8 +1,11 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
@@ -26,6 +29,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,28 +37,23 @@ import lombok.NoArgsConstructor;
 @Table(name = "gen_convocatoria")
 @SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado_convocatoria = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado_convocatoria <> 'ELIMINADO'")
-public class ConvocatoriaFor {
-
+public class Convocatorialistar {
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include()
+	
 	@Column(name = "cod_convocatoria")
 	private Integer codConvocatoria;
 	
-	@Column(name = "cod_periodo_evaluacion")
-	private Integer codPeriodoEvaluacion;
+
 	
-	@Column(name = "cod_periodo_academico")
-	private Integer codPeriodoAcademico;
 	
-	@Column(name = "cod_modulo")
-	private Integer codModulo;
 	
-	@Column(name = "nombre_convocaria")
-	private String nombre;
 	
-	@Column(name = "estado")
-	private String estado;
+	@Column(name = "nombre_convocatoria")
+	private String nombreConvocatoria;
 	
 	@Column(name = "fecha_inicio_convocatoria")
 	@JsonFormat(pattern = "yyyy-MM-dd")
@@ -72,6 +71,7 @@ public class ConvocatoriaFor {
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime horaFinConvocatoria;
 	
+	
 	@Column(name = "codigo_unico_convocatoria")
 	private String codigoUnico;
 	
@@ -81,16 +81,22 @@ public class ConvocatoriaFor {
 	@Column(name = "cupo_mujeres")
 	private Integer cupoMujeres;
 	
+	/*@Column(name = "nombre_documento")
+	private String nombre_documento;*/
+	
+	@Column(name = "ruta")
+	private String documento;
+	
+	
 	@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "gen_convocatoria_documento",
+        name = "gen_convocatoria_requisito",
         joinColumns = @JoinColumn(name = "cod_convocatoria"),
-        inverseJoinColumns = @JoinColumn(name = "cod_documento")
+        inverseJoinColumns = @JoinColumn(name = "cod_requisito")
     )
-    private Set<DocumentoFor> documentos = new HashSet<>();
+	 private List<Requisitolistar> requisitos = new ArrayList<>();
+
+	
+		
+	
 }
-
-
-
-
-

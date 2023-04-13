@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.repositorio.admin;
 
 import java.util.Optional;
@@ -10,3 +11,4 @@ public interface EstadosRepository extends JpaRepository<Estados, Integer> {
 
 	Optional<Estados> findByNombre(String nombre);
 }
+

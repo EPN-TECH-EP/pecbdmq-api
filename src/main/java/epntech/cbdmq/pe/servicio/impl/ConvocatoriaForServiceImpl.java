@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.servicio.impl;
 
 import java.time.LocalTime;
@@ -28,3 +29,4 @@ public class ConvocatoriaForServiceImpl implements ConvocatoriaForService {
 	}
 
 }
+
