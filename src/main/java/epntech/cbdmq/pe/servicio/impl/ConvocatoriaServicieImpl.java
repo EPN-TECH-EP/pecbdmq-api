@@ -1,6 +1,9 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
+import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,19 +11,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
-
 import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatorialistarRepository;
-
-import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisistoDocumento;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
-import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRequisitoDocumentoRepository;
-
 import epntech.cbdmq.pe.servicio.ConvocatoriaService;
 
 @Service

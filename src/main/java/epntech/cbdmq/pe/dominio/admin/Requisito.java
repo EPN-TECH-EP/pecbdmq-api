@@ -42,8 +42,6 @@ public class Requisito {
 	@Column(name = "estado")
 	private String estado;
 	
-	@Column(name = "es_documento")
-	private Boolean esDocumento;
 	
 	/*@ManyToMany(mappedBy = "requisitos", fetch = FetchType.LAZY)
     private Set<ConvocatoriaFor> convocatorias = new HashSet<>();*/
