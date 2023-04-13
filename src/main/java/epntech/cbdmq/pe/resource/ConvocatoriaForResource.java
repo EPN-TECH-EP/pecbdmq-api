@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.resource;
 
 import java.time.LocalTime;
@@ -61,3 +62,4 @@ public class ConvocatoriaForResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body("Convocatoria creada con éxito");
 	}
 }
+

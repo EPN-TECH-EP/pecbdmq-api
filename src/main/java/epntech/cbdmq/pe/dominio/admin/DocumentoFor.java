@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.util.HashSet;
@@ -64,3 +65,6 @@ public class DocumentoFor {
 	@ManyToMany(mappedBy = "documentos", fetch = FetchType.LAZY)
     private Set<ConvocatoriaFor> convocatorias = new HashSet<>();
 }
+
+
+

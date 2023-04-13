@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.dominio.admin;
 
 import jakarta.persistence.Entity;
@@ -20,3 +21,4 @@ public class ModuloEstadosData {
 	private String estado;
 	
 }
+
