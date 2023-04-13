@@ -31,5 +31,11 @@ public class MenuResource {
         List<MenuPermisos> listaMenu = this.menuService.findMenuByIdUsuario(idUsuario);
         return new ResponseEntity<List<MenuPermisos>>(listaMenu, OK);
     }
+	
+	@GetMapping("/listar")
+	public ResponseEntity<List<Menu>> findAll() {
+		List<Menu> listaMenu = this.menuService.getAll();
+        return new ResponseEntity<List<Menu>>(listaMenu, OK);
+	}
 
 }

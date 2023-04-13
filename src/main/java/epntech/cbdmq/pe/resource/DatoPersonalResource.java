@@ -83,8 +83,8 @@ public class DatoPersonalResource {
 			datosGuardados.setFecha_nacimiento(obj.getFecha_nacimiento());
 			datosGuardados.setCorreo_personal(obj.getCorreo_personal());
 			datosGuardados.setValidacion_correo(obj.getValidacion_correo());
-			datosGuardados.setNum_telef(obj.getNum_telef());
-			datosGuardados.setCiudad(obj.getCiudad());
+			//datosGuardados.setNum_telef(obj. getNum_telef());
+			//datosGuardados.setCiudad(obj.getCiudad());
 			datosGuardados.setTipo_sangre(obj.getTipo_sangre());
 			//datosGuardados.setUnidad(obj.getUnidad());
 			datosGuardados.setEstado(obj.getEstado());
