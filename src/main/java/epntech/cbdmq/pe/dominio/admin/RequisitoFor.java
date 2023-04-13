@@ -18,7 +18,7 @@ import lombok.*;
 @Table(name = "gen_requisito")
 @SQLDelete(sql = "UPDATE {h-schema}gen_requisito SET estado = 'ELIMINADO' WHERE cod_requisito = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-public class Requisito {
+public class RequisitoFor {
 
 	@Id
 	@GeneratedValue(strategy  = GenerationType.IDENTITY)
@@ -29,15 +29,11 @@ public class Requisito {
 	@Column(name = "cod_funcionario")
 	private Integer codFuncionario;
 	
-
 	@Column(name = "nombre_requisito")
 	private String nombre;
 	
 	@Column(name = "descripcion_requisito")
 	private String descripcion;
-	
-	@Column(name = "es_documento")
-	private Boolean esDocumento;
 	
 	@Column(name = "estado")
 	private String estado;
@@ -45,8 +41,8 @@ public class Requisito {
 	@Column(name = "es_documento")
 	private Boolean esDocumento;
 	
-	/*@ManyToMany(mappedBy = "requisitos", fetch = FetchType.LAZY)
-    private Set<ConvocatoriaFor> convocatorias = new HashSet<>();*/
+	@ManyToMany(mappedBy = "requisitos", fetch = FetchType.LAZY)
+    private Set<ConvocatoriaFor> convocatorias = new HashSet<>();
 	
 	/*@ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "gen_requisito_documento",

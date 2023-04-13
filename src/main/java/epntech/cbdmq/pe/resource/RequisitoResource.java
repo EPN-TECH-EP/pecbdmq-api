@@ -58,6 +58,7 @@ public class RequisitoResource {
 
 			datosGuardados.setDescripcion(obj.getDescripcion());
 			datosGuardados.setEstado(obj.getEstado());
+			datosGuardados.setEsDocumento(obj.getEsDocumento());
 
 			Requisito datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

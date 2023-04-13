@@ -55,7 +55,6 @@ public class ConvocatoriaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Convocatoria> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Convocatoria obj) {
 		return objService.getByIdData(codigo).map(datosGuardados -> {
-			datosGuardados.setCodModulo(obj.getCodModulo());
 			datosGuardados.setCodPeriodoAcademico(obj.getCodPeriodoAcademico());
 			datosGuardados.setCodPeriodoEvaluacion(obj.getCodPeriodoEvaluacion());
 			datosGuardados.setNombre(obj.getNombre());
