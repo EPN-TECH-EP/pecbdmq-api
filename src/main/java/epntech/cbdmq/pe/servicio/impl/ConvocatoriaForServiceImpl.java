@@ -41,4 +41,12 @@ public class ConvocatoriaForServiceImpl implements ConvocatoriaForService {
 		return repo.insertarConvocatoriaConDocumentos(convocatoria, requisito, docsPeriodoAcademico, docsConvocatoria);
 
 	}
+
+	@Override
+	public PeriodoAcademicoFor actualizarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
+			Set<RequisitoFor> requisito, List<MultipartFile> docsConvocatoria, DocumentoFor documento)
+			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
+
+		return repo.actualizarConvocatoriaConDocumentos(convocatoria, requisito, docsConvocatoria, documento);
+	}
 }

@@ -88,4 +88,17 @@ public class PeriodoAcademicoResource {
 	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
 		return objService.getAllPeriodoAcademico();
 	}
+	
+	@GetMapping("/validaestado")
+	public ResponseEntity<HttpResponse> getEstado() {
+		String result = objService.getEstado();
+		
+		if (result == null) {
+			result = "SIN PERIODO";
+		}
+		
+		return response(HttpStatus.OK, result);
+	}
+	
+	
 }

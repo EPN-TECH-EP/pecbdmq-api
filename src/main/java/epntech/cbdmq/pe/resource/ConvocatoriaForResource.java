@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.Convocatoria;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
+import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
@@ -115,6 +118,40 @@ public class ConvocatoriaForResource {
 
 		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
 		pa = objService.insertarConvocatoriaConDocumentos(convocatoria, reqs, docsPeriodoAcademico, docsConvocatoria);
+		
+		
+		return new ResponseEntity<>(pa, HttpStatus.OK);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<?> actualizar(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam("docsConvocatoria") List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
+	
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		ConvocatoriaFor convocatoria = objectMapper.readValue(datosConvocatoria, ConvocatoriaFor.class);
+
+		Set<DocumentoFor> documentos = convocatoria.getDocumentos();
+		Set<RequisitoFor> requisitos = convocatoria.getRequisitos();
+
+		Set<DocumentoFor> docs = new HashSet<>();
+		DocumentoFor doc = new DocumentoFor();
+		for (DocumentoFor d : documentos) {
+			DocumentoFor documento = new DocumentoFor();
+			documento.setCodigoDocumento(d.getCodigoDocumento());
+			docs.add(documento);
+			doc = documento;
+		}
+
+		Set<RequisitoFor> reqs = new HashSet<>();
+		for (RequisitoFor r : requisitos) {
+			RequisitoFor requisito = new RequisitoFor();
+			requisito.setCodigoRequisito(r.getCodigoRequisito());
+			reqs.add(requisito);
+		}
+
+		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
+		pa = objService.actualizarConvocatoriaConDocumentos(convocatoria, reqs, docsConvocatoria, doc);
 		
 		
 		return new ResponseEntity<>(pa, HttpStatus.OK);

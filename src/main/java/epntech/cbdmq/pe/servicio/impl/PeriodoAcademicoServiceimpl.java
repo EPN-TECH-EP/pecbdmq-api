@@ -77,6 +77,12 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		return repo1.getPeriodoAcademico();
 	}
 
+	@Override
+	public String getEstado() {
+		// TODO Auto-generated method stub
+		return repo.getEstado();
+	}
+
 	
 
 }

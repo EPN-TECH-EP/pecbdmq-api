@@ -20,4 +20,6 @@ public interface PeriodoAcademicoService {
 	void deleteById(int id) throws DataException;
 	
 	List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico();
+	
+	String getEstado();
 }
