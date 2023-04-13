@@ -1,8 +1,5 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +21,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
-import epntech.cbdmq.pe.dominio.admin.Requisito;
+import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.servicio.impl.ConvocatoriaForServiceImpl;
 import jakarta.mail.MessagingException;
@@ -47,7 +44,7 @@ public class ConvocatoriaForResource {
 		ConvocatoriaFor convocatoria = objectMapper.readValue(datosConvocatoria, ConvocatoriaFor.class);
 
 		
-		Set<Requisito> requisitos = convocatoria.getRequisitos();
+		Set<RequisitoFor> requisitos = convocatoria.getRequisitos();
 		//Set<DocumentoRequisitoFor> documentosRequisito = null;
 
 		/*Set<DocumentoFor> docs = new HashSet<>();
@@ -65,9 +62,9 @@ public class ConvocatoriaForResource {
 			docs.add(documento);
 		}*/
 
-		Set<Requisito> reqs = new HashSet<>();
-		for (Requisito r : requisitos) {
-			Requisito requisito = new Requisito();
+		Set<RequisitoFor> reqs = new HashSet<>();
+		for (RequisitoFor r : requisitos) {
+			RequisitoFor requisito = new RequisitoFor();
 			requisito.setCodigoRequisito(r.getCodigoRequisito());
 			//requisito.setCodFuncionario(r.getCodFuncionario());
 			//requisito.setDescripcion(r.getDescripcion());

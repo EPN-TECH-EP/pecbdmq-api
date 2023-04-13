@@ -1,10 +1,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
@@ -22,7 +20,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -90,5 +87,5 @@ public class ConvocatoriaFor {
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "gen_convocatoria_requisito", joinColumns = @JoinColumn(name = "cod_convocatoria"), inverseJoinColumns = @JoinColumn(name = "cod_requisito"))
-	private Set<Requisito> requisitos = new HashSet<>();
+	private Set<RequisitoFor> requisitos = new HashSet<>();
 }

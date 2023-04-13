@@ -31,6 +31,7 @@ import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
+import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.servicio.EmailService;
 import jakarta.mail.MessagingException;
@@ -63,7 +64,7 @@ public class ConvocatoriaForRepository {
 
 
 	public PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
-			Set<Requisito> requisitos, List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria)
+			Set<RequisitoFor> requisitos, List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria)
 			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
 		String sqlConvocatoria = "INSERT INTO cbdmq.gen_convocatoria (cod_periodo_academico, nombre_convocatoria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres, correo) "
 				+ "VALUES (:periodo, :nombre, :estado, :fechaInicio, :fechaFin, :horaInicio, :horaFin, :codigoUnico, :cupoHombres, :cupoMujeres, :correo)";
@@ -237,7 +238,7 @@ public class ConvocatoriaForRepository {
 
 		// REQUISITOS
 
-		for (Requisito elemento : requisitos) {
+		for (RequisitoFor elemento : requisitos) {
 			entityManager.createNativeQuery(sqlConvocatoriaRequisito).setParameter("cod_convocatoria", codConvocatoria)
 					.setParameter("cod_requisito", elemento.getCodigoRequisito());
 		}
