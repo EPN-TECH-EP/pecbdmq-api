@@ -71,6 +71,8 @@ public class Convocatoria {
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime horaFinConvocatoria;
 	
+
+
 	@Column(name = "codigo_unico_convocatoria")
 	private String codigoUnico;
 	
@@ -79,6 +81,8 @@ public class Convocatoria {
 	
 	@Column(name = "cupo_mujeres")
 	private Integer cupoMujeres;
+
+
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_convocatoria_documento",

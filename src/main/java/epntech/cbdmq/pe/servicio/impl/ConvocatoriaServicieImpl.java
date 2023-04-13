@@ -10,8 +10,17 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
+
+import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
+import epntech.cbdmq.pe.repositorio.admin.ConvocatorialistarRepository;
+
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisistoDocumento;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
+import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRequisitoDocumentoRepository;
+
 import epntech.cbdmq.pe.servicio.ConvocatoriaService;
 
 @Service
@@ -19,6 +28,11 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 
 	@Autowired
 	private ConvocatoriaRepository repo;
+	
+	@Autowired
+
+	private ConvocatorialistarRepository repo1;
+
 	
 	@Override
 	public Convocatoria saveData(Convocatoria obj) throws DataException {
@@ -63,6 +77,14 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 				throw new DataException(DATOS_RELACIONADOS);
 			}
 		}
+	}
+
+	@Override
+
+	public List<Convocatorialistar> getConvocatorialistar() {
+		// TODO Auto-generated method stub
+		return repo1.getConvocatorialistar();
+
 	}
 
 }

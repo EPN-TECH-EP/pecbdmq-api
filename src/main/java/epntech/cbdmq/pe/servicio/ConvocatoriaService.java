@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
+
+import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
+
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 
@@ -18,4 +21,8 @@ public interface ConvocatoriaService {
 	Convocatoria updateData(Convocatoria objActualizado);
 	
 	void deleteData(int id) throws DataException;
+	
+
+	List<Convocatorialistar> getConvocatorialistar();
+
 }

@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.repositorio.admin;
 
 import java.util.List;
@@ -31,3 +32,4 @@ public interface ModuloEstadosDataRepository extends JpaRepository<ModuloEstados
 			+ "order by 2 ", nativeQuery=true)
 	List<ModuloEstadosData> getAllData();
 }
+
