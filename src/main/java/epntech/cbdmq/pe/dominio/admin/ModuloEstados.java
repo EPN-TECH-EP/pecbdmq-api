@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2008-2023. Todos los derechos reservados.
  */
@@ -40,3 +41,5 @@ public class ModuloEstados {
     private Integer modulo;
     
 }
+
+

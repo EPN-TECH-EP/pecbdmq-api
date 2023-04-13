@@ -29,17 +29,19 @@ public class Requisito {
 	@Column(name = "cod_funcionario")
 	private Integer codFuncionario;
 	
+
 	@Column(name = "nombre_requisito")
 	private String nombre;
 	
 	@Column(name = "descripcion_requisito")
 	private String descripcion;
 	
+	@Column(name = "es_documento")
+	private Boolean esDocumento;
+	
 	@Column(name = "estado")
 	private String estado;
 	
-	@Column(name = "es_documento")
-	private Boolean esDocumento;
 	
 	/*@ManyToMany(mappedBy = "requisitos", fetch = FetchType.LAZY)
     private Set<ConvocatoriaFor> convocatorias = new HashSet<>();*/

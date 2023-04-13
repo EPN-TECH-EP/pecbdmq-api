@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.dominio.admin;
 
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import lombok.Data;
 @Data
 @Entity(name = "gen_documento")
 @Table(name = "gen_documento")
+
 public class ConvocatoriaDocumento {
 
 	@Id
@@ -35,4 +37,9 @@ public class ConvocatoriaDocumento {
 	private String autorizacion;
 	@Column(name = "estado")
 	private String estado;
+
+	
 }
+
+
+

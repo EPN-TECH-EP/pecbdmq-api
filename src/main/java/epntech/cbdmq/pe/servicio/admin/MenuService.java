@@ -16,20 +16,21 @@ import epntech.cbdmq.pe.repositorio.admin.MenuRepository;
 @Service
 @Transactional
 public class MenuService {
-	
+
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
-    private MenuRepository menuRepository;
-    
-    @Autowired
-    public MenuService(MenuRepository menuRepository) {
-    	this.menuRepository = menuRepository;
-    }
+	private MenuRepository menuRepository;
+
+	@Autowired
+	public MenuService(MenuRepository menuRepository) {
+		this.menuRepository = menuRepository;
+	}
+
+	public List<MenuPermisos> findMenuByIdUsuario(@Param("idUsuario") String idUsuario) {
+		return this.menuRepository.findMenuByIdUsuario(idUsuario);
+	}
 	
-    
-    public List<MenuPermisos> findMenuByIdUsuario(@Param("idUsuario") String idUsuario){
-    	
-    	return this.menuRepository.findMenuByIdUsuario(idUsuario);
-    	
-    }
-    
+	public List<Menu> getAll(){
+		return this.menuRepository.findAll();
+	}
+
 }
