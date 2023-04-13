@@ -40,57 +40,52 @@ public class ConvocatoriaFor {
 	@EqualsAndHashCode.Include()
 	@Column(name = "cod_convocatoria")
 	private Integer codConvocatoria;
-	
+
 	@Column(name = "cod_periodo_evaluacion")
 	private Integer codPeriodoEvaluacion;
-	
+
 	@Column(name = "cod_periodo_academico")
 	private Integer codPeriodoAcademico;
-	
-	@Column(name = "cod_modulo")
-	private Integer codModulo;
-	
-	@Column(name = "nombre_convocaria")
+
+	@Column(name = "nombre_convocatoria")
 	private String nombre;
-	
+
 	@Column(name = "estado")
 	private String estado;
-	
+
 	@Column(name = "fecha_inicio_convocatoria")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechaInicioConvocatoria;
-	
+
 	@Column(name = "fecha_fin_convocatoria")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechaFinConvocatoria;
-	
+
 	@Column(name = "hora_inicio_convocatoria")
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime horaInicioConvocatoria;
-	
+
 	@Column(name = "hora_fin_convocatoria")
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime horaFinConvocatoria;
-	
+
 	@Column(name = "codigo_unico_convocatoria")
 	private String codigoUnico;
-	
+
 	@Column(name = "cupo_hombres")
 	private Integer cupoHombres;
-	
+
 	@Column(name = "cupo_mujeres")
 	private Integer cupoMujeres;
-	
+
+	@Column(name = "correo")
+	private String correo;
+
 	@ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "gen_convocatoria_documento",
-        joinColumns = @JoinColumn(name = "cod_convocatoria"),
-        inverseJoinColumns = @JoinColumn(name = "cod_documento")
-    )
-    private Set<DocumentoFor> documentos = new HashSet<>();
+	@JoinTable(name = "gen_convocatoria_documento", joinColumns = @JoinColumn(name = "cod_convocatoria"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))
+	private Set<DocumentoFor> documentos = new HashSet<>();
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "gen_convocatoria_requisito", joinColumns = @JoinColumn(name = "cod_convocatoria"), inverseJoinColumns = @JoinColumn(name = "cod_requisito"))
+	private Set<RequisitoFor> requisitos = new HashSet<>();
 }
-
-
-
-
-

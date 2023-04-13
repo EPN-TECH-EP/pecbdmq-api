@@ -18,4 +18,8 @@ public class ArchivoConst {
 
 	public static final String PUNTO = ".";
 	public static final String FORWARD_SLASH = "/";
+	
+	public static final String PATH_PROCESO_CONVOCATORIA = "Convocatoria/";
+	public static final String PATH_PROCESO_PERIODO_ACADEMICO = "Periodo Academico/";
+	
 }
