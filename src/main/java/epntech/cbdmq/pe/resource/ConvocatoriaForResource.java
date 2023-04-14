@@ -1,9 +1,17 @@
 package epntech.cbdmq.pe.resource;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,8 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
@@ -123,13 +134,33 @@ public class ConvocatoriaForResource {
 		return new ResponseEntity<>(pa, HttpStatus.OK);
 	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizar(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam("docsConvocatoria") List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
+	@PostMapping("/actualizar")
+	public ResponseEntity<?> actualizar(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam(name = "docsConvocatoria", required = false) List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException {
 	
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
-		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		
+		JsonNode jsonNode = objectMapper.readTree(datosConvocatoria);
+		System.out.println("jsonNode: " + jsonNode);
+		
 		ConvocatoriaFor convocatoria = objectMapper.readValue(datosConvocatoria, ConvocatoriaFor.class);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> entry = fields.next();
+            String key = entry.getKey();
+            JsonNode value = entry.getValue();
+            //System.out.println("Clave: " + key + ", Valor: " + value.asText());
+            if(key.equals("fechaInicioConvocatoria")) {
+                Date fecha = dateFormat.parse(value.asText());
+            	convocatoria.setFechaInicioConvocatoria(fecha);
+            }
+            if(key.equals("fechaFinConvocatoria")) {
+                Date fecha = dateFormat.parse(value.asText());
+            	convocatoria.setFechaFinConvocatoria(fecha);
+            }
+        }
 
 		Set<DocumentoFor> documentos = convocatoria.getDocumentos();
 		Set<RequisitoFor> requisitos = convocatoria.getRequisitos();

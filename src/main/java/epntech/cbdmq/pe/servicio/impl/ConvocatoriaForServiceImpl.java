@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,7 @@ import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaForRepository;
+import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaForUpdRepository;
 import epntech.cbdmq.pe.servicio.ConvocatoriaForService;
 import jakarta.mail.MessagingException;
 
@@ -34,6 +36,9 @@ public class ConvocatoriaForServiceImpl implements ConvocatoriaForService {
 
 	@Autowired
 	private ConvocatoriaForRepository repo;
+	
+	@Autowired
+	private ConvocatoriaForUpdRepository repo1;
 
 	@Override
 	public PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria, Set<RequisitoFor> requisito, List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
@@ -45,8 +50,8 @@ public class ConvocatoriaForServiceImpl implements ConvocatoriaForService {
 	@Override
 	public PeriodoAcademicoFor actualizarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
 			Set<RequisitoFor> requisito, List<MultipartFile> docsConvocatoria, DocumentoFor documento)
-			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
+			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException {
 
-		return repo.actualizarConvocatoriaConDocumentos(convocatoria, requisito, docsConvocatoria, documento);
+		return repo1.actualizarConvocatoriaConDocumentos(convocatoria, requisito, docsConvocatoria, documento);
 	}
 }

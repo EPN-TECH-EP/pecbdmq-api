@@ -47,9 +47,6 @@ public class ConvocatoriaForRepository {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	@PersistenceContext
-	private EntityManager entityManagerUpd;
-	
 	@Autowired
 	private EmailService emailService;
 
@@ -329,119 +326,6 @@ public class ConvocatoriaForRepository {
 		String resultado = null;
 		resultado = ARCHIVOS_RUTA + proceso + id + "/";
 		return resultado;
-	}
-	
-	public PeriodoAcademicoFor actualizarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
-			Set<RequisitoFor> requisitos, List<MultipartFile> docsConvocatoria, DocumentoFor documentosFor)
-			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
-		String sqlConvocatoria = "update cbdmq.gen_convocatoria set "
-								+ "nombre_convocatoria = :nombre, "
-								+ "estado = :estado, "
-								+ "fecha_inicio_convocatoria = :fechaInicio, "
-								+ "fecha_fin_convocatoria = :fechaFin, "
-								+ "hora_inicio_convocatoria = :horaInicio, "
-								+ "hora_fin_convocatoria = :horaFin, "
-								+ "cupo_hombres = :cupoHombres, "
-								+ "cupo_mujeres = :cupoMujeres, "
-								+ "correo = :correo "
-								+ "where cod_convocatoria = :cod_convocatoria";
-		
-		String sqlDocumento = "update cbdmq.gen_documento set "
-							+ "nombre_documento = :nombre, "
-							+ "ruta = :ruta "
-							+ "where cod_documento = :cod_documento";
-		
-		String sqlConvocatoriaRequisito = "INSERT INTO cbdmq.gen_convocatoria_requisito (cod_convocatoria, cod_requisito) "
-				+ "VALUES (:cod_convocatoria, :cod_requisito)";
-		
-		String sqlConvocatoriaRequisitoDel = "delete from cbdmq.gen_convocatoria_requisito where cod_convocatoria = :cod_convocatoria ";
-
-
-		// CONVOCATORIA
-
-		entityManagerUpd.createNativeQuery(sqlConvocatoria)
-				.setParameter("nombre", convocatoria.getNombre())
-				.setParameter("estado", convocatoria.getEstado())
-				.setParameter("fechaInicio", convocatoria.getFechaInicioConvocatoria())
-				.setParameter("fechaFin", convocatoria.getFechaFinConvocatoria())
-				.setParameter("horaInicio", convocatoria.getHoraInicioConvocatoria())
-				.setParameter("horaFin", convocatoria.getHoraFinConvocatoria())
-				.setParameter("cupoHombres", convocatoria.getCupoHombres())
-				.setParameter("cupoMujeres", convocatoria.getCupoMujeres())
-				.setParameter("correo", convocatoria.getCorreo())
-				.setParameter("cod_convocatoria", convocatoria.getCodConvocatoria());
-
-		entityManagerUpd.persist(convocatoria);
-
-		Integer codConvocatoria = convocatoria.getCodConvocatoria();
-		
-		// ARCHIVOS CONVOCATORIA
-		// guardamos archivos de la convocatoria en el servidor
-
-		if (!(docsConvocatoria == null))
-		{
-			List<DatosFile> archivosConvocatoria = new ArrayList<>();
-			try {
-				archivosConvocatoria = guardarArchivo(docsConvocatoria, PATH_PROCESO_CONVOCATORIA, convocatoria.getCodConvocatoria().toString());
-			} catch (Exception e) {
-				HttpHeaders headers = new HttpHeaders();
-				headers.add("errorHeader", e.getMessage());
-			}
-			Set<DocumentoFor> dConvocatoria = new HashSet<>();
-			
-			for (DatosFile datosFile : archivosConvocatoria) {
-				DocumentoFor dd = new DocumentoFor();
-				dd.setEstado("ACTIVO");
-				dd.setNombre(datosFile.getNombre());
-				dd.setRuta(datosFile.getRuta());
-	
-				dConvocatoria.add(dd);
-			}
-			
-			Set<DocumentoFor> documentos = new HashSet<>();
-			for (DocumentoFor documento : dConvocatoria) {
-				DocumentoFor documentoFor = new DocumentoFor();
-				entityManagerUpd.createNativeQuery(sqlDocumento)
-						.setParameter("nombre", documento.getNombre())
-						.setParameter("ruta", documento.getRuta())
-						.setParameter("cod_documento", documentosFor.getCodigoDocumento());
-				entityManagerUpd.persist(documento);
-				documentoFor = documento;
-				documentos.add(documentoFor);
-			}
-		}
-
-		
-		// REQUISITOS
-
-		if(requisitos != null)
-		{
-			entityManagerUpd.createNativeQuery(sqlConvocatoriaRequisitoDel)
-			.setParameter("cod_convocatoria", codConvocatoria);
-			entityManagerUpd.persist(requisitos);
-			
-			for (RequisitoFor elemento : requisitos) {
-				entityManagerUpd.createNativeQuery(sqlConvocatoriaRequisito)
-						.setParameter("cod_convocatoria", codConvocatoria)
-						.setParameter("cod_requisito", elemento.getCodigoRequisito());
-			}
-		}
-		
-		//ENVIO DE EMAIL CON DOCUMENTO CONVOCATORIA
-		if (docsConvocatoria != null)
-		{
-			String link = HOSTNAME + ":" + SERVER_PORT + "/link/" + documentosFor.getCodigoDocumento();
-			
-			String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
-			
-			emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
-		}
-		
-		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
-
-		pa.setConvocatoria(codConvocatoria);
-
-		return pa;
 	}
 
 }

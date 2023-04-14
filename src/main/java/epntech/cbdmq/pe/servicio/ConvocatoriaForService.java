@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +22,6 @@ public interface ConvocatoriaForService {
 			List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException;
 	
 	PeriodoAcademicoFor actualizarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria, Set<RequisitoFor> requisito, 
-			List<MultipartFile> docsConvocatoria, DocumentoFor documento) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException;
+			List<MultipartFile> docsConvocatoria, DocumentoFor documento) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException;
 
 }
