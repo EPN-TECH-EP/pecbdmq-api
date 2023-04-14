@@ -48,14 +48,34 @@ public class ConvocatoriaForResource {
 	private ConvocatoriaForServiceImpl objService;
 
 	@PostMapping("/crear")
-	public ResponseEntity<?> crear(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam("docsPeriodoAcademico") List<MultipartFile> docsPeriodoAcademico, @RequestParam("docsConvocatoria") List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
+	public ResponseEntity<?> crear(@RequestParam("datosConvocatoria") String datosConvocatoria, @RequestParam("docsPeriodoAcademico") List<MultipartFile> docsPeriodoAcademico, @RequestParam("docsConvocatoria") List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException {
 
 		//Set<DocumentoFor> documentos = convocatoria.getDocumentos();
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
-		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		
+		JsonNode jsonNode = objectMapper.readTree(datosConvocatoria);
+		System.out.println("jsonNode: " + jsonNode);
+		
 		ConvocatoriaFor convocatoria = objectMapper.readValue(datosConvocatoria, ConvocatoriaFor.class);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> entry = fields.next();
+            String key = entry.getKey();
+            JsonNode value = entry.getValue();
+            //System.out.println("Clave: " + key + ", Valor: " + value.asText());
+            if(key.equals("fechaInicioConvocatoria")) {
+                Date fecha = dateFormat.parse(value.asText());
+            	convocatoria.setFechaInicioConvocatoria(fecha);
+            }
+            if(key.equals("fechaFinConvocatoria")) {
+                Date fecha = dateFormat.parse(value.asText());
+            	convocatoria.setFechaFinConvocatoria(fecha);
+            }
+        }
 
 		
 		Set<RequisitoFor> requisitos = convocatoria.getRequisitos();
