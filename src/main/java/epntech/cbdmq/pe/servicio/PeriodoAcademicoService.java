@@ -22,4 +22,6 @@ public interface PeriodoAcademicoService {
 	List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico();
 	
 	String getEstado();
+	
+	Integer updateNextState(Integer id, String proceso);
 }

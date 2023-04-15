@@ -83,6 +83,12 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		return repo.getEstado();
 	}
 
+	@Override
+	public Integer updateNextState(Integer id, String proceso) {
+		// TODO Auto-generated method stub
+		return repo.updateNextState(id, proceso);
+	}
+
 	
 
 }

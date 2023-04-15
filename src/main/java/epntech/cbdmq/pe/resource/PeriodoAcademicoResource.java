@@ -100,5 +100,11 @@ public class PeriodoAcademicoResource {
 		return response(HttpStatus.OK, result);
 	}
 	
+	@GetMapping("/siguienteEstado")
+	public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id, @RequestParam("proceso") String proceso) {
+		String result = objService.updateNextState(id, proceso).toString();
+				
+		return response(HttpStatus.OK, result);
+	}
 	
 }

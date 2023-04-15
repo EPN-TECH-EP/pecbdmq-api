@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PostulanteDatoPersonal;
@@ -27,5 +28,8 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
 				+ "AND UPPER(pa.estado) = 'ACTIVO' "
 				+ "AND UPPER(trim(m.etiqueta)) = 'FORMACIÓN' ", nativeQuery = true)
 	String getEstado();
+	
+	@Procedure(value = "cbdmq.get_next_state_pa")
+	Integer updateNextState(Integer id, String proceso);
 	
 }
