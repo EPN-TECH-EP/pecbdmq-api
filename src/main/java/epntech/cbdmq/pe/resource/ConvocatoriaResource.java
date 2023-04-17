@@ -22,7 +22,7 @@ import epntech.cbdmq.pe.dominio.admin.Convocatoria;
 
 import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
 
-import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisistoDocumento;
+
 
 import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
