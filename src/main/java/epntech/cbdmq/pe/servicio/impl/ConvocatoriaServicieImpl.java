@@ -19,7 +19,7 @@ import epntech.cbdmq.pe.repositorio.admin.ConvocatorialistarRepository;
 
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
-import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRequisitoDocumentoRepository;
+
 
 import epntech.cbdmq.pe.servicio.ConvocatoriaService;
 
