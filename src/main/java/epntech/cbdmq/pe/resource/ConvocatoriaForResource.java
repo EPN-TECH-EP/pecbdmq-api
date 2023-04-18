@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -150,6 +152,8 @@ public class ConvocatoriaForResource {
 		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
 		pa = objService.insertarConvocatoriaConDocumentos(convocatoria, reqs, docsPeriodoAcademico, docsConvocatoria);
 		
+		if(pa == null)
+			return response(HttpStatus.BAD_REQUEST, PA_ACTIVO);
 		
 		return new ResponseEntity<>(pa, HttpStatus.OK);
 	}

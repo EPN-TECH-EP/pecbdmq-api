@@ -26,6 +26,7 @@ import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaForRepository;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaForUpdRepository;
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.ConvocatoriaForService;
 import jakarta.mail.MessagingException;
 
@@ -39,11 +40,17 @@ public class ConvocatoriaForServiceImpl implements ConvocatoriaForService {
 	
 	@Autowired
 	private ConvocatoriaForUpdRepository repo1;
+	
+	@Autowired
+	private PeriodoAcademicoRepository repo2;
 
 	@Override
 	public PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria, Set<RequisitoFor> requisito, List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException {
-
-		return repo.insertarConvocatoriaConDocumentos(convocatoria, requisito, docsPeriodoAcademico, docsConvocatoria);
+	
+		if (repo2.getActive().equals(false))
+			return repo.insertarConvocatoriaConDocumentos(convocatoria, requisito, docsPeriodoAcademico, docsConvocatoria);
+		else
+			return null;
 
 	}
 

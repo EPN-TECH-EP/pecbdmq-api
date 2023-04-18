@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.resource;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,11 @@ public class ConvocatoriaResource {
 	public ResponseEntity<Convocatoria> obtenerPorId(@PathVariable("id") int codigo) {
 		return objService.getByIdData(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/")
+	public Set<Convocatoria> obtenerConvocatoriaActiva() {
+		return objService.getConvocatoriaActiva();
 	}
 
 	@PutMapping("/{id}")

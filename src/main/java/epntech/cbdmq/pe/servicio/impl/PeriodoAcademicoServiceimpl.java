@@ -4,13 +4,16 @@ import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoDocRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoMSRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
@@ -22,6 +25,8 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	private PeriodoAcademicoRepository repo;
 	@Autowired
 	private PeriodoAcademicoMSRepository repo1;
+	@Autowired
+	private PeriodoAcademicoDocRepository repo2;
 	
 	@Override
 	public PeriodoAcademico save(PeriodoAcademico obj) throws DataException {
@@ -87,6 +92,24 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	public Integer updateNextState(Integer id, String proceso) {
 		// TODO Auto-generated method stub
 		return repo.updateNextState(id, proceso);
+	}
+
+	@Override
+	public Integer validState(Integer id, String proceso) {
+		// TODO Auto-generated method stub
+		return repo.validState(id, proceso);
+	}
+
+	@Override
+	public Set<Documento> getDocumentos() {
+		// TODO Auto-generated method stub
+		return repo2.getDocumentos();
+	}
+
+	@Override
+	public Optional<PeriodoAcademico> getActive() {
+		// TODO Auto-generated method stub
+		return repo.getPeriodoActivo();
 	}
 
 	

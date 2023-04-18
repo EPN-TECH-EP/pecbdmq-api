@@ -32,4 +32,23 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
 	@Procedure(value = "cbdmq.get_next_state_pa")
 	Integer updateNextState(Integer id, String proceso);
 	
+	@Procedure(value = "cbdmq.get_valid_states_pa")
+	Integer validState(Integer id, String proceso);
+	
+	@Procedure(value = "cbdmq.valida_pa_activo")
+	Boolean getActive();
+	
+	@Query(value = "select pa.* "
+			+ "	from cbdmq.gen_periodo_academico pa, cbdmq.gen_modulo_estados me, cbdmq.gen_modulo m, "
+			+ "	cbdmq.gen_convocatoria c "
+			+ "	where pa.cod_modulo_estados = me.cod_modulo_estados "
+			+ "	and me.cod_modulo = m.cod_modulo "
+			+ "	and c.cod_periodo_academico = pa.cod_periodo_academico "
+			+ "	and UPPER(pa.estado) = 'ACTIVO' "
+			+ "	and UPPER(m.estado) = 'ACTIVO' "
+			+ "	and UPPER(me.estado) = 'ACTIVO' "
+			+ "	and UPPER(c.estado) = 'ACTIVO' "
+			+ "	and UPPER(m.etiqueta) = 'FORMACIÓN' ", nativeQuery = true)
+	Optional<PeriodoAcademico> getPeriodoActivo();
+	
 }
