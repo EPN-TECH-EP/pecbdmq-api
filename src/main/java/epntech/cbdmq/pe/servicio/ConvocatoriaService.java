@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.servicio;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
 
@@ -25,7 +24,5 @@ public interface ConvocatoriaService {
 	
 
 	List<Convocatorialistar> getConvocatorialistar();
-	
-	Set<Convocatoria> getConvocatoriaActiva();
 
 }

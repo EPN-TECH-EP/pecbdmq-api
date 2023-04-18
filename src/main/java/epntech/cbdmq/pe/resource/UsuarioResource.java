@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.UserPrincipal;
 import epntech.cbdmq.pe.dominio.Usuario;
+import epntech.cbdmq.pe.dominio.util.NombreApellido;
 import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
@@ -135,6 +135,13 @@ public class UsuarioResource extends GestorExcepciones {
 		Usuario user = usuarioService.findUserByUsername(username);
 		return new ResponseEntity<>(user, OK);
 	}
+	
+	@PostMapping("/buscarNombreApellido")
+	public ResponseEntity<List<Usuario>> getUserNombreApellido(@RequestBody NombreApellido nombreApellido) {
+		List<Usuario> users = usuarioService.findUsuariosByNombreApellido(nombreApellido.getNombre(), nombreApellido.getApellido());
+		return new ResponseEntity<>(users, OK);
+	}
+	
 
 	@GetMapping("/lista")
 	public ResponseEntity<List<Usuario>> getAllUsers() {
