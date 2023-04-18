@@ -16,20 +16,20 @@ import epntech.cbdmq.pe.servicio.MenuRolService;
 
 @Service
 @Transactional
-public class MenuRolServiceImpl implements MenuRolService {
-
+public class MenuRolServiceImpl implements MenuRolService{
+	
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 	private MenuRolRepository menuRolRepository;
-
+	
 	@Autowired
-	public MenuRolServiceImpl(MenuRolRepository menuRolRepository) {
-		this.menuRolRepository = menuRolRepository;
-	}
-
+    public MenuRolServiceImpl(MenuRolRepository menuRolRepository) {
+    	this.menuRolRepository = menuRolRepository;
+    }
+	
 	public MenuRol save(MenuRol menuRol) {
-		return this.menuRolRepository.save(menuRol);
+		return this.menuRolRepository.save(menuRol);			
 	}
-
+	
 	public void delete(MenuRol menuRol) {
 		Optional<MenuRol> mr = this.menuRolRepository.findById(menuRol.getMenuRolId());
 		if (mr.isPresent()) {
@@ -45,37 +45,6 @@ public class MenuRolServiceImpl implements MenuRolService {
 	@Override
 	public MenuRol update(MenuRol objActualizado) throws DataException {
 		return this.save(objActualizado);
-	}
-
-	@Override
-	public List<MenuRol> getAllByRol(Long codRol) {
-		return this.menuRolRepository.findByCodRol(codRol);
-	}
-
-	@Override
-	public void deleteAllByMenuRolId_CodRol(Long codRol) {
-		this.menuRolRepository.deleteAllByMenuRolId_CodRol(codRol);
-	}
-
-	@Override
-	public List<MenuRol> saveAll(Iterable<MenuRol> entities) {
-		return this.menuRolRepository.saveAll(entities);
-	}
-
-	@Override
-	public void deleteAndSave(Iterable<MenuRol> entities) {
-
-		// primero, eliminar todas las entidades asociadas al rol
-		if (entities != null && entities.iterator().hasNext()) {
-			MenuRol mr = entities.iterator().next();
-
-			this.deleteAllByMenuRolId_CodRol(mr.getMenuRolId().getCodRol());
-
-			// luego, registrar la configuración recibida en la lista
-			this.saveAll(entities);
-
-		}
-
 	}
 
 }

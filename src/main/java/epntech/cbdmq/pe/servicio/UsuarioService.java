@@ -48,6 +48,4 @@ public interface UsuarioService {
 	void guardarArchivo(String nombreArchivo, MultipartFile archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 
 	long tamañoMáximoArchivo();
-	
-	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido);
 }

@@ -12,11 +12,7 @@ import epntech.cbdmq.pe.dominio.admin.MenuRolId;
 public interface MenuRolRepository extends JpaRepository<MenuRol, MenuRolId>{
 	
     @Query("select mr FROM MenuRol mr WHERE mr.id.codRol = :codRol")    
-	List<MenuRol> findByCodRol(@Param("codRol") Long codRol);
-    
-    void deleteAllByMenuRolId_CodRol(Long codRol);    
-    
-    <S extends MenuRol> List<S> saveAll(Iterable<S> entities);
+	List<MenuRol> findByCodRol(@Param("codRol") Integer codRol);
 	
 	//Optional<MenuRol> findByCodRolAndCodMenu(Integer codMenu,	Integer codRol);
 
