@@ -20,6 +20,7 @@ public class MensajesConst {
 	public static final String CURSO_REPROBADO="El curso ha sido reprobado";
 	public static final String APELACION_CURSO="Esta apelacion esta en curso";
 	public static final String APELACION_NO_EXISTE="Esta apelacion no exte";
+	public static final String ASIGNACION_EXITO = "Se asignaron los valores con éxito";
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";
