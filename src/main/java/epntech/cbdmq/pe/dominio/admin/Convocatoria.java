@@ -3,9 +3,7 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -86,17 +84,10 @@ public class Convocatoria {
 
 
 	
-	@Column(name = "correo")
-	private String correo;
-	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_convocatoria_documento",
             joinColumns = @JoinColumn(name = "cod_convocatoria"),
             inverseJoinColumns = @JoinColumn(name = "cod_documento")
     )
 	private List<Documento> documentos = new ArrayList<>();
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "gen_convocatoria_requisito", joinColumns = @JoinColumn(name = "cod_convocatoria"), inverseJoinColumns = @JoinColumn(name = "cod_requisito"))
-	private Set<Requisito> requisitos = new HashSet<>();
 }

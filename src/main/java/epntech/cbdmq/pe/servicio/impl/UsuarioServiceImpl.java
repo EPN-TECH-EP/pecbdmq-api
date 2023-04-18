@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -360,6 +361,10 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	public long tamañoMáximoArchivo() {
 		return TAMAÑO_MÁXIMO.toBytes();
+	}
+	
+	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido){
+		return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
 	}
 
 }

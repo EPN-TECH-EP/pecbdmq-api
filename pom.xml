@@ -95,12 +95,18 @@
 
 		<!-- eureka server -->
 		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-loadbalancer -->
-		<!-- dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-loadbalancer</artifactId> 
-			<version>4.0.1</version> </dependency -->
+		<!-- dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
+			<version>4.0.1</version>
+		</dependency -->
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
-		<!-- dependency> <groupId>org.springframework.cloud</groupId> <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId> 
-			<version>4.0.0</version> </dependency -->
+		<!--  dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<version>4.0.0</version>
+		</dependency -->
 
 		<!-- EXCEL -->
 		<dependency>
@@ -128,10 +134,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
-
 
 		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
 		<!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->

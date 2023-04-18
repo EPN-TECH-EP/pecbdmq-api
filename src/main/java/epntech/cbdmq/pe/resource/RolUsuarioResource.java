@@ -1,7 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import static epntech.cbdmq.pe.constante.MensajesConst.ASIGNACION_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
 
@@ -19,50 +19,47 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.MenuRol;
+import epntech.cbdmq.pe.dominio.admin.RolUsuario;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.MenuRolService;
+import epntech.cbdmq.pe.servicio.RolUsuarioService;
 import epntech.cbdmq.pe.util.ResponseEntityUtil;
 
 @RestController
-@RequestMapping("/menuRol")
-
-public class MenuRolResource {
-
+@RequestMapping("/rolUsuario")
+public class RolUsuarioResource {
 	@Autowired
-	private MenuRolService menuRolService;
+	private RolUsuarioService rolUsuarioService;
 
 	@GetMapping("/listar")
-	public List<MenuRol> listar() {
-		return this.menuRolService.getAll();
+	public List<RolUsuario> listar() {
+		return this.rolUsuarioService.getAll();
 	}
 	
 	@GetMapping("/listar/{id}")
-	public List<MenuRol> listarPorRol(@PathVariable("id") Long codRol) {
-		return this.menuRolService.getAllByRol(codRol);
+	public List<RolUsuario> listarPorRol(@PathVariable("id") Long codUsuario) {
+		return this.rolUsuarioService.getAllByUsuario(codUsuario);
 	}
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody MenuRol obj) throws DataException {
-		return new ResponseEntity<>(this.menuRolService.save(obj), HttpStatus.OK);
+	public ResponseEntity<?> guardar(@RequestBody RolUsuario obj) throws DataException {
+		return new ResponseEntity<>(this.rolUsuarioService.save(obj), HttpStatus.OK);
 	}
 
 	@PutMapping("/actualizar")
-	public ResponseEntity<MenuRol> actualizarDatos(@RequestBody MenuRol obj) throws DataException {
-		return new ResponseEntity<>(this.menuRolService.update(obj), HttpStatus.OK);
+	public ResponseEntity<RolUsuario> actualizarDatos(@RequestBody RolUsuario obj) throws DataException {
+		return new ResponseEntity<>(this.rolUsuarioService.update(obj), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/eliminar")
-	public ResponseEntity<HttpResponse> eliminarDatos(@RequestBody MenuRol obj) throws DataException {
-		this.menuRolService.delete(obj);
+	public ResponseEntity<HttpResponse> eliminarDatos(@RequestBody RolUsuario obj) throws DataException {
+		this.rolUsuarioService.delete(obj);
 		return ResponseEntityUtil.response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
 	@PostMapping("/asignar")	
-	public ResponseEntity<?> asignar(@RequestBody List<MenuRol> lista) throws DataException {
-		this.menuRolService.deleteAndSave(lista);
+	public ResponseEntity<?> asignar(@RequestBody List<RolUsuario> lista) throws DataException {
+		this.rolUsuarioService.deleteAndSave(lista);
 		return ResponseEntityUtil.response(HttpStatus.OK, ASIGNACION_EXITO);
 	}
-
 }
