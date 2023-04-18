@@ -1,13 +1,12 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.query.sqm.tree.update.SqmUpdateStatement;
 import org.springframework.beans.factory.annotation.*;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -90,45 +88,4 @@ public class PeriodoAcademicoResource {
 	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
 		return objService.getAllPeriodoAcademico();
 	}
-	
-	@GetMapping("/validaestado")
-	public ResponseEntity<HttpResponse> getEstado() {
-		String result = objService.getEstado();
-		
-		if (result == null) {
-			result = "SIN PERIODO";
-		}
-		
-		return response(HttpStatus.OK, result);
-	}
-	
-	@GetMapping("/siguienteEstado")
-	public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id, @RequestParam("proceso") String proceso) {
-		String result = objService.updateNextState(id, proceso).toString();
-				
-		return response(HttpStatus.OK, result);
-	}
-	
-	@GetMapping("/actualizaEstado")
-	public ResponseEntity<HttpResponse> validState(@RequestParam("estado") Integer estado, @RequestParam("proceso") String proceso) {
-		Integer result = objService.validState(estado, proceso);
-		String r;
-		
-		if (result == 1)
-			return response(HttpStatus.OK, REGISTRO_ACRUALIZADO);
-		else
-			return response(HttpStatus.BAD_REQUEST, ESTADO_INCORRECTO);
-	}
-	
-	@GetMapping("/documentos")
-	public Set<Documento> listarDocumentos() {
-		return objService.getDocumentos();
-	}
-	
-	@GetMapping("/")
-	public ResponseEntity<PeriodoAcademico> getPeriodo() {
-		return objService.getActive().map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
-	
 }

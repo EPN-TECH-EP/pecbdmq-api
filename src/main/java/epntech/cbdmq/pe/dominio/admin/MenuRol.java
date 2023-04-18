@@ -18,8 +18,8 @@ public class MenuRol {
 
 	}
 
-	public MenuRol(Integer codMenu, Integer codRol, String permisos) {
-		this.menuRolId = new MenuRolId(codMenu, codRol);		
+	public MenuRol(Long codMenu, Long codRol, String permisos) {
+		this.menuRolId = new MenuRolId(codMenu, codRol);
 		this.permisos = permisos;
 	}
 
