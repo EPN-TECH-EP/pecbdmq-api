@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +29,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
+import epntech.cbdmq.pe.dominio.admin.InscripcionResult;
+import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.admin.TipoProcedencia;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InscripcionForServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.PostulanteServiceimpl;
 import jakarta.mail.MessagingException;
 
 @RestController
@@ -38,9 +46,12 @@ public class InscripcionForResource {
 
 	@Autowired
 	private InscripcionForServiceImpl objService;
+	
+	@Autowired
+	private PostulanteServiceimpl objPostulanteService;
 
 	@PostMapping("/crear")
-	public ResponseEntity<HttpResponse> crear(@RequestParam(name = "datosPersonales", required = true) String datosPersonales, @RequestParam(name = "documentos", required = true) List<MultipartFile> documentos) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException {
+	public ResponseEntity<?> crear(@RequestParam(name = "datosPersonales", required = true) String datosPersonales, @RequestParam(name = "documentos", required = true) List<MultipartFile> documentos) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException, DataException {
 
 		//System.out.println("documentos.size(): " + documentos.size());
 		List<MultipartFile> archivosAdjuntos = new ArrayList<>();
@@ -74,17 +85,11 @@ public class InscripcionForResource {
         }
 
         //System.out.println("inscripcion.getCedula(): " + inscripcion.getCedula());
-		Integer ins;
-		ins = objService.insertarInscripcionConDocumentos(inscripcion, documentos);
+        InscripcionResult result = new InscripcionResult();
+        result = objService.insertarInscripcionConDocumentos(inscripcion, documentos);
 		//System.out.println("ins: " + ins);
-		if(ins == -1)
-			return response(HttpStatus.BAD_REQUEST, CORREO_YA_EXISTE);
-		if(ins == -2)
-			return response(HttpStatus.BAD_REQUEST, CEDULA_YA_EXISTE);
-		else if(ins >= 1)
-			return response(HttpStatus.OK, ins.toString());
-		return null;
 		
+        return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
@@ -95,6 +100,49 @@ public class InscripcionForResource {
 		} catch (Exception e) {
 			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
 		}
+	}
+	
+	@PutMapping("/generaPin")
+	public ResponseEntity<InscripcionFor> getPin(@RequestParam("idDatoPersonal") Integer idDatoPersonal) throws DataException, MessagingException {
+		return objService.getById(idDatoPersonal).map(datosGuardados -> {
+			datosGuardados.setCodDatoPersonal(idDatoPersonal);
+
+			InscripcionFor datosActualizados = new InscripcionFor();
+			try {
+				datosActualizados = objService.savePin(datosGuardados);
+			} catch (DataException | MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+		}).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/validaPin")
+	public ResponseEntity<HttpResponse> validaPin(@RequestParam("pin") String pin, @RequestParam("idDatoPersonal") Integer idDatoPersonal, @RequestParam("idPostulante") Integer idPostulante)
+			throws DataException, MessagingException {
+		InscripcionFor dato;
+		Postulante p;
+
+		try {
+			dato = objService.getById(idDatoPersonal).get();
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE + " - " + idDatoPersonal);
+		}
+		
+		try {
+			p = objPostulanteService.getById(idPostulante).get();
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE + " - " + idPostulante);
+		}
+			
+		Postulante postulante = new Postulante();
+		postulante.setCodigo(idPostulante);
+		postulante.setCodDatoPersonal(idDatoPersonal);
+		postulante.setEstado("ACTIVO");
+		
+		return response(HttpStatus.OK, objService.savePostulante(postulante, "F", pin, dato.getPin_validacion_correo(), dato.getCorreoPersonal()));
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
