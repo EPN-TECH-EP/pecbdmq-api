@@ -7,6 +7,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,12 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 		// TODO Auto-generated method stub
 		return repo1.getConvocatorialistar();
 
+	}
+
+	@Override
+	public Set<Convocatoria> getConvocatoriaActiva() {
+		// TODO Auto-generated method stub
+		return repo.getConvocatoriaActiva();
 	}
 
 }
