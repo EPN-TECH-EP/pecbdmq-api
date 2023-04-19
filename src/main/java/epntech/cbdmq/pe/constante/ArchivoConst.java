@@ -21,5 +21,7 @@ public class ArchivoConst {
 	
 	public static final String PATH_PROCESO_CONVOCATORIA = "Convocatoria/";
 	public static final String PATH_PROCESO_PERIODO_ACADEMICO = "Periodo Academico/";
+	public static final String PATH_PROCESO_INSCRIPCION_FOR = "Postulante/";
+	public static final String NO_ADJUNTO = "No existe un documento adjunto";
 	
 }
