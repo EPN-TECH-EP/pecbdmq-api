@@ -136,4 +136,14 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		return repo1.validaEdad(fecha);
 	}
 
+	public InscripcionFor reenvioPin(InscripcionFor obj) throws DataException, MessagingException {
+		String code = "";
+
+		code = getRandomCode();
+		System.out.println("code: " + code);
+		obj.setCorreoPersonal(obj.getCorreoPersonal());
+		obj.setPin_validacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
+		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
+		return repo1.save(obj);
+	}
 }

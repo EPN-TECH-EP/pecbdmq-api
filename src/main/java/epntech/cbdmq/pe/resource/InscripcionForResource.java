@@ -145,6 +145,30 @@ public class InscripcionForResource {
 		return response(HttpStatus.OK, objService.savePostulante(postulante, "F", pin, dato.getPin_validacion_correo(), dato.getCorreoPersonal()));
 	}
 	
+	@PutMapping("/reenvioPin")
+	public ResponseEntity<?> reenvioPin(@RequestBody InscripcionFor obj) throws DataException, MessagingException {
+		try {
+			objService.getById(obj.getCodDatoPersonal()).get();
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE + " - " + obj.getCodDatoPersonal().toString());
+		}
+		
+		return objService.getById(obj.getCodDatoPersonal()).map(datosGuardados -> {
+			datosGuardados.setCodDatoPersonal(obj.getCodDatoPersonal());
+			datosGuardados.setCorreoPersonal(obj.getCorreoPersonal());
+
+			InscripcionFor datosActualizados = new InscripcionFor();
+			try {
+				datosActualizados = objService.reenvioPin(datosGuardados);
+			} catch (DataException | MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+		}).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),

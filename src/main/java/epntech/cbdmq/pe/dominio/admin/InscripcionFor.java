@@ -97,8 +97,8 @@ public class InscripcionFor {
 	@Column(name = "pin_validacion_correo")
 	private String pin_validacion_correo;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	/*@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "gen_documento_dato_personal", joinColumns = @JoinColumn(name = "cod_datos_personales"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))
-	private Set<DocumentoDatoPersonal> documentos = new HashSet<>();
+	private Set<DocumentoDatoPersonal> documentos = new HashSet<>();*/
 	
 }
