@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +36,12 @@ import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.InscripcionResult;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.admin.TipoProcedencia;
+import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InscripcionForServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.PostulanteServiceimpl;
+import epntech.cbdmq.pe.servicio.impl.UsuarioDatoPersonalServiceImpl;
 import jakarta.mail.MessagingException;
 
 @RestController
@@ -49,6 +53,9 @@ public class InscripcionForResource {
 	
 	@Autowired
 	private PostulanteServiceimpl objPostulanteService;
+	
+	@Autowired
+	private UsuarioDatoPersonalServiceImpl objUDPService;
 
 	@PostMapping("/crear")
 	public ResponseEntity<?> crear(@RequestParam(name = "datosPersonales", required = true) String datosPersonales, @RequestParam(name = "documentos", required = true) List<MultipartFile> documentos) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException, DataException {
@@ -163,10 +170,21 @@ public class InscripcionForResource {
 			} catch (DataException | MessagingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage());
 			}
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/usuarios")
+	public Set<UsuarioDatoPersonal> getUsuarios() {
+		return objUDPService.getUsuarios();
+	}
+	
+	@GetMapping("/usuario/{cedula}")
+	public UsuarioDatoPersonal getUsuario(@PathVariable("cedula") String cedula) throws DataException {
+		return objUDPService.getByCedula(cedula);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
