@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "gen_documento")
 @SQLDelete(sql = "UPDATE {h-schema}gen_documento SET estado = 'ELIMINADO' WHERE cod_documento = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-public class DocumentoFor {
+public class DocumentoRequisitoFor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +61,7 @@ public class DocumentoFor {
 	
 	@Column(name = "estado")
 	private String estado;
-
-	@ManyToMany(mappedBy = "documentos", fetch = FetchType.LAZY)
-    private Set<ConvocatoriaFor> convocatorias = new HashSet<>();
+	
+	/*@ManyToMany(mappedBy = "documentosRequisito", fetch = FetchType.LAZY)
+    private Set<Requisito> requisitos = new HashSet<>();*/
 }

@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
-
 import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
 
 
 
+
 import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
+
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ConvocatoriaServicieImpl;
 
@@ -55,7 +56,6 @@ public class ConvocatoriaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Convocatoria> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Convocatoria obj) {
 		return objService.getByIdData(codigo).map(datosGuardados -> {
-			datosGuardados.setCodModulo(obj.getCodModulo());
 			datosGuardados.setCodPeriodoAcademico(obj.getCodPeriodoAcademico());
 			datosGuardados.setCodPeriodoEvaluacion(obj.getCodPeriodoEvaluacion());
 			datosGuardados.setNombre(obj.getNombre());

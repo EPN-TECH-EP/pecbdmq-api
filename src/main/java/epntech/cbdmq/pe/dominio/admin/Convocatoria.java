@@ -33,8 +33,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "gen_convocatoria")
 @Table(name = "gen_convocatoria")
-@SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado_convocatoria = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado_convocatoria <> 'ELIMINADO'")
+@SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class Convocatoria {
 
 	@Id
@@ -49,10 +49,7 @@ public class Convocatoria {
 	@Column(name = "cod_periodo_academico")
 	private Integer codPeriodoAcademico;
 	
-	@Column(name = "cod_modulo")
-	private Integer codModulo;
-	
-	@Column(name = "nombre_convocaria")
+	@Column(name = "nombre_convocatoria")
 	private String nombre;
 	
 	@Column(name = "estado")

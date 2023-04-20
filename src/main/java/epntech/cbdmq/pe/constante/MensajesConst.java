@@ -10,6 +10,7 @@ public class MensajesConst {
 	public static final String REGISTRO_YA_EXISTE = "El registro con esa información ya existe";
 	public static final String REGISTRO_VACIO = "El registro no permite campos vacíos";
 	public static final String REGISTRO_NO_EXISTE = "No existe información con ese id";
+	public static final String EXITO = "Información almacenada con éxito!";
 	public static final String CEDULA_YA_EXISTE = "Cédula ya existe";
 	public static final String CORREO_YA_EXISTE = "Correo ya existe";
 	public static final String REGISTRO_ELIMINADO_EXITO = "Registro eliminado con éxito";
@@ -19,6 +20,7 @@ public class MensajesConst {
 	public static final String CURSO_REPROBADO="El curso ha sido reprobado";
 	public static final String APELACION_CURSO="Esta apelacion esta en curso";
 	public static final String APELACION_NO_EXISTE="Esta apelacion no exte";
+	public static final String ASIGNACION_EXITO = "Se asignaron los valores con éxito";
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";

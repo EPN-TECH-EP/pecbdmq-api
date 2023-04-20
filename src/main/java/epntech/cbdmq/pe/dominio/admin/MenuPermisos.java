@@ -9,15 +9,17 @@ public class MenuPermisos extends Menu {
 
 	private String permisos;
 
-	public MenuPermisos(Integer id, String etiqueta, String ruta, Integer menu_padre, Integer orden, String permisos) {
+	public MenuPermisos(Integer codMenu, String etiqueta, String ruta, Integer menu_padre, Integer orden, String descripcion, String icono, String permisos) {
 		super();
 
-		this.id = id;
+		this.codMenu = codMenu;
 		this.etiqueta = etiqueta;
 		this.ruta = ruta;
 		this.menu_padre = menu_padre;
 		this.orden = orden;
 		this.permisos = permisos;
+		this.descripcion = descripcion;
+		this.icono = icono;		
 	}
 
 }

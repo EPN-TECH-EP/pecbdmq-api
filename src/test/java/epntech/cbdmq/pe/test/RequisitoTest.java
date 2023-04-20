@@ -82,7 +82,7 @@ public class RequisitoTest {
 		String datoNuevo = "NombreNuevo";
 
 		obj.setNombre(datoNuevo);
-		obj.setCodigo(obj1.get().getCodigo());
+		obj.setCodigoRequisito(obj1.get().getCodigoRequisito());
 
 		Optional<Requisito> objModificado = repo.findByNombre(datoNuevo);
 		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
@@ -105,7 +105,7 @@ public class RequisitoTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombre("Test").get().getCodigo();
+		int id = repo.findByNombre("Test").get().getCodigoRequisito();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

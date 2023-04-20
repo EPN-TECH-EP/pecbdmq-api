@@ -20,9 +20,9 @@ import lombok.Data;
 @Table(name = "gen_menu")
 @Data
 
-@NamedNativeQuery(name = "MenuPermisos.findMenuByIdUsuario", query = "select "
+/*@NamedNativeQuery(name = "MenuPermisos.findMenuByIdUsuario", query = "select "
 		//+ "	m.id, m.etiqueta, coalesce (m.ruta, '-') as ruta, coalesce (m.menu_padre,0) as menu_padre, coalesce (m.orden,0) as orden, 	coalesce (mr.permisos, '-') as permisos "
-		+ "	m.cod_menu, m.etiqueta, m.ruta, m.menu_padre, m.orden, mr.permisos "
+		+ "	m.cod_menu, m.etiqueta, m.ruta, m.menu_padre, m.orden, m.descripcion, m.icono, mr.permisos "
 		+ " from "
 		+ "	cbdmq.gen_menu_rol mr, "
 		+ "	cbdmq.gen_menu m, "
@@ -41,7 +41,23 @@ import lombok.Data;
 		+ " order by "
 		+ "	padre.factor + coalesce(m.orden, 0)  + (case when m.menu_padre is null then 1000 else 0 end) desc",
 		resultSetMapping = "MenuPermisos"
-		)	
+		)*/
+
+@NamedNativeQuery(name = "MenuPermisos.findMenuByIdUsuario", query = "	select m.cod_menu, "
+		+ "	m.etiqueta, "
+		+ "	m.ruta, "
+		+ "	m.menu_padre, "
+		+ "	m.orden, "
+		+ "	m.descripcion, "
+		+ "	m.icono, "
+		+ "	permisos "
+		+ "	from cbdmq.gen_menu m,	 "
+		+ "	(select cod_menu, permisos from cbdmq.gen_menu_rol gmr where cod_rol in "
+		+ "	(select cod_rol	from cbdmq.gen_rol_usuario ru where cod_usuario =  "
+		+ "	(select u.cod_usuario from cbdmq.gen_usuario u where u.nombre_usuario = :id_usuario))) permisos "
+		+ "	where m.cod_menu = permisos.cod_menu "
+		+ "	order by coalesce(menu_padre, 0), orden",
+		resultSetMapping = "MenuPermisos")
 
 @SqlResultSetMapping(name = "MenuPermisos", classes = @ConstructorResult(targetClass = MenuPermisos.class, columns = {
 		@ColumnResult(name = "cod_menu"),
@@ -49,6 +65,8 @@ import lombok.Data;
 		@ColumnResult(name = "ruta"),
 		@ColumnResult(name = "menu_padre"),
 		@ColumnResult(name = "orden"),
+		@ColumnResult(name = "descripcion"),
+		@ColumnResult(name = "icono"),
 		@ColumnResult(name = "permisos")		
 }))
 
@@ -60,23 +78,27 @@ public class Menu implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(nullable = false, updatable = false)
-	protected Integer id;
+	protected Integer codMenu;
 
 	protected String etiqueta;
 	protected String ruta;
 	protected Integer menu_padre;
 	protected Integer orden;
+	protected String icono;
+	protected String descripcion;
 
 	public Menu() {
 	}
 
-	public Menu(Integer id, String etiqueta, String ruta, Integer menu_padre, Integer orden) {
+	public Menu(Integer codMenu, String etiqueta, String ruta, Integer menu_padre, Integer orden, String descripcion, String icono) {
 		super();
-		this.id = id;
+		this.codMenu = codMenu;
 		this.etiqueta = etiqueta;
 		this.ruta = ruta;
 		this.menu_padre = menu_padre;
 		this.orden = orden;
+		this.icono = icono;
+		this.descripcion = descripcion;
 	}
 
 }
