@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.resource;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,12 +53,15 @@ public class ConvocatoriaResource {
 		return objService.getByIdData(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+	
+	@GetMapping("/")
+	public Set<Convocatoria> obtenerConvocatoriaActiva() {
+		return objService.getConvocatoriaActiva();
+	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Convocatoria> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Convocatoria obj) {
 		return objService.getByIdData(codigo).map(datosGuardados -> {
-			datosGuardados.setCodPeriodoAcademico(obj.getCodPeriodoAcademico());
-			datosGuardados.setCodPeriodoEvaluacion(obj.getCodPeriodoEvaluacion());
 			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setEstado(obj.getEstado());
 			datosGuardados.setFechaInicioConvocatoria(obj.getFechaInicioConvocatoria());
@@ -68,6 +72,7 @@ public class ConvocatoriaResource {
 
 			datosGuardados.setCupoHombres(obj.getCupoHombres());
 			datosGuardados.setCupoMujeres(obj.getCupoMujeres());
+			datosGuardados.setCorreo(obj.getCorreo());
 
 
 			Convocatoria datosActualizados = objService.updateData(datosGuardados);

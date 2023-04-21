@@ -9,9 +9,10 @@ public class MensajesConst {
 	
 	public static final String REGISTRO_YA_EXISTE = "El registro con esa información ya existe";
 	public static final String REGISTRO_VACIO = "El registro no permite campos vacíos";
-	public static final String REGISTRO_NO_EXISTE = "No existe información con ese id";
+	public static final String REGISTRO_NO_EXISTE = "No existe información con el id ingresado";
 	public static final String EXITO = "Información almacenada con éxito!";
 	public static final String CEDULA_YA_EXISTE = "Cédula ya existe";
+	public static final String CEDULA_NO_EXISTE = "No existe información con la Cédula";
 	public static final String CORREO_YA_EXISTE = "Correo ya existe";
 	public static final String REGISTRO_ELIMINADO_EXITO = "Registro eliminado con éxito";
 	public static final String FECHAS_YA_EXISTE = "Ya se encuentran registradas esas fechas";
@@ -20,9 +21,16 @@ public class MensajesConst {
 	public static final String CURSO_REPROBADO="El curso ha sido reprobado";
 	public static final String APELACION_CURSO="Esta apelacion esta en curso";
 	public static final String APELACION_NO_EXISTE="Esta apelacion no exte";
+	public static final String REGISTRO_ACRUALIZADO = "Registro actualizado con éxito";
+	public static final String ESTADO_INCORRECTO = "Estado incorrecto";
+	public static final String PA_ACTIVO = "Ya existe un Período Académico Activo";
 	public static final String ASIGNACION_EXITO = "Se asignaron los valores con éxito";
+	public static final String EDAD_NO_CUMPLE = "No cumple con la edad requerida";
+	public static final String PIN_INCORRECTO = "El PIN no coincide";
+	public static final String ERROR_REGISTRO = "Se presentó un problema al realizar la transacción";
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";
+	
 	
 }
