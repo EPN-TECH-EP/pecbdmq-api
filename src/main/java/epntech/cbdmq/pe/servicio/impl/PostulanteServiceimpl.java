@@ -1,5 +1,8 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.POSTULANTE_ASIGNADO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +52,32 @@ public class PostulanteServiceimpl implements PostulanteService {
 
 	public Optional<PostulanteDatoPersonal> getByCedula(String cedula){
 		return repo1.getByCedula(cedula);
+	}
+
+	@Override
+	public List<Postulante> getPostulantes(Integer usuario) {
+		// TODO Auto-generated method stub
+		return repo.getPostulantes(usuario);
+	}
+
+	@Override
+	public Postulante update(Postulante objActualizado) throws DataException {
+		Optional<Postulante> postulante;
+		
+		postulante = repo.findById(objActualizado.getCodPostulante());
+		if(postulante.isPresent()) {
+			Postulante p = postulante.get();
+			if(p.getCodUsuario() == null) {
+				objActualizado.setCodDatoPersonal(p.getCodDatoPersonal());
+				objActualizado.setIdPostulante(p.getIdPostulante());
+				objActualizado.setEstado("ASIGNADO");
+				return repo.save(objActualizado);
+			}
+			else
+				throw new DataException(POSTULANTE_ASIGNADO);
+		}
+		else
+			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
 	}
 	
 }

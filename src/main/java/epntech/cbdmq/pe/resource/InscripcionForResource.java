@@ -56,6 +56,9 @@ public class InscripcionForResource {
 	
 	@Autowired
 	private UsuarioDatoPersonalServiceImpl objUDPService;
+	
+	@Autowired
+	private PostulanteServiceimpl postulanteService;
 
 	@PostMapping("/crear")
 	public ResponseEntity<?> crear(@RequestParam(name = "datosPersonales", required = true) String datosPersonales, @RequestParam(name = "documentos", required = true) List<MultipartFile> documentos) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException, DataException {
@@ -145,7 +148,7 @@ public class InscripcionForResource {
 		}
 			
 		Postulante postulante = new Postulante();
-		postulante.setCodigo(idPostulante);
+		postulante.setCodPostulante(idPostulante);
 		postulante.setCodDatoPersonal(idDatoPersonal);
 		postulante.setEstado("ACTIVO");
 		
@@ -185,6 +188,16 @@ public class InscripcionForResource {
 	@GetMapping("/usuario/{cedula}")
 	public UsuarioDatoPersonal getUsuario(@PathVariable("cedula") String cedula) throws DataException {
 		return objUDPService.getByCedula(cedula);
+	}
+	
+	@GetMapping("/postulantes/{usuario}")
+	public List<Postulante> getPostulantes(@PathVariable("usuario") Integer usuario) {
+		return postulanteService.getPostulantes(usuario);
+	}
+	
+	@PutMapping("/postulante")
+	public Postulante asignarPostulante(@RequestBody Postulante postulante) throws DataException {
+		return postulanteService.update(postulante);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

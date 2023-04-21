@@ -15,4 +15,8 @@ public interface PostulanteService {
 	Optional<Postulante> getById(int id);
 	
 	void delete(int id) throws DataException;
+	
+	Postulante update(Postulante objActualizado) throws DataException;
+	
+	List<Postulante> getPostulantes(Integer usuario);
 }

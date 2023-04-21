@@ -4,17 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import epntech.cbdmq.pe.repositorio.admin.DelegadoDAORepository;
 import epntech.cbdmq.pe.repositorio.admin.DelegadoRepository;
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.DelegadoService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 import epntech.cbdmq.pe.dominio.admin.Delegado;
-import epntech.cbdmq.pe.dominio.admin.DelegadoPK;
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 @Service
@@ -24,9 +20,16 @@ public class DelegadoServiceImpl implements DelegadoService {
 	private DelegadoRepository repo;
 	@Autowired
 	private DelegadoDAORepository repoDAO;
+	@Autowired
+	private PeriodoAcademicoRepository repoPA;
 
 	@Override
 	public Delegado save(Delegado obj) throws DataException {
+		PeriodoAcademico periodoAcademico = new PeriodoAcademico();
+		periodoAcademico = repoPA.getPeriodoAcademicoActivo();
+		
+		obj.setCodPeriodoAcademico(periodoAcademico.getCodigo());
+		
 		return repo.save(obj);
 	}
 

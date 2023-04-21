@@ -28,6 +28,7 @@ public class MensajesConst {
 	public static final String EDAD_NO_CUMPLE = "No cumple con la edad requerida";
 	public static final String PIN_INCORRECTO = "El PIN no coincide";
 	public static final String ERROR_REGISTRO = "Se presentó un problema al realizar la transacción";
+	public static final String POSTULANTE_ASIGNADO = "El postulante ya está asignado a un usuario";
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";
