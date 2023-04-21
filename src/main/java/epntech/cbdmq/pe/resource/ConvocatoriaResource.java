@@ -21,6 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
 import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
+
+
+
+
+import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
+
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ConvocatoriaServicieImpl;
 
