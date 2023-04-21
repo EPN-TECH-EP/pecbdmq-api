@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PostulanteService {
@@ -19,4 +20,5 @@ public interface PostulanteService {
 	Postulante update(Postulante objActualizado) throws DataException;
 	
 	List<Postulante> getPostulantes(Integer usuario);
+	
 }

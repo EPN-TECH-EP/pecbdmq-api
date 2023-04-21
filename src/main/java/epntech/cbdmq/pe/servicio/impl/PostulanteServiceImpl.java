@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.admin.PostulanteDatoPersonal;
+import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteDPRepository;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteRepository;
 import epntech.cbdmq.pe.servicio.PostulanteService;
 
 @Service
-public class PostulanteServiceimpl implements PostulanteService {
+public class PostulanteServiceImpl implements PostulanteService {
 
 	@Autowired
 	private PostulanteRepository repo;
@@ -79,5 +80,5 @@ public class PostulanteServiceimpl implements PostulanteService {
 		else
 			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
 	}
-	
+
 }

@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,14 @@ import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.InscripcionResult;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
 import epntech.cbdmq.pe.dominio.admin.TipoProcedencia;
 import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InscripcionForServiceImpl;
-import epntech.cbdmq.pe.servicio.impl.PostulanteServiceimpl;
+import epntech.cbdmq.pe.servicio.impl.PostulanteDatosServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.PostulanteServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.UsuarioDatoPersonalServiceImpl;
 import jakarta.mail.MessagingException;
 
@@ -52,13 +55,16 @@ public class InscripcionForResource {
 	private InscripcionForServiceImpl objService;
 	
 	@Autowired
-	private PostulanteServiceimpl objPostulanteService;
+	private PostulanteServiceImpl objPostulanteService;
 	
 	@Autowired
 	private UsuarioDatoPersonalServiceImpl objUDPService;
 	
 	@Autowired
-	private PostulanteServiceimpl postulanteService;
+	private PostulanteServiceImpl postulanteService;
+	
+	@Autowired
+	private PostulanteDatosServiceImpl postulanteDatosService;
 
 	@PostMapping("/crear")
 	public ResponseEntity<?> crear(@RequestParam(name = "datosPersonales", required = true) String datosPersonales, @RequestParam(name = "documentos", required = true) List<MultipartFile> documentos) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException, DataException {
@@ -198,6 +204,11 @@ public class InscripcionForResource {
 	@PutMapping("/postulante")
 	public Postulante asignarPostulante(@RequestBody Postulante postulante) throws DataException {
 		return postulanteService.update(postulante);
+	}
+	
+	@GetMapping("/datos/{postulante}")
+	public Optional<PostulanteDatos> getDatos(@PathVariable("postulante") Integer postulante) throws DataException {
+		return postulanteDatosService.getDatos(postulante);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
