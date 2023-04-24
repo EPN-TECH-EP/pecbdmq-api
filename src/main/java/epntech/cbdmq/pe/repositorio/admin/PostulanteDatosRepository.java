@@ -24,7 +24,7 @@ public interface PostulanteDatosRepository extends JpaRepository<PostulanteDatos
 			+ "(select pr.nombre from cbdmq.gen_provincia pr where UPPER(pr.estado) = 'ACTIVO' and pr.cod_provincia = dp.cod_provincia_residencia) provincia_residencia "
 			+ "from cbdmq.gen_postulante p, cbdmq.gen_dato_personal dp "
 			+ "where p.cod_datos_personales = dp.cod_datos_personales "
-			+ "and UPPER(p.estado) = 'ACTIVO' "
+			+ "and UPPER(p.estado) != 'ELIMINADO' "
 			+ "and UPPER(dp.estado) = 'ACTIVO' "
 			+ "and cod_postulante = :codPostulante", nativeQuery=true)
 	Optional<PostulanteDatos> getDatos(Integer codPostulante);

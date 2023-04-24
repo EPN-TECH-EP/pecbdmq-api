@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
@@ -59,6 +60,12 @@ public class PostulanteServiceImpl implements PostulanteService {
 	public List<Postulante> getPostulantes(Integer usuario) {
 		// TODO Auto-generated method stub
 		return repo.getPostulantes(usuario);
+	}
+	
+	@Override
+	public List<Postulante> getPostulantesPaginado(Integer usuario, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return repo.getPostulantesPaginado(usuario, pageable);
 	}
 
 	@Override

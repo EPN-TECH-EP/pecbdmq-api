@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -198,6 +199,11 @@ public class InscripcionForResource {
 	
 	@GetMapping("/postulantes/{usuario}")
 	public List<Postulante> getPostulantes(@PathVariable("usuario") Integer usuario) {
+		return postulanteService.getPostulantes(usuario);
+	}
+	
+	@GetMapping("/postulantesPaginado/{usuario}")
+	public List<Postulante> getPostulantesPaginado(@PathVariable("usuario") Integer usuario, Pageable pageable) {
 		return postulanteService.getPostulantes(usuario);
 	}
 	

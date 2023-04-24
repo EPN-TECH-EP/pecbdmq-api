@@ -2,9 +2,15 @@ package epntech.cbdmq.pe.dominio.admin;
 
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 
 @Data
@@ -38,5 +44,9 @@ public class PostulanteDatos {
 	private String meritoDeportivoDescripcion;
 	private String provinciaNacimiento;
 	private String provinciaResidencia;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "gen_postulante_documento", joinColumns = @JoinColumn(name = "cod_postulante"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))
+	private Set<DocumentoPostulante> documentos = new HashSet<>();
 	
 }
