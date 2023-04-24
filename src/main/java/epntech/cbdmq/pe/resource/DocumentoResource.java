@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.servicio.DocumentoService;
@@ -122,6 +123,14 @@ public class DocumentoResource {
 		}
 		return lista;
 	}
+	
+	
+	@PostMapping(value= "/eliminar/{id}")
+    public ResponseEntity<HttpResponse> eliminarArchivo(@PathVariable("id") int id) throws IOException, ArchivoMuyGrandeExcepcion {
+	    
+		objService.eliminarArchivo(id);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
 
 	/*@GetMapping("/maxArchivo")
 	public long tamañoMáximoArchivo() {

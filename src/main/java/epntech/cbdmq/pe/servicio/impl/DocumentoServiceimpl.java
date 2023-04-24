@@ -113,4 +113,32 @@ public class DocumentoServiceimpl implements DocumentoService {
 		return lista;
 	}
 	
+	@Override
+	public void eliminarArchivo( int id) throws IOException, ArchivoMuyGrandeExcepcion {
+		// TODO Auto-generated method stub
+		String resultado=null;
+		Documento documentos=new Documento();
+		Optional <Documento> documento;
+		
+		 
+		 //resultado=ARCHIVOS_RUTA+"/"+ id+"/";
+		 documento=repo.findById(id);
+		 documentos=documento.get();
+		 Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
+		 //ruta =Path.of( );
+		 
+		 
+		
+		 
+		 if (Files.exists(ruta)) {
+	            try {
+	            	System.out.println("ruta"+ruta);
+	                Files.delete(ruta);
+	            } catch (Exception e) {
+	               
+	                e.printStackTrace();
+	            }
+	        }
+	}
+	
 }

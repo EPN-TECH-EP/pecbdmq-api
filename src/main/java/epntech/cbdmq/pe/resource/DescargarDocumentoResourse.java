@@ -64,55 +64,7 @@ public class DescargarDocumentoResourse {
 	             .body(resource);
 	 }
 	 
-	 /*
-	 @Value("${server.base.url}")
-	    private String serverBaseUrl;
-
-	    @GetMapping("/file-link")
-	    public String getFileLink(@RequestParam String filePath) {
-	        // Generar la URL completa al archivo
-	        String fileUrl = serverBaseUrl + "/" + filePath;
-	        return fileUrl;
-	    }*/
 	
-	
-	/*@GetMapping("/descargar")
-    public void descargarArchivo(HttpServletResponse response) {
-        
-        File archivo = new File("/ruta/al/archivo/nombre_archivo.pdf");
-        
-        try (FileInputStream inputStream = new FileInputStream(archivo)) {
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + archivo.getName() + "\"");
-            IOUtils.copy(inputStream, response.getOutputStream());
-            response.flushBuffer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-	
-	@Autowired
-	private DocumentoServiceimpl objService;
-
-	@GetMapping("/descarga,{id}")
-	public ResponseEntity<?> obtenerPorId(@PathVariable("id") int id) {
-		return response(HttpStatus.OK, objService.getById(id).get().getRuta());
-	}
-	
-	/*@GetMapping("/descargar")
-    public void descargarArchivo(HttpServletResponse response) {
-        
-        File archivo = new File("C:/pfb21.pdf");
-        
-        try (FileInputStream inputStream = new FileInputStream(archivo)) {
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + archivo.getName() + "\"");
-            IOUtils.copy(inputStream, response.getOutputStream());
-            response.flushBuffer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
 	
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus , String message){
