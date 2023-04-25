@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisito;
 import epntech.cbdmq.pe.dominio.admin.DatosFile;
+import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
@@ -38,6 +40,7 @@ import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.servicio.EmailService;
+import epntech.cbdmq.pe.servicio.impl.DocumentoServiceimpl;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
@@ -67,6 +70,9 @@ public class ConvocatoriaForUpdRepository {
 
 	@Value("${eureka.instance.hostname}")
 	public String HOSTNAME;
+	
+	@Autowired
+	private DocumentoServiceimpl objServiceDoc;
 
 	public List<DatosFile> guardarArchivo(List<MultipartFile> archivo, String proceso, String id)
 			throws IOException, ArchivoMuyGrandeExcepcion {
@@ -113,7 +119,8 @@ public class ConvocatoriaForUpdRepository {
 		
 		String sqlConvocatoriaRequisito = "INSERT INTO cbdmq.gen_convocatoria_requisito (cod_convocatoria, cod_requisito) "
 				+ "VALUES (:cod_convocatoria, :cod_requisito)";
-		
+
+		//en este sentencia utiliza el nombre de la clase, entidad ConvocatoriaRequisito
 		String sqlConvocatoriaRequisitoDel = "delete from ConvocatoriaRequisito e where e.cod_convocatoria = :cod_convocatoria ";
 
 
@@ -150,6 +157,7 @@ public class ConvocatoriaForUpdRepository {
 		{
 			List<DatosFile> archivosConvocatoria = new ArrayList<>();
 			try {
+				objServiceDoc.eliminarArchivo(documentosFor.getCodigoDocumento());
 				archivosConvocatoria = guardarArchivo(docsConvocatoria, PATH_PROCESO_CONVOCATORIA, convocatoria.getCodConvocatoria().toString());
 			} catch (Exception e) {
 				HttpHeaders headers = new HttpHeaders();
@@ -158,6 +166,7 @@ public class ConvocatoriaForUpdRepository {
 			Set<DocumentoFor> dConvocatoria = new HashSet<>();
 			
 			for (DatosFile datosFile : archivosConvocatoria) {
+				
 				DocumentoFor dd = new DocumentoFor();
 				dd.setEstado("ACTIVO");
 				dd.setNombre(datosFile.getNombre());

@@ -58,7 +58,7 @@ public class DescargarDocumentoResourse {
 	     String downloadUrl = baseUrl + "/archivo/" + archivo.getCodigo();
 	     // Devolver una respuesta con el archivo adjunto y la URL de descarga
 	     return ResponseEntity.ok()
-	             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getRuta() + "\"")
+	             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
 	             .contentType(MediaType.parseMediaType("application/pdf"))
 	             
 	             .body(resource);
