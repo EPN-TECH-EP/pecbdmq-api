@@ -25,13 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
-import epntech.cbdmq.pe.dominio.admin.DatosFile;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
+import epntech.cbdmq.pe.dominio.util.DatosFile;
+import epntech.cbdmq.pe.dominio.util.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.EmailService;

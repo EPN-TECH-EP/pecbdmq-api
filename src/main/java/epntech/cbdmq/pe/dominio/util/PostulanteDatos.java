@@ -1,10 +1,11 @@
-package epntech.cbdmq.pe.dominio.admin;
+package epntech.cbdmq.pe.dominio.util;
 
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import epntech.cbdmq.pe.dominio.admin.DocumentoPostulante;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;

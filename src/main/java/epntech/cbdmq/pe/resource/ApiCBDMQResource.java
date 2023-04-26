@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.resource;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.ApiBase;
-import epntech.cbdmq.pe.dominio.admin.ApiCiudadanos;
-import epntech.cbdmq.pe.dominio.admin.ApiEducacionMedia;
-import epntech.cbdmq.pe.dominio.admin.ApiEducacionSuperior;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.dominio.util.ApiBase;
+import epntech.cbdmq.pe.dominio.util.ApiEducacionMedia;
+import epntech.cbdmq.pe.dominio.util.ApiEducacionSuperior;
 import epntech.cbdmq.pe.servicio.impl.APICBDMQServiceImpl;
 
 @RestController

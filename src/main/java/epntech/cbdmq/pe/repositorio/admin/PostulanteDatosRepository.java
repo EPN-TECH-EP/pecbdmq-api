@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
+import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
 
 
 

@@ -35,17 +35,21 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
-import epntech.cbdmq.pe.dominio.admin.InscripcionResult;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
 import epntech.cbdmq.pe.dominio.admin.TipoProcedencia;
 import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
+import epntech.cbdmq.pe.dominio.admin.ValidacionRequisitos;
+import epntech.cbdmq.pe.dominio.util.InscripcionResult;
+import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
+import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosLista;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InscripcionForServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.PostulanteDatosServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.PostulanteServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.UsuarioDatoPersonalServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.ValidacionRequisitosForServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.ValidacionRequisitosServiceImpl;
 import jakarta.mail.MessagingException;
 
 @RestController
@@ -66,6 +70,12 @@ public class InscripcionForResource {
 	
 	@Autowired
 	private PostulanteDatosServiceImpl postulanteDatosService;
+	
+	@Autowired
+	private ValidacionRequisitosServiceImpl validacionRequisitosService;
+	
+	@Autowired
+	private ValidacionRequisitosForServiceImpl validacionRequisitosForService;
 
 	@PostMapping("/crear")
 	public ResponseEntity<?> crear(@RequestParam(name = "datosPersonales", required = true) String datosPersonales, @RequestParam(name = "documentos", required = true) List<MultipartFile> documentos) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException, DataException {
@@ -204,7 +214,7 @@ public class InscripcionForResource {
 	
 	@GetMapping("/postulantesPaginado/{usuario}")
 	public List<Postulante> getPostulantesPaginado(@PathVariable("usuario") Integer usuario, Pageable pageable) {
-		return postulanteService.getPostulantes(usuario);
+		return postulanteService.getPostulantesPaginado(usuario, pageable);
 	}
 	
 	@PutMapping("/postulante")
@@ -215,6 +225,17 @@ public class InscripcionForResource {
 	@GetMapping("/datos/{postulante}")
 	public Optional<PostulanteDatos> getDatos(@PathVariable("postulante") Integer postulante) throws DataException {
 		return postulanteDatosService.getDatos(postulante);
+	}
+	
+	@GetMapping("/requisitos/{postulante}")
+	public List<ValidacionRequisitosLista> getRequisitos(@PathVariable("postulante") Integer postulante) throws DataException {
+		return validacionRequisitosService.getRequisitos(postulante);
+	}
+	
+	@PutMapping("/requisitosUpdate")
+	public List<ValidacionRequisitos> requisitosUpdate(@RequestBody List<ValidacionRequisitos> requisitos) throws DataException {
+		
+		return validacionRequisitosForService.update(requisitos);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

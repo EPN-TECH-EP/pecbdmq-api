@@ -5,8 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
+import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteDatosRepository;
 import epntech.cbdmq.pe.servicio.PostulanteDatosService;
 

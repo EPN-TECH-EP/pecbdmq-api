@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
+import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PostulanteService {
@@ -24,5 +24,7 @@ public interface PostulanteService {
 	List<Postulante> getPostulantes(Integer usuario);
 	
 	List<Postulante> getPostulantesPaginado(Integer usuario, Pageable pageable);
+	
+	void updateState(Integer codpostulante);
 	
 }

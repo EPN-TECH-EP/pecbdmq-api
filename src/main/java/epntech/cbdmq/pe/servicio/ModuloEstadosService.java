@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.ModuloEstados;
-import epntech.cbdmq.pe.dominio.admin.ModuloEstadosData;
+import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 
 public interface ModuloEstadosService {
 

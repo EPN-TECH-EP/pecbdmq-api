@@ -2,8 +2,8 @@ package epntech.cbdmq.pe.servicio;
 
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.admin.ApiEducacionMedia;
-import epntech.cbdmq.pe.dominio.admin.ApiEducacionSuperior;
+import epntech.cbdmq.pe.dominio.util.ApiEducacionMedia;
+import epntech.cbdmq.pe.dominio.util.ApiEducacionSuperior;
 
 public interface ApiCBDMQService {
 

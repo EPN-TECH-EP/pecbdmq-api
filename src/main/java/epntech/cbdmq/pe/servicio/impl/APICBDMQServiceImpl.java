@@ -7,70 +7,97 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import epntech.cbdmq.pe.dominio.admin.ApiBase;
-import epntech.cbdmq.pe.dominio.admin.ApiCiudadanos;
-import epntech.cbdmq.pe.dominio.admin.ApiEducacionMedia;
-import epntech.cbdmq.pe.dominio.admin.ApiEducacionSuperior;
-
+import epntech.cbdmq.pe.dominio.util.ApiBase;
+import epntech.cbdmq.pe.dominio.util.ApiCiudadanos;
+import epntech.cbdmq.pe.dominio.util.ApiEducacionMedia;
+import epntech.cbdmq.pe.dominio.util.ApiEducacionSuperior;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.ApiCBDMQService;
+import epntech.cbdmq.pe.util.Utilitarios;
 
 @Service
 public class APICBDMQServiceImpl implements ApiCBDMQService {
 
 	@Autowired
-    private RestTemplate restTemplate;
-	
+	private RestTemplate restTemplate;
+	@Autowired
+	private Utilitarios util;
+
 	@Value("${api.cbdmq.ciudadanos}")
 	private String apiCiudadanos;
 	@Value("${api.cbdmq.educacion-media}")
 	private String apiEducacionMedia;
 	@Value("${api.cbdmq.educacion-superior}")
 	private String apiEducacionSuperior;
-	
-	public Optional<?> servicioCiudadanos(String cedula) throws Exception {
-        String url = apiCiudadanos + cedula;
-        Optional<ApiCiudadanos> result;
-        ApiBase base;
 
-        try {
-        	return restTemplate.getForObject(url, ApiBase.class).getData();
+	public Optional<?> servicioCiudadanos(String cedula) throws Exception, DataException {
+		String url = apiCiudadanos + cedula;
+		Optional<?> result = Optional.empty();
+		ApiBase base;
+		Boolean isValid = util.validadorDeCedula(cedula);
 
-        }catch(Exception ex) {
-        	//System.out.println("error: " + ex.getLocalizedMessage());
+		// System.out.println("isValid: " + isValid);
+		if (isValid) {
+			try {
+				result = restTemplate.getForObject(url, ApiBase.class).getData();
 
-        	throw new Exception(ex.getMessage());
-        }
-        
-        
-        //System.out.println("base: " + base.getStatus());
-        
-        /*if( base.getStatus().equals("error")) {
-        	throw new Exception(base.getMessage());
-        }
-        else return (Optional<ApiCiudadanos>) base.getData();*/
-        
-    }
+			} catch (Exception ex) {
+				// System.out.println("error: " + ex.getLocalizedMessage());
+
+				throw new Exception(ex.getMessage());
+			}
+		}
+
+		return result;
+
+		// System.out.println("base: " + base.getStatus());
+
+		/*
+		 * if( base.getStatus().equals("error")) { throw new
+		 * Exception(base.getMessage()); } else return (Optional<ApiCiudadanos>)
+		 * base.getData();
+		 */
+
+	}
 
 	@Override
 	public Optional<ApiEducacionMedia> servicioEducacionMedia(String cedula) throws Exception {
-		String url = apiEducacionMedia + cedula;
-		ApiBase base = restTemplate.getForObject(url, ApiBase.class);
-		
-		if( base.getStatus().equals("error"))
-        	throw new Exception(base.getMessage());
-		else
-			return (Optional<ApiEducacionMedia>) base.getData();
-		
+
+		Optional<ApiEducacionMedia> result = Optional.empty();
+		Boolean isValid = util.validadorDeCedula(cedula);
+
+		// System.out.println("isValid: " + isValid);
+		if (isValid) {
+			String url = apiEducacionMedia + cedula;
+			ApiBase base = restTemplate.getForObject(url, ApiBase.class);
+
+			if (base.getStatus().equals("error"))
+				throw new Exception(base.getMessage());
+			else
+				result = (Optional<ApiEducacionMedia>) base.getData();
+		}
+
+		return result;
+
 	}
 
 	@Override
 	public Optional<ApiEducacionSuperior> servicioEducacionSuperior(String cedula) throws Exception {
-		String url = apiEducacionMedia + cedula;
-		ApiBase base = restTemplate.getForObject(url, ApiBase.class);
+
+		Optional<ApiEducacionSuperior> result = Optional.empty();
 		
-		if( base.getStatus().equals("error"))
-        	throw new Exception(base.getMessage());
-		else
-			return (Optional<ApiEducacionSuperior>) base.getData();
+		Boolean isValid = util.validadorDeCedula(cedula);
+		// System.out.println("isValid: " + isValid);
+		if (isValid) {
+			String url = apiEducacionMedia + cedula;
+			ApiBase base = restTemplate.getForObject(url, ApiBase.class);
+
+			if (base.getStatus().equals("error"))
+				throw new Exception(base.getMessage());
+			else
+				result = (Optional<ApiEducacionSuperior>) base.getData();
+		}
+		
+		return result;
 	}
 }

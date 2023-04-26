@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatoPersonal;
+import epntech.cbdmq.pe.dominio.util.PostulanteDatoPersonal;
 
 public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademico, Integer> {
 

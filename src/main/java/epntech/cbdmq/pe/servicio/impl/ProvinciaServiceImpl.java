@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.servicio.ProvinciaService;
-import epntech.cbdmq.pe.dominio.admin.Excel;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
+import epntech.cbdmq.pe.dominio.util.Excel;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.helper.ProvinciaHelper;

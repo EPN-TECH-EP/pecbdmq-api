@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.repositorio.admin;
 
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,9 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatos;
-
-
 
 public interface PostulanteRepository extends JpaRepository<Postulante, Integer> {
 	
@@ -41,4 +37,6 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Integer>
 			+ "order by cod_usuario ", nativeQuery=true)
 	List<Postulante> getPostulantesPaginado(Integer usuario, Pageable pageable);
 	
+	@Procedure(value = "cbdmq.update_state_postulante")
+	Boolean updateState(Integer codPostulante);
 }
