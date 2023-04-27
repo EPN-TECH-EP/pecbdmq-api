@@ -217,6 +217,11 @@ public class InscripcionForResource {
 		return postulanteService.getPostulantesPaginado(usuario, pageable);
 	}
 	
+	@GetMapping("/postulantesAllPaginado")
+	public List<Postulante> getPostulantesAllPaginado(Pageable pageable) {
+		return postulanteService.getPostulantesAllPaginado(pageable);
+	}
+	
 	@PutMapping("/postulante")
 	public Postulante asignarPostulante(@RequestBody Postulante postulante) throws DataException {
 		return postulanteService.update(postulante);
@@ -236,6 +241,11 @@ public class InscripcionForResource {
 	public List<ValidacionRequisitos> requisitosUpdate(@RequestBody List<ValidacionRequisitos> requisitos) throws DataException {
 		
 		return validacionRequisitosForService.update(requisitos);
+	}
+	
+	@GetMapping("/muestra")
+	public List<Postulante> getMuestra() throws DataException {
+		return postulanteService.getMuestra();
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

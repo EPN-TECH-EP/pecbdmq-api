@@ -27,4 +27,8 @@ public interface PostulanteService {
 	
 	void updateState(Integer codpostulante);
 	
+	List<Postulante> getPostulantesAllPaginado(Pageable pageable);
+	
+	List<Postulante> getMuestra();
+	
 }

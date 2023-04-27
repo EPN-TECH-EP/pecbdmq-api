@@ -35,4 +35,7 @@ public class Postulante {
 	
 	@Column(name = "cod_usuario")
 	private Integer codUsuario;
+	
+	@Column(name = "cod_periodo_academico")
+	private Integer codPeriodoAcademico;
 }

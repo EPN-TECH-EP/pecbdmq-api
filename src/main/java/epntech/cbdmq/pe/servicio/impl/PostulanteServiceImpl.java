@@ -94,4 +94,16 @@ public class PostulanteServiceImpl implements PostulanteService {
 		
 	}
 
+	@Override
+	public List<Postulante> getPostulantesAllPaginado(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return repo.getPostulantesAllPaginado(pageable);
+	}
+
+	@Override
+	public List<Postulante> getMuestra() {
+		// TODO Auto-generated method stub
+		return repo.getMuestra();
+	}
+
 }
