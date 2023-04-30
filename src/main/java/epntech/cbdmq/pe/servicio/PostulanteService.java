@@ -19,7 +19,9 @@ public interface PostulanteService {
 	
 	void delete(int id) throws DataException;
 	
-	Postulante update(Postulante objActualizado) throws DataException;
+	Postulante update(Postulante objActualizado) throws DataException; //PARA ASIGNAR UN POSTULANTE
+	
+	Postulante updateEstadoMuestra(Postulante objActualizado) throws DataException; //PARA ASIGNAR MUESTRA
 	
 	List<Postulante> getPostulantes(Integer usuario);
 	

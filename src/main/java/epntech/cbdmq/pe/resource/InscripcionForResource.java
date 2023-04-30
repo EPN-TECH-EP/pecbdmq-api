@@ -248,6 +248,11 @@ public class InscripcionForResource {
 		return postulanteService.getMuestra();
 	}
 	
+	@PutMapping("/asignarMuestra")
+	public Postulante asignarMuestra(@RequestBody Postulante postulante) throws DataException {
+		return postulanteService.updateEstadoMuestra(postulante);
+	}
+	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),

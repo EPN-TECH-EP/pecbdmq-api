@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.POSTULANTE_ASIGNADO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.util.PostulanteDatoPersonal;
-import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteDPRepository;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteRepository;
@@ -71,18 +71,29 @@ public class PostulanteServiceImpl implements PostulanteService {
 	@Override
 	public Postulante update(Postulante objActualizado) throws DataException {
 		Optional<Postulante> postulante;
+		Boolean bandera = false;
 		
 		postulante = repo.findById(objActualizado.getCodPostulante());
 		if(postulante.isPresent()) {
-			Postulante p = postulante.get();
-			if(p.getCodUsuario() == null) {
-				objActualizado.setCodDatoPersonal(p.getCodDatoPersonal());
-				objActualizado.setIdPostulante(p.getIdPostulante());
-				objActualizado.setEstado("ASIGNADO");
-				return repo.save(objActualizado);
+			
+			if(postulante.get().getEstado().equalsIgnoreCase("PENDIENTE") &&  objActualizado.getEstado().equalsIgnoreCase("ASIGNADO"))
+				bandera = true;
+			else
+				bandera = false;
+			
+			if(bandera) {
+				Postulante p = postulante.get();
+				if(p.getCodUsuario() == null) {
+					objActualizado.setCodDatoPersonal(p.getCodDatoPersonal());
+					objActualizado.setIdPostulante(p.getIdPostulante());
+					objActualizado.setCodPeriodoAcademico(p.getCodPeriodoAcademico());
+					return repo.save(objActualizado);
+				}
+				else
+					throw new DataException(POSTULANTE_ASIGNADO);
 			}
 			else
-				throw new DataException(POSTULANTE_ASIGNADO);
+				throw new DataException(ESTADO_INVALIDO + " Estado actual: " + postulante.get().getEstado() + ", Estado ingresado: " + objActualizado.getEstado());
 		}
 		else
 			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
@@ -104,6 +115,34 @@ public class PostulanteServiceImpl implements PostulanteService {
 	public List<Postulante> getMuestra() {
 		// TODO Auto-generated method stub
 		return repo.getMuestra();
+	}
+
+	@Override
+	public Postulante updateEstadoMuestra(Postulante objActualizado) throws DataException {
+		Optional<Postulante> postulante;
+		Boolean bandera = false;
+		
+		postulante = repo.findById(objActualizado.getCodPostulante());
+		if(postulante.isPresent()) {
+			if(postulante.get().getEstado().equalsIgnoreCase("VALIDO") &&  objActualizado.getEstado().equalsIgnoreCase("ASIGNADO MUESTRA"))
+				bandera = true;
+			
+			else
+				bandera = false;
+			
+			if(bandera) {
+				Postulante p = postulante.get();
+				
+				objActualizado.setCodDatoPersonal(p.getCodDatoPersonal());
+				objActualizado.setIdPostulante(p.getIdPostulante());
+				objActualizado.setCodPeriodoAcademico(p.getCodPeriodoAcademico());
+				return repo.save(objActualizado);
+			}
+			else
+				throw new DataException(ESTADO_INVALIDO + " Estado actual: " + postulante.get().getEstado() + ", Estado ingresado: " + objActualizado.getEstado());
+		}
+		else
+			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
 	}
 
 }
