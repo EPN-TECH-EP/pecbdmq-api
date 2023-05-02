@@ -1,9 +1,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -21,7 +20,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 
@@ -44,9 +42,9 @@ public class Materia {
 	@Column(name = "observacion_materia")
 	private String observacionMateria;
 	@Column(name = "peso_materia")
-	private Integer pesoMateria;
+	private BigDecimal pesoMateria;
 	@Column(name = "nota_minima")
-	private Integer notaMinima;
+	private BigDecimal notaMinima;
 	@Column(name = "estado")
 	private String estado;
 	

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +43,9 @@ public class MateriaTest {
         paralelo.setEstado("ACTIVO");
         paralelos.add(paralelo);
         	
-		obj.setNombre("Test");
-		obj.setNotaMinima(10);
+		obj.setNombreMateria("Test");
+		obj.setNotaMinima(new BigDecimal(10.0));
+
 		obj.setObservacionMateria("pruebas unitarias");
 		obj.setParalelos(paralelos);
 		obj.setEstado("activo");
@@ -64,7 +66,8 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		obj.setNotaMinima(10);
+		obj.setNotaMinima(new BigDecimal(10));
+
 		obj.setEstado("activo");
 
 		repo.save(obj);
@@ -80,8 +83,8 @@ public class MateriaTest {
 		String nombre = "Test";
 
 		Materia obj = new Materia();
-		obj.setNombre(nombre);
-		obj.setNotaMinima(10);
+		obj.setNombreMateria(nombre);
+		obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 
 		repo.save(obj);
@@ -111,7 +114,7 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		obj.setNotaMinima(10);
+		obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 		repo.save(obj);
 
