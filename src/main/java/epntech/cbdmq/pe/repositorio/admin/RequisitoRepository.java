@@ -8,5 +8,5 @@ import epntech.cbdmq.pe.dominio.admin.Requisito;
 
 public interface RequisitoRepository extends JpaRepository<Requisito, Integer> {
 
-	Optional<Requisito> findByNombre(String nombre);
+	Optional<Requisito> findByNombreIgnoreCase(String nombre);
 }

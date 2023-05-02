@@ -62,7 +62,7 @@ public class TipoNotaTest {
 
 		repo.save(obj);
 
-		Optional<TipoNota> obj1 = repo.findByNota("texto");
+		Optional<TipoNota> obj1 = repo.findByNotaIgnoreCase("texto");
 
 		assertThat(obj1.get().getNota()).isEqualTo("texto");
 	}
@@ -81,14 +81,14 @@ public class TipoNotaTest {
 
 		repo.save(obj);
 
-		Optional<TipoNota> obj1 = repo.findByNota("texto");
+		Optional<TipoNota> obj1 = repo.findByNotaIgnoreCase("texto");
 
 		String datoNuevo = "texto";
 
 		obj.setNota(datoNuevo);
 		obj.setCod_tipo_nota(obj1.get().getCod_tipo_nota());
 
-		Optional<TipoNota> objModificado = repo.findByNota("texto");
+		Optional<TipoNota> objModificado = repo.findByNotaIgnoreCase("texto");
 		assertThat(objModificado.get().getNota()).isEqualTo(datoNuevo);
 	}
 	@Order(4)
@@ -109,7 +109,7 @@ public class TipoNotaTest {
 
 		repo.save(obj);
 
-		int id = repo.findByNota("texto").get().getCod_tipo_nota();
+		int id = repo.findByNotaIgnoreCase("texto").get().getCod_tipo_nota();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

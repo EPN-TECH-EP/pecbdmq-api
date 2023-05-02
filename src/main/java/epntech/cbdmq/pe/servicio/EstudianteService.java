@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import epntech.cbdmq.pe.dominio.admin.Estudiante;
-import epntech.cbdmq.pe.dominio.admin.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 
 public interface EstudianteService {
 	

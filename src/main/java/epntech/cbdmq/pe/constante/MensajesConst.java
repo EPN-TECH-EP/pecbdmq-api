@@ -13,6 +13,7 @@ public class MensajesConst {
 	public static final String EXITO = "Información almacenada con éxito!";
 	public static final String CEDULA_YA_EXISTE = "Cédula ya existe";
 	public static final String CEDULA_NO_EXISTE = "No existe información con la Cédula";
+	public static final String CEDULA_INCORRECTA = "La Cédula ingresada es Incorrecta";
 	public static final String CORREO_YA_EXISTE = "Correo ya existe";
 	public static final String REGISTRO_ELIMINADO_EXITO = "Registro eliminado con éxito";
 	public static final String FECHAS_YA_EXISTE = "Ya se encuentran registradas esas fechas";
@@ -28,6 +29,8 @@ public class MensajesConst {
 	public static final String EDAD_NO_CUMPLE = "No cumple con la edad requerida";
 	public static final String PIN_INCORRECTO = "El PIN no coincide";
 	public static final String ERROR_REGISTRO = "Se presentó un problema al realizar la transacción";
+	public static final String POSTULANTE_ASIGNADO = "El postulante ya está asignado a un usuario";
+	public static final String ESTADO_INVALIDO = "El estado no corresponde o es inválido.";
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";

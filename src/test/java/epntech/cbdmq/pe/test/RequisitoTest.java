@@ -61,7 +61,7 @@ public class RequisitoTest {
 
 		repo.save(obj);
 
-		Optional<Requisito> obj1 = repo.findByNombre(nombre);
+		Optional<Requisito> obj1 = repo.findByNombreIgnoreCase(nombre);
 
 		assertThat(obj1.get().getNombre()).isEqualTo(nombre);
 	}
@@ -77,14 +77,14 @@ public class RequisitoTest {
 
 		repo.save(obj);
 
-		Optional<Requisito> obj1 = repo.findByNombre("Test");
+		Optional<Requisito> obj1 = repo.findByNombreIgnoreCase("Test");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setNombre(datoNuevo);
 		obj.setCodigoRequisito(obj1.get().getCodigoRequisito());
 
-		Optional<Requisito> objModificado = repo.findByNombre(datoNuevo);
+		Optional<Requisito> objModificado = repo.findByNombreIgnoreCase(datoNuevo);
 		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
 	}
 
@@ -105,7 +105,7 @@ public class RequisitoTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombre("Test").get().getCodigoRequisito();
+		int id = repo.findByNombreIgnoreCase("Test").get().getCodigoRequisito();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

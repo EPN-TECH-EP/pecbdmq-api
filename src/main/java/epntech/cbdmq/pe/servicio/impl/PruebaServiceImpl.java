@@ -45,8 +45,11 @@ public class PruebaServiceImpl implements PruebaService{
 	}
 
 	@Override
-	public Prueba update(Prueba objActualizado) {
-		// TODO Auto-generated method stub
+	public Prueba update(Prueba objActualizado) throws DataException {
+		Optional<Prueba> objGuardado = repo.findByprueba(objActualizado.getPrueba());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

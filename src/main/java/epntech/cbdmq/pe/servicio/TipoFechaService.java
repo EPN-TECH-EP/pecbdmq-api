@@ -20,7 +20,7 @@ public interface TipoFechaService {
 
     Optional<TipoFecha> getById(String fecha);
 
-    TipoFecha update(TipoFecha objActualizado);
+    TipoFecha update(TipoFecha objActualizado) throws DataException;
 
     void delete(String fecha);
 }

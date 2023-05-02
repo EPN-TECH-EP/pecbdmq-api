@@ -27,7 +27,7 @@ public class SemestreServiceImpl implements SemestreService {
 	public Semestre save(Semestre obj) throws DataException {
 		if(obj.getSemestre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Semestre> objGuardado = repo.findBySemestre(obj.getSemestre());
+		Optional<Semestre> objGuardado = repo.findBySemestreIgnoreCase(obj.getSemestre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -47,8 +47,11 @@ public class SemestreServiceImpl implements SemestreService {
 	}
 
 	@Override
-	public Semestre update(Semestre objActualizado) {
-		// TODO Auto-generated method stub
+	public Semestre update(Semestre objActualizado) throws DataException  {
+		Optional<Semestre> objGuardado = repo.findBySemestreIgnoreCase(objActualizado.getSemestre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

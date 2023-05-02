@@ -35,6 +35,7 @@ public class TipoFuncionarioResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody TipoFuncionario obj) throws DataException{
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -50,12 +51,18 @@ public class TipoFuncionarioResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<TipoFuncionario> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoFuncionario obj) {
+	public ResponseEntity<TipoFuncionario> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoFuncionario obj) throws DataException {
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
 
-			TipoFuncionario datosActualizados = objService.update(datosGuardados);
+			TipoFuncionario datosActualizados = null;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}

@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import epntech.cbdmq.pe.dominio.admin.Estudiante;
-import epntech.cbdmq.pe.dominio.admin.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
 

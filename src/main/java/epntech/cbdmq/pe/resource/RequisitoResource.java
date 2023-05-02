@@ -35,6 +35,7 @@ public class RequisitoResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Requisito obj) throws DataException{
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -50,9 +51,9 @@ public class RequisitoResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Requisito> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Requisito obj) {
+	public ResponseEntity<Requisito> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Requisito obj)  throws DataException{
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			//datosGuardados.setCodConvocatoria(obj.getCodConvocatoria());
 			datosGuardados.setCodFuncionario(obj.getCodFuncionario());
 
@@ -60,7 +61,13 @@ public class RequisitoResource {
 			datosGuardados.setEstado(obj.getEstado());
 			datosGuardados.setEsDocumento(obj.getEsDocumento());
 
-			Requisito datosActualizados = objService.update(datosGuardados);
+			Requisito datosActualizados = null;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}

@@ -34,7 +34,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
-@RequestMapping("/linkconvocatoria")
+@RequestMapping("/link")
 
 public class DescargarDocumentoResourse {
 
@@ -53,11 +53,9 @@ public class DescargarDocumentoResourse {
 	     // Crear un objeto Resource para el archivo
 	     File file = new File(archivo.getRuta());
 	     InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-	     
 	     // Construir la URL completa de descarga del archivo
 	     String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build().toUriString();
 	     String downloadUrl = baseUrl + "/archivo/" + archivo.getCodigo();
-	     
 	     // Devolver una respuesta con el archivo adjunto y la URL de descarga
 	     return ResponseEntity.ok()
 	             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")

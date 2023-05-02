@@ -28,7 +28,7 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 	public TipoDocumento save(TipoDocumento obj) throws DataException {
 		if(obj.getTipoDocumento().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<?> objGuardado = repo.findByTipoDocumento(obj.getTipoDocumento());
+		Optional<?> objGuardado = repo.findByTipoDocumentoIgnoreCase(obj.getTipoDocumento());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -48,8 +48,11 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 	}
 
 	@Override
-	public TipoDocumento update(TipoDocumento objActualizado) {
-		// TODO Auto-generated method stub
+	public TipoDocumento update(TipoDocumento objActualizado) throws DataException{
+		Optional<?> objGuardado = repo.findByTipoDocumentoIgnoreCase(objActualizado.getTipoDocumento());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

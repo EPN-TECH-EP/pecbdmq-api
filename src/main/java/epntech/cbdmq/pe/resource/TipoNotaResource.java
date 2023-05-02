@@ -39,6 +39,7 @@ public class TipoNotaResource {
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody TipoNota obj) throws DataException {
+    	obj.setNota(obj.getNota().toUpperCase());
     	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 
@@ -53,11 +54,17 @@ public class TipoNotaResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TipoNota> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoNota obj) {
+    public ResponseEntity<TipoNota> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoNota obj) throws DataException {
         return objServices.getById(codigo).map(datosGuardados -> {
-            datosGuardados.setNota(obj.getNota());
+            datosGuardados.setNota(obj.getNota().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
-            TipoNota datosActualizados = objServices.update(datosGuardados);
+            TipoNota datosActualizados = null;
+			try {
+				datosActualizados = objServices.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

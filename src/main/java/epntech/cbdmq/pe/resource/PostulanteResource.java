@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatoPersonal;
+import epntech.cbdmq.pe.dominio.util.PostulanteDatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.impl.PostulanteServiceimpl;
+import epntech.cbdmq.pe.servicio.impl.PostulanteServiceImpl;
 
 @RestController
 @RequestMapping("/postulante")
 public class PostulanteResource {
 
 	@Autowired
-	private PostulanteServiceimpl objService;
+	private PostulanteServiceImpl objService;
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)

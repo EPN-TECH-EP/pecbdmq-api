@@ -34,7 +34,7 @@ public class TipoSancionServiceImpl implements TipoSancionService {
     public TipoSancion save(TipoSancion obj) throws DataException {
     	if(obj.getSancion().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoSancion> objGuardado = repo.findBysancion(obj.getSancion());
+		Optional<TipoSancion> objGuardado = repo.findBySancionIgnoreCase(obj.getSancion());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -63,7 +63,11 @@ public class TipoSancionServiceImpl implements TipoSancionService {
      * {@inheritDoc}
      */
     @Override
-    public TipoSancion update(TipoSancion objActualizado) {
+    public TipoSancion update(TipoSancion objActualizado) throws DataException {
+    	Optional<TipoSancion> objGuardado = repo.findBySancionIgnoreCase(objActualizado.getSancion());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
         return repo.save(objActualizado);
     }
 

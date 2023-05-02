@@ -62,7 +62,7 @@ public class TipoInstruccionTest {
 
 		repo.save(obj);
 
-		Optional<TipoInstruccion> obj1 = repo.findByTipoInstruccion(TipoInstruccion);
+		Optional<TipoInstruccion> obj1 = repo.findByTipoInstruccionIgnoreCase(TipoInstruccion);
 
 		assertThat(obj1.get().getTipoInstruccion()).isEqualTo(TipoInstruccion);
 	}
@@ -78,14 +78,14 @@ public class TipoInstruccionTest {
 
 		repo.save(obj);
 
-		Optional<TipoInstruccion> obj1 = repo.findByTipoInstruccion("Test");
+		Optional<TipoInstruccion> obj1 = repo.findByTipoInstruccionIgnoreCase("Test");
 
 		String datoNuevo = "TipoInstruccionNuevo";
 
 		obj.setTipoInstruccion(datoNuevo);
 		obj.setCodigoTipoInstruccion(obj1.get().getCodigoTipoInstruccion());
 
-		Optional<TipoInstruccion> objModificado = repo.findByTipoInstruccion(datoNuevo);
+		Optional<TipoInstruccion> objModificado = repo.findByTipoInstruccionIgnoreCase(datoNuevo);
 		assertThat(objModificado.get().getTipoInstruccion()).isEqualTo(datoNuevo);
 	}
 
@@ -106,7 +106,7 @@ public class TipoInstruccionTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByTipoInstruccion("Test").get().getCodigoTipoInstruccion();
+		int id = repo.findByTipoInstruccionIgnoreCase("Test").get().getCodigoTipoInstruccion();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

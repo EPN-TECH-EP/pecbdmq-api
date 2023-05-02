@@ -33,6 +33,7 @@ public class PruebaResource {
 	@PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody Prueba obj) throws DataException {
+		obj.setPrueba(obj.getPrueba().toUpperCase());
     	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 	@GetMapping("/listar")
@@ -48,16 +49,22 @@ public class PruebaResource {
 	/*poner el metodo put*/
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Prueba> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Prueba obj) {
+    public ResponseEntity<Prueba> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Prueba obj) throws DataException {
         return objServices.getById(codigo).map(datosGuardados -> {
             
-            datosGuardados.setPrueba(obj.getPrueba());
+            datosGuardados.setPrueba(obj.getPrueba().toUpperCase());
             datosGuardados.setDescripcion_prueba(obj.getDescripcion_prueba());
             datosGuardados.setFecha_inicio(obj.getFecha_inicio());
             datosGuardados.setFecha_fin(obj.getFecha_fin());
             datosGuardados.setHora(obj.getHora());
          
-            Prueba datosActualizados = objServices.update(datosGuardados);
+            Prueba datosActualizados = null;
+			try {
+				datosActualizados = objServices.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

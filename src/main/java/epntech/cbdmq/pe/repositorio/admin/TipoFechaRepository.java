@@ -12,5 +12,6 @@ import epntech.cbdmq.pe.dominio.admin.TipoFecha;
 
 public interface TipoFechaRepository extends JpaRepository<TipoFecha, String> {
     
-	Optional<TipoFecha> findByFecha(String fecha);
+	Optional<TipoFecha> findByFechaIgnoreCase(String fecha);
+	
 }

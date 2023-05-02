@@ -14,5 +14,5 @@ import epntech.cbdmq.pe.dominio.admin.TipoBaja;
  * @version $Revision: $
  */
 public interface TipoBajaRepository extends JpaRepository<TipoBaja, Integer> {
-    Optional<TipoBaja> findByBaja(String baja);
+    Optional<TipoBaja> findByBajaIgnoreCase(String baja);
 }

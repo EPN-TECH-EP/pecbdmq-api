@@ -10,7 +10,7 @@ import epntech.cbdmq.pe.dominio.admin.TipoInstructor;
 public interface TipoInstructorRepository extends JpaRepository<TipoInstructor, Integer>{
 
 	
-	Optional<TipoInstructor> findBynombretipoinstructor(String nombretipoinstructor);
+	Optional<TipoInstructor> findBynombretipoinstructorIgnoreCase(String nombretipoinstructor);
 	
 	
 }
