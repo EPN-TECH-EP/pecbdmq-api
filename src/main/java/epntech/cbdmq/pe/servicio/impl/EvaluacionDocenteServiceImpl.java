@@ -23,13 +23,13 @@ public class EvaluacionDocenteServiceImpl implements EvaluacionDocenteService {
 	
 	@Override
 	public EvaluacionDocente save(EvaluacionDocente obj) throws DataException {
-		if(obj.getPregunta().trim().isEmpty())
+		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
 		Optional<EvaluacionDocente> objGuardado = repo.findByNombreIgnoreCase(obj.getPregunta());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
-		obj.setPregunta(obj.getPregunta().toUpperCase());
+		obj.setNombre(obj.getNombre().toUpperCase());
         return repo.save(obj);
 	}
 

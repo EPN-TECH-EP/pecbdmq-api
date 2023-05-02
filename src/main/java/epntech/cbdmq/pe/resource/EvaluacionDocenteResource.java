@@ -52,7 +52,7 @@ public class EvaluacionDocenteResource {
 	    public ResponseEntity<EvaluacionDocente> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EvaluacionDocente obj) {
 	        return objServices.getById(codigo).map(datosGuardados -> {
 	            //datosGuardados.setCod_evaluacion_docente(obj.getCod_evaluacion_docente());
-	            datosGuardados.setPregunta(obj.getPregunta());
+	            datosGuardados.setNombre(obj.getNombre());
 	            datosGuardados.setEstado(obj.getEstado());
 	            EvaluacionDocente datosActualizados = objServices.update(datosGuardados);
 	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
