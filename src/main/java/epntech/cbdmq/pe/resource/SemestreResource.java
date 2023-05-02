@@ -34,6 +34,7 @@ public class SemestreResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Semestre obj) throws DataException{
+		obj.setSemestre(obj.getSemestre().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -49,12 +50,18 @@ public class SemestreResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Semestre> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Semestre obj) {
+	public ResponseEntity<Semestre> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Semestre obj)  throws DataException {
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setSemestre(obj.getSemestre());
+			datosGuardados.setSemestre(obj.getSemestre().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
 
-			Semestre datosActualizados = objService.update(datosGuardados);
+			Semestre datosActualizados = null;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}

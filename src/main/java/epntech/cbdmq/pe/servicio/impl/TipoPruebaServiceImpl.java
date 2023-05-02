@@ -32,7 +32,7 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
     public TipoPrueba save(TipoPrueba obj) throws DataException {
     	if(obj.getPrueba().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoPrueba> objGuardado = repo.findByprueba(obj.getPrueba());
+		Optional<TipoPrueba> objGuardado = repo.findByPruebaIgnoreCase(obj.getPrueba());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -62,8 +62,12 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
      * {@inheritDoc}
      */
     @Override
-    public TipoPrueba update(TipoPrueba objActualizado) {
-        return repo.save(objActualizado);
+    public TipoPrueba update(TipoPrueba objActualizado)  throws DataException{
+    	Optional<TipoPrueba> objGuardado = repo.findByPruebaIgnoreCase(objActualizado.getPrueba());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
+    	return repo.save(objActualizado);
     }
 
     /**

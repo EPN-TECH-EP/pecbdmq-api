@@ -8,5 +8,5 @@ import epntech.cbdmq.pe.dominio.admin.Semestre;
 
 public interface SemestreRepository extends JpaRepository<Semestre, Integer> {
 
-	Optional<Semestre> findBySemestre(String nombre);
+	Optional<Semestre> findBySemestreIgnoreCase(String nombre);
 }

@@ -20,7 +20,7 @@ public interface TipoNotaService {
 
     Optional<TipoNota> getById(Integer codigo);
 
-    TipoNota update(TipoNota objActualizado);
+    TipoNota update(TipoNota objActualizado) throws DataException;
 
     void delete(Integer codigo);
 }

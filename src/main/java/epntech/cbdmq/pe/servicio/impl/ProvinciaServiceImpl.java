@@ -29,7 +29,7 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 		// TODO Auto-generated method stub
 		if (obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Provincia> objGuardado = repo.findByNombre(obj.getNombre());
+		Optional<Provincia> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -52,6 +52,10 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	@Override
 	public Provincia update(Provincia objActualizado) throws DataException {
 
+		Optional<Provincia> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

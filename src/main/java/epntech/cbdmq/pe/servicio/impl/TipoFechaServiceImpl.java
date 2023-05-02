@@ -34,7 +34,7 @@ public class TipoFechaServiceImpl implements TipoFechaService {
     public TipoFecha save(TipoFecha obj) throws DataException {
     	if(obj.getFecha().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoFecha> objGuardado = repo.findByFecha(obj.getFecha());
+		Optional<TipoFecha> objGuardado = repo.findByFechaIgnoreCase(obj.getFecha());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -63,7 +63,11 @@ public class TipoFechaServiceImpl implements TipoFechaService {
      * {@inheritDoc}
      */
     @Override
-    public TipoFecha update(TipoFecha objActualizado) {
+    public TipoFecha update(TipoFecha objActualizado) throws DataException {
+    	Optional<TipoFecha> objGuardado = repo.findByFechaIgnoreCase(objActualizado.getFecha());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
         return repo.save(objActualizado);
     }
 

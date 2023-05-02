@@ -23,7 +23,7 @@ public class AulaServiceImpl implements AulaService {
 		// TODO Auto-generated method stub
 		if (obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Aula> objGuardado = repo.findByNombre(obj.getNombre());
+		Optional<Aula> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -46,6 +46,10 @@ public class AulaServiceImpl implements AulaService {
 	@Override
 	public Aula update(Aula objActualizado) throws DataException {
 
+		Optional<Aula> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

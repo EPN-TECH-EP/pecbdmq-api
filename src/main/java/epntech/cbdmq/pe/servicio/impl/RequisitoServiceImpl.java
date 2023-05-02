@@ -28,7 +28,7 @@ public class RequisitoServiceImpl implements RequisitoService {
 	public Requisito save(Requisito obj) throws DataException {
 		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Requisito> objGuardado = repo.findByNombre(obj.getNombre());
+		Optional<Requisito> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -48,8 +48,11 @@ public class RequisitoServiceImpl implements RequisitoService {
 	}
 
 	@Override
-	public Requisito update(Requisito objActualizado) {
-		// TODO Auto-generated method stub
+	public Requisito update(Requisito objActualizado) throws DataException {
+		Optional<Requisito> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

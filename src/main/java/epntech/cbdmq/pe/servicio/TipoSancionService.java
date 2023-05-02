@@ -16,7 +16,7 @@ public interface TipoSancionService {
 
     Optional<TipoSancion> getById(Integer codigo);
 
-    TipoSancion update(TipoSancion objActualizado);
+    TipoSancion update(TipoSancion objActualizado) throws DataException;
 
     void delete(Integer codigo);
 }

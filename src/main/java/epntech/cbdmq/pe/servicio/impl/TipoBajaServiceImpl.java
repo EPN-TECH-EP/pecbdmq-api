@@ -35,7 +35,7 @@ public class TipoBajaServiceImpl implements TipoBajaService {
     public TipoBaja save(TipoBaja obj) throws DataException {
     	if(obj.getBaja().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoBaja> objGuardado = repo.findByBaja(obj.getBaja());
+		Optional<TipoBaja> objGuardado = repo.findByBajaIgnoreCase(obj.getBaja());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -64,8 +64,11 @@ public class TipoBajaServiceImpl implements TipoBajaService {
      * {@inheritDoc}
      */
     @Override
-    public TipoBaja update(TipoBaja objActualizado) {
-        // TODO Auto-generated method stub
+    public TipoBaja update(TipoBaja objActualizado) throws DataException  {
+    	Optional<TipoBaja> objGuardado = repo.findByBajaIgnoreCase(objActualizado.getBaja());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
         return repo.save(objActualizado);
     }
 

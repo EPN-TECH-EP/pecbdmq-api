@@ -24,7 +24,7 @@ public class ModuloServiceImpl implements ModuloService {
     public Modulo save(Modulo obj) throws DataException {
     	if(obj.getEtiqueta().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Modulo> objGuardado = repo.findByEtiqueta(obj.getEtiqueta());
+		Optional<Modulo> objGuardado = repo.findByEtiquetaIgnoreCase(obj.getEtiqueta());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -38,8 +38,11 @@ public class ModuloServiceImpl implements ModuloService {
     }
 
     @Override
-    public Modulo update(Modulo objActualizado) {
-        // TODO Auto-generated method stub
+    public Modulo update(Modulo objActualizado) throws DataException {
+    	Optional<Modulo> objGuardado = repo.findByEtiquetaIgnoreCase(objActualizado.getEtiqueta());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
         return repo.save(objActualizado);
     }
 

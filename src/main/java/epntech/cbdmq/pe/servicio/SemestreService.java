@@ -14,7 +14,7 @@ public interface SemestreService {
 	
 	Optional<Semestre> getById(int id);
 	
-	Semestre update(Semestre obActualizado);
+	Semestre update(Semestre obActualizado) throws DataException ;
 	
 	void deleteById(int id) throws DataException;
 }

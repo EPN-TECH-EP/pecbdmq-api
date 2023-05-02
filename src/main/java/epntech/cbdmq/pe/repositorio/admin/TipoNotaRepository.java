@@ -16,5 +16,5 @@ import epntech.cbdmq.pe.dominio.admin.TipoNota;
 public interface TipoNotaRepository extends JpaRepository<TipoNota, Integer> {
     
    
-    Optional<TipoNota> findByNota(String nota);
+    Optional<TipoNota> findByNotaIgnoreCase(String nota);
 }
