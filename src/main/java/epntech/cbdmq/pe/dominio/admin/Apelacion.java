@@ -36,7 +36,7 @@ public class Apelacion {
 	@Column(name = "fecha_solicitud")
 	private LocalDateTime fechasolicitud;
 	@Column(name = "nombre_prueba_revision")
-	private String nombrepruebarevision;
+	private String nombre;
 	@Column(name = "observacion_aspirante")
 	private String observacionaspirante;
 	@Column(name = "observacion_docente")

@@ -15,8 +15,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.Excel;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
+import epntech.cbdmq.pe.dominio.util.Excel;
 
 public class ProvinciaHelper {
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";

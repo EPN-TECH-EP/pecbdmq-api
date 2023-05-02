@@ -27,7 +27,7 @@ public class TipoFuncionarioServiceImpl implements TipoFuncionarioService {
 	public TipoFuncionario save(TipoFuncionario obj) throws DataException {
 		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<?> objGuardado = repo.findByNombre(obj.getNombre());
+		Optional<?> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -47,8 +47,11 @@ public class TipoFuncionarioServiceImpl implements TipoFuncionarioService {
 	}
 
 	@Override
-	public TipoFuncionario update(TipoFuncionario objActualizado) {
-		// TODO Auto-generated method stub
+	public TipoFuncionario update(TipoFuncionario objActualizado)  throws DataException{
+		Optional<?> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

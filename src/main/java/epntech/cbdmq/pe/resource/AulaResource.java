@@ -43,7 +43,7 @@ public class AulaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Aula> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Aula obj) throws DataException{
 		return (ResponseEntity<Aula>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setCapacidad(obj.getCapacidad());
 			datosGuardados.setTipo(obj.getTipo());
 			datosGuardados.setPcs(obj.getPcs());

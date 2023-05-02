@@ -28,7 +28,7 @@ public class TipoInstruccionServiceImpl implements TipoInstruccionService {
 	public TipoInstruccion save(TipoInstruccion obj) throws DataException {
 		if(obj.getTipoInstruccion().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<?> objGuardado = repo.findByTipoInstruccion(obj.getTipoInstruccion());
+		Optional<?> objGuardado = repo.findByTipoInstruccionIgnoreCase(obj.getTipoInstruccion());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -48,8 +48,11 @@ public class TipoInstruccionServiceImpl implements TipoInstruccionService {
 	}
 
 	@Override
-	public TipoInstruccion update(TipoInstruccion objActualizado) {
-		// TODO Auto-generated method stub
+	public TipoInstruccion update(TipoInstruccion objActualizado) throws DataException {
+		Optional<?> objGuardado = repo.findByTipoInstruccionIgnoreCase(objActualizado.getTipoInstruccion());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

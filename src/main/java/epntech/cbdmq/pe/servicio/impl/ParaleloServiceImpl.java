@@ -26,7 +26,7 @@ public class ParaleloServiceImpl implements ParaleloService{
 		// TODO Auto-generated method stub
 		if(obj.getNombreParalelo().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Paralelo> objGuardado = repo.findByNombreParalelo(obj.getNombreParalelo());
+		Optional<Paralelo> objGuardado = repo.findByNombreParaleloIgnoreCase(obj.getNombreParalelo());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -51,7 +51,7 @@ public class ParaleloServiceImpl implements ParaleloService{
 		// TODO Auto-generated method stub
 		if(objActualizado.getNombreParalelo().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Paralelo> objGuardado = repo.findByNombreParalelo(objActualizado.getNombreParalelo());
+		Optional<Paralelo> objGuardado = repo.findByNombreParaleloIgnoreCase(objActualizado.getNombreParalelo());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}

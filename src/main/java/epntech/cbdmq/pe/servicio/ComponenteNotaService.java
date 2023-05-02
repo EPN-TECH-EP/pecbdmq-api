@@ -20,7 +20,7 @@ public interface ComponenteNotaService {
 
     Optional<ComponenteNota> getById(int id);
 
-    ComponenteNota update(ComponenteNota objActualizado);
+    ComponenteNota update(ComponenteNota objActualizado)throws DataException;
 
     void delete(int id);
 }

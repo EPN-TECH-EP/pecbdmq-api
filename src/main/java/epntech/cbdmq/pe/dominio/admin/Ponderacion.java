@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ResultCheckStyle;
@@ -35,9 +36,9 @@ public class Ponderacion {
 	@Column(name = "cod_tipo_nota")
 	private Integer cod_tipo_nota;
 	@Column(name = "porcentaje_final_ponderacion")
-	private Integer porcentajefinalponderacion;
+	private BigDecimal porcentajefinalponderacion;
 	@Column(name = "porcentaje_nota_materia")
-	private Integer porcentajenotamateria;
+	private BigDecimal porcentajenotamateria;
 	@Column(name = "fecha_inicio_vigencia")
 	private LocalDateTime fechainiciovigencia;
 	@Column(name = "fecha_fin_vigencia")

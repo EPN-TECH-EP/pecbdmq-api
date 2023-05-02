@@ -39,6 +39,7 @@ public class TipoFechaResource {
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody TipoFecha obj) throws DataException {
+    	obj.setFecha(obj.getFecha().toUpperCase());
     	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 
@@ -53,11 +54,17 @@ public class TipoFechaResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TipoFecha> actualizarDatos(@PathVariable("id") String fecha, @RequestBody TipoFecha obj) {
+    public ResponseEntity<TipoFecha> actualizarDatos(@PathVariable("id") String fecha, @RequestBody TipoFecha obj) throws DataException {
         return objServices.getById(fecha).map(datosGuardados -> {
-            datosGuardados.setFecha(obj.getFecha());
+            datosGuardados.setFecha(obj.getFecha().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
-            TipoFecha datosActualizados = objServices.update(datosGuardados);
+            TipoFecha datosActualizados = null;
+			try {
+				datosActualizados = objServices.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

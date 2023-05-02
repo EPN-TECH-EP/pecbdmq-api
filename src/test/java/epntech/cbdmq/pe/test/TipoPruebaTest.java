@@ -66,7 +66,7 @@ public class TipoPruebaTest {
 
 		repo.save(obj);
 
-		Optional<TipoPrueba> obj1 = repo.findByprueba("texto");
+		Optional<TipoPrueba> obj1 = repo.findByPruebaIgnoreCase("texto");
 
 		assertThat(obj1.get().getPrueba()).isEqualTo("texto");
 	}
@@ -84,14 +84,14 @@ public class TipoPruebaTest {
 
 		repo.save(obj);
 
-		Optional<TipoPrueba> obj1 = repo.findByprueba("Pedro");
+		Optional<TipoPrueba> obj1 = repo.findByPruebaIgnoreCase("Pedro");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setPrueba(datoNuevo);
 		obj.setCod_tipo_prueba(obj1.get().getCod_tipo_prueba());
 
-		Optional<TipoPrueba> objModificado = repo.findByprueba("Pedro");
+		Optional<TipoPrueba> objModificado = repo.findByPruebaIgnoreCase("Pedro");
 		assertThat(objModificado.get().getPrueba()).isEqualTo(datoNuevo);
 	}
 	
@@ -114,7 +114,7 @@ public class TipoPruebaTest {
 
 		repo.save(obj);
 
-		int id = repo.findByprueba("texto").get().getCod_tipo_prueba();
+		int id = repo.findByPruebaIgnoreCase("texto").get().getCod_tipo_prueba();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

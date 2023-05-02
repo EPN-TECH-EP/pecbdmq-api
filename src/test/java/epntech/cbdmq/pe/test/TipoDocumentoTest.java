@@ -60,7 +60,7 @@ public class TipoDocumentoTest {
 
 		repo.save(obj);
 
-		Optional<TipoDocumento> obj1 = repo.findByTipoDocumento(nombre);
+		Optional<TipoDocumento> obj1 = repo.findByTipoDocumentoIgnoreCase(nombre);
 
 		assertThat(obj1.get().getTipoDocumento()).isEqualTo(nombre);
 	}
@@ -76,14 +76,14 @@ public class TipoDocumentoTest {
 
 		repo.save(obj);
 
-		Optional<TipoDocumento> obj1 = repo.findByTipoDocumento("Test");
+		Optional<TipoDocumento> obj1 = repo.findByTipoDocumentoIgnoreCase("Test");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setTipoDocumento(datoNuevo);
 		obj.setCodigoDocumento(obj1.get().getCodigoDocumento());
 
-		Optional<TipoDocumento> objModificado = repo.findByTipoDocumento(datoNuevo);
+		Optional<TipoDocumento> objModificado = repo.findByTipoDocumentoIgnoreCase(datoNuevo);
 		assertThat(objModificado.get().getTipoDocumento()).isEqualTo(datoNuevo);
 	}
 
@@ -104,7 +104,7 @@ public class TipoDocumentoTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByTipoDocumento("Test").get().getCodigoDocumento();
+		int id = repo.findByTipoDocumentoIgnoreCase("Test").get().getCodigoDocumento();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

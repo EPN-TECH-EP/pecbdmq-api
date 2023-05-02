@@ -40,7 +40,7 @@ public class AulaTest {
 		aula.setInternet("wifi");
 		aula.setPcs(3);
 		aula.setProyectores(1);
-		aula.setSalaOcupada("no");
+		aula.setSalaOcupada(true);
 		aula.setTipo("teatro");
 		aula.setEstado("activo");
 
@@ -64,7 +64,7 @@ public class AulaTest {
 
 		Aula datos = repo.save(aula);
 
-		Optional<Aula> aula1 = repo.findByNombre(nombre);
+		Optional<Aula> aula1 = repo.findByNombreIgnoreCase(nombre);
 
 		assertThat(aula1.get().getNombre()).isEqualTo(nombre);
 	}
@@ -80,14 +80,14 @@ public class AulaTest {
 
 		Aula datos = repo.save(aula);
 
-		Optional<Aula> aula1 = repo.findByNombre("Test");
+		Optional<Aula> aula1 = repo.findByNombreIgnoreCase("Test");
 
 		String nombreNuevo = "NombreNuevo";
 		// Aula aula = new Aula();
 		aula.setNombre(nombreNuevo);
 		aula.setCodigo(aula1.get().getCodigo());
 
-		Optional<Aula> aulaModificada = repo.findByNombre(nombreNuevo);
+		Optional<Aula> aulaModificada = repo.findByNombreIgnoreCase(nombreNuevo);
 		assertThat(aulaModificada.get().getNombre()).isEqualTo(nombreNuevo);
 	}
 
@@ -108,7 +108,7 @@ public class AulaTest {
 		aula.setEstado("activo");
 
 		Aula datos = repo.save(aula);
-		int id = repo.findByNombre("Test").get().getCodigo();
+		int id = repo.findByNombreIgnoreCase("Test").get().getCodigo();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

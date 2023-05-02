@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Excel;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
+import epntech.cbdmq.pe.dominio.util.Excel;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.helper.ProvinciaHelper;
@@ -38,6 +38,7 @@ public class ProvinciaResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Provincia obj) throws DataException {
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 
@@ -56,7 +57,7 @@ public class ProvinciaResource {
 	public ResponseEntity<Provincia> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Provincia obj)
 			throws DataException {
 		return (ResponseEntity<Provincia>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
 
 			Provincia datosActualizados = null;

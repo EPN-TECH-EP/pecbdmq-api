@@ -63,7 +63,7 @@ public class TipoProcedenciaTest {
 
 		repo.save(obj);
 
-		Optional<TipoProcedencia> obj1 = repo.findByNombre(nombre);
+		Optional<TipoProcedencia> obj1 = repo.findByNombreIgnoreCase(nombre);
 
 		assertThat(obj1.get().getNombre()).isEqualTo(nombre);
 	}
@@ -79,14 +79,14 @@ public class TipoProcedenciaTest {
 
 		repo.save(obj);
 
-		Optional<TipoProcedencia> obj1 = repo.findByNombre("Test");
+		Optional<TipoProcedencia> obj1 = repo.findByNombreIgnoreCase("Test");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setNombre(datoNuevo);
 		obj.setCodigo(obj1.get().getCodigo());
 
-		Optional<TipoProcedencia> objModificado = repo.findByNombre(datoNuevo);
+		Optional<TipoProcedencia> objModificado = repo.findByNombreIgnoreCase(datoNuevo);
 		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
 	}
 
@@ -107,7 +107,7 @@ public class TipoProcedenciaTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombre("Test").get().getCodigo();
+		int id = repo.findByNombreIgnoreCase("Test").get().getCodigo();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

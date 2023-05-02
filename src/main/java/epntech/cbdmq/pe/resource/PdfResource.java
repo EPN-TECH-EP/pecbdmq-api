@@ -53,7 +53,7 @@ public class PdfResource {
 	}
 
 	public static String[] materiaToStringArray(Materia materia) {
-		return new String[] { materia.getCodMateria().toString(), materia.getNombreMateria(),
+		return new String[] { materia.getCodMateria().toString(), materia.getNombre(),
 				materia.getNotaMinima().toString(), materia.getNumHoras().toString(), materia.getObservacionMateria(),
 				materia.getPesoMateria().toString(), materia.getTipoMateria(), materia.getEstado() };
 	}

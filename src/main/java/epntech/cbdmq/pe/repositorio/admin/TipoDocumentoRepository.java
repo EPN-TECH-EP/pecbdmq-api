@@ -8,5 +8,5 @@ import epntech.cbdmq.pe.dominio.admin.TipoDocumento;
 
 public interface TipoDocumentoRepository extends JpaRepository<TipoDocumento, Integer> {
 
-	Optional<TipoDocumento> findByTipoDocumento(String nombre);
+	Optional<TipoDocumento> findByTipoDocumentoIgnoreCase(String nombre);
 }

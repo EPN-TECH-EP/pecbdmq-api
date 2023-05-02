@@ -9,5 +9,5 @@ import epntech.cbdmq.pe.dominio.admin.TipoFuncionario;
 
 public interface TipoFuncionarioRepository extends JpaRepository<TipoFuncionario, Integer> {
 
-	Optional<TipoFuncionario> findByNombre(String nombre);
+	Optional<TipoFuncionario> findByNombreIgnoreCase(String nombre);
 }

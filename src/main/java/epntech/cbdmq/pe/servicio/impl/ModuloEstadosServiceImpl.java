@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.ModuloEstados;
-import epntech.cbdmq.pe.dominio.admin.ModuloEstadosData;
+import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import epntech.cbdmq.pe.repositorio.admin.ModuloEstadosDataRepository;
 import epntech.cbdmq.pe.repositorio.admin.ModuloEstadosRepository;
 import epntech.cbdmq.pe.servicio.ModuloEstadosService;

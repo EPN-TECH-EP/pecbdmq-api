@@ -20,7 +20,7 @@ public interface TipoPruebaService {
 
     Optional<TipoPrueba> getById(Integer codigo);
 
-    TipoPrueba update(TipoPrueba objActualizado);
+    TipoPrueba update(TipoPrueba objActualizado) throws DataException;
 
     void delete(Integer codigo);
 }

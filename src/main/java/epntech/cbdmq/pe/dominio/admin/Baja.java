@@ -35,7 +35,7 @@ public class Baja {
 	@Column(name = "descripcion_baja")
 	private String descripcionbaja;
 	@Column(name = "usuario_crea_baja")
-	private String usuariocreabaja;
+	private String nombre;
 	@Column(name = "fecha_crea_baja")
 	private LocalDateTime fechacreabaja;
 	@Column(name = "hora_crea_baja")
@@ -46,8 +46,7 @@ public class Baja {
 	private LocalDateTime fechamodbaja;
 	@Column(name = "hora_mod_baja")
 	private Time horamodbaja;
-	@Column(name = "ruta_adjunto_baja")
-	private String rutaadjuntobaja;
+	
 	@Column(name = "estado")
 	private String estado;
 }

@@ -14,7 +14,7 @@ public interface TipoInstructorService {
 
     Optional<TipoInstructor> getById(Integer codigo);
 
-    TipoInstructor update(TipoInstructor objActualizado);
+    TipoInstructor update(TipoInstructor objActualizado) throws DataException;
 
     void delete(Integer codigo);
 	

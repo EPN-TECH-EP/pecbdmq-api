@@ -60,7 +60,7 @@ public class SemestreTest {
 
 		repo.save(obj);
 
-		Optional<Semestre> obj1 = repo.findBySemestre(nombre);
+		Optional<Semestre> obj1 = repo.findBySemestreIgnoreCase(nombre);
 
 		assertThat(obj1.get().getSemestre()).isEqualTo(nombre);
 	}
@@ -76,14 +76,14 @@ public class SemestreTest {
 
 		repo.save(obj);
 
-		Optional<Semestre> obj1 = repo.findBySemestre("Test");
+		Optional<Semestre> obj1 = repo.findBySemestreIgnoreCase("Test");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setSemestre(datoNuevo);
 		obj.setCodSemestre(obj1.get().getCodSemestre());
 
-		Optional<Semestre> objModificado = repo.findBySemestre(datoNuevo);
+		Optional<Semestre> objModificado = repo.findBySemestreIgnoreCase(datoNuevo);
 		assertThat(objModificado.get().getSemestre()).isEqualTo(datoNuevo);
 	}
 
@@ -104,7 +104,7 @@ public class SemestreTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findBySemestre("Test").get().getCodSemestre();
+		int id = repo.findBySemestreIgnoreCase("Test").get().getCodSemestre();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,8 @@ public class MateriaTest {
         paralelos.add(paralelo);
         	
 		obj.setNombreMateria("Test");
-		obj.setNotaMinima(10);
+		obj.setNotaMinima(new BigDecimal(10.0));
+
 		obj.setObservacionMateria("pruebas unitarias");
 		obj.setParalelos(paralelos);
 		obj.setEstado("activo");
@@ -51,7 +53,7 @@ public class MateriaTest {
 		Materia datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("Test", datos.getNombreMateria());
+		assertEquals("Test", datos.getNombre());
 		assertEquals(10, datos.getNotaMinima());
 		assertEquals("pruebas unitarias", datos.getObservacionMateria());
 		assertEquals("activo", datos.getEstado());
@@ -63,15 +65,16 @@ public class MateriaTest {
 		String nombre = "Test";
 
 		Materia obj = new Materia();
-		obj.setNombreMateria(nombre);
-		obj.setNotaMinima(10);
+		obj.setNombre(nombre);
+		obj.setNotaMinima(new BigDecimal(10));
+
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		Optional<Materia> obj1 = repo.findByNombreMateria("Test");
+		Optional<Materia> obj1 = repo.findByNombreIgnoreCase("Test");
 
-		assertThat(obj1.get().getNombreMateria()).isEqualTo(nombre);
+		assertThat(obj1.get().getNombre()).isEqualTo(nombre);
 	}
 
 	@Test
@@ -81,20 +84,20 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombreMateria(nombre);
-		obj.setNotaMinima(10);
+		obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		Optional<Materia> obj1 = repo.findByNombreMateria("Test");
+		Optional<Materia> obj1 = repo.findByNombreIgnoreCase("Test");
 
 		String datoNuevo = "Abc";
 
-		obj.setNombreMateria(datoNuevo);
+		obj.setNombre(datoNuevo);
 		obj.setCodMateria(obj1.get().getCodMateria());
 
-		Optional<Materia> objModificado = repo.findByNombreMateria(datoNuevo);
-		assertThat(objModificado.get().getNombreMateria()).isEqualTo(datoNuevo);
+		Optional<Materia> objModificado = repo.findByNombreIgnoreCase(datoNuevo);
+		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
 	}
 
 	@Test
@@ -110,12 +113,12 @@ public class MateriaTest {
 		String nombre = "Test";
 
 		Materia obj = new Materia();
-		obj.setNombreMateria(nombre);
-		obj.setNotaMinima(10);
+		obj.setNombre(nombre);
+		obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombreMateria("Test").get().getCodMateria();
+		int id = repo.findByNombreIgnoreCase("Test").get().getCodMateria();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

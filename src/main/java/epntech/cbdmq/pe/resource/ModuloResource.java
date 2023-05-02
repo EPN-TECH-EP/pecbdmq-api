@@ -33,6 +33,7 @@ public class ModuloResource {
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody Modulo obj) throws DataException {
+    	obj.setEtiqueta(obj.getEtiqueta().toUpperCase());
     	return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
     }
 
@@ -47,12 +48,19 @@ public class ModuloResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Modulo> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Modulo obj) {
-        return objService.getById(codigo).map(datosGuardados -> {
-            datosGuardados.setEtiqueta(obj.getEtiqueta());
+    public ResponseEntity<Modulo> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Modulo obj)  throws DataException{
+        return (ResponseEntity<Modulo>) objService.getById(codigo).map(datosGuardados -> {
+            datosGuardados.setEtiqueta(obj.getEtiqueta().toUpperCase());
             datosGuardados.setDescripcion(obj.getDescripcion());
             datosGuardados.setEstado(obj.getEstado());
-            Modulo datosActualizados = objService.update(datosGuardados);
+            Modulo datosActualizados;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

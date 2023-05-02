@@ -8,5 +8,5 @@ import epntech.cbdmq.pe.dominio.admin.Materia;
 
 public interface MateriaRepository extends JpaRepository<Materia, Integer> {
 
-	Optional<Materia> findByNombreMateria(String nombre);
+	Optional<Materia> findByNombreIgnoreCase(String nombre);
 }

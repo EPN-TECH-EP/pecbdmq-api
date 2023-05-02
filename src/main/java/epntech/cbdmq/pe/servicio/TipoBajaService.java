@@ -20,7 +20,7 @@ public interface TipoBajaService {
 
     Optional<TipoBaja> getById(Integer codigo);
 
-    TipoBaja update(TipoBaja objActualizado);
+    TipoBaja update(TipoBaja objActualizado) throws DataException ;
 
     void delete(Integer codigo);
 }

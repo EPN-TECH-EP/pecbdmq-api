@@ -27,6 +27,7 @@ public class DocumentoHabilitanteServiceImpl implements DocumentoHabilitanteServ
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return repo.save(obj);
 	}
 
