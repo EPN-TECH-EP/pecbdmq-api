@@ -68,7 +68,7 @@ public class TipoSancionTest {
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("texto");
+		Optional<TipoSancion> obj1 = repo.findBySancionIgnoreCase("texto");
 
 		assertThat(obj1.get().getSancion()).isEqualTo("texto");
 	}
@@ -86,14 +86,14 @@ public class TipoSancionTest {
 
 		repo.save(obj);
 
-		Optional<TipoSancion> obj1 = repo.findBysancion("NombreNuevo");
+		Optional<TipoSancion> obj1 = repo.findBySancionIgnoreCase("NombreNuevo");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setSancion(datoNuevo);
 		obj.setCod_tipo_sancion(obj1.get().getCod_tipo_sancion());
 
-		Optional<TipoSancion> objModificado = repo.findBysancion("NombreNuevo");
+		Optional<TipoSancion> objModificado = repo.findBySancionIgnoreCase("NombreNuevo");
 		assertThat(objModificado.get().getSancion()).isEqualTo(datoNuevo);
 	}
 	
@@ -117,7 +117,7 @@ public class TipoSancionTest {
 
 		repo.save(obj);
 
-		int id = repo.findBysancion("texto").get().getCod_tipo_sancion();
+		int id = repo.findBySancionIgnoreCase("texto").get().getCod_tipo_sancion();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

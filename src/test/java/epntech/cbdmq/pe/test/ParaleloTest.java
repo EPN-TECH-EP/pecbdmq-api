@@ -59,7 +59,7 @@ public class ParaleloTest {
 
 		repo.save(obj);
 
-		Optional<Paralelo> obj1 = repo.findByNombreParalelo(nombre);
+		Optional<Paralelo> obj1 = repo.findByNombreParaleloIgnoreCase(nombre);
 
 		assertThat(obj1.get().getNombreParalelo()).isEqualTo(nombre);
 	}
@@ -75,14 +75,14 @@ public class ParaleloTest {
 
 		repo.save(obj);
 
-		Optional<Paralelo> obj1 = repo.findByNombreParalelo("Test");
+		Optional<Paralelo> obj1 = repo.findByNombreParaleloIgnoreCase("Test");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setNombreParalelo(datoNuevo);
 		obj.setCodParalelo(obj1.get().getCodParalelo());
 
-		Optional<Paralelo> objModificado = repo.findByNombreParalelo(datoNuevo);
+		Optional<Paralelo> objModificado = repo.findByNombreParaleloIgnoreCase(datoNuevo);
 		assertThat(objModificado.get().getNombreParalelo()).isEqualTo(datoNuevo);
 	}
 
@@ -103,7 +103,7 @@ public class ParaleloTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombreParalelo("Test").get().getCodParalelo();
+		int id = repo.findByNombreParaleloIgnoreCase("Test").get().getCodParalelo();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

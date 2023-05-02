@@ -9,5 +9,5 @@ import epntech.cbdmq.pe.dominio.admin.Provincia;
 
 public interface ProvinciaRepository extends JpaRepository<Provincia, Integer> {
 
-	Optional<Provincia> findByNombre(String Nombre);
+	Optional<Provincia> findByNombreIgnoreCase(String Nombre);
 }

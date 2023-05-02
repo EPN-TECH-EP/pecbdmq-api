@@ -25,6 +25,7 @@ public class TipoInstruccionResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody TipoInstruccion obj) throws DataException{
+		obj.setTipoInstruccion(obj.getTipoInstruccion().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -40,12 +41,18 @@ public class TipoInstruccionResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<TipoInstruccion> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoInstruccion obj) {
+	public ResponseEntity<TipoInstruccion> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoInstruccion obj)throws DataException {
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setTipoInstruccion(obj.getTipoInstruccion());
+			datosGuardados.setTipoInstruccion(obj.getTipoInstruccion().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
 
-			TipoInstruccion datosActualizados = objService.update(datosGuardados);
+			TipoInstruccion datosActualizados = null;
+			try {
+				datosActualizados = objService.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}

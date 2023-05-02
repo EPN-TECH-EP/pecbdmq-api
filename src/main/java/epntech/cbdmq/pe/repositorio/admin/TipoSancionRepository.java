@@ -14,5 +14,5 @@ import epntech.cbdmq.pe.dominio.admin.TipoSancion;
  * @version $Revision: $
  */
 public interface TipoSancionRepository extends JpaRepository<TipoSancion, Integer> {
-    Optional<TipoSancion> findBysancion(String sancion);
+    Optional<TipoSancion> findBySancionIgnoreCase(String sancion);
 }

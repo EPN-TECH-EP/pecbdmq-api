@@ -14,5 +14,5 @@ import epntech.cbdmq.pe.dominio.admin.Modulo;
  * @version $Revision: $
  */
 public interface ModuloRepository extends JpaRepository<Modulo, Integer> {
-    Optional<Modulo> findByEtiqueta(String Etiqueta);
+    Optional<Modulo> findByEtiquetaIgnoreCase(String Etiqueta);
 }

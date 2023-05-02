@@ -41,6 +41,7 @@ public class UnidadGestionResource extends GestorExcepciones{
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public UnidadGestion guardarUnidadGestion(@RequestBody UnidadGestion obj) throws DataException {
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return objService.saveUnidadGestion(obj);
 	}
 	
@@ -57,7 +58,7 @@ public class UnidadGestionResource extends GestorExcepciones{
 	@PutMapping("/{id}")
 	public ResponseEntity<UnidadGestion> actualizarDatos(@PathVariable("id") int codigo, @RequestBody UnidadGestion obj) throws DataException {
 		return (ResponseEntity<UnidadGestion>) objService.getUnidadGestionById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
 				UnidadGestion datosActualizados = null;
 				try {

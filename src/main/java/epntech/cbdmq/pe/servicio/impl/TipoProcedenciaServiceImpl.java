@@ -27,7 +27,7 @@ public class TipoProcedenciaServiceImpl implements TipoProcedenciaService {
 	public TipoProcedencia save(TipoProcedencia obj) throws DataException {	
 		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<?> objGuardado = repo.findByNombre(obj.getNombre());
+		Optional<?> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -47,8 +47,11 @@ public class TipoProcedenciaServiceImpl implements TipoProcedenciaService {
 	}
 
 	@Override
-	public TipoProcedencia update(TipoProcedencia objActualizado) {
-		// TODO Auto-generated method stub
+	public TipoProcedencia update(TipoProcedencia objActualizado) throws DataException {
+		Optional<?> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

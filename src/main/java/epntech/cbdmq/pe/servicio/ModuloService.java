@@ -13,7 +13,7 @@ public interface ModuloService {
 
     Optional<Modulo> getById(Integer codigo);
 
-    Modulo update(Modulo objActualizado);
+    Modulo update(Modulo objActualizado) throws DataException;
 
     void delete(Integer codigo);
 }

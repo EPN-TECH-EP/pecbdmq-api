@@ -26,7 +26,7 @@ public class TipoInstructorServiceImpl implements TipoInstructorService{
 	public TipoInstructor save(TipoInstructor obj) throws DataException {
 		if(obj.getNombretipoinstructor().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoInstructor> objGuardado = repo.findBynombretipoinstructor(obj.getNombretipoinstructor());
+		Optional<TipoInstructor> objGuardado = repo.findBynombretipoinstructorIgnoreCase(obj.getNombretipoinstructor());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -46,7 +46,11 @@ public class TipoInstructorServiceImpl implements TipoInstructorService{
 	}
 
 	@Override
-	public TipoInstructor update(TipoInstructor objActualizado) {
+	public TipoInstructor update(TipoInstructor objActualizado) throws DataException  {
+		Optional<TipoInstructor> objGuardado = repo.findBynombretipoinstructorIgnoreCase(objActualizado.getNombretipoinstructor());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

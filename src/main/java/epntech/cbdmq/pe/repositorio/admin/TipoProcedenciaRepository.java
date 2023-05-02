@@ -8,6 +8,6 @@ import epntech.cbdmq.pe.dominio.admin.TipoProcedencia;
 
 
 public interface TipoProcedenciaRepository extends JpaRepository<TipoProcedencia, Integer> {
-	Optional<TipoProcedencia> findByNombre(String nombre);
+	Optional<TipoProcedencia> findByNombreIgnoreCase(String nombre);
 
 }

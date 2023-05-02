@@ -27,13 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonalDocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.DatosFile;
 import epntech.cbdmq.pe.dominio.admin.DocumentoDatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.DocumentoPostulante;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
-import epntech.cbdmq.pe.dominio.admin.InscripcionResult;
 import epntech.cbdmq.pe.dominio.admin.PostulanteDocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PostulanteFor;
+import epntech.cbdmq.pe.dominio.util.DatosFile;
+import epntech.cbdmq.pe.dominio.util.InscripcionResult;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
@@ -126,7 +126,7 @@ public class InscripcionForRepository{
 
 		PostulanteFor postulante = new PostulanteFor();
 		postulante.setCodDatoPersonal(inscripcion.getCodDatoPersonal());
-		postulante.setEstado("ACTIVO");
+		postulante.setEstado(inscripcion.getEstado());
 		postulante.setFechaPostulacion(fechaPostulacion);
 		postulante.setEdadPostulacion(Integer.parseInt(edad.toString()));
 		
@@ -193,6 +193,14 @@ public class InscripcionForRepository{
 			entityManager.persist(postulanteDocumentoFor);
 		}		
 				
+		//inserta los requisitos por postulante para la validación
+		StoredProcedureQuery sql = entityManager.createStoredProcedureQuery("cbdmq.insert_requisitos");
+		sql.registerStoredProcedureParameter("postulante", Integer.class, ParameterMode.IN);
+		sql.setParameter("postulante", codPostulante);
+		sql.execute();
+		sql.getSingleResult();
+		
+		
 		InscripcionResult result = new InscripcionResult();
 		result.setCod_datos_personales(postulante.getCodDatoPersonal());
 		result.setCod_postulante(codPostulante);

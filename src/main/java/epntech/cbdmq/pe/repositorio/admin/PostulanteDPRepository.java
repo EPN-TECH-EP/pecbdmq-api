@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import epntech.cbdmq.pe.dominio.admin.PostulanteDatoPersonal;
+import epntech.cbdmq.pe.dominio.util.PostulanteDatoPersonal;
 
 public interface PostulanteDPRepository extends JpaRepository<PostulanteDatoPersonal, Integer> {
 
