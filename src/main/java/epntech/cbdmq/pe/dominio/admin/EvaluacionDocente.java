@@ -29,7 +29,7 @@ public class EvaluacionDocente {
 	@Column(name = "cod_instructor")
 	private Integer cod_instructor;
 	@Column(name = "pregunta")
-	private String pregunta;
+	private String nombre;
 	@Column(name = "estado")
 	private String estado;
 	

@@ -61,7 +61,7 @@ public class ConvocatoriaResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Convocatoria> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Convocatoria obj) {
-		return objService.getByIdData(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Convocatoria>) objService.getByIdData(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setEstado(obj.getEstado());
 			datosGuardados.setFechaInicioConvocatoria(obj.getFechaInicioConvocatoria());
@@ -75,7 +75,14 @@ public class ConvocatoriaResource {
 			datosGuardados.setCorreo(obj.getCorreo());
 
 
-			Convocatoria datosActualizados = objService.updateData(datosGuardados);
+			Convocatoria datosActualizados=null;
+			try {
+				datosActualizados = objService.updateData(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}

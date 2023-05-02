@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Baja;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.BajaRepository;
@@ -23,13 +24,15 @@ public class BajaServiceImpl implements BajaService{
 	
 	@Override
 	public Baja save(Baja obj) throws DataException {
-		if(obj.getUsuariocreabaja().trim().isEmpty())
+		if (obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Baja> objGuardado = repo.findByusuariocreabaja(obj.getUsuariocreabaja());
+		Optional<Baja> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
-        return repo.save(obj);
+
+		obj.setNombre(obj.getNombre().toUpperCase());
+		return repo.save(obj);
 	}
 
 	@Override
@@ -45,8 +48,13 @@ public class BajaServiceImpl implements BajaService{
 	}
 
 	@Override
-	public Baja update(Baja objActualizado) {
-		// TODO Auto-generated method stub
+	public Baja update(Baja objActualizado) throws DataException {
+		Optional<Baja> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
+
+		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
 		return repo.save(objActualizado);
 	}
 

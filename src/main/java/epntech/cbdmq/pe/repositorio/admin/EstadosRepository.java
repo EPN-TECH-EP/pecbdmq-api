@@ -9,6 +9,6 @@ import epntech.cbdmq.pe.dominio.admin.Estados;
 
 public interface EstadosRepository extends JpaRepository<Estados, Integer> {
 
-	Optional<Estados> findByNombre(String nombre);
+	Optional<Estados> findByNombreIgnoreCase(String nombre);
 }
 

@@ -15,7 +15,7 @@ public interface EstadosService {
 	
 	Optional<Estados> getById(int id);
 	
-	Estados update(Estados objActualizado);
+	Estados update(Estados objActualizado)throws DataException;
 	
 	void delete(int id);
 	

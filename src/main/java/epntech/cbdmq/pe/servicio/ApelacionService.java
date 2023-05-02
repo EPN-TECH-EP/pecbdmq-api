@@ -1,4 +1,4 @@
-package epntech.cbdmq.pe.servicio.admin;
+package epntech.cbdmq.pe.servicio;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +14,7 @@ public interface ApelacionService {
 
     Optional<Apelacion> getById(Integer codigo);
 
-    Apelacion update(Apelacion objActualizado);
+    Apelacion update(Apelacion objActualizado) throws DataException;
 
     void delete(Integer codigo);
 	

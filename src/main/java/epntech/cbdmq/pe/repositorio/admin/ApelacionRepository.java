@@ -9,7 +9,9 @@ import epntech.cbdmq.pe.dominio.admin.Apelacion;
 public interface ApelacionRepository extends JpaRepository<Apelacion, Integer>{
 
 	
-	Optional<Apelacion>findByaprobacion(String apelacion);
+	Optional<Apelacion> findByNombreIgnoreCase(String nombre);
+	
+	
 	
 	
 	

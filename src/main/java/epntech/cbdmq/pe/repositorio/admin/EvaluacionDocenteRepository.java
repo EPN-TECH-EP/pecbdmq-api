@@ -9,6 +9,6 @@ import epntech.cbdmq.pe.dominio.admin.EvaluacionDocente;
 
 public interface EvaluacionDocenteRepository  extends JpaRepository<EvaluacionDocente, Integer>{
 	
-	Optional<EvaluacionDocente> findBypregunta(String nombre);
+	Optional<EvaluacionDocente> findByNombreIgnoreCase(String nombre);
 
 }

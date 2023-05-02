@@ -40,13 +40,13 @@ public class ComponenteNotaTest {
 	 
 		ComponenteNota obj = new ComponenteNota();
 		obj.setCod_componente_nota(2);		
-		obj.setComponentenota("texto");
+		obj.setNombre("texto");
 		obj.setEstado("activo");
 
 		ComponenteNota datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getComponentenota());
+		assertEquals("texto", datos.getNombre());
 		
 		assertEquals("activo", datos.getEstado());
 	}
@@ -59,15 +59,15 @@ public class ComponenteNotaTest {
 		
 		ComponenteNota obj = new ComponenteNota();
 		obj.setCod_componente_nota(2);		
-		obj.setComponentenota("texto");
+		obj.setNombre("texto");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<ComponenteNota> obj1 = repo.findByComponentenota("texto");
+		Optional<ComponenteNota> obj1 = repo.findByNombreIgnoreCase("texto");
 
-		assertThat(obj1.get().getComponentenota()).isEqualTo("texto");
+		assertThat(obj1.get().getNombre()).isEqualTo("texto");
 	}
 
 	@Test
@@ -77,21 +77,21 @@ public class ComponenteNotaTest {
 
 		ComponenteNota obj = new ComponenteNota();
 		obj.setCod_componente_nota(2);		
-		obj.setComponentenota("texto");
+		obj.setNombre("texto");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<ComponenteNota> obj1 = repo.findByComponentenota("texto");
+		Optional<ComponenteNota> obj1 = repo.findByNombreIgnoreCase("texto");
 
 		String datoNuevo = "texto";
 
-		obj.setComponentenota(datoNuevo);
+		obj.setNombre(datoNuevo);
 		obj.setCod_componente_nota(obj1.get().getCod_componente_nota());
 
-		Optional<ComponenteNota> objModificado = repo.findByComponentenota("texto");
-		assertThat(objModificado.get().getComponentenota()).isEqualTo(datoNuevo);
+		Optional<ComponenteNota> objModificado = repo.findByNombreIgnoreCase("texto");
+		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
 	}
 	
 	@Test
@@ -108,12 +108,12 @@ public class ComponenteNotaTest {
 
 		ComponenteNota obj = new ComponenteNota();
 		obj.setCod_componente_nota(2);		
-		obj.setComponentenota("texto");
+		obj.setNombre("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findByComponentenota("texto").get().getCod_componente_nota();
+		int id = repo.findByNombreIgnoreCase("texto").get().getCod_componente_nota();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

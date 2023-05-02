@@ -50,7 +50,7 @@ public class MateriaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Materia> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Materia obj) throws DataException{
 		return (ResponseEntity<Materia>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombreMateria(obj.getNombreMateria());
+			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setNumHoras(obj.getNumHoras());
 			datosGuardados.setTipoMateria(obj.getTipoMateria());
 			datosGuardados.setObservacionMateria(obj.getObservacionMateria());
