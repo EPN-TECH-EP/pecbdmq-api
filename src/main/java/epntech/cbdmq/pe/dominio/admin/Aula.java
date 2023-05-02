@@ -50,7 +50,7 @@ public class Aula {
 	private String instructor;
 	
 	@Column(name = "sala_ocupada")
-	private String salaOcupada;
+	private Boolean salaOcupada;
 	
 	@Column(name = "estado")
 	private String estado;

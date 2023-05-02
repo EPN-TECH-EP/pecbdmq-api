@@ -27,6 +27,7 @@ public class DelegadoServiceImpl implements DelegadoService {
 
 	@Override
 	public Delegado save(Delegado obj) throws DataException {
+		
 		return repo.save(obj);
 	}
 

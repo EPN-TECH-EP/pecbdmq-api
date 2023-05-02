@@ -36,7 +36,7 @@ public class Materia {
 	@Column(name = "cod_materia")
 	private Integer codMateria;
 	@Column(name = "nombre_materia")
-	private String nombreMateria;
+	private String nombre;
 	@Column(name = "num_horas")
 	private Integer numHoras;
 	@Column(name = "tipo_materia")

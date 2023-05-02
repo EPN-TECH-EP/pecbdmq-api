@@ -4,11 +4,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Baja;
 
 
 public interface BajaRepository extends JpaRepository<Baja, Integer>{
 
-	Optional<Baja> findByusuariocreabaja(String usuariocreabaja);
+	Optional<Baja> findByNombreIgnoreCase(String Nombre);
 	
 }

@@ -42,11 +42,11 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 	public Convocatoria saveData(Convocatoria obj) throws DataException {
 		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<?> objGuardado = repo.findByNombre(obj.getNombre());
+		Optional<?> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
-		obj.setCodigoUnico(repo.getId("C"));
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return repo.save(obj);
 	}
 
@@ -63,8 +63,12 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 	}
 
 	@Override
-	public Convocatoria updateData(Convocatoria objActualizado) {
-		// TODO Auto-generated method stub
+	public Convocatoria updateData(Convocatoria objActualizado)throws DataException  {
+		Optional<?> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
+		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
 		return repo.save(objActualizado);
 	}
 

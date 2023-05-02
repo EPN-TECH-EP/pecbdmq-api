@@ -42,12 +42,8 @@ public class ComponenteNotaResource {
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> guardar(@RequestBody ComponenteNota obj) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(objServices.save(obj));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(("{\"error\": \"" + e.getMessage() + "\"}"));
-        }
+    public ResponseEntity<?> guardar(@RequestBody ComponenteNota obj)throws DataException {
+    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 
     @GetMapping("/listar")
@@ -61,12 +57,19 @@ public class ComponenteNotaResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ComponenteNota> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody ComponenteNota obj) {
-        return objServices.getById(codigo).map(datosGuardados -> {
+    public ResponseEntity<ComponenteNota> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody ComponenteNota obj)throws DataException {
+        return (ResponseEntity<ComponenteNota>) objServices.getById(codigo).map(datosGuardados -> {
            // datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
-            datosGuardados.setComponentenota(obj.getComponentenota());
+            datosGuardados.setNombre(obj.getNombre());
             datosGuardados.setEstado(obj.getEstado());
-            ComponenteNota datosActualizados = objServices.update(datosGuardados);
+            ComponenteNota datosActualizados = null;
+			try {
+				datosActualizados = objServices.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

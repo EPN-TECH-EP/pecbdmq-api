@@ -66,7 +66,7 @@ public class ApelacionTest {
 
 		repo.save(obj);
 
-		Optional<Apelacion> obj1 = repo.findByaprobacion("texto");
+		Optional<Apelacion> obj1 = repo.findByNombreIgnoreCase("texto");
 
 		assertThat(obj1.get().getAprobacion()).isEqualTo("texto");
 	}
@@ -84,14 +84,14 @@ public class ApelacionTest {
 
 		repo.save(obj);
 
-		Optional<Apelacion> obj1 = repo.findByaprobacion("texto");
+		Optional<Apelacion> obj1 = repo.findByNombreIgnoreCase("texto");
 
 		String datoNuevo = "texto";
 
 		obj.setAprobacion(datoNuevo);
 		obj.setCod_apelacion(obj1.get().getCod_apelacion());
 
-		Optional<Apelacion> objModificado = repo.findByaprobacion("texto");
+		Optional<Apelacion> objModificado = repo.findByNombreIgnoreCase("texto");
 		assertThat(objModificado.get().getAprobacion()).isEqualTo(datoNuevo);
 	}
 	@Test
@@ -113,7 +113,7 @@ public class ApelacionTest {
 
 		repo.save(obj);
 
-		int id = repo.findByaprobacion("texto").get().getCod_apelacion();
+		int id = repo.findByNombreIgnoreCase("texto").get().getCod_apelacion();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();
