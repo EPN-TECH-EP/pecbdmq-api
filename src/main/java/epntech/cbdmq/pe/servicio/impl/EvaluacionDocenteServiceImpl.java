@@ -25,7 +25,7 @@ public class EvaluacionDocenteServiceImpl implements EvaluacionDocenteService {
 	public EvaluacionDocente save(EvaluacionDocente obj) throws DataException {
 		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<EvaluacionDocente> objGuardado = repo.findByNombreIgnoreCase(obj.getPregunta());
+		Optional<EvaluacionDocente> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
