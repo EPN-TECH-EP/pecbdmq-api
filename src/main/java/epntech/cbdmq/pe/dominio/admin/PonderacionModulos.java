@@ -15,29 +15,22 @@ public class PonderacionModulos {
 
 	@Id
 	private Integer cod_ponderacion;
-	
-	private String cod_modulo;
-	
-	private String cod_periodo_academico;
-	
-	private String cod_componente_nota;
-	
-	private String cod_tipo_nota;
-	
+	private Integer cod_modulo;
+	private Integer cod_periodo_academico;
+	private Integer cod_componente_nota;
+	private Integer cod_tipo_nota;
 	private Integer porcentajefinalponderacion;
-	
 	private Integer porcentajenotamateria;
-
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechainiciovigencia;
-	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechafinvigencia;
-	
 	private String estado;
+	private String modulo_desc; 
+	private String periodo_academico_desc;
+	private String componente_nota_desc;
+	private String tipo_nota_desc;
 	
 	
-	
-	
-	
+
 }
