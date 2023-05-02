@@ -22,7 +22,7 @@ public class Postulante {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_postulante")
-	private Integer codigo;
+	private Integer codPostulante;
 	
 	@Column(name = "cod_datos_personales")
 	private Integer codDatoPersonal;
@@ -32,4 +32,10 @@ public class Postulante {
 	
 	@Column(name = "estado")
 	private String estado;
+	
+	@Column(name = "cod_usuario")
+	private Integer codUsuario;
+	
+	@Column(name = "cod_periodo_academico")
+	private Integer codPeriodoAcademico;
 }

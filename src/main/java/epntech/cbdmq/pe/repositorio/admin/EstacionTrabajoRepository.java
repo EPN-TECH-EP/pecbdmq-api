@@ -8,6 +8,6 @@ import epntech.cbdmq.pe.dominio.admin.EstacionTrabajo;
 
 public interface EstacionTrabajoRepository extends JpaRepository<EstacionTrabajo, Integer> {
 
-	Optional<EstacionTrabajo> findByNombre(String nombre);
+	Optional<EstacionTrabajo> findByNombreIgnoreCase(String nombre);
 	
 }

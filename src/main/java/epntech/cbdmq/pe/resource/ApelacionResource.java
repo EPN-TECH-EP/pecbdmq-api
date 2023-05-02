@@ -1,8 +1,11 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Apelacion;
-
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.ApelacionRepository;
+import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.servicio.impl.ApelacionServiceImpl;
 
 
@@ -28,15 +33,17 @@ import epntech.cbdmq.pe.servicio.impl.ApelacionServiceImpl;
 @RequestMapping("/apelacion")
 public class ApelacionResource {
 
-	
+	@Autowired
+	private ApelacionRepository repo;
 	@Autowired
     private ApelacionServiceImpl objServices;
 	
 	@PostMapping("/crear")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> guardar(@RequestBody Apelacion obj) throws DataException {
-    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
-    }
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> guardar(@RequestBody Apelacion obj) throws DataException{
+		return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
+	}
+	
 	
 	@GetMapping("/listar")
     public List<Apelacion> listar() {
@@ -49,10 +56,11 @@ public class ApelacionResource {
 	    }
 	 
 	 @PutMapping("/{id}")
-	    public ResponseEntity<Apelacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Apelacion obj) {
-	        return objServices.getById(codigo).map(datosGuardados -> {
+	    public ResponseEntity<Apelacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Apelacion obj) throws DataException{
+	        return (ResponseEntity<Apelacion>) objServices.getById(codigo).map(datosGuardados -> {
+	        	datosGuardados.setNombre(obj.getNombre().toUpperCase());
 	            datosGuardados.setFechasolicitud(obj.getFechasolicitud());
-	            datosGuardados.setNombrepruebarevision(obj.getNombrepruebarevision());
+	            
 	            datosGuardados.setObservacionaspirante(obj.getObservacionaspirante());
 	            datosGuardados.setObservaciondocente(obj.getObservaciondocente());
 	            datosGuardados.setAprobacion(obj.getAprobacion());
@@ -60,7 +68,15 @@ public class ApelacionResource {
 	            datosGuardados.setNotanueva(obj.getNotanueva());
 	            datosGuardados.setRespuesta(obj.getRespuesta());
 	            datosGuardados.setEstado(obj.getEstado());
-	            Apelacion datosActualizados = objServices.update(datosGuardados);
+	            Apelacion datosActualizados = null;
+				try {
+					datosActualizados = objServices.update(datosGuardados);
+				} catch (DataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+				}
 	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 	        }).orElseGet(() -> ResponseEntity.notFound().build());
 	    }

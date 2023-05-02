@@ -14,7 +14,7 @@ public interface PruebaService {
 
     Optional<Prueba> getById(Integer codigo);
 
-    Prueba update(Prueba objActualizado);
+    Prueba update(Prueba objActualizado) throws DataException;
 
     void delete(Integer codigo);
 	

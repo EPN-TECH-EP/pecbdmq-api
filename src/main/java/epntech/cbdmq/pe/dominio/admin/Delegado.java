@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 
+import epntech.cbdmq.pe.dominio.util.DelegadoPK;
 import jakarta.persistence.*;
 
 import lombok.*;

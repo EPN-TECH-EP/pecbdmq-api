@@ -65,7 +65,7 @@ public class ConvocatoriaTest {
 
 		repo.save(obj);
 
-		Optional<Convocatoria> obj1 = repo.findByNombre(nombre);
+		Optional<Convocatoria> obj1 = repo.findByNombreIgnoreCase(nombre);
 
 		assertThat(obj1.get().getNombre()).isEqualTo(nombre);
 	}
@@ -81,14 +81,14 @@ public class ConvocatoriaTest {
 
 		repo.save(obj);
 
-		Optional<Convocatoria> obj1 = repo.findByNombre("Test");
+		Optional<Convocatoria> obj1 = repo.findByNombreIgnoreCase("Test");
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setNombre(datoNuevo);
 		obj.setCodConvocatoria(obj1.get().getCodConvocatoria());
 
-		Optional<Convocatoria> objModificado = repo.findByNombre(datoNuevo);
+		Optional<Convocatoria> objModificado = repo.findByNombreIgnoreCase(datoNuevo);
 		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
 	}
 
@@ -109,7 +109,7 @@ public class ConvocatoriaTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombre("Test").get().getCodConvocatoria();
+		int id = repo.findByNombreIgnoreCase("Test").get().getCodConvocatoria();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

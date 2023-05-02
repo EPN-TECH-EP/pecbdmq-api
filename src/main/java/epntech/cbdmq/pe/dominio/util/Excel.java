@@ -1,4 +1,4 @@
-package epntech.cbdmq.pe.dominio.admin;
+package epntech.cbdmq.pe.dominio.util;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

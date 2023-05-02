@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
-import epntech.cbdmq.pe.dominio.admin.InscripcionResult;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.util.InscripcionResult;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.InscripcionForRepository;

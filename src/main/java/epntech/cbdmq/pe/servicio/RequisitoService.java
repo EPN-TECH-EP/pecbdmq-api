@@ -14,7 +14,7 @@ public interface RequisitoService {
 	
 	Optional<Requisito> getById(int id);
 	
-	Requisito update(Requisito objActualizado);
+	Requisito update(Requisito objActualizado) throws DataException;
 	
 	void delete(int id) throws DataException;
 	

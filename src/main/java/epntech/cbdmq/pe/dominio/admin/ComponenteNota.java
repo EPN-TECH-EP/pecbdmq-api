@@ -30,7 +30,7 @@ public class ComponenteNota {
     @Column(name = "cod_componente_nota")
     private Integer cod_componente_nota;
     @Column(name = "tipo_componente_nota")
-    private String componentenota;
+    private String nombre;
     @Column(name = "estado")
 	private String estado;
 }

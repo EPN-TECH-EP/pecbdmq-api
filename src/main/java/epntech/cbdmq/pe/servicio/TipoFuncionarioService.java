@@ -14,7 +14,7 @@ public interface TipoFuncionarioService {
 	
 	Optional<TipoFuncionario> getById(Integer codigo);
 	
-	TipoFuncionario update(TipoFuncionario objActualizado);
+	TipoFuncionario update(TipoFuncionario objActualizado) throws DataException;
 	
 	void delete(int id) throws DataException;
 

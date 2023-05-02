@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.dominio.admin.ModuloEstados;
-import epntech.cbdmq.pe.dominio.admin.ModuloEstadosData;
+import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ModuloEstadosServiceImpl;
 

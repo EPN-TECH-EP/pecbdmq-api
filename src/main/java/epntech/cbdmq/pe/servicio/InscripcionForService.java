@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
-import epntech.cbdmq.pe.dominio.admin.InscripcionResult;
+import epntech.cbdmq.pe.dominio.util.InscripcionResult;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import jakarta.mail.MessagingException;

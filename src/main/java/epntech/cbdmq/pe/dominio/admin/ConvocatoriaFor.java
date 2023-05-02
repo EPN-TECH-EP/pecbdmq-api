@@ -31,8 +31,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "gen_convocatoria")
-@SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado_convocatoria = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado_convocatoria <> 'ELIMINADO'")
+@SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class ConvocatoriaFor {
 
 	@Id

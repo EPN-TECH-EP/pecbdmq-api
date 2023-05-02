@@ -34,7 +34,7 @@ public class TipoNotaServiceImpl implements TipoNotaService {
     public TipoNota save(TipoNota obj) throws DataException {
     	if(obj.getNota().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoNota> objGuardado = repo.findByNota(obj.getNota());
+		Optional<TipoNota> objGuardado = repo.findByNotaIgnoreCase(obj.getNota());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -65,7 +65,11 @@ public class TipoNotaServiceImpl implements TipoNotaService {
      * {@inheritDoc}
      */
     @Override
-    public TipoNota update(TipoNota objActualizado) {
+    public TipoNota update(TipoNota objActualizado) throws DataException {
+    	Optional<TipoNota> objGuardado = repo.findByNotaIgnoreCase(objActualizado.getNota());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
         return repo.save(objActualizado);
     }
 

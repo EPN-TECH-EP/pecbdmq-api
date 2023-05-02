@@ -23,7 +23,7 @@ public class UnidadGestionServiceImpl implements UnidadGestionService {
 	public UnidadGestion saveUnidadGestion(UnidadGestion obj) throws DataException {
 		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<UnidadGestion> objGuardado = repo.findByNombre(obj.getNombre());
+		Optional<UnidadGestion> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -45,7 +45,10 @@ public class UnidadGestionServiceImpl implements UnidadGestionService {
 
 	@Override
 	public UnidadGestion updateUnidadGestion(UnidadGestion objActualizado) throws DataException {
-		
+		Optional<UnidadGestion> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		return repo.save(objActualizado);
 	}
 

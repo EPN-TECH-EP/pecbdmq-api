@@ -8,6 +8,6 @@ import epntech.cbdmq.pe.dominio.admin.UnidadGestion;
 
 
 public interface UnidadGestionRepository extends JpaRepository<UnidadGestion, Integer> {
-	Optional<UnidadGestion> findByNombre(String nombre);
+	Optional<UnidadGestion> findByNombreIgnoreCase(String nombre);
 	
 }

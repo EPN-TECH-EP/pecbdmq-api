@@ -13,7 +13,7 @@ public interface BajaService {
 
     Optional<Baja> getById(Integer codigo);
 
-    Baja update(Baja objActualizado);
+    Baja update(Baja objActualizado)throws DataException;
 
     void delete(Integer codigo);
 }
