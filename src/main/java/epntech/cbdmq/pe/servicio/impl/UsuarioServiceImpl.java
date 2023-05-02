@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -78,7 +77,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
 
-	@Value("${spring.servlet.multipart.max-file-size}")	
+	@Value("${spring.servlet.multipart.max-file-size}")
 	public DataSize TAMAÑO_MÁXIMO;
 
 	@Autowired
@@ -176,14 +175,14 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public Usuario actualizarUsuario(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
 			EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-		Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo_personal());
-		
+		Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(),
+				usuario.getCodDatosPersonales().getCorreo_personal());
+
 		currentUser.setActive(usuario.isActive());
 		currentUser.setNotLocked(usuario.isNotLocked());
-		
-		
+
 		// TODO: validar campos actualizables
-		
+
 		// currentUser.setNombres(newFirstName);
 		// currentUser.setApellidos(newLastName);
 //		currentUser.setNombreUsuario(usuario);
@@ -192,27 +191,38 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 //		currentUser.setNotLocked(isNonLocked);
 		userRepository.save(currentUser);
 		// saveProfileImage(currentUser, profileImage);
-		
-		
-		//TODO: eliminar log
+
+		// TODO: eliminar log
 		LOGGER.info("Actualizar usuario ejecutado");
-		
+
 		return currentUser;
 	}
 
 	@Override
-	public void resetPassword(String email) throws MessagingException, EmailNoEncontradoExcepcion {
-		/*
-		 * Usuario user = userRepository.findUsuarioByEmail(email); if (user == null) {
-		 * throw new EmailNoEncontradoExcepcion(NO_EXISTE_USUARIO_EMAIL + email); }
-		 */
+	public void resetPassword(String nombreUsuario) throws MessagingException, UsuarioNoEncontradoExcepcion {
+
+		Usuario usuario = userRepository.findUsuarioByNombreUsuario(nombreUsuario);
+		if (usuario == null) {
+			throw new UsuarioNoEncontradoExcepcion(NO_EXISTE_USUARIO + nombreUsuario);
+		}
+
 		String password = generatePassword();
-		// user.setPassword(encodePassword(password));
-		// userRepository.save(user);
-		// TODO eliminar línea de log
-		LOGGER.info("New user password: " + password);
-		// emailService.sendNewPasswordEmail(user.getNombres().concat("
-		// ").concat(user.getApellidos()), password, user.getEmail());
+		usuario.setClave(encodePassword(password));
+		userRepository.save(usuario);
+
+		// datos personales
+		DatoPersonal datos = usuario.getCodDatosPersonales();
+
+		// asocia datos personales con usuario
+		usuario.setCodDatosPersonales(datos);
+
+		userRepository.save(usuario);
+
+		userRepository.flush();
+
+		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
+				usuario.getCodDatosPersonales().getCorreo_personal());
+
 	}
 
 	@Override
@@ -362,10 +372,9 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public long tamañoMáximoArchivo() {
 		return TAMAÑO_MÁXIMO.toBytes();
 	}
-	
-	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido){
+
+	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido) {
 		return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
 	}
 
 }
-

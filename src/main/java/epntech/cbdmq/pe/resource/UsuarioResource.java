@@ -149,11 +149,11 @@ public class UsuarioResource extends GestorExcepciones {
 		return new ResponseEntity<>(users, OK);
 	}
 
-	@GetMapping("/resetPassword/{email}")
-	public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email)
-			throws MessagingException, EmailNoEncontradoExcepcion {
-		usuarioService.resetPassword(email);
-		return response(OK, EMAIL_ENVIADO + email);
+	@PostMapping("/resetPassword/{nombreUsuario}")
+	public ResponseEntity<HttpResponse> resetPassword(@PathVariable("nombreUsuario") String nombreUsuario)
+			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion {
+		usuarioService.resetPassword(nombreUsuario);
+		return response(OK, EMAIL_ENVIADO + " la dirección de email registrada para el usuario " + nombreUsuario);
 	}
 
 	@DeleteMapping("/eliminar/{username}")

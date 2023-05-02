@@ -40,7 +40,7 @@ public interface UsuarioService {
 
 	void eliminarUsuario(String username) throws IOException;
 
-	void resetPassword(String email) throws MessagingException, EmailNoEncontradoExcepcion;
+	void resetPassword(String email) throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion;
 
 	Usuario actualizarImagenPerfil(String username, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
 			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion;
@@ -50,4 +50,6 @@ public interface UsuarioService {
 	long tamañoMáximoArchivo();
 	
 	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido);
+	
+	
 }
