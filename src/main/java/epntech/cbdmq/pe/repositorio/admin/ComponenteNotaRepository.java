@@ -14,5 +14,5 @@ import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
  * @version $Revision: $
  */
 public interface ComponenteNotaRepository extends JpaRepository<ComponenteNota, Integer> {
-    Optional<ComponenteNota> findByComponentenota(String componentenota);
+    Optional<ComponenteNota> findByNombreIgnoreCase(String Nombre);
 }

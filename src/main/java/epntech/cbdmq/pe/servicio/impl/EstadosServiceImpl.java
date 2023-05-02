@@ -3,6 +3,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.EstadosRepository;
@@ -29,7 +31,12 @@ public class EstadosServiceImpl implements EstadosService {
 			throw new DataException(REGISTRO_VACIO);
 		if(obj.getNombre().trim().isBlank())
 			throw new DataException(REGISTRO_VACIO);
-			
+		Optional<Estados> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
+
+		obj.setNombre(obj.getNombre().toUpperCase());	
 		return repo.save(obj);
 	}
 
@@ -46,8 +53,13 @@ public class EstadosServiceImpl implements EstadosService {
 	}
 
 	@Override
-	public Estados update(Estados objActualizado) {
-		// TODO Auto-generated method stub
+	public Estados update(Estados objActualizado) throws DataException {
+		Optional<Estados> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
+
+		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
 		return repo.save(objActualizado);
 	}
 

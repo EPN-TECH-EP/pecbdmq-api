@@ -28,6 +28,7 @@ public class AulaServiceImpl implements AulaService {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return repo.save(obj);
 	}
 
@@ -45,11 +46,12 @@ public class AulaServiceImpl implements AulaService {
 
 	@Override
 	public Aula update(Aula objActualizado) throws DataException {
-
 		Optional<Aula> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
+
+		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
 		return repo.save(objActualizado);
 	}
 

@@ -29,6 +29,7 @@ public class DelegadoServiceImpl implements DelegadoService {
 		periodoAcademico = repoPA.getPeriodoAcademicoActivo();
 		
 		obj.setCodPeriodoAcademico(periodoAcademico.getCodigo());
+
 		
 		return repo.save(obj);
 	}

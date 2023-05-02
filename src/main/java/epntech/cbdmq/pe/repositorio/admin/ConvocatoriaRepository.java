@@ -13,7 +13,7 @@ import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
 
 public interface ConvocatoriaRepository extends JpaRepository<Convocatoria, Integer> {
 
-	Optional<Convocatoria> findByNombre(String nombre);
+	Optional<Convocatoria> findByNombreIgnoreCase(String Nombre);
 	
 	@Procedure(value = "cbdmq.get_id")
 	String getId(String proceso);

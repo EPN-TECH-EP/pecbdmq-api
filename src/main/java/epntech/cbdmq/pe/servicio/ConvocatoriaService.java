@@ -19,7 +19,7 @@ public interface ConvocatoriaService {
 	
 	Optional<Convocatoria> getByIdData(int id);
 	
-	Convocatoria updateData(Convocatoria objActualizado);
+	Convocatoria updateData(Convocatoria objActualizado)throws DataException ;
 	
 	void deleteData(int id) throws DataException;
 	

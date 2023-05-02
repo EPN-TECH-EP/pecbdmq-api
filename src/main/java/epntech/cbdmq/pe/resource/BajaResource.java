@@ -47,22 +47,29 @@ public class BajaResource {
 	 
 	 @PutMapping("/{id}")
 	    public ResponseEntity<Baja> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Baja obj) {
-	        return objServices.getById(codigo).map(datosGuardados -> {
+	        return (ResponseEntity<Baja>) objServices.getById(codigo).map(datosGuardados -> {
 	            
 	            datosGuardados.setCod_modulo(obj.getCod_modulo());
 	            datosGuardados.setCod_baja(obj.getCod_baja());
 	            datosGuardados.setFechacreabaja(obj.getFechabaja());
 	            datosGuardados.setDescripcionbaja(obj.getDescripcionbaja());
-	            datosGuardados.setUsuariocreabaja(obj.getUsuariocreabaja());
+	            datosGuardados.setNombre(obj.getNombre());
 	            datosGuardados.setFechacreabaja(obj.getFechacreabaja());
 	            datosGuardados.setHoracreabaja(obj.getHoracreabaja());
 	            datosGuardados.setUsuariomodbaja(obj.getUsuariomodbaja());
 	            datosGuardados.setFechamodbaja(obj.getFechamodbaja());
 	            datosGuardados.setHoramodbaja(obj.getHoramodbaja());
-	            datosGuardados.setRutaadjuntobaja(obj.getRutaadjuntobaja());
+	           // datosGuardados.setRutaadjuntobaja(obj.getRutaadjuntobaja());
 	            datosGuardados.setCod_baja(obj.getCod_baja());           
 	            datosGuardados.setEstado(obj.getEstado());
-	            Baja datosActualizados = objServices.update(datosGuardados);
+	            Baja datosActualizados=null;
+				try {
+					datosActualizados = objServices.update(datosGuardados);
+				} catch (DataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+				}
 	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 	        }).orElseGet(() -> ResponseEntity.notFound().build());
 	    }

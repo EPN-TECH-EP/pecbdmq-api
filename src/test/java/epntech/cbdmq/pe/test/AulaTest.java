@@ -40,7 +40,7 @@ public class AulaTest {
 		aula.setInternet("wifi");
 		aula.setPcs(3);
 		aula.setProyectores(1);
-		aula.setSalaOcupada("no");
+		aula.setSalaOcupada(true);
 		aula.setTipo("teatro");
 		aula.setEstado("activo");
 
