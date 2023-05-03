@@ -52,7 +52,7 @@ public class TipoBajaResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TipoBaja> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoBaja obj) throws DataException {
+    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoBaja obj) throws DataException {
         return (ResponseEntity<TipoBaja>) objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setBaja(obj.getBaja().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());

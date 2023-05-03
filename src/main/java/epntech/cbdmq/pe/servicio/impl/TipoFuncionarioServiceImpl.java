@@ -48,10 +48,12 @@ public class TipoFuncionarioServiceImpl implements TipoFuncionarioService {
 
 	@Override
 	public TipoFuncionario update(TipoFuncionario objActualizado)  throws DataException{
-		Optional<?> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
+		
+		Optional<TipoFuncionario> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre().toUpperCase());
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
+		
 		return repo.save(objActualizado);
 	}
 

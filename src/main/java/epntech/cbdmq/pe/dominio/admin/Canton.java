@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+
 import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
@@ -7,8 +8,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import lombok.*;
 
 @Data
 @Entity

@@ -54,7 +54,7 @@ public class TipoFechaResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TipoFecha> actualizarDatos(@PathVariable("id") String fecha, @RequestBody TipoFecha obj) throws DataException {
+    public ResponseEntity<?> actualizarDatos(@PathVariable("id") String fecha, @RequestBody TipoFecha obj) throws DataException {
         return (ResponseEntity<TipoFecha>) objServices.getById(fecha).map(datosGuardados -> {
             datosGuardados.setFecha(obj.getFecha().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());

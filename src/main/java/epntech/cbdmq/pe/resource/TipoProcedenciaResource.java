@@ -49,7 +49,7 @@ public class TipoProcedenciaResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<TipoProcedencia> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoProcedencia obj) throws DataException {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoProcedencia obj) throws DataException {
 		return (ResponseEntity<TipoProcedencia>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
