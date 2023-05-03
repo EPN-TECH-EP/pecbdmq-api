@@ -48,7 +48,7 @@ public class MateriaServiceImpl implements MateriaService {
 	@Override
 	public Materia update(Materia objActualizado) throws DataException {
 		Optional<Materia> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodMateria().equals(objActualizado.getCodMateria())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 

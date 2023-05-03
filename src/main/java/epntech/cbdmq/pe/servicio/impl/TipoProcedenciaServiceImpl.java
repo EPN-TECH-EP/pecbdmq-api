@@ -48,8 +48,8 @@ public class TipoProcedenciaServiceImpl implements TipoProcedenciaService {
 
 	@Override
 	public TipoProcedencia update(TipoProcedencia objActualizado) throws DataException {
-		Optional<?> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
+		Optional<TipoProcedencia> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);

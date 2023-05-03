@@ -66,7 +66,7 @@ public class TipoBajaServiceImpl implements TipoBajaService {
     @Override
     public TipoBaja update(TipoBaja objActualizado) throws DataException  {
     	Optional<TipoBaja> objGuardado = repo.findByBajaIgnoreCase(objActualizado.getBaja());
-		if (objGuardado.isPresent()) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_baja().equals(objActualizado.getCod_tipo_baja())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

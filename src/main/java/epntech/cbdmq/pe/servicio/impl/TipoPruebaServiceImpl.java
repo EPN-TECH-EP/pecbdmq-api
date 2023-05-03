@@ -64,7 +64,7 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
     @Override
     public TipoPrueba update(TipoPrueba objActualizado)  throws DataException{
     	Optional<TipoPrueba> objGuardado = repo.findByPruebaIgnoreCase(objActualizado.getPrueba());
-		if (objGuardado.isPresent()) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_prueba().equals(objActualizado.getCod_tipo_prueba())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
     	return repo.save(objActualizado);

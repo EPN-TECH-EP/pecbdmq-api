@@ -67,7 +67,7 @@ public class TipoNotaServiceImpl implements TipoNotaService {
     @Override
     public TipoNota update(TipoNota objActualizado) throws DataException {
     	Optional<TipoNota> objGuardado = repo.findByNotaIgnoreCase(objActualizado.getNota());
-		if (objGuardado.isPresent()) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_nota().equals(objActualizado.getCod_tipo_nota())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

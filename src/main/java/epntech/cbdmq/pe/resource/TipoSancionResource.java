@@ -54,8 +54,8 @@ public class TipoSancionResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TipoSancion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoSancion obj) throws DataException {
-        return objServices.getById(codigo).map(datosGuardados -> {
+    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoSancion obj) throws DataException {
+    	return objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setSancion(obj.getSancion().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
             TipoSancion datosActualizados = null;
@@ -64,6 +64,7 @@ public class TipoSancionResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());

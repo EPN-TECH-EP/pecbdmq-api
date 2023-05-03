@@ -26,13 +26,15 @@ public class ApiCBDMQResource {
 
 	@GetMapping("/ciudadanos/{cedula}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Optional<?> getData(@PathVariable("cedula") String cedula) throws Exception{
+	public ResponseEntity<?> getData(@PathVariable("cedula") String cedula) throws Exception{
 		
 		try {
-			return objService.servicioCiudadanos(cedula);
+			return new ResponseEntity<>(objService.servicioCiudadanos(cedula), HttpStatus.OK);
 		}catch(Exception ex) {
 
-			Optional<?> data = Optional.empty();
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+			
+			/*Optional<?> data = Optional.empty();
 			
 			ApiBase base = new ApiBase();
 			base.setData(data);
@@ -41,27 +43,30 @@ public class ApiCBDMQResource {
 			
 			Optional<ApiBase> b = Optional.of(base);
 			
-			return b;
+			return b;*/
 		}
 	}
 	
 	@GetMapping("/educacionMedia/{cedula}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Optional<ApiEducacionMedia> getEducacionMedia(@PathVariable("cedula") String cedula) throws Exception{
+	public ResponseEntity<?> getEducacionMedia(@PathVariable("cedula") String cedula) throws Exception{
 		try {
-			return objService.servicioEducacionMedia(cedula);
+			//return objService.servicioEducacionMedia(cedula);
+			return new ResponseEntity<>(objService.servicioEducacionMedia(cedula), HttpStatus.OK);
 		}catch(Exception ex) {
-			throw new Exception(ex.getMessage());
+			//throw new Exception(ex.getMessage());
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
 	
 	@GetMapping("/educacionSuperior/{cedula}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Optional<ApiEducacionSuperior> getEducacionSuperior(@PathVariable("cedula") String cedula) throws Exception{
+	public ResponseEntity<?> getEducacionSuperior(@PathVariable("cedula") String cedula) throws Exception{
 		try{
-			return objService.servicioEducacionSuperior(cedula);
+			//return objService.servicioEducacionSuperior(cedula);
+			return new ResponseEntity<>(objService.servicioEducacionSuperior(cedula), HttpStatus.OK);
 		}catch(Exception ex) {
-			throw new Exception(ex.getMessage());
+			//throw new Exception(ex.getMessage());
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
 	

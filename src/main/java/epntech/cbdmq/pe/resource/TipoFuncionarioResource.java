@@ -51,9 +51,11 @@ public class TipoFuncionarioResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<TipoFuncionario> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoFuncionario obj) throws DataException {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoFuncionario obj) throws DataException {
+		
+		
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre().toUpperCase());
+			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setEstado(obj.getEstado());
 
 			TipoFuncionario datosActualizados = null;
@@ -62,6 +64,7 @@ public class TipoFuncionarioResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

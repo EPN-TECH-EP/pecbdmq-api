@@ -43,7 +43,7 @@ public class MateriaTest {
         paralelo.setEstado("ACTIVO");
         paralelos.add(paralelo);
         	
-		obj.setNombreMateria("Test");
+		obj.setNombre("Test");
 		obj.setNotaMinima(new BigDecimal(10.0));
 
 		obj.setObservacionMateria("pruebas unitarias");
@@ -83,7 +83,7 @@ public class MateriaTest {
 		String nombre = "Test";
 
 		Materia obj = new Materia();
-		obj.setNombreMateria(nombre);
+		obj.setNombre(nombre);
 		obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 
