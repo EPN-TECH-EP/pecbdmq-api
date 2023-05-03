@@ -58,4 +58,38 @@ public class Notas {
 	@Column(name = "estado")
 	private String estado;
 	
+	
+	/*@Column(name = "cod_nota_formacion")
+	private Integer cod_nota_formacion;
+	@Column(name = "cod_instructor")
+	private Integer cod_instructor;
+	@Column(name = "cod_curso_especializacion")
+	private Integer cod_curso_especializacion;
+	@Column(name = "cod_ponderacion")
+	private Integer cod_ponderacion;
+	@Column(name = "cod_estudiante")
+	private Integer cod_estudiante;
+	@Column(name = "cod_materia")
+	private Integer cod_materia;
+	@Column(name = "aporte_academico")
+	private Integer aporte_academico;
+	@Column(name = "nota_final_formacion")
+	private UNSUPPORTED_TYPE nota_final_formacion;
+	@Column(name = "usuario_crea_nota")
+	private String usuario_crea_nota;
+	@Column(name = "fecha_crea_nota")
+	private LocalDateTime fecha_crea_nota;
+	@Column(name = "hora_crea_nota")
+	private UNSUPPORTED_TYPE hora_crea_nota;
+	@Column(name = "usuario_mod_nota")
+	private String usuario_mod_nota;
+	@Column(name = "fecha_mod_nota")
+	private LocalDateTime fecha_mod_nota;
+	@Column(name = "hora_mod_nota")
+	private UNSUPPORTED_TYPE hora_mod_nota;
+	@Column(name = "estado")
+	private String estado;
+	@Column(name = "resultado")
+	private UNSUPPORTED_TYPE resultado;*/
+	
 }
