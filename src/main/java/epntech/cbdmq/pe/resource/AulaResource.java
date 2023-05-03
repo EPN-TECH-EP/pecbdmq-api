@@ -42,6 +42,8 @@ public class AulaResource {
 	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
 	public ResponseEntity<Aula> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Aula obj) throws DataException{
+		
+	
 		return (ResponseEntity<Aula>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setCapacidad(obj.getCapacidad());

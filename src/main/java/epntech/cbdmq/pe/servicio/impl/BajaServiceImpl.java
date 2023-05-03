@@ -49,14 +49,14 @@ public class BajaServiceImpl implements BajaService{
 
 	@Override
 	public Baja update(Baja objActualizado) throws DataException {
-		Optional<Baja> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
+		if(objActualizado.getNombre() !=null) {
+			Optional<Baja> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+			if (objGuardado.isPresent()&& !objGuardado.get().getCod_baja().equals(objActualizado.getClass())) {
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
 		}
-
-		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
-		return repo.save(objActualizado);
-	}
+			return repo.save(objActualizado);
+		}
 
 	@Override
 	public void delete(Integer codigo) {

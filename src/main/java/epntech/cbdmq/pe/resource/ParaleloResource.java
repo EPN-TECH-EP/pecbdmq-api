@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
@@ -33,7 +34,6 @@ public class ParaleloResource  {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Paralelo obj) throws DataException{
-		obj.setNombreParalelo(obj.getNombreParalelo().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -50,9 +50,9 @@ public class ParaleloResource  {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Paralelo> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Paralelo obj) throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Paralelo>) objService.getById(codigo).map(datosGuardados -> {
 			//datosGuardados.setCodParalelo(obj.getCodParalelo());
-			datosGuardados.setNombreParalelo(obj.getNombreParalelo().toUpperCase());
+			datosGuardados.setNombreParalelo(obj.getNombreParalelo());
 			datosGuardados.setEstado(obj.getEstado());
 			Paralelo datosActualizados = null;
 			try {
@@ -60,6 +60,7 @@ public class ParaleloResource  {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
@@ -78,3 +79,4 @@ public class ParaleloResource  {
 	
 
 }
+

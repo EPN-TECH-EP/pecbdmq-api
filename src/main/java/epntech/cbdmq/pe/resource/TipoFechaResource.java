@@ -55,7 +55,7 @@ public class TipoFechaResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<TipoFecha> actualizarDatos(@PathVariable("id") String fecha, @RequestBody TipoFecha obj) throws DataException {
-        return objServices.getById(fecha).map(datosGuardados -> {
+        return (ResponseEntity<TipoFecha>) objServices.getById(fecha).map(datosGuardados -> {
             datosGuardados.setFecha(obj.getFecha().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
             TipoFecha datosActualizados = null;
@@ -64,6 +64,7 @@ public class TipoFechaResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());
