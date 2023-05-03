@@ -36,12 +36,15 @@ public class JWTTokenProvider {
 
     @Value("${jwt.secret}")
     private String secret;
+    
+    @Value("${pecb.security.jwtExpirationMs}")
+    private Long jwtExpirationMs;
 
     public String generateJwtToken(UserPrincipal userPrincipal) {
         String[] claims = getClaimsFromUser(userPrincipal);
         return JWT.create().withIssuer(PLATAFORMA_EDUCATIVA).withAudience(PLATAFORMA_EDUCATIVA_ADMIN)
                 .withIssuedAt(new Date()).withSubject(userPrincipal.getUsername())
-                .withArrayClaim(PERMISOS, claims).withExpiresAt(new Date(System.currentTimeMillis() + TIEMPO_EXPIRACION))
+                .withArrayClaim(PERMISOS, claims).withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .sign(HMAC512(secret.getBytes()));
     }
 

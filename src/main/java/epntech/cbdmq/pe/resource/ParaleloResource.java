@@ -48,9 +48,10 @@ public class ParaleloResource  {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
 	public ResponseEntity<Paralelo> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Paralelo obj) throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Paralelo>) objService.getById(codigo).map(datosGuardados -> {
 			//datosGuardados.setCodParalelo(obj.getCodParalelo());
 			datosGuardados.setNombreParalelo(obj.getNombreParalelo().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
@@ -60,6 +61,7 @@ public class ParaleloResource  {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

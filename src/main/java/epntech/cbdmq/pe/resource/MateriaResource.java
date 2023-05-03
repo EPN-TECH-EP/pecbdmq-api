@@ -33,7 +33,7 @@ public class MateriaResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Materia obj) throws DataException{
-		obj.setNombreMateria(obj.getNombreMateria().toUpperCase());
+		obj.setNombre(obj.getNombre().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -51,7 +51,7 @@ public class MateriaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Materia> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Materia obj) throws DataException{
 		return (ResponseEntity<Materia>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombreMateria(obj.getNombreMateria().toUpperCase());
+			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setNumHoras(obj.getNumHoras());
 			datosGuardados.setTipoMateria(obj.getTipoMateria());
 			datosGuardados.setObservacionMateria(obj.getObservacionMateria());
