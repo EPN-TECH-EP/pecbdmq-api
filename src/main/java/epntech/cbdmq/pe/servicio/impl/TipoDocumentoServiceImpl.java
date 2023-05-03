@@ -49,8 +49,8 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 
 	@Override
 	public TipoDocumento update(TipoDocumento objActualizado) throws DataException{
-		Optional<?> objGuardado = repo.findByTipoDocumentoIgnoreCase(objActualizado.getTipoDocumento());
-		if (objGuardado.isPresent()) {
+		Optional<TipoDocumento> objGuardado = repo.findByTipoDocumentoIgnoreCase(objActualizado.getTipoDocumento());
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodigoDocumento().equals(objActualizado.getCodigoDocumento())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);

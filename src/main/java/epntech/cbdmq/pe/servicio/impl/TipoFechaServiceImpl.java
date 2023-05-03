@@ -65,7 +65,7 @@ public class TipoFechaServiceImpl implements TipoFechaService {
     @Override
     public TipoFecha update(TipoFecha objActualizado) throws DataException {
     	Optional<TipoFecha> objGuardado = repo.findByFechaIgnoreCase(objActualizado.getFecha());
-		if (objGuardado.isPresent()) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_fecha().equals(objActualizado.getCod_tipo_fecha())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

@@ -52,7 +52,7 @@ public class ParaleloServiceImpl implements ParaleloService{
 		if(objActualizado.getNombreParalelo().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
 		Optional<Paralelo> objGuardado = repo.findByNombreParaleloIgnoreCase(objActualizado.getNombreParalelo());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodParalelo().equals(objActualizado.getCodParalelo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		

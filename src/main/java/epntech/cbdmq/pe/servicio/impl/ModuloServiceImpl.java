@@ -40,7 +40,7 @@ public class ModuloServiceImpl implements ModuloService {
     @Override
     public Modulo update(Modulo objActualizado) throws DataException {
     	Optional<Modulo> objGuardado = repo.findByEtiquetaIgnoreCase(objActualizado.getEtiqueta());
-		if (objGuardado.isPresent()) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_modulo().equals(objActualizado.getCod_modulo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

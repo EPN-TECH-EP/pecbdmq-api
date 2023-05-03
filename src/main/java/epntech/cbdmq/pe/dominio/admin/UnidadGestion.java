@@ -22,7 +22,7 @@ public class UnidadGestion {
 	@Id
 	@jakarta.persistence.GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_unidad_gestion")
-	public int codigo;
+	public Integer codigo;
 	
 	@Column(name = "unidad_gestion")
 	public String nombre;

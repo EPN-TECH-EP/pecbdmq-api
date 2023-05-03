@@ -1,4 +1,3 @@
-
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
@@ -49,7 +48,7 @@ public class ParaleloResource  {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Paralelo> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Paralelo obj) throws DataException{
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Paralelo obj) throws DataException{
 		return (ResponseEntity<Paralelo>) objService.getById(codigo).map(datosGuardados -> {
 			//datosGuardados.setCodParalelo(obj.getCodParalelo());
 			datosGuardados.setNombreParalelo(obj.getNombreParalelo());
@@ -79,4 +78,3 @@ public class ParaleloResource  {
 	
 
 }
-

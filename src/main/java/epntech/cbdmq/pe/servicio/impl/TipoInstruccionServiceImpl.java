@@ -49,8 +49,8 @@ public class TipoInstruccionServiceImpl implements TipoInstruccionService {
 
 	@Override
 	public TipoInstruccion update(TipoInstruccion objActualizado) throws DataException {
-		Optional<?> objGuardado = repo.findByTipoInstruccionIgnoreCase(objActualizado.getTipoInstruccion());
-		if (objGuardado.isPresent()) {
+		Optional<TipoInstruccion> objGuardado = repo.findByTipoInstruccionIgnoreCase(objActualizado.getTipoInstruccion());
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodigoTipoInstruccion().equals(objActualizado.getCodigoTipoInstruccion())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);

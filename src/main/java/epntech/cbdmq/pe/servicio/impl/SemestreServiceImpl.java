@@ -49,7 +49,7 @@ public class SemestreServiceImpl implements SemestreService {
 	@Override
 	public Semestre update(Semestre objActualizado) throws DataException  {
 		Optional<Semestre> objGuardado = repo.findBySemestreIgnoreCase(objActualizado.getSemestre());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodSemestre().equals(objActualizado.getCodSemestre())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);

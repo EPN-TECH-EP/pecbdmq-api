@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.dominio.admin.TipoFuncionario;
 import epntech.cbdmq.pe.dominio.admin.UnidadGestion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.UnidadGestionRepository;
@@ -21,7 +22,7 @@ public class UnidadGestionServiceImpl implements UnidadGestionService {
 
 	@Override
 	public UnidadGestion saveUnidadGestion(UnidadGestion obj) throws DataException {
-		if(obj.getNombre().trim().isEmpty())
+		if (obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
 		Optional<UnidadGestion> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
@@ -45,15 +46,17 @@ public class UnidadGestionServiceImpl implements UnidadGestionService {
 
 	@Override
 	public UnidadGestion updateUnidadGestion(UnidadGestion objActualizado) throws DataException {
+
 		Optional<UnidadGestion> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent() && !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
+
 		return repo.save(objActualizado);
 	}
 
 	@Override
-	public void deleteUnidadGestion(int id) throws DataException{
+	public void deleteUnidadGestion(int id) throws DataException {
 		Optional<?> objGuardado = repo.findById(id);
 		if (objGuardado.isEmpty()) {
 			throw new DataException(REGISTRO_NO_EXISTE);

@@ -49,7 +49,7 @@ public class PruebaResource {
 	/*poner el metodo put*/
 	
 	@PutMapping("/{id}")
-    public ResponseEntity<Prueba> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Prueba obj) throws DataException {
+    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Prueba obj) throws DataException {
         return objServices.getById(codigo).map(datosGuardados -> {
             
             datosGuardados.setPrueba(obj.getPrueba().toUpperCase());
@@ -64,6 +64,7 @@ public class PruebaResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
         }).orElseGet(() -> ResponseEntity.notFound().build());

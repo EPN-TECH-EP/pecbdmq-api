@@ -22,7 +22,7 @@ public class TipoProcedencia {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_tipo_procedencia")
-	public int codigo;
+	public Integer codigo;
 	
 	@Column(name = "tipo_procedencia")
 	public String nombre;

@@ -53,7 +53,7 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 	public Provincia update(Provincia objActualizado) throws DataException {
 
 		Optional<Provincia> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);
