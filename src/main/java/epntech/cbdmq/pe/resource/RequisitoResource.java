@@ -52,7 +52,7 @@ public class RequisitoResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Requisito> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Requisito obj)  throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Requisito>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			//datosGuardados.setCodConvocatoria(obj.getCodConvocatoria());
 			datosGuardados.setCodFuncionario(obj.getCodFuncionario());
@@ -67,6 +67,7 @@ public class RequisitoResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

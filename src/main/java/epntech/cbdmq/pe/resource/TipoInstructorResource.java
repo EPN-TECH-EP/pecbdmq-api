@@ -51,7 +51,7 @@ public class TipoInstructorResource {
 
 	    @PutMapping("/{id}")
 	    public ResponseEntity<TipoInstructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoInstructor obj) throws DataException {
-	        return objServices.getById(codigo).map(datosGuardados -> {
+	        return (ResponseEntity<TipoInstructor>) objServices.getById(codigo).map(datosGuardados -> {
 	            datosGuardados.setNombretipoinstructor(obj.getNombretipoinstructor().toUpperCase());
 	            datosGuardados.setEstado(obj.getEstado());
 	            TipoInstructor datosActualizados = null;
@@ -60,6 +60,7 @@ public class TipoInstructorResource {
 				} catch (DataException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 				}
 	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 	        }).orElseGet(() -> ResponseEntity.notFound().build());
