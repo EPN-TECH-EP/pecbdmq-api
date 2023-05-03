@@ -51,7 +51,7 @@ public class RequisitoResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Requisito> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Requisito obj)  throws DataException{
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Requisito obj)  throws DataException{
 		return (ResponseEntity<Requisito>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			//datosGuardados.setCodConvocatoria(obj.getCodConvocatoria());

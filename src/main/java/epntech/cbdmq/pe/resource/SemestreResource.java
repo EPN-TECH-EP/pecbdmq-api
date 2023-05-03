@@ -50,7 +50,7 @@ public class SemestreResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Semestre> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Semestre obj)  throws DataException {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Semestre obj)  throws DataException {
 		return (ResponseEntity<Semestre>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setSemestre(obj.getSemestre().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());

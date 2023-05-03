@@ -50,7 +50,7 @@ public class RequisitoServiceImpl implements RequisitoService {
 	@Override
 	public Requisito update(Requisito objActualizado) throws DataException {
 		Optional<Requisito> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodigoRequisito().equals(objActualizado.getCodigoRequisito())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);

@@ -51,7 +51,7 @@ public class TipoFuncionarioResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<TipoFuncionario> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoFuncionario obj) throws DataException {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoFuncionario obj) throws DataException {
 		return (ResponseEntity<TipoFuncionario>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
