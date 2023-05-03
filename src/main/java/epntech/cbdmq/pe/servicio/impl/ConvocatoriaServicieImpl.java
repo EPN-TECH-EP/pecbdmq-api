@@ -12,6 +12,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
 import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -64,13 +65,14 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 
 	@Override
 	public Convocatoria updateData(Convocatoria objActualizado)throws DataException  {
-		Optional<?> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
+		if(objActualizado.getNombre() !=null) {
+			Optional<Convocatoria> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+			if (objGuardado.isPresent()&& !objGuardado.get().getCodConvocatoria().equals(objActualizado.getCodConvocatoria())) {
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
 		}
-		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
-		return repo.save(objActualizado);
-	}
+			return repo.save(objActualizado);
+		}
 
 	@Override
 	public void deleteData(int id) throws DataException {

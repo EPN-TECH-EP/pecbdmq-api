@@ -54,14 +54,14 @@ public class EstadosServiceImpl implements EstadosService {
 
 	@Override
 	public Estados update(Estados objActualizado) throws DataException {
-		Optional<Estados> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
+		if(objActualizado.getNombre() !=null) {
+			Optional<Estados> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+			if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
 		}
-
-		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
-		return repo.save(objActualizado);
-	}
+			return repo.save(objActualizado);
+		}
 
 	@Override
 	public void delete(int id) {
