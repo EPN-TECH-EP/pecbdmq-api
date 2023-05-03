@@ -55,7 +55,7 @@ public class TipoNotaResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoNota obj) throws DataException {
-        return objServices.getById(codigo).map(datosGuardados -> {
+        return (ResponseEntity<TipoNota>) objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setNota(obj.getNota().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
             TipoNota datosActualizados = null;

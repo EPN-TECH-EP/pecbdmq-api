@@ -51,7 +51,7 @@ public class NotaResource {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Notas> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Notas obj) throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Notas>) objService.getById(codigo).map(datosGuardados -> {
 			
 			datosGuardados.setCod_instructor(obj.getCod_instructor());
 			datosGuardados.setCod_curso_especializacion(obj.getCod_curso_especializacion());
@@ -74,6 +74,7 @@ public class NotaResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

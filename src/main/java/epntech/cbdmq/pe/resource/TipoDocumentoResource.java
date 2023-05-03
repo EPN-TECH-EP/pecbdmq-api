@@ -42,7 +42,7 @@ public class TipoDocumentoResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody TipoDocumento obj) throws DataException {
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<TipoDocumento>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setTipoDocumento(obj.getTipoDocumento().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
 

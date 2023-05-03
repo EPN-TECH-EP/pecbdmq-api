@@ -52,7 +52,7 @@ public class PonderacionResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Ponderacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Ponderacion obj) throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Ponderacion>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCod_modulo(obj.getCod_modulo());
 			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
 			datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
@@ -71,6 +71,7 @@ public class PonderacionResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
