@@ -2,10 +2,12 @@ package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DatoPersonalServiceImpl;
 import jakarta.mail.MessagingException;
@@ -161,5 +166,20 @@ public class DatoPersonalResource {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
+	}
+	
+	@PostMapping("/guardarImagen")
+	public ResponseEntity<?> guardarArchivo(@RequestParam String proceso,
+			@RequestParam Integer codigo,@RequestParam MultipartFile archivo) throws Exception {
+		
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(objService.guardarImagen( proceso,codigo,archivo));
+		
+		} catch (Exception e) {			
+			
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
+			
+		}
+
 	}
 }
