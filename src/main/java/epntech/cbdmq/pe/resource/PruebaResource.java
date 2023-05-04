@@ -57,6 +57,7 @@ public class PruebaResource {
             datosGuardados.setFecha_inicio(obj.getFecha_inicio());
             datosGuardados.setFecha_fin(obj.getFecha_fin());
             datosGuardados.setHora(obj.getHora());
+            datosGuardados.setEstado(obj.getEstado());
          
             Prueba datosActualizados = null;
 			try {

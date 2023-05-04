@@ -47,7 +47,7 @@ public class PruebaServiceImpl implements PruebaService{
 	@Override
 	public Prueba update(Prueba objActualizado) throws DataException {
 		Optional<Prueba> objGuardado = repo.findByprueba(objActualizado.getPrueba());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent()&& !objGuardado.get().getCod_prueba().equals(objActualizado.getCod_prueba())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);

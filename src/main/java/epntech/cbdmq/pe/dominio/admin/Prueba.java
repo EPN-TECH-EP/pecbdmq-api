@@ -48,5 +48,7 @@ public class Prueba {
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime hora;
 	
+	@Column(name = "estado")
+	private String estado;
 	
 }
