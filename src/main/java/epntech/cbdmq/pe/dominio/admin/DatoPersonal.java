@@ -92,6 +92,8 @@ public class DatoPersonal {
 	private String merito_academico_descripcion;
 	@Column(name = "pin_validacion_correo")
 	private String pin_validacion_correo;
+	@Column(name="cod_documento_imagen")
+	private Integer cod_documento_imagen;
 	
 	/*@Column(nullable = false, updatable = false, name = "cod_datos_personales")
 	private Integer cod_datos_personales;

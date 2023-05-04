@@ -49,6 +49,7 @@ public class ExporterPdf {
 			celda.setPhrase(new Phrase(elemento, fuente));
 			tabla.addCell(celda);
 		}
+		
 
 	}
 
@@ -61,17 +62,18 @@ public class ExporterPdf {
 		XSSFFont fuente = libro.createFont();
 		fuente.setFontHeight(14);
 		estilo.setFont(fuente);
-
+		//System.out.println("lista " + lista);
 		for (int i = 0; i < lista.size(); i++) {
-			System.out.println("valor " + lista.get(i).get(i));
+			//System.out.println("valor " + lista.get(i).get(i));
 			Row fila = hoja.createRow(nueroFilas++);
-
+			
 			for (int j = 0; j < lista.get(i).size(); j++) {
 				//Cell celda = fila.createCell(i);
 				tabla.addCell(String.valueOf(lista.get(i).get(j)));
 			}
 
 		}
+
 	}
 
 	public void exportar(HttpServletResponse response, String[] columnas, ArrayList<ArrayList<String>> lista, float[] widths)
