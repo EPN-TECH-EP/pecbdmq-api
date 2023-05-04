@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
+
 public class InscripcionesValidasUtil {
 
 	@Id
