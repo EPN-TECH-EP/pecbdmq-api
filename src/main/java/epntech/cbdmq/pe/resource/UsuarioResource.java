@@ -131,18 +131,35 @@ public class UsuarioResource extends GestorExcepciones {
 		return new ResponseEntity<>(updatedUser, OK);
 	}
 
+	//por parametro de ruta
 	@GetMapping("/buscar/{nombreusuario}")
 	public ResponseEntity<Usuario> getUser(@PathVariable("nombreusuario") String username) {
 		Usuario user = usuarioService.findUserByUsername(username);
 		return new ResponseEntity<>(user, OK);
 	}
-	
+	//por body
 	@PostMapping("/buscarNombreApellido")
 	public ResponseEntity<List<Usuario>> getUserNombreApellido(@RequestBody NombreApellido nombreApellido) {
 		List<Usuario> users = usuarioService.findUsuariosByNombreApellido(nombreApellido.getNombre(), nombreApellido.getApellido());
 		return new ResponseEntity<>(users, OK);
 	}
-	
+	//por query params
+		@PostMapping("/buscarNombresApellidos")
+	public ResponseEntity<List<Usuario>> getNombreApellido(@RequestParam String nombres, @RequestParam String apellidos) {
+		List<Usuario> users = usuarioService.findUsuariosByNombreApellido(nombres, apellidos);
+		return new ResponseEntity<>(users, OK);
+	}
+
+	@PostMapping("/buscarCorreo")
+	public ResponseEntity<List<Usuario>> getCorreo(@RequestParam String correo) {
+		List<Usuario> users = usuarioService.findUsuariosByCorreo(correo);
+		return new ResponseEntity<>(users, OK);
+	}
+	@PostMapping("/buscarUsuario")
+	public ResponseEntity<Usuario> getUserII(@RequestParam String usuario) {
+		Usuario users = usuarioService.findUserByUsername(usuario);
+		return new ResponseEntity<>(users, OK);
+	}
 
 	@GetMapping("/lista")
 	public ResponseEntity<List<Usuario>> getAllUsers() {

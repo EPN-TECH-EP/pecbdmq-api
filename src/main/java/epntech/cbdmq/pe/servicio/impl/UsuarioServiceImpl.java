@@ -356,5 +356,10 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
         return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
     }
 
+    @Override
+    public List<Usuario> findUsuariosByCorreo(String correo) {
+        return this.userRepository.findUsuariosByCorreo(correo);
+    }
+
 }
 

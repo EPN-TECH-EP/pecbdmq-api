@@ -24,6 +24,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 	@Query(value = "select u from Usuario u where u.codDatosPersonales.apellido like %:apellido% or u.codDatosPersonales.nombre like %:nombre%")
 	public List<Usuario> findUsuariosByNombreApellido(@Param("nombre") String nombre, @Param("apellido") String apellido) ;
+	@Query(value = "SELECT u FROM Usuario u WHERE u.codDatosPersonales.correo_personal like %:correo%")
+	public List<Usuario> findUsuariosByCorreo(@Param("correo") String correo) ;
 
 	@Query(value = "SELECT u FROM Usuario u")
 	List<Usuario> findAllPageable(Pageable pageable);
