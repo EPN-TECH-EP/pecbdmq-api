@@ -1,4 +1,3 @@
-
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_GUARDADO;
@@ -38,6 +37,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -69,303 +70,291 @@ import jakarta.mail.MessagingException;
 @Transactional
 @Qualifier("userDetailsService")
 public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
-	private Logger LOGGER = LoggerFactory.getLogger(getClass());
-	private UsuarioRepository userRepository;
-	private BCryptPasswordEncoder passwordEncoder;
-	private IntentoLoginService loginAttemptService;
-	private EmailService emailService;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
+    private UsuarioRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
+    private IntentoLoginService loginAttemptService;
+    private EmailService emailService;
 
-	@Value("${pecb.archivos.ruta}")
-	private String ARCHIVOS_RUTA;
+    @Value("${pecb.archivos.ruta}")
+    private String ARCHIVOS_RUTA;
 
-	@Value("${spring.servlet.multipart.max-file-size}")	
-	public DataSize TAMAÑO_MÁXIMO;
+    @Value("${spring.servlet.multipart.max-file-size}")
+    public DataSize TAMAÑO_MÁXIMO;
 
-	@Autowired
-	public UsuarioServiceImpl(UsuarioRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-			IntentoLoginService loginAttemptService, EmailService emailService) {
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.loginAttemptService = loginAttemptService;
-		this.emailService = emailService;
-	}
+    @Autowired
+    public UsuarioServiceImpl(UsuarioRepository userRepository, BCryptPasswordEncoder passwordEncoder, IntentoLoginService loginAttemptService, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.loginAttemptService = loginAttemptService;
+        this.emailService = emailService;
+    }
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Usuario user = userRepository.findUsuarioByNombreUsuario(username);
-		if (user == null) {
-			LOGGER.error(NO_EXISTE_USUARIO + username);
-			throw new UsernameNotFoundException(NO_EXISTE_USUARIO + username);
-		} else {
-			validateLoginAttempt(user);
-			user.setFechaUltimoLoginMostrar(user.getFechaUltimoLogin());
-			user.setFechaUltimoLogin(new Date());
-			userRepository.save(user);
-			UserPrincipal userPrincipal = new UserPrincipal(user);
-			LOGGER.info(NOMBRE_USUARIO_ENCONTRADO + username);
-			return userPrincipal;
-		}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario user = userRepository.findUsuarioByNombreUsuario(username);
+        if (user == null) {
+            LOGGER.error(NO_EXISTE_USUARIO + username);
+            throw new UsernameNotFoundException(NO_EXISTE_USUARIO + username);
+        } else {
+            validateLoginAttempt(user);
+            user.setFechaUltimoLoginMostrar(user.getFechaUltimoLogin());
+            user.setFechaUltimoLogin(new Date());
+            userRepository.save(user);
+            UserPrincipal userPrincipal = new UserPrincipal(user);
+            LOGGER.info(NOMBRE_USUARIO_ENCONTRADO + username);
+            return userPrincipal;
+        }
 
-	}
+    }
 
-	@Override
-	// public Usuario registrar(String firstName, String lastName, String username,
-	// String email) throws UsuarioNoEncontradoExcepcion,
-	// NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException {
-	public Usuario registrar(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
-			EmailExisteExcepcion, MessagingException {
-		validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(),
-				usuario.getCodDatosPersonales().getCorreo_personal());
+    @Override
+    // public Usuario registrar(String firstName, String lastName, String username,
+    // String email) throws UsuarioNoEncontradoExcepcion,
+    // NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException {
+    public Usuario registrar(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException {
+        validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo_personal());
 
-		// datos de usuario
-		Usuario user = new Usuario();
-		// user.setUserId(generateUserId());
-		String password = generatePassword();
-		// user.setNombres(firstName);
-		// user.setApellidos(lastName);
-		user.setNombreUsuario(usuario.getNombreUsuario());
-		// user.setEmail(email);
-		user.setFechaRegistro(new Date());
-		user.setClave(encodePassword(password));
-		user.setActive(true);
-		user.setNotLocked(true);
-		// user.setUrlImagenPerfil(getTemporaryProfileImageUrl(username));
+        // datos de usuario
+        Usuario user = new Usuario();
+        // user.setUserId(generateUserId());
+        String password = generatePassword();
+        // user.setNombres(firstName);
+        // user.setApellidos(lastName);
+        user.setNombreUsuario(usuario.getNombreUsuario());
+        // user.setEmail(email);
+        user.setFechaRegistro(new Date());
+        user.setClave(encodePassword(password));
+        user.setActive(true);
+        user.setNotLocked(true);
+        // user.setUrlImagenPerfil(getTemporaryProfileImageUrl(username));
 
-		// datos personales
-		DatoPersonal datos = new DatoPersonal();
-		datos.setNombre(usuario.getCodDatosPersonales().getNombre());
-		datos.setApellido(usuario.getCodDatosPersonales().getApellido());
-		datos.setCorreo_personal(usuario.getCodDatosPersonales().getCorreo_personal());
+        // datos personales
+        DatoPersonal datos = new DatoPersonal();
+        datos.setNombre(usuario.getCodDatosPersonales().getNombre());
+        datos.setApellido(usuario.getCodDatosPersonales().getApellido());
+        datos.setCorreo_personal(usuario.getCodDatosPersonales().getCorreo_personal());
 
-		// asocia datos personales con usuario
-		user.setCodDatosPersonales(datos);
+        // asocia datos personales con usuario
+        user.setCodDatosPersonales(datos);
 
-		userRepository.save(user);
+        userRepository.save(user);
 
-		userRepository.flush();
+        userRepository.flush();
 
-		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
-				usuario.getCodDatosPersonales().getCorreo_personal());
-		return user;
-	}
+        emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password, usuario.getCodDatosPersonales().getCorreo_personal());
+        return user;
+    }
 
-	@Override
-	public Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role,
-			boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
-			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-		validateNewUsernameAndEmail(EMPTY, username, email);
-		Usuario user = new Usuario();
-		String password = generatePassword();
-		// user.setUserId(generateUserId());
-		// user.setNombres(firstName);
-		// user.setApellidos(lastName);
-		user.setFechaRegistro(new Date());
-		user.setNombreUsuario(username);
-		// user.setEmail(email);
-		// user.setPassword(encodePassword(password));
-		user.setActive(isActive);
-		user.setNotLocked(isNonLocked);
-		// user.setUrlImagenPerfil(getTemporaryProfileImageUrl(username));
-		userRepository.save(user);
-		// saveProfileImage(user, profileImage);
-		// TODO eliminar línea de log
-		LOGGER.info("New user password: " + password);
-		return user;
-	}
+    @Override
+    public Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+        validateNewUsernameAndEmail(EMPTY, username, email);
+        Usuario user = new Usuario();
+        String password = generatePassword();
+        // user.setUserId(generateUserId());
+        // user.setNombres(firstName);
+        // user.setApellidos(lastName);
+        user.setFechaRegistro(new Date());
+        user.setNombreUsuario(username);
+        // user.setEmail(email);
+        // user.setPassword(encodePassword(password));
+        user.setActive(isActive);
+        user.setNotLocked(isNonLocked);
+        // user.setUrlImagenPerfil(getTemporaryProfileImageUrl(username));
+        userRepository.save(user);
+        // saveProfileImage(user, profileImage);
+        // TODO eliminar línea de log
+        LOGGER.info("New user password: " + password);
+        return user;
+    }
 
-	@Override
-	public Usuario actualizarUsuario(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
-			EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-		Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo_personal());
-		
-		currentUser.setActive(usuario.isActive());
-		currentUser.setNotLocked(usuario.isNotLocked());
-		
-		
-		// TODO: validar campos actualizables
-		
-		// currentUser.setNombres(newFirstName);
-		// currentUser.setApellidos(newLastName);
+    @Override
+    public Usuario actualizarUsuario(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+        Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo_personal());
+
+        currentUser.setActive(usuario.isActive());
+        currentUser.setNotLocked(usuario.isNotLocked());
+
+
+        // TODO: validar campos actualizables
+
+        // currentUser.setNombres(newFirstName);
+        // currentUser.setApellidos(newLastName);
 //		currentUser.setNombreUsuario(usuario);
-		// currentUser.setEmail(newEmail);
+        // currentUser.setEmail(newEmail);
 //		currentUser.setActive(isActive);
 //		currentUser.setNotLocked(isNonLocked);
-		userRepository.save(currentUser);
-		// saveProfileImage(currentUser, profileImage);
-		
-		
-		//TODO: eliminar log
-		LOGGER.info("Actualizar usuario ejecutado");
-		
-		return currentUser;
-	}
+        userRepository.save(currentUser);
+        // saveProfileImage(currentUser, profileImage);
 
-	@Override
-	public void resetPassword(String email) throws MessagingException, EmailNoEncontradoExcepcion {
-		/*
-		 * Usuario user = userRepository.findUsuarioByEmail(email); if (user == null) {
-		 * throw new EmailNoEncontradoExcepcion(NO_EXISTE_USUARIO_EMAIL + email); }
-		 */
-		String password = generatePassword();
-		// user.setPassword(encodePassword(password));
-		// userRepository.save(user);
-		// TODO eliminar línea de log
-		LOGGER.info("New user password: " + password);
-		// emailService.sendNewPasswordEmail(user.getNombres().concat("
-		// ").concat(user.getApellidos()), password, user.getEmail());
-	}
 
-	@Override
-	public Usuario actualizarImagenPerfil(String username, MultipartFile profileImage)
-			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException,
-			NoEsArchivoImagenExcepcion {
-		Usuario user = validateNewUsernameAndEmail(username, null, null);
-		// saveProfileImage(user, profileImage);
-		return user;
-	}
+        //TODO: eliminar log
+        LOGGER.info("Actualizar usuario ejecutado");
 
-	@Override
-	public List<Usuario> getUsuarios() {
-		return userRepository.findAll();
-	}
+        return currentUser;
+    }
 
-	@Override
-	public Usuario findUserByUsername(String username) {
-		return userRepository.findUsuarioByNombreUsuario(username);
-	}
+    @Override
+    public void resetPassword(String email) throws MessagingException, EmailNoEncontradoExcepcion {
+        /*
+         * Usuario user = userRepository.findUsuarioByEmail(email); if (user == null) {
+         * throw new EmailNoEncontradoExcepcion(NO_EXISTE_USUARIO_EMAIL + email); }
+         */
+        String password = generatePassword();
+        // user.setPassword(encodePassword(password));
+        // userRepository.save(user);
+        // TODO eliminar línea de log
+        LOGGER.info("New user password: " + password);
+        // emailService.sendNewPasswordEmail(user.getNombres().concat("
+        // ").concat(user.getApellidos()), password, user.getEmail());
+    }
 
-	/*
-	 * @Override public Usuario findUserByEmail(String email) { return
-	 * userRepository.findUsuarioByEmail(email); }
-	 */
+    @Override
+    public Usuario actualizarImagenPerfil(String username, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+        Usuario user = validateNewUsernameAndEmail(username, null, null);
+        // saveProfileImage(user, profileImage);
+        return user;
+    }
 
-	@Override
-	public void eliminarUsuario(String username) throws IOException {
-		Usuario user = userRepository.findUsuarioByNombreUsuario(username);
-		Path userFolder = Paths.get(CARPETA_USUARIO + user.getNombreUsuario()).toAbsolutePath().normalize();
-		FileUtils.deleteDirectory(new File(userFolder.toString()));
-		userRepository.deleteById(user.getCodUsuario());
-	}
+    @Override
+    public List<Usuario> getUsuarios() {
+        return userRepository.findAll();
+    }
 
-	private void saveProfileImage(Usuario user, MultipartFile profileImage)
-			throws IOException, NoEsArchivoImagenExcepcion {
-		if (profileImage != null) {
-			if (!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE,
-					IMAGE_GIF_VALUE).contains(profileImage.getContentType())) {
-				throw new NoEsArchivoImagenExcepcion(profileImage.getOriginalFilename() +
-						NO_ES_ARCHIVO_IMAGEN);
-			}
-			Path userFolder = Paths.get(CARPETA_USUARIO +
-					user.getNombreUsuario()).toAbsolutePath().normalize();
-			if (!Files.exists(userFolder)) {
-				Files.createDirectories(userFolder);
-				LOGGER.info(DIRECTORIO_CREADO + userFolder);
-			}
-			Files.deleteIfExists(Paths.get(userFolder + user.getNombreUsuario() + PUNTO +
-					EXTENSION_JPG));
-			Files.copy(profileImage.getInputStream(),
-					userFolder.resolve(user.getNombreUsuario() + PUNTO + EXTENSION_JPG),
-					REPLACE_EXISTING);
-			// user.setUrlImagenPerfil(setProfileImageUrl(user.getNombreUsuario()));
-			// userRepository.save(user);
-			LOGGER.info(ARCHIVO_GUARDADO +
-					profileImage.getOriginalFilename());
-		}
-	}
+    @Override
+    public List<Usuario> getUsuariosPageable(Pageable pageable){
 
-	private String setProfileImageUrl(String username) {
-		return ServletUriComponentsBuilder.fromCurrentContextPath().path(PATH_IMAGEN_USUARIO + username + FORWARD_SLASH
-				+ username + PUNTO + EXTENSION_JPG).toUriString();
-	}
 
-	private Role getRoleEnumName(String role) {
-		return Role.valueOf(role.toUpperCase());
-	}
+        return userRepository.findAllPageable(pageable);
 
-	private String getTemporaryProfileImageUrl(String username) {
-		return ServletUriComponentsBuilder.fromCurrentContextPath().path(PATH_DEFECTO_IMAGEN_USUARIO + username)
-				.toUriString();
-	}
 
-	private String encodePassword(String password) {
+    }
 
-		String encodedPassword = passwordEncoder.encode(password);
-		return encodedPassword;
-	}
+    @Override
+    public Usuario findUserByUsername(String username) {
+        return userRepository.findUsuarioByNombreUsuario(username);
+    }
 
-	private String generatePassword() {
-		return RandomStringUtils.randomAlphanumeric(20);
-	}
+    /*
+     * @Override public Usuario findUserByEmail(String email) { return
+     * userRepository.findUsuarioByEmail(email); }
+     */
 
-	private String generateUserId() {
-		return RandomStringUtils.randomNumeric(10);
-	}
+    @Override
+    public void eliminarUsuario(String username) throws IOException {
+        Usuario user = userRepository.findUsuarioByNombreUsuario(username);
+        Path userFolder = Paths.get(CARPETA_USUARIO + user.getNombreUsuario()).toAbsolutePath().normalize();
+        FileUtils.deleteDirectory(new File(userFolder.toString()));
+        userRepository.deleteById(user.getCodUsuario());
+    }
 
-	private void validateLoginAttempt(Usuario user) {
-		if (user.isNotLocked()) {
-			if (loginAttemptService.excedeMaximoIntentos(user.getNombreUsuario())) {
-				user.setNotLocked(false);
-			} else {
-				user.setNotLocked(true);
-			}
-		} else {
-			loginAttemptService.retirarUsuarioDeCache(user.getNombreUsuario());
-		}
-	}
+    private void saveProfileImage(Usuario user, MultipartFile profileImage) throws IOException, NoEsArchivoImagenExcepcion {
+        if (profileImage != null) {
+            if (!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())) {
+                throw new NoEsArchivoImagenExcepcion(profileImage.getOriginalFilename() + NO_ES_ARCHIVO_IMAGEN);
+            }
+            Path userFolder = Paths.get(CARPETA_USUARIO + user.getNombreUsuario()).toAbsolutePath().normalize();
+            if (!Files.exists(userFolder)) {
+                Files.createDirectories(userFolder);
+                LOGGER.info(DIRECTORIO_CREADO + userFolder);
+            }
+            Files.deleteIfExists(Paths.get(userFolder + user.getNombreUsuario() + PUNTO + EXTENSION_JPG));
+            Files.copy(profileImage.getInputStream(), userFolder.resolve(user.getNombreUsuario() + PUNTO + EXTENSION_JPG), REPLACE_EXISTING);
+            // user.setUrlImagenPerfil(setProfileImageUrl(user.getNombreUsuario()));
+            // userRepository.save(user);
+            LOGGER.info(ARCHIVO_GUARDADO + profileImage.getOriginalFilename());
+        }
+    }
 
-	private Usuario validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail)
-			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion {
-		Usuario userByNewUsername = findUserByUsername(newUsername);
-		// Usuario userByNewEmail = findUserByEmail(newEmail);
-		if (StringUtils.isNotBlank(currentUsername)) {
-			Usuario currentUser = findUserByUsername(currentUsername);
-			if (currentUser == null) {
-				throw new UsuarioNoEncontradoExcepcion(NO_EXISTE_USUARIO + currentUsername);
-			}
-			if (userByNewUsername != null && !currentUser.getCodUsuario().equals(userByNewUsername.getCodUsuario())) {
-				throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
-			}
-			/*
-			 * if(userByNewEmail != null &&
-			 * !currentUser.getCodUsuario().equals(userByNewEmail.getCodUsuario())) { throw
-			 * new EmailExisteExcepcion(EMAIL_YA_EXISTE); }
-			 */
-			return currentUser;
-		} else {
-			if (userByNewUsername != null) {
-				throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
-			}
-			/*
-			 * if(userByNewEmail != null) { throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
-			 * }
-			 */
-			return null;
-		}
-	}
+    private String setProfileImageUrl(String username) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(PATH_IMAGEN_USUARIO + username + FORWARD_SLASH + username + PUNTO + EXTENSION_JPG).toUriString();
+    }
 
-	public void guardarArchivo(String nombreArchivo, MultipartFile archivo)
-			throws IOException, ArchivoMuyGrandeExcepcion {
+    private Role getRoleEnumName(String role) {
+        return Role.valueOf(role.toUpperCase());
+    }
 
-		if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
-			throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
-		}
+    private String getTemporaryProfileImageUrl(String username) {
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(PATH_DEFECTO_IMAGEN_USUARIO + username).toUriString();
+    }
 
-		Path ruta = Paths.get(ARCHIVOS_RUTA).toAbsolutePath().normalize();
-		if (!Files.exists(ruta)) {
-			Files.createDirectories(ruta);
-		}
+    private String encodePassword(String password) {
 
-		Files.copy(archivo.getInputStream(), ruta.resolve(nombreArchivo), StandardCopyOption.REPLACE_EXISTING);
-		LOGGER.info("Archivo guardado: " + ARCHIVOS_RUTA + nombreArchivo);
-	}
+        String encodedPassword = passwordEncoder.encode(password);
+        return encodedPassword;
+    }
 
-	public long tamañoMáximoArchivo() {
-		return TAMAÑO_MÁXIMO.toBytes();
-	}
-	
-	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido){
-		return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
-	}
+    private String generatePassword() {
+        return RandomStringUtils.randomAlphanumeric(20);
+    }
+
+    private String generateUserId() {
+        return RandomStringUtils.randomNumeric(10);
+    }
+
+    private void validateLoginAttempt(Usuario user) {
+        if (user.isNotLocked()) {
+            if (loginAttemptService.excedeMaximoIntentos(user.getNombreUsuario())) {
+                user.setNotLocked(false);
+            } else {
+                user.setNotLocked(true);
+            }
+        } else {
+            loginAttemptService.retirarUsuarioDeCache(user.getNombreUsuario());
+        }
+    }
+
+    private Usuario validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion {
+        Usuario userByNewUsername = findUserByUsername(newUsername);
+        // Usuario userByNewEmail = findUserByEmail(newEmail);
+        if (StringUtils.isNotBlank(currentUsername)) {
+            Usuario currentUser = findUserByUsername(currentUsername);
+            if (currentUser == null) {
+                throw new UsuarioNoEncontradoExcepcion(NO_EXISTE_USUARIO + currentUsername);
+            }
+            if (userByNewUsername != null && !currentUser.getCodUsuario().equals(userByNewUsername.getCodUsuario())) {
+                throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
+            }
+            /*
+             * if(userByNewEmail != null &&
+             * !currentUser.getCodUsuario().equals(userByNewEmail.getCodUsuario())) { throw
+             * new EmailExisteExcepcion(EMAIL_YA_EXISTE); }
+             */
+            return currentUser;
+        } else {
+            if (userByNewUsername != null) {
+                throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
+            }
+            /*
+             * if(userByNewEmail != null) { throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
+             * }
+             */
+            return null;
+        }
+    }
+
+    public void guardarArchivo(String nombreArchivo, MultipartFile archivo) throws IOException, ArchivoMuyGrandeExcepcion {
+
+        if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
+            throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+        }
+
+        Path ruta = Paths.get(ARCHIVOS_RUTA).toAbsolutePath().normalize();
+        if (!Files.exists(ruta)) {
+            Files.createDirectories(ruta);
+        }
+
+        Files.copy(archivo.getInputStream(), ruta.resolve(nombreArchivo), StandardCopyOption.REPLACE_EXISTING);
+        LOGGER.info("Archivo guardado: " + ARCHIVOS_RUTA + nombreArchivo);
+    }
+
+    public long tamañoMáximoArchivo() {
+        return TAMAÑO_MÁXIMO.toBytes();
+    }
+
+    public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido) {
+        return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
+    }
 
 }
 

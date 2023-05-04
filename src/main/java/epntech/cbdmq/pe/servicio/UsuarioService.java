@@ -4,6 +4,7 @@ package epntech.cbdmq.pe.servicio;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.Usuario;
@@ -23,6 +24,7 @@ public interface UsuarioService {
 			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException;
 
 	List<Usuario> getUsuarios();
+	List<Usuario> getUsuariosPageable(Pageable pageable);
 
 	Usuario findUserByUsername(String username);
 
