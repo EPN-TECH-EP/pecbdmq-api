@@ -16,6 +16,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
@@ -125,14 +126,11 @@ public class UsuarioResource extends GestorExcepciones {
     public ResponseEntity<Usuario> actualizarDatos(@PathVariable("id") Long codigo, @RequestParam(name = "isActive", required = false) Boolean active, @RequestParam(name = "isNotLocked", required = false) Boolean isNotLocked) throws DataException {
         return usuarioService.getById(codigo).map(datosGuardados -> {
             //datosGuardados.setCodParalelo(obj.getCodParalelo());
+            Optional.ofNullable(isNotLocked).ifPresent(datosGuardados::setNotLocked);
+            Optional.ofNullable(active).ifPresent(datosGuardados::setActive);
             Usuario datosActualizados = null;
+
             try {
-                if (isNotLocked != null) {
-                    datosGuardados.setNotLocked(isNotLocked);
-                }
-                if (active != null) {
-                    datosGuardados.setActive(active);
-                }
                 datosActualizados = usuarioService.actualizarUsuario(datosGuardados);
             } catch (UsuarioNoEncontradoExcepcion | NombreUsuarioExisteExcepcion | EmailExisteExcepcion |
                      IOException | NoEsArchivoImagenExcepcion e) {
