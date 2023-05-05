@@ -168,7 +168,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		userRepository.save(user);
 		// saveProfileImage(user, profileImage);
 		// TODO eliminar línea de log
-		LOGGER.info("New user password: " + password);
+		//LOGGER.info("New user password: " + password);
 		return user;
 	}
 
@@ -193,7 +193,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		// saveProfileImage(currentUser, profileImage);
 
 		// TODO: eliminar log
-		LOGGER.info("Actualizar usuario ejecutado");
+		//LOGGER.info("Actualizar usuario ejecutado");
 
 		return currentUser;
 	}
