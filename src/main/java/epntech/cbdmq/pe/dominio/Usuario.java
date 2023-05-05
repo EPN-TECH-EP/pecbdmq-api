@@ -6,20 +6,33 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.NamedNativeQuery;
 
 @Entity
 @Table(name = "gen_usuario")
 @Data
+@NamedNativeQuery(name = "UsuarioDtoRead.buscarUsuarioPersonalizado",
+		query = "select u.cod_usuario, u.cod_modulo, u.nombre_usuario, u.clave, u.fecha_ultimo_login, u.fecha_ultimo_login_mostrar,u.fecha_registro, u.is_active, u.is_not_locked, dp.nombre, dp.apellido, dp.correo_personal from {h-schema}gen_usuario u join {h-schema}gen_dato_personal dp on dp.cod_datos_personales = u.cod_datos_personales",
+		resultSetMapping = "UsuarioDtoRead"
+)
+@SqlResultSetMapping(name = "UsuarioDtoRead", classes = @ConstructorResult(targetClass = UsuarioDtoRead.class, columns = {
+		@ColumnResult(name = "cod_usuario"),
+		@ColumnResult(name = "cod_modulo"),
+		@ColumnResult(name = "nombre_usuario"),
+		@ColumnResult(name = "clave"),
+		@ColumnResult(name = "fecha_ultimo_login"),
+		@ColumnResult(name = "fecha_ultimo_login_mostrar"),
+		@ColumnResult(name = "fecha_registro"),
+		@ColumnResult(name = "is_active"),
+		@ColumnResult(name = "is_not_locked"),
+		@ColumnResult(name = "nombre"),
+		@ColumnResult(name = "apellido"),
+		@ColumnResult(name = "correo_personal")
+}))
 public class Usuario implements Serializable {
 
 	private static final long serialVersionUID = 9203940391795653856L;

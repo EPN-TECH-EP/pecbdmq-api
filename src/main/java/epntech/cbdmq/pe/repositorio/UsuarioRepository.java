@@ -29,7 +29,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 	@Query(value = "SELECT u FROM Usuario u")
 	List<Usuario> findAllPageable(Pageable pageable);
-	@Query(nativeQuery = true)
+	@Query(nativeQuery = true, name = "UsuarioDtoRead.buscarUsuarioPersonalizado")
 	List<UsuarioDtoRead> buscarUsuarioPersonalizado();
 
     

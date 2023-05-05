@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +171,12 @@ public class UsuarioResource extends GestorExcepciones {
 	public List<Usuario> getAllUsersPageable(Pageable pageable){
 
 			return usuarioService.getUsuariosPageable(pageable);
+
+	}
+	@GetMapping("/listaRPaginado")
+	public List<UsuarioDtoRead> getAllUsersPer(){
+
+		return usuarioService.getUsuariosPer();
 
 	}
 

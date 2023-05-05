@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -228,6 +229,11 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
         return userRepository.findAllPageable(pageable);
 
 
+    }
+
+    @Override
+    public List<UsuarioDtoRead> getUsuariosPer() {
+        return userRepository.buscarUsuarioPersonalizado();
     }
 
     @Override
