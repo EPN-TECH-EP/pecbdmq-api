@@ -252,8 +252,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
     }
 
     @Override
-    public List<UsuarioDtoRead> getUsuariosPer() {
-        return userRepository.buscarUsuarioPersonalizado();
+    public List<UsuarioDtoRead> getUsuariosPer(Pageable pageable) {
+        return userRepository.buscarUsuarioPersonalizado(pageable);
     }
 
     @Override

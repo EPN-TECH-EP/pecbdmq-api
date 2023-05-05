@@ -33,7 +33,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	@Query(value = "SELECT u FROM Usuario u")
 	List<Usuario> findAllPageable(Pageable pageable);
 	@Query(nativeQuery = true, name = "UsuarioDtoRead.buscarUsuarioPersonalizado")
-	List<UsuarioDtoRead> buscarUsuarioPersonalizado();
+	List<UsuarioDtoRead> buscarUsuarioPersonalizado(Pageable pageable);
 
 	@Modifying
 	@Query("UPDATE Usuario u SET u.isActive = ?1 WHERE u.nombreUsuario = ?2")

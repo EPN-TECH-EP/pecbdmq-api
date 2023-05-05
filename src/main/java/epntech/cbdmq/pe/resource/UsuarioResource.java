@@ -220,9 +220,9 @@ public class UsuarioResource extends GestorExcepciones {
     }
 
     @GetMapping("/listaRPaginado")
-    public List<UsuarioDtoRead> getAllUsersPer() {
+    public List<UsuarioDtoRead> getAllUsersPer(Pageable pageable) {
 
-        return usuarioService.getUsuariosPer();
+        return usuarioService.getUsuariosPer(pageable);
 
     }
 

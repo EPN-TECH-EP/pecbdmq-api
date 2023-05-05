@@ -30,7 +30,7 @@ public interface UsuarioService {
 	public Optional<Usuario> getById(Long codigo);
 	List<Usuario> getUsuarios();
 	List<Usuario> getUsuariosPageable(Pageable pageable);
-	List<UsuarioDtoRead> getUsuariosPer();
+	List<UsuarioDtoRead> getUsuariosPer(Pageable pageable);
 
 	Usuario findUserByUsername(String username);
 
