@@ -29,7 +29,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -38,6 +41,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -148,6 +154,15 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		return user;
 	}
 
+
+@Override
+    public Optional<Usuario> getById(Long codigo) {
+
+            // TODO Auto-generated method stub
+            return userRepository.findById(codigo);
+
+    }
+
 	@Override
 	public Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role,
 			boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
@@ -198,6 +213,17 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		return currentUser;
 	}
 
+
+	@Override
+    public int actualizarActive(Boolean active, String username) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+        return userRepository.actualizarIsActive(active, username);
+    }
+
+    @Override
+    public int actualizarNotLock(Boolean notLock, String username) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+        return userRepository.actualizarNotLocked(notLock, username);
+    }
+    
 	@Override
 	public void resetPassword(String nombreUsuario) throws MessagingException, UsuarioNoEncontradoExcepcion {
 
@@ -238,6 +264,20 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public List<Usuario> getUsuarios() {
 		return userRepository.findAll();
 	}
+
+	 @Override
+    public List<Usuario> getUsuariosPageable(Pageable pageable){
+
+
+        return userRepository.findAllPageable(pageable);
+
+
+    }
+
+    @Override
+    public List<UsuarioDtoRead> getUsuariosPer(Pageable pageable) {
+        return userRepository.buscarUsuarioPersonalizado(pageable);
+    }
 
 	@Override
 	public Usuario findUserByUsername(String username) {
@@ -376,5 +416,10 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido) {
 		return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
 	}
+
+    @Override
+    public List<Usuario> findUsuariosByCorreo(String correo) {
+        return this.userRepository.findUsuariosByCorreo(correo);
+    }
 
 }
