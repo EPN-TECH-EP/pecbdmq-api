@@ -3,9 +3,12 @@ package epntech.cbdmq.pe.repositorio;
 import java.util.List;
 
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -31,6 +34,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	List<Usuario> findAllPageable(Pageable pageable);
 	@Query(nativeQuery = true, name = "UsuarioDtoRead.buscarUsuarioPersonalizado")
 	List<UsuarioDtoRead> buscarUsuarioPersonalizado();
+
+	@Modifying
+	@Query("UPDATE Usuario u SET u.isActive = ?1 WHERE u.nombreUsuario = ?2")
+	int actualizarIsActive(Boolean active, String username);
+
+	@Modifying
+	@Query("UPDATE Usuario u SET u.isActive = ?1 WHERE u.nombreUsuario = ?2")
+	int actualizarNotLocked(Boolean noLock, String username);
+
+
 
     
     

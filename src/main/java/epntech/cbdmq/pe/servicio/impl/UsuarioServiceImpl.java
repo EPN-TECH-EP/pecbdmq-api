@@ -28,7 +28,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -148,6 +150,14 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
     }
 
     @Override
+    public Optional<Usuario> getById(Long codigo) {
+
+            // TODO Auto-generated method stub
+            return userRepository.findById(codigo);
+
+    }
+
+    @Override
     public Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
         validateNewUsernameAndEmail(EMPTY, username, email);
         Usuario user = new Usuario();
@@ -193,6 +203,16 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
         LOGGER.info("Actualizar usuario ejecutado");
 
         return currentUser;
+    }
+
+    @Override
+    public int actualizarActive(Boolean active, String username) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+        return userRepository.actualizarIsActive(active, username);
+    }
+
+    @Override
+    public int actualizarNotLock(Boolean notLock, String username) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+        return userRepository.actualizarNotLocked(notLock, username);
     }
 
     @Override
