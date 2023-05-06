@@ -112,6 +112,12 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		return repo.getPeriodoActivo();
 	}
 
+	@Override
+	public Integer getPAActivo() {
+		// TODO Auto-generated method stub
+		return repo.getPAActive();
+	}
+
 	
 
 }

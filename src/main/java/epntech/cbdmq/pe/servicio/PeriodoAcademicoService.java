@@ -32,4 +32,6 @@ public interface PeriodoAcademicoService {
 	Set<Documento> getDocumentos();
 	
 	Optional<PeriodoAcademico> getActive();
+	
+	Integer getPAActivo();
 }

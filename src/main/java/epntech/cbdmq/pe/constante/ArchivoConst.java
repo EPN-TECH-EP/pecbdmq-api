@@ -23,5 +23,7 @@ public class ArchivoConst {
 	public static final String PATH_PROCESO_PERIODO_ACADEMICO = "Periodo Academico/";
 	public static final String PATH_PROCESO_INSCRIPCION_FOR = "Postulante/";
 	public static final String NO_ADJUNTO = "No existe un documento adjunto";
+	public static final String FALLA_PROCESAR_EXCEL = "Falla al procesar el archivo excel";
+	public static final String PATH_RESULTADO_PRUEBAS = "Resultado Pruebas/";
 	
 }
