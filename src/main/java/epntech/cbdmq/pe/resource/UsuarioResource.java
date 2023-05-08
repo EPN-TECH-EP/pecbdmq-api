@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,7 +179,7 @@ public class UsuarioResource extends GestorExcepciones {
 		Usuario user = usuarioService.findUserByUsername(username);
 		return new ResponseEntity<>(user, OK);
 	}
-	
+
 	@PostMapping("/buscarNombreApellido")
 	public ResponseEntity<List<Usuario>> getUserNombreApellido(@RequestBody NombreApellido nombreApellido) {
 		List<Usuario> users = usuarioService.findUsuariosByNombreApellido(nombreApellido.getNombre(), nombreApellido.getApellido());
@@ -186,11 +187,23 @@ public class UsuarioResource extends GestorExcepciones {
 	}
 	
     //por query params
-    @PostMapping("/buscarNombresApellidos")
-    public ResponseEntity<List<Usuario>> getNombreApellido(@RequestParam String nombres, @RequestParam String apellidos) {
-        List<Usuario> users = usuarioService.findUsuariosByNombreApellido(nombres, apellidos);
-        return new ResponseEntity<>(users, OK);
-    }
+	@PostMapping("/buscarNombresApellidos")
+	public ResponseEntity<List<Usuario>> buscarUsuarios(
+			@RequestParam(name = "nombres", required = false) String nombre,
+			@RequestParam(name = "apellidos", required = false) String apellido) {
+
+		List<Usuario> usuarios = new ArrayList<>();
+
+		if (nombre != null && !nombre.trim().isEmpty() && apellido != null && !apellido.trim().isEmpty()) {
+			usuarios = usuarioService.findUsuariosByNombreApellido(nombre, apellido);
+		} else if (nombre != null && !nombre.trim().isEmpty()) {
+			usuarios = usuarioService.findUsuariosByNombre(nombre);
+		} else if (apellido != null && !apellido.trim().isEmpty()) {
+			usuarios = usuarioService.findUsuariosByApellido(apellido);
+		}
+		return ResponseEntity.ok(usuarios);
+	}
+
 
     @PostMapping("/buscarCorreo")
     public ResponseEntity<List<Usuario>> getCorreo(@RequestParam String correo) {
