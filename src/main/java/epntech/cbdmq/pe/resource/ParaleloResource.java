@@ -33,7 +33,6 @@ public class ParaleloResource  {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Paralelo obj) throws DataException{
-		obj.setNombreParalelo(obj.getNombreParalelo().toUpperCase());
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -50,9 +49,9 @@ public class ParaleloResource  {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Paralelo obj) throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Paralelo>) objService.getById(codigo).map(datosGuardados -> {
 			//datosGuardados.setCodParalelo(obj.getCodParalelo());
-			datosGuardados.setNombreParalelo(obj.getNombreParalelo().toUpperCase());
+			datosGuardados.setNombreParalelo(obj.getNombreParalelo());
 			datosGuardados.setEstado(obj.getEstado());
 			Paralelo datosActualizados = null;
 			try {

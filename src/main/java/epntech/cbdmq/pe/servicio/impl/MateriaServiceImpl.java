@@ -51,10 +51,7 @@ public class MateriaServiceImpl implements MateriaService {
 		if (objGuardado.isPresent()&& !objGuardado.get().getCodMateria().equals(objActualizado.getCodMateria())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
-
-		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
-		return repo.save(objActualizado);
-		
+			return repo.save(objActualizado);
 	}
 
 	@Override

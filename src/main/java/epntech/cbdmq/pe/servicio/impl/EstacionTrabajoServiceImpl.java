@@ -48,14 +48,14 @@ public class EstacionTrabajoServiceImpl implements EstacionTrabajoService {
 
 	@Override
 	public EstacionTrabajo update(EstacionTrabajo objActualizado) throws DataException {
-		Optional<EstacionTrabajo> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
+		if(objActualizado.getNombre() !=null) {
+			Optional<EstacionTrabajo> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+			if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
 		}
-
-		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
-		return repo.save(objActualizado);
-	}
+			return repo.save(objActualizado);
+		}
 
 	@Override
 	public void delete(int id) throws DataException {

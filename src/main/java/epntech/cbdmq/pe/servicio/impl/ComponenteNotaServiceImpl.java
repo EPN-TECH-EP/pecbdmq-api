@@ -68,14 +68,14 @@ public class ComponenteNotaServiceImpl implements ComponenteNotaService {
      */
     @Override
     public ComponenteNota update(ComponenteNota objActualizado) throws DataException {
-    	Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-		
-		objActualizado.setNombre(objActualizado.getNombre().toUpperCase());
-		return repo.save(objActualizado);
-    }
+    	if(objActualizado.getNombre() !=null) {
+    		Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+    		if (objGuardado.isPresent()&& !objGuardado.get().getCod_componente_nota().equals(objActualizado.getCod_componente_nota())) {
+    			throw new DataException(REGISTRO_YA_EXISTE);
+    		}
+    	}
+    		return repo.save(objActualizado);
+    	}
 
     /**
      * {@inheritDoc}

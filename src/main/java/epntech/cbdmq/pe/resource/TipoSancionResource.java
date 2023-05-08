@@ -55,7 +55,7 @@ public class TipoSancionResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoSancion obj) throws DataException {
-    	return objServices.getById(codigo).map(datosGuardados -> {
+        return (ResponseEntity<TipoSancion>) objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setSancion(obj.getSancion().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
             TipoSancion datosActualizados = null;

@@ -48,7 +48,7 @@ public class ParametrizacionResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Parametrizacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Parametrizacion obj) throws DataException{
-		return objService.getbyId(codigo).map(datosGuardados -> {
+		return (ResponseEntity<Parametrizacion>) objService.getbyId(codigo).map(datosGuardados -> {
 			datosGuardados.setCodparametriza(obj.getCodparametriza());
 			datosGuardados.setFechainicioparam(obj.getFechainicioparam());
 			datosGuardados.setFechafinparam(obj.getFechafinparam());
@@ -63,6 +63,7 @@ public class ParametrizacionResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
