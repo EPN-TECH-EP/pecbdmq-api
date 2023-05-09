@@ -65,5 +65,19 @@ public class MenuResource {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@GetMapping("/listarPrimerNivel")
+	public ResponseEntity<List<Menu>> getAllMenuPrimerNivel() throws DataException {
+		List<Menu> listaMenu = this.menuService.getAllMenuPrimerNivel();
+        return new ResponseEntity<List<Menu>>(listaMenu, OK);
+	}
+	
+	@GetMapping("listarHijos/{codMenuPadre}")
+	public ResponseEntity<List<Menu>> findByMenuPadre(@PathVariable("codMenuPadre") Integer menuPadre) throws DataException 
+	{
+		List<Menu> listaMenu = this.menuService.findByMenuPadre(menuPadre);
+        return new ResponseEntity<List<Menu>>(listaMenu, OK);
+	}
+	
 
 }

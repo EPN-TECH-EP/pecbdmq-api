@@ -6,13 +6,16 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.io.IOException;
 import java.util.Objects;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -170,6 +173,25 @@ public class GestorExcepciones implements ErrorController {
 	@ExceptionHandler(DataException.class)
 	public ResponseEntity<HttpResponse> dataException(DataException exception) {
 		return createHttpResponse(BAD_REQUEST, exception.getMessage());
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<HttpResponse> dataIntegrityViolationException(DataIntegrityViolationException exception) {
+		
+		Throwable cause = exception.getCause();
+		
+		String constraintName = ((ConstraintViolationException)exception.getCause()).getConstraintName();
+		
+		if (cause != null && cause instanceof ConstraintViolationException) {
+			if (constraintName.contains("_un")) {
+				return createHttpResponse(BAD_REQUEST, REGISTRO_YA_EXISTE);
+			}
+		} 
+			LOGGER.error(exception.getMessage());
+			exception.printStackTrace();
+			return createHttpResponse(INTERNAL_SERVER_ERROR, ERROR_INTERNO_SERVIDOR);
+		
+		
 	}
 }
 

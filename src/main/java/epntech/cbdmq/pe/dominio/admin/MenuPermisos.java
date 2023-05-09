@@ -15,7 +15,7 @@ public class MenuPermisos extends Menu {
 		this.codMenu = codMenu;
 		this.etiqueta = etiqueta;
 		this.ruta = ruta;
-		this.menu_padre = menu_padre;
+		this.menuPadre = menu_padre;
 		this.orden = orden;
 		this.permisos = permisos;
 		this.descripcion = descripcion;

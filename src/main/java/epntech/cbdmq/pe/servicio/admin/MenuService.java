@@ -13,10 +13,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Menu;
 import epntech.cbdmq.pe.dominio.admin.MenuPermisos;
-import epntech.cbdmq.pe.dominio.admin.MenuRol;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.MenuRepository;
 
@@ -37,11 +35,10 @@ public class MenuService {
 	}
 	
 	public List<Menu> getAll(){
-		return this.menuRepository.findAll();
+		return this.menuRepository.findAll(MenuRepository.defaultSort);
 	}
 	
 	public Optional<Menu> getById(Integer id) {
-		// TODO Auto-generated method stub
 		return menuRepository.findById(id);
 	}
 	
@@ -68,6 +65,16 @@ public Menu save(Menu menu) throws DataException {
 		return this.save(menu);
 	}
 	
+	
+	// obtener menús de primer nivel
+	public List<Menu> getAllMenuPrimerNivel(){
+		return this.menuRepository.findByMenuPadreIsNullOrderByOrden();
+	}
+	
+	// obtener lista de hijos
+	public List<Menu> findByMenuPadre(Integer menuPadre){
+		return this.menuRepository.findByMenuPadreOrderByOrden(menuPadre);
+	}
 	
 
 }
