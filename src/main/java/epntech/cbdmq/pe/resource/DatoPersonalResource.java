@@ -142,9 +142,9 @@ public class DatoPersonalResource {
 		}
 	}
 	@GetMapping("/buscarHistorico")
-	public ResponseEntity<?> searchHistorico(){
+	public ResponseEntity<?> searchHistorico(@RequestParam("cedula") String cedula){
 
-			return ResponseEntity.status(HttpStatus.OK).body(objService.datosPersonalePersonalizado());
+			return ResponseEntity.status(HttpStatus.OK).body(objService.datosPersonalePersonalizado(cedula));
 	}
 
 	@DeleteMapping("/{id}")

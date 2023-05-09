@@ -25,7 +25,7 @@ import org.hibernate.annotations.SQLDelete;
 					"left join cbdmq.gen_canton gcr on gcr.cod_canton=gdp.cod_canton_residencia\n" +
 					"left join cbdmq.gen_cargo cg on cg.cod_cargo=gdp.cod_cargo \n" +
 					"left join cbdmq.gen_rango rg on rg.cod_rango=gdp.cod_rango \n" +
-					"left join cbdmq.gen_grado gd on gd.cod_grado=gdp.cod_grado",
+					"left join cbdmq.gen_grado gd on gd.cod_grado=gdp.cod_grado where gdp.cedula =:cedula",
 		resultSetMapping = "DatoPersonalDto"
 )
 @SqlResultSetMapping(name = "DatoPersonalDto", classes = @ConstructorResult(targetClass = DatoPersonalDto.class, columns = {

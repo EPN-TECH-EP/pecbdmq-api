@@ -21,7 +21,7 @@ public interface DatoPersonalService {
 	DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException;
 	
 	List<DatoPersonal> getAllDatosPersonales();
-	List<DatoPersonalDto> datosPersonalePersonalizado();
+	List<DatoPersonalDto> datosPersonalePersonalizado(String cedula);
 	Page<DatoPersonal> getAllDatosPersonales(Pageable pageable) throws Exception;
 	
 	Optional<DatoPersonal> getDatosPersonalesById(Integer codigo);
