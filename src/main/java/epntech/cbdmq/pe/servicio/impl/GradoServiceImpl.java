@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import epntech.cbdmq.pe.dominio.admin.Grado;
 import epntech.cbdmq.pe.dominio.admin.Rango;
+import epntech.cbdmq.pe.dominio.util.RangoDtoRead;
 import epntech.cbdmq.pe.repositorio.admin.GradoRepository;
 import epntech.cbdmq.pe.repositorio.admin.RangoRepository;
 import epntech.cbdmq.pe.servicio.GradoService;
@@ -22,7 +23,7 @@ public class GradoServiceImpl implements GradoService {
     }
 
     @Override
-    public List<Rango> getRangoByGrado(Integer codGrado) {
+    public List<RangoDtoRead> getRangoByGrado(Integer codGrado) {
         return repoRa.findByGrado(codGrado);
     }
 }

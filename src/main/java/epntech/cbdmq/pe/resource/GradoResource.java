@@ -4,6 +4,7 @@ import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.Apelacion;
 import epntech.cbdmq.pe.dominio.admin.Grado;
 import epntech.cbdmq.pe.dominio.admin.Rango;
+import epntech.cbdmq.pe.dominio.util.RangoDtoRead;
 import epntech.cbdmq.pe.repositorio.admin.GradoRepository;
 import epntech.cbdmq.pe.servicio.impl.GradoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class GradoResource {
     }
 
     @PostMapping("/listarRangos")
-    public ResponseEntity<List<Rango>> getCorreo(@RequestParam Integer codGrado) {
-        List<Rango> rango = service.getRangoByGrado(codGrado);
+    public ResponseEntity<List<RangoDtoRead>> getCorreo(@RequestParam Integer codGrado) {
+        List<RangoDtoRead> rango = service.getRangoByGrado(codGrado);
         return new ResponseEntity<>(rango, OK);
     }
 
