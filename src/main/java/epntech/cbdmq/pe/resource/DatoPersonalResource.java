@@ -141,6 +141,11 @@ public class DatoPersonalResource {
 			return response(HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
+	@GetMapping("/buscarHistorico")
+	public ResponseEntity<?> searchHistorico(String cedula, Pageable pageable) throws Exception {
+
+			return ResponseEntity.status(HttpStatus.OK).body(objService.datosPersonalesActualizado(cedula,pageable));
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {

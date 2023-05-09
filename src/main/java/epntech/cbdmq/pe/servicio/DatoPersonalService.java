@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.DatoPersonalDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,8 @@ public interface DatoPersonalService {
 	DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException;
 	
 	List<DatoPersonal> getAllDatosPersonales();
-	
+	List<DatoPersonalDto> datosPersonalesActualizado(String cedula,Pageable pageable)throws Exception;
+
 	Page<DatoPersonal> getAllDatosPersonales(Pageable pageable) throws Exception;
 	
 	Optional<DatoPersonal> getDatosPersonalesById(Integer codigo);

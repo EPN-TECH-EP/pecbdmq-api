@@ -3,6 +3,8 @@ package epntech.cbdmq.pe.repositorio.admin;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.DatoPersonalDto;
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +30,12 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
 	
 	/*@EntityGraph(attributePaths = "documentos")
 	List<DatoPersonal> findAll();*/
-	
-	
+
+	/*
+	@Query(nativeQuery = true, name = "DatoPersonalDto.informacionDetallada")
+	List<DatoPersonalDto> buscarInformaciónPersonalizada(@Param("cedula") String cedula,Pageable pageable);
+	 */
+	@Query(nativeQuery = true, name = "DatoPersonalDto.informacionDetallada")
+	List<DatoPersonalDto> buscarInformaciónPersonalizada(Pageable pageable);
+
 }

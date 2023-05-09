@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.DatoPersonalDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,16 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+
+	@Override
+	public List<DatoPersonalDto> datosPersonalesActualizado(String cedula,Pageable pageable) throws Exception {
+		try {
+			return repo.buscarInformaciónPersonalizada(pageable);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
+
 
 	@Override
 	public Page<DatoPersonal> getAllDatosPersonales(Pageable pageable) throws Exception {
