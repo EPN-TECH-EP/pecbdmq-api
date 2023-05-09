@@ -91,12 +91,8 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 	}
 
 	@Override
-	public List<DatoPersonalDto> datosPersonalesActualizado(String cedula,Pageable pageable) throws Exception {
-		try {
-			return repo.buscarInformaciónPersonalizada(pageable);
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
-		}
+	public List<DatoPersonalDto> datosPersonalePersonalizado() {
+		return repo.buscarInformaciónPersonalizada();
 	}
 
 

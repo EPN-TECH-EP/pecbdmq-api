@@ -142,9 +142,9 @@ public class DatoPersonalResource {
 		}
 	}
 	@GetMapping("/buscarHistorico")
-	public ResponseEntity<?> searchHistorico(String cedula, Pageable pageable) throws Exception {
+	public ResponseEntity<?> searchHistorico(){
 
-			return ResponseEntity.status(HttpStatus.OK).body(objService.datosPersonalesActualizado(cedula,pageable));
+			return ResponseEntity.status(HttpStatus.OK).body(objService.datosPersonalePersonalizado());
 	}
 
 	@DeleteMapping("/{id}")
