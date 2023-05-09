@@ -63,6 +63,9 @@ public interface UsuarioService {
 	long tamañoMáximoArchivo();
 	
 	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido);
-	
+
+	public List<Usuario> findUsuariosByApellido(String apellido);
+	public List<Usuario> findUsuariosByNombre(String nombre);
+
 	public List<Usuario> findUsuariosByCorreo(String correo);
 }

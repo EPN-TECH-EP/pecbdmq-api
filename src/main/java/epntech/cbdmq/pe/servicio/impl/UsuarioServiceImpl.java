@@ -417,7 +417,17 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
 	}
 
-    @Override
+	@Override
+	public List<Usuario> findUsuariosByApellido(String apellido) {
+		return this.userRepository.findUsuariosByApellido(apellido);
+	}
+
+	@Override
+	public List<Usuario> findUsuariosByNombre(String nombre) {
+		return this.userRepository.findUsuariosByNombre(nombre);
+	}
+
+	@Override
     public List<Usuario> findUsuariosByCorreo(String correo) {
         return this.userRepository.findUsuariosByCorreo(correo);
     }
