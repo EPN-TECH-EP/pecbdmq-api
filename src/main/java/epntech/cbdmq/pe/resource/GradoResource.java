@@ -19,8 +19,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class GradoResource {
 
     @Autowired
-    private GradoRepository repo;
-    @Autowired
     private GradoServiceImpl service;
 
     @GetMapping("/listar")
