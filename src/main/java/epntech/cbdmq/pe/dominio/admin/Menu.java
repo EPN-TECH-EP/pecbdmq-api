@@ -52,7 +52,7 @@ import lombok.Data;
 		+ "	m.icono, "
 		+ "	permisos "
 		+ "	from cbdmq.gen_menu m,	 "
-		+ "	(select cod_menu, permisos from cbdmq.gen_menu_rol gmr where cod_rol in "
+		+ "	(select distinct cod_menu, permisos from cbdmq.gen_menu_rol gmr where cod_rol in "
 		+ "	(select cod_rol	from cbdmq.gen_rol_usuario ru where cod_usuario =  "
 		+ "	(select u.cod_usuario from cbdmq.gen_usuario u where u.nombre_usuario = :id_usuario))) permisos "
 		+ "	where m.cod_menu = permisos.cod_menu "

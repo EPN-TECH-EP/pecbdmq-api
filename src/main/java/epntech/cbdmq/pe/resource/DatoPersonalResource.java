@@ -81,18 +81,46 @@ public class DatoPersonalResource {
 	public ResponseEntity<DatoPersonal> actualizarDatos(@PathVariable("id") Integer codigo,
 			@RequestBody DatoPersonal obj) {
 		return (ResponseEntity<DatoPersonal>) objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
-			datosGuardados.setCod_estacion(obj.getCod_estacion());
-			datosGuardados.setCedula(obj.getCedula());
-			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setApellido(obj.getApellido());
-			datosGuardados.setFecha_nacimiento(obj.getFecha_nacimiento());
+			datosGuardados.setCedula(obj.getCedula());
+			datosGuardados.setCod_estacion(obj.getCod_estacion());
 			datosGuardados.setCorreo_personal(obj.getCorreo_personal());
+			datosGuardados.setEstado(obj.getEstado());
+			datosGuardados.setFecha_nacimiento(obj.getFecha_nacimiento());
+			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setNum_telef_convencional(obj.getNum_telef_convencional());
+			datosGuardados.setTipo_sangre(obj.getTipo_sangre());			
 			datosGuardados.setValidacion_correo(obj.getValidacion_correo());
+			datosGuardados.setCod_provincia_nacimiento(obj.getCod_provincia_nacimiento());
+			datosGuardados.setCod_unidad_gestion(obj.getCod_unidad_gestion());
+			datosGuardados.setGenero(obj.getGenero());
+			datosGuardados.setNum_telef_celular(obj.getNum_telef_celular());
+			datosGuardados.setReside_pais(obj.getReside_pais());
+			datosGuardados.setCod_provincia_residencia(obj.getCod_provincia_residencia());
+			datosGuardados.setCalle_principal_residencia(obj.getCalle_principal_residencia());
+			datosGuardados.setCalle_secundaria_residencia(obj.getCalle_secundaria_residencia());
+			datosGuardados.setNumero_casa(obj.getNumero_casa());
+			datosGuardados.setColegio(obj.getColegio());
+			datosGuardados.setTipo_nacionalidad(obj.getTipo_nacionalidad());
+			datosGuardados.setTiene_merito_deportivo(obj.getTiene_merito_deportivo());
+			datosGuardados.setTiene_merito_academico(obj.getTiene_merito_academico());
+			datosGuardados.setNombre_titulo(obj.getNombre_titulo());
+			datosGuardados.setPais_titulo(obj.getPais_titulo());
+			datosGuardados.setCiudad_titulo(obj.getCiudad_titulo());
+			datosGuardados.setMerito_deportivo_descripcion(obj.getMerito_deportivo_descripcion());
+			datosGuardados.setMerito_academico_descripcion(obj.getMerito_academico_descripcion());
+			datosGuardados.setCorreo_institucional(obj.getCorreo_institucional());
+			datosGuardados.setCod_cargo(obj.getCod_cargo());
+			datosGuardados.setCod_rango(obj.getCod_rango());
+			datosGuardados.setCod_grado(obj.getCod_grado());
+			datosGuardados.setCod_canton_nacimiento(obj.getCod_canton_nacimiento());
+			datosGuardados.setCod_canton_residencia(obj.getCod_canton_residencia());
+			
 			//datosGuardados.setNum_telef(obj. getNum_telef());
 			//datosGuardados.setCiudad(obj.getCiudad());
-			datosGuardados.setTipo_sangre(obj.getTipo_sangre());
+			
 			//datosGuardados.setUnidad(obj.getUnidad());
-			datosGuardados.setEstado(obj.getEstado());
+			
 			//datosGuardados.setProvincia(obj.getProvincia());
 
 			DatoPersonal datosActualizados = null;
