@@ -116,13 +116,6 @@ public class DatoPersonalResource {
 			datosGuardados.setCod_canton_nacimiento(obj.getCod_canton_nacimiento());
 			datosGuardados.setCod_canton_residencia(obj.getCod_canton_residencia());
 			
-			//datosGuardados.setNum_telef(obj. getNum_telef());
-			//datosGuardados.setCiudad(obj.getCiudad());
-			
-			//datosGuardados.setUnidad(obj.getUnidad());
-			
-			//datosGuardados.setProvincia(obj.getProvincia());
-
 			DatoPersonal datosActualizados = null;
 			try {
 				datosActualizados = objService.updateDatosPersonales(datosGuardados);

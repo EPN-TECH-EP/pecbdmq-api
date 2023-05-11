@@ -1,22 +1,16 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -42,11 +36,11 @@ public class PruebaFisica {
 	@Column(name = "sexo")
 	private String sexo;
 	@Column(name = "calificacion")
-	private Integer calificacion;
+	private BigDecimal calificacion;
 	@Column(name = "peso_prueba")
-	private Integer pesoprueba;
+	private BigDecimal pesoprueba;
 	@Column(name = "valor")
-	private Integer valor;
+	private BigDecimal valor;
 	@Column(name = "no_min_flexion")
 	private Integer nominflexion;
 	@Column(name = "estado")

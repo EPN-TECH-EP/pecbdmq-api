@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -75,7 +76,8 @@ public class Menu implements Serializable {
 
 	//@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen_menu_cod_menu_seq")
+	@SequenceGenerator(name = "gen_menu_cod_menu_seq", sequenceName = "gen_menu_cod_menu_seq", allocationSize = 1)
 	@Column(nullable = false, updatable = false)
 	protected Integer codMenu;
 

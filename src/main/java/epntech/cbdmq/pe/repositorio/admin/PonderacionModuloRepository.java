@@ -21,7 +21,7 @@ public interface PonderacionModuloRepository extends JpaRepository<PonderacionMo
 			+ "gp.fecha_inicio_vigencia as fechainiciovigencia , \r\n"
 			+ "gp.fecha_fin_vigencia as fechafinvigencia ,\r\n"
 			+ "gp.estado as estado ,\r\n"
-			+ "gm.descripcion as modulo_desc, \r\n"
+			+ "gm.etiqueta as modulo_desc, \r\n"
 			+ "gpa.descripcion as periodo_academico_desc, \r\n"
 			+ "gcn.tipo_componente_nota as componente_nota_desc, \r\n"
 			+ "gtn.tipo_nota as tipo_nota_desc\r\n"

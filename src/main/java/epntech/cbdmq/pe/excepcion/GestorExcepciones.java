@@ -40,6 +40,7 @@ import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.NombreUsuarioExisteExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.UsuarioNoEncontradoExcepcion;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.NoResultException;
 
 @RestControllerAdvice
@@ -52,6 +53,7 @@ public class GestorExcepciones implements ErrorController {
 	private static final String CUENTA_DESHABILITADA = "Cuenta deshabilitada - Contacte al administrador";
 	private static final String ERROR_PROCESO_ARCHIVO = "Error al procesar el archivo";
 	private static final String PERMISOS_INSUFICIENTES = "Permisos insuficientes para esta acción";
+	private static final String ERROR_ENVIO_EMAIL = "Error al enviar email, verifique que la dirección ingresada sea válida.";
 	public static final String RUTA_ERROR = "/error";
 
 	@ExceptionHandler(DisabledException.class)
@@ -189,9 +191,13 @@ public class GestorExcepciones implements ErrorController {
 		} 
 			LOGGER.error(exception.getMessage());
 			exception.printStackTrace();
-			return createHttpResponse(INTERNAL_SERVER_ERROR, ERROR_INTERNO_SERVIDOR);
-		
-		
+			return createHttpResponse(INTERNAL_SERVER_ERROR, ERROR_INTERNO_SERVIDOR);	
+	}
+	
+	@ExceptionHandler(MessagingException.class)
+	public ResponseEntity<HttpResponse> messsagingException(MessagingException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, ERROR_ENVIO_EMAIL);
 	}
 }
 

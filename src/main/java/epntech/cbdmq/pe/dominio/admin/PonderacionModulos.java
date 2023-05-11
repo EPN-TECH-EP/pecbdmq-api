@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,8 +20,8 @@ public class PonderacionModulos {
 	private Integer cod_periodo_academico;
 	private Integer cod_componente_nota;
 	private Integer cod_tipo_nota;
-	private Integer porcentajefinalponderacion;
-	private Integer porcentajenotamateria;
+	private BigDecimal porcentajefinalponderacion;
+	private BigDecimal porcentajenotamateria;
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechainiciovigencia;
 	@JsonFormat(pattern = "yyyy-MM-dd")

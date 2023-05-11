@@ -66,6 +66,12 @@ public Menu save(Menu menu) throws DataException {
 	}
 	
 	
+	public void delete(Integer id) throws DataException {
+		this.menuRepository.deleteById(id);
+		
+	}
+	
+	
 	// obtener menús de primer nivel
 	public List<Menu> getAllMenuPrimerNivel(){
 		return this.menuRepository.findByMenuPadreIsNullOrderByOrden();

@@ -1,12 +1,9 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -46,7 +43,7 @@ public class NotificacionPrueba {
 	private String estado;
 	@Column(name = "fecha_notificacion")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date fecha_prueba;
+	private LocalDateTime fecha_prueba;
 	@Column(name = "hora")
 	@DateTimeFormat(pattern = "HH:mm:ss")
 	private LocalTime  hora;

@@ -1,8 +1,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 
-import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -39,13 +39,13 @@ public class Baja {
 	@Column(name = "fecha_crea_baja")
 	private LocalDateTime fechacreabaja;
 	@Column(name = "hora_crea_baja")
-	private Time horacreabaja;
+	private LocalTime horacreabaja;
 	@Column(name = "usuario_mod_baja")
 	private String usuariomodbaja;
 	@Column(name = "fecha_mod_baja")
 	private LocalDateTime fechamodbaja;
 	@Column(name = "hora_mod_baja")
-	private Time horamodbaja;
+	private LocalTime horamodbaja;
 	
 	@Column(name = "estado")
 	private String estado;
