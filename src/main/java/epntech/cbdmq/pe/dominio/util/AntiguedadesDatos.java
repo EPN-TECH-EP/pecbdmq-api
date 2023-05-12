@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class ResultadosPruebasDatos {
+public class AntiguedadesDatos {
 
 	@Id
 	private Integer codPostulante;
@@ -14,4 +14,5 @@ public class ResultadosPruebasDatos {
 	private String cedula;
 	private String nombre;
 	private String apellido;
+	private Double notaPromedioFinal; 
 }

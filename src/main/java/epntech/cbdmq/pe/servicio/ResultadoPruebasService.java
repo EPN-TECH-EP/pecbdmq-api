@@ -11,6 +11,7 @@ import com.lowagie.text.DocumentException;
 
 import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface ResultadoPruebasService {
@@ -19,7 +20,7 @@ public interface ResultadoPruebasService {
 	
 	ResultadoPruebas update(ResultadoPruebas objActualizado);
 	
-	Optional<ResultadoPruebas> getByCodPostulanteAndPrueba(Integer CodPostulante, Integer codPrueba);
+	Optional<ResultadoPruebas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba);
 	
 	void uploadFile(MultipartFile file);
 	
@@ -27,9 +28,9 @@ public interface ResultadoPruebasService {
 	
 	ByteArrayInputStream downloadFile();
 	
-	void generarExcel(String filePath, String nombre)  throws IOException;
+	void generarExcel(String filePath, String nombre, Integer subtipoPrueba)  throws IOException, DataException;
 	
-	void generarPDF(HttpServletResponse response, String nombre) throws DocumentException, IOException;
+	void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer subtipoPrueba) throws DocumentException, IOException, DataException;
 	
-	List<ResultadosPruebasDatos> getResultados();
+	List<ResultadosPruebasDatos> getResultados(Integer subtipoPrueba);
 }

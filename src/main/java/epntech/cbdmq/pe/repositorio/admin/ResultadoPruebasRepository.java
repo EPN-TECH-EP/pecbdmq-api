@@ -12,6 +12,6 @@ import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 
 public interface ResultadoPruebasRepository extends JpaRepository<ResultadoPruebas, Integer> {
 
-	Optional<ResultadoPruebas> findByCodPostulanteAndCodPrueba(Integer CodPostulante, Integer codPrueba);
+	Optional<ResultadoPruebas> findByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba);
 	
 }

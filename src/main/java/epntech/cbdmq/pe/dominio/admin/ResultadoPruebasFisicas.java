@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.sql.Time;
+
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -14,14 +16,14 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "gen_resultado_prueba_nofisica")
-@SQLDelete(sql = "UPDATE {h-schema}gen_resultado_prueba_nofisica SET estado = 'ELIMINADO' WHERE cod_resul_prueba_nofisica = ?", check = ResultCheckStyle.COUNT)
+@Table(name = "gen_resultado_prueba_fisica")
+@SQLDelete(sql = "UPDATE {h-schema}gen_resultado_prueba_fisica SET estado = 'ELIMINADO' WHERE cod_resul_prueba = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-public class ResultadoPruebas {
+public class ResultadoPruebasFisicas {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cod_resul_prueba_nofisica")
+	@Column(name = "cod_resul_prueba_fisica")
 	private Integer codResulPrueba;
 	
 	@Column(name = "cod_funcionario")
@@ -39,19 +41,26 @@ public class ResultadoPruebas {
 	@Column(name = "cod_personal_ope")
 	private Integer codPersonalOpe;
 	
-	@Column(name = "cod_prueba_detalle")
-	private Integer codPruebaDetalle;
-	
 	@Column(name = "estado")
 	private String estado;
-	
-	@Column(name = "cumple_prueba")
-	private Boolean cumplePrueba;
 	
 	@Column(name = "nota_promedio_final")
 	private Double notaPromedioFinal;
 	
 	@Column(name = "seleccionado")
 	private Boolean seleccionado;
+	
+	@Column(name = "cod_prueba")
+	private Integer codPrueba;
+	
+	@Column(name = "resultado")
+	private Integer resultado;
+	
+	@Column(name = "resultado_tiempo")
+	private Time resultadoTiempo;
+	
+	
+	
+		
 	
 }

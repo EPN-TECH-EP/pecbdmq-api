@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,11 +21,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
+import epntech.cbdmq.pe.dominio.admin.ResultadoPruebasFisicas;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 
 public class ResultadoPruebasHelper {
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	static String[] HEADERs = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Aprueba" };
+	static String[] HEADERs = { "Codigo", "id", "Cedula", "Nombre", "Apellido" };
 	static String SHEET = "Hoja1";
 
 	public static boolean hasExcelFormat(MultipartFile file) {
@@ -56,16 +58,12 @@ public class ResultadoPruebasHelper {
 				row.createCell(0).setCellValue(dato.getCodResulPrueba());
 				row.createCell(1).setCellValue(dato.getCodFuncionario());
 				row.createCell(2).setCellValue(dato.getCodEstudiante());
-				row.createCell(3).setCellValue(dato.getCodModulo());
 				row.createCell(4).setCellValue(dato.getCodPostulante());
-				row.createCell(5).setCellValue(dato.getCodPeriodoEvaluacion());
-				row.createCell(6).setCellValue(dato.getCodPrueba());
-				row.createCell(7).setCellValue(dato.getCodParametrizaFisica());
-				row.createCell(8).setCellValue(dato.getResultado());
+				row.createCell(6).setCellValue(dato.getCodPruebaDetalle());
 				row.createCell(9).setCellValue(dato.getEstado());
 				row.createCell(10).setCellValue(dato.getCumplePrueba());
 				row.createCell(11).setCellValue(dato.getNotaPromedioFinal());
-				row.createCell(12).setCellValue(dato.getSeleccionadoFormacion());
+				row.createCell(12).setCellValue(dato.getSeleccionado());
 
 			}
 
@@ -105,7 +103,7 @@ public class ResultadoPruebasHelper {
 					switch (cellIdx) {
 					case 0:
 
-						dato.setCodModulo(Integer.parseInt(currentCell.getStringCellValue()));
+						//dato.setCodModulo(Integer.parseInt(currentCell.getStringCellValue()));
 						break;
 					case 1:
 
@@ -113,11 +111,11 @@ public class ResultadoPruebasHelper {
 						break;
 					case 2:
 
-						dato.setCodPrueba(Integer.parseInt(currentCell.getStringCellValue()));
+						dato.setCodPruebaDetalle(Integer.parseInt(currentCell.getStringCellValue()));
 						break;
 					case 3:
 
-						dato.setResultado(Integer.parseInt(currentCell.getStringCellValue()));
+						dato.setNotaPromedioFinal(Double.parseDouble(currentCell.getStringCellValue()));
 						break;
 					case 4:
 
@@ -142,6 +140,72 @@ public class ResultadoPruebasHelper {
 		}
 	}
 
+	public static List<ResultadoPruebasFisicas> excelToDatosPruebasFisicas(InputStream is) {
+		try {
+			Workbook workbook = new XSSFWorkbook(is);
+
+			Sheet sheet = workbook.getSheet(SHEET);
+			Iterator<Row> rows = sheet.iterator();
+
+			List<ResultadoPruebasFisicas> datos = new ArrayList<ResultadoPruebasFisicas>();
+
+			int rowNumber = 0;
+			while (rows.hasNext()) {
+				Row currentRow = rows.next();
+				// skip header
+				if (rowNumber == 0) {
+					rowNumber++;
+					continue;
+				}
+
+				Iterator<Cell> cellsInRow = currentRow.iterator();
+
+				ResultadoPruebasFisicas dato = new ResultadoPruebasFisicas();
+
+				int cellIdx = 0;
+				while (cellsInRow.hasNext()) {
+
+					Cell currentCell = cellsInRow.next();
+					switch (cellIdx) {
+					case 0:
+						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
+						dato.setCodPostulante(Integer.parseInt(currentCell.getStringCellValue()));
+						break;
+					case 1:
+						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
+						dato.setCodPrueba(Integer.parseInt(currentCell.getStringCellValue()));
+						break;
+					case 2:
+						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
+						dato.setResultado(Integer.parseInt(currentCell.getStringCellValue()));
+						break;
+					case 3:
+						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
+						dato.setResultadoTiempo(Time.valueOf(currentCell.getStringCellValue()));
+						break;
+					case 4:
+						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
+						dato.setNotaPromedioFinal(Double.parseDouble(currentCell.getStringCellValue()));
+						
+						break;
+					default:
+						break;
+					}
+
+					cellIdx++;
+				}
+				dato.setEstado("ACTIVO");
+				datos.add(dato);
+			}
+
+			workbook.close();
+
+			return datos;
+		} catch (IOException e) {
+			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
+		}
+	}
+	
 	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Datos");
@@ -159,12 +223,11 @@ public class ResultadoPruebasHelper {
         for (ResultadosPruebasDatos dato : datos) {
 			Row row = sheet.createRow(rowIndex++);
 
-			row.createCell(0).setCellValue(dato.getIdPostulante());
-			row.createCell(1).setCellValue(dato.getCedula());
-			row.createCell(2).setCellValue(dato.getNombre());
-			row.createCell(3).setCellValue(dato.getApellido());
-			row.createCell(4).setCellValue(dato.getResultado());
-			row.createCell(5).setCellValue(dato.getCumplePrueba());
+			row.createCell(0).setCellValue(dato.getCodPostulante());
+			row.createCell(1).setCellValue(dato.getIdPostulante());
+			row.createCell(2).setCellValue(dato.getCedula());
+			row.createCell(3).setCellValue(dato.getNombre());
+			row.createCell(4).setCellValue(dato.getApellido());
 			
 		}    
 

@@ -1,16 +1,16 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
-import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INCORRECTO;
-import static epntech.cbdmq.pe.constante.ResponseMessage.CARGA_ARCHIVO_EXCEL;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.ResponseMessage.*;
-import static epntech.cbdmq.pe.constante.MensajesConst.ERROR_REGISTRO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
+import static epntech.cbdmq.pe.constante.EstadosConst.*;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -31,30 +31,31 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lowagie.text.DocumentException;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Prueba;
+import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.impl.PostulantesValidosServiceImpl;
-import epntech.cbdmq.pe.servicio.impl.PruebaServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.PruebaDetalleServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.ResultadoPruebasServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/pruebasFor")
-public class PruebasForResource {
+@RequestMapping("/pruebasNoFisicas")
+public class ResultadoPruebasNoFisicasResource {
 
 	@Autowired
 	private PostulantesValidosServiceImpl objService;
 	@Autowired
-	private PruebaServiceImpl pruebaServiceImpl;
-	@Autowired
 	private ResultadoPruebasServiceImpl resultadoPruebasServiceImpl;
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
+	@Autowired
+	private PruebaDetalleServiceImpl pruebaDetalleServiceImpl;
+
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
 
@@ -64,29 +65,38 @@ public class PruebasForResource {
 	}
 
 	@PostMapping("/notificar")
-	public ResponseEntity<?> notificar(@RequestParam("mensaje") String mensaje, @RequestParam("modulo") Integer modulo,
-			@RequestParam("prueba") Integer prueba) throws MessagingException, DataException {
-		Optional<Prueba> pp = pruebaServiceImpl.getById(prueba);
+	public ResponseEntity<?> notificar(@RequestParam("mensaje") String mensaje,
+			@RequestParam("subTipoPrueba") Integer subTipoPrueba)
+			throws MessagingException, DataException, PSQLException {
+
+		Optional<PruebaDetalle> pp = pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba,
+				periodoAcademicoRepository.getPAActive());
+
 		if (pp.isPresent() && (pp.get().getEstado().equalsIgnoreCase("ACTIVO")
 				|| pp.get().getEstado().equalsIgnoreCase("INICIO"))) {
-			objService.notificar(mensaje);
-			// objService.onInitResultado(objService.getPostulantesValidos(), modulo,
-			// prueba);
 
-			Prueba p = new Prueba();
-			p = pp.get();
-			p.setEstado("NOTIFICACIÓN");
-			pruebaServiceImpl.update(p);
+			try {
+				objService.notificar(mensaje, pp.get().getDescripcionPrueba(), pp.get().getFechaInicio(),
+						pp.get().getFechaFin(), pp.get().getHora(), pp.get().getCodSubtipoPrueba());
 
-			return response(HttpStatus.OK, EMAIL_SEND);
+				PruebaDetalle p = new PruebaDetalle();
+				p = pp.get();
+				p.setEstado(NOTIFICACION);
+				pruebaDetalleServiceImpl.update(p);
+
+				return response(HttpStatus.OK, EMAIL_SEND);
+
+			} catch (Exception ex) {
+				return response(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+			}
 		} else
 			return response(HttpStatus.BAD_REQUEST, ESTADO_INCORRECTO);
 	}
 
 	@GetMapping("/paginado")
-	public ResponseEntity<?> listarDatos(Pageable pageable) {
+	public ResponseEntity<?> listarDatos(Pageable pageable, @RequestParam("subTipoPrueba") Integer subTipoPrueba) {
 		try {
-			return ResponseEntity.status(HttpStatus.OK).body(objService.getAllPaginado(pageable));
+			return ResponseEntity.status(HttpStatus.OK).body(objService.getAllPaginado(pageable, subTipoPrueba));
 		} catch (Exception e) {
 			return response(HttpStatus.NOT_FOUND, ERROR_REGISTRO);
 		}
@@ -100,8 +110,9 @@ public class PruebasForResource {
 	// {
 	public ResponseEntity<?> update(@RequestBody ResultadoPruebas obj) {
 		return (ResponseEntity<ResultadoPruebas>) resultadoPruebasServiceImpl
-				.getByCodPostulanteAndPrueba(obj.getCodPostulante(), obj.getCodPrueba()).map(datosGuardados -> {
-					datosGuardados.setResultado(obj.getResultado());
+				.getByCodPostulanteAndCodPruebaDetalle(obj.getCodPostulante(), obj.getCodPruebaDetalle())
+				.map(datosGuardados -> {
+					datosGuardados.setNotaPromedioFinal(obj.getNotaPromedioFinal());
 					datosGuardados.setCumplePrueba(obj.getCumplePrueba());
 
 					ResultadoPruebas datosActualizados = null;
@@ -142,13 +153,44 @@ public class PruebasForResource {
 				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file);
 	}
 
+	@GetMapping("/generarArchivos")
+	public ResponseEntity<?> generarArchivos(HttpServletResponse response, @RequestParam("nombre") String nombre,
+			Integer subTipoPrueba) throws DataException, DocumentException {
+		try {
+			Optional<PruebaDetalle> pp = pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba, periodoAcademicoRepository.getPAActive());
+
+			if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
+				throw new DataException(ESTADO_INVALIDO);
+			} else {
+				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
+						+ periodoAcademicoRepository.getPAActive().toString() + "/" + nombre;
+
+				resultadoPruebasServiceImpl.generarExcel(ruta + ".xlsx", nombre, subTipoPrueba);
+				resultadoPruebasServiceImpl.generarPDF(response, ruta + ".pdf", nombre, subTipoPrueba);
+
+				PruebaDetalle p = new PruebaDetalle();
+				p = pp.get();
+				p.setEstado("CIERRE");
+
+				pruebaDetalleServiceImpl.save(p);
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("error: " + e.getMessage());
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+	}
+
 	@GetMapping("/generarExcel")
-	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre) {
+	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, Integer subTipoPrueba)
+			throws DataException {
 		try {
 			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
 					+ "/" + nombre;
 
-			resultadoPruebasServiceImpl.generarExcel(ruta, nombre);
+			resultadoPruebasServiceImpl.generarExcel(ruta, nombre, subTipoPrueba);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("error: " + e.getMessage());
@@ -158,12 +200,15 @@ public class PruebasForResource {
 	}
 
 	@GetMapping("/generarPDF")
-	public ResponseEntity<?> generarPDF(HttpServletResponse response, @RequestParam("nombre") String nombre)
-			throws DocumentException, IOException {
+	public ResponseEntity<?> generarPDF(HttpServletResponse response, @RequestParam("nombre") String nombre,
+			Integer subTipoPrueba) throws DocumentException, IOException, DataException {
 
 		try {
-			resultadoPruebasServiceImpl.generarPDF(response, nombre);
-			
+			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
+					+ "/" + nombre;
+
+			resultadoPruebasServiceImpl.generarPDF(response, ruta, nombre, subTipoPrueba);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("error: " + e.getMessage());

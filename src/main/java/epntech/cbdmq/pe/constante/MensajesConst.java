@@ -31,6 +31,7 @@ public class MensajesConst {
 	public static final String ERROR_REGISTRO = "Se presentó un problema al realizar la transacción";
 	public static final String POSTULANTE_ASIGNADO = "El postulante ya está asignado a un usuario";
 	public static final String ESTADO_INVALIDO = "El estado no corresponde o es inválido.";
+	public static final String ORDEN_INCORRECTO = "No existen un orden correcto de los registros";
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";

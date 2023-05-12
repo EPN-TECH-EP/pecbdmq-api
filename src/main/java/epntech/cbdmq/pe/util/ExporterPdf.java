@@ -2,6 +2,7 @@
 package epntech.cbdmq.pe.util;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class ExporterPdf {
 		estilo.setFont(fuente);
 
 		for (int i = 0; i < lista.size(); i++) {
-			System.out.println("valor " + lista.get(i).get(i));
+			//System.out.println("valor " + lista.get(i).get(i));
 			Row fila = hoja.createRow(nueroFilas++);
 
 			for (int j = 0; j < lista.get(i).size(); j++) {
@@ -105,6 +106,10 @@ public class ExporterPdf {
 	
 	public void exportar(HttpServletResponse response, String[] columnas, ArrayList<ArrayList<String>> lista, float[] widths, String filePath)
 			throws DocumentException, IOException {
+		
+		File file = new File(filePath);
+        file.getParentFile().mkdirs();
+        
 		Document documento = new Document(PageSize.A4);
 		PdfWriter.getInstance(documento, new FileOutputStream(filePath));
 
