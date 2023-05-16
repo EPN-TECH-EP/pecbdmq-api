@@ -27,4 +27,6 @@ public interface EstudianteService {
 
 	List<EstudianteDatos> findAllEstudiante();
 
+	List<?> findPeriodosAcademicos(Integer id, Pageable pageable);
+
 }

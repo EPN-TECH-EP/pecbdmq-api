@@ -89,4 +89,9 @@ public class EstudianteResource {
 	public List<EstudianteDatos> listarAll() {
 		return objService.findAllEstudiante();
 	}
+
+	@PostMapping("/listarPeriodosFormacion")
+	public List<?> listarAll(@RequestParam("estudiante")Integer estudiante, Pageable pageable) {
+		return objService.findPeriodosAcademicos(estudiante, pageable);
+	}
 }

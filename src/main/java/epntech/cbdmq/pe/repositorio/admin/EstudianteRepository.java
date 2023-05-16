@@ -10,14 +10,20 @@ import org.springframework.data.jpa.repository.Query;
 
 import epntech.cbdmq.pe.dominio.admin.Estudiante;
 import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
+import org.springframework.data.repository.query.Param;
 
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
 
 	Optional<Estudiante> findByidEstudiante(String id);
-	
+
 	@Query(nativeQuery = true)
 	List<EstudianteDatos> findAllEstudiante();
 
 	@Query(nativeQuery = true)
 	Page<EstudianteDatos> findAllEstudiante(Pageable pageable);
+
+	/* Historico
+	 */
+	@Query(value = "select gme.codperiodoAcademico.codigo, gme.codperiodoAcademico.descripcion from Estudiante ge left join gen_modulo gmod on gmod.cod_modulo =ge.codModulo  left join MateriaEstudiante gme on gme.estudiante.codEstudiante=ge.codEstudiante where gmod.cod_modulo=1 and ge.codEstudiante=:codEstudiante group by gme.codperiodoAcademico.codigo")
+	List<?> findPeriodos(@Param("codEstudiante") Integer codEstudiante, Pageable pageable);
 }

@@ -68,5 +68,10 @@ public class EstudianteServiceImpl implements EstudianteService {
 		return this.repo.findAllEstudiante();
 	}
 
-	
+	@Override
+	public List<?> findPeriodosAcademicos(Integer id, Pageable pageable) {
+		return this.repo.findPeriodos(id, pageable);
+	}
+
+
 }
