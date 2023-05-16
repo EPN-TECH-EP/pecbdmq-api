@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.servicio.impl;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,9 +70,14 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}
 
 	@Override
+	public List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable) {
+		return this.repo.getHistoricos(codEstudiante, pageable);
+	}
+/*
+	@Override
 	public List<?> findPeriodosAcademicos(Integer id, Pageable pageable) {
 		return this.repo.findPeriodos(id, pageable);
-	}
+	}*/
 
 
 }

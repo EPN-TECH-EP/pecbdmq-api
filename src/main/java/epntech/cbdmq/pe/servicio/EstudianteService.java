@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.servicio;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,7 +27,10 @@ public interface EstudianteService {
 	Page<EstudianteDatos> getAllEstudiante(Pageable pageable) throws Exception;
 
 	List<EstudianteDatos> findAllEstudiante();
-
+/*
 	List<?> findPeriodosAcademicos(Integer id, Pageable pageable);
+
+ */
+	List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
 
 }
