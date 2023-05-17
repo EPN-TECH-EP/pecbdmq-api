@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class DatoPersonal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen_dato_personal_cod_datos_personales_seq")
+	@SequenceGenerator(name = "gen_dato_personal_cod_datos_personales_seq", sequenceName = "gen_dato_personal_cod_datos_personales_seq", allocationSize = 1)
 	@Column(name = "cod_datos_personales")
 	private Integer cod_datos_personales;
 	@Column(name = "apellido")

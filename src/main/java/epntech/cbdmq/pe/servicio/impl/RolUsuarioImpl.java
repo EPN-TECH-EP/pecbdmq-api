@@ -34,6 +34,11 @@ public class RolUsuarioImpl implements RolUsuarioService {
 	}
 
 	@Override
+	public List<RolUsuario> getAllByRol(Long codRol) {
+		return this.rolUsuarioRepository.findByCodRol(codRol);
+	}
+
+	@Override
 	public RolUsuario save(RolUsuario obj) throws DataException {
 		return this.rolUsuarioRepository.save(obj);
 	}
@@ -64,18 +69,23 @@ public class RolUsuarioImpl implements RolUsuarioService {
 	}
 
 	@Override
-	public void deleteAndSave(Iterable<RolUsuario> entities) {
-		
-		// primero, eliminar todas las entidades asociadas al usuario
-				if (entities != null && entities.iterator().hasNext()) {
-					RolUsuario mr = entities.iterator().next();
-					
-					this.deleteAllByRolUsuarioId_codUsuario(mr.getRolUsuarioId().getCodUsuario());
-					
-					// luego, registrar la configuración recibida en la lista
-					this.saveAll(entities);
-					
-				}
+	public void deleteAndSave(Iterable<RolUsuario> entities, Long codUsuario) {
+
+		// si hay elementos en la lista, eliminar todas las entidades asociadas al
+		// usuario
+		if (entities != null && entities.iterator().hasNext()) {
+			RolUsuario mr = entities.iterator().next();
+
+			this.deleteAllByRolUsuarioId_codUsuario(mr.getRolUsuarioId().getCodUsuario());
+
+			// luego, registrar la configuración recibida en la lista
+			this.saveAll(entities);
+
+		}
+		// si la lista está vacía, solo elimina los roles
+		else {
+			this.deleteAllByRolUsuarioId_codUsuario(codUsuario);
+		}
 
 	}
 

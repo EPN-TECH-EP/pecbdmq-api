@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.NullHandling;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,9 +15,9 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface MenuRepository extends JpaRepository<Menu, Integer> {
 	
-	public static Sort defaultSort = Sort.by(Sort.Direction.ASC, "orden");
+	public static Sort defaultSort = Sort.by(Sort.Order.asc("menuPadre").with(NullHandling.NULLS_FIRST) /*, Sort.Order.asc("orden")*/);
 
-	Menu findMenuByEtiqueta(String etiqueta)throws DataException;
+	Menu findMenuByEtiquetaIgnoreCase(String etiqueta)throws DataException;
 	
 	Optional<Menu> getById(int id);
 	

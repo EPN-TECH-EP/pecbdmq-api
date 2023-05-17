@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Canton;
+import epntech.cbdmq.pe.dominio.admin.CantonProjection;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.CantonServiceImpl;
 
@@ -35,7 +36,7 @@ public class CantonResource {
 	}
 	
 	@GetMapping("/provincia/{id}")
-	public List<Canton> obtenerPorProvinciaId(@PathVariable("id") int codigo) {
+	public List<CantonProjection> obtenerPorProvinciaId(@PathVariable("id") int codigo) {
 		return objService.getAllByCodProvinciaId(codigo);
 	}
 

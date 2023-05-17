@@ -30,6 +30,27 @@ public class Provincia {
 	private String estado;
 
     
-	@OneToMany(mappedBy="codProvincia")
+	@OneToMany(mappedBy="codProvincia"/*, fetch = FetchType.LAZY*/)
     private Set<Canton> cantones;
+
+
+	public Provincia(Integer codigo, String nombre, String estado) {
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.estado = estado;
+	}
+	
+	public Provincia(Integer codigo, String nombre, String estado, Set<Canton> cantones) {
+	    this.codigo = codigo;
+	    this.nombre = nombre;
+	    this.estado = estado;
+	    this.cantones = cantones;
+	}
+
+	public Provincia() {
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	
 }

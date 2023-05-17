@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
+import epntech.cbdmq.pe.dominio.admin.ProvinciaProjection;
 import epntech.cbdmq.pe.dominio.util.Excel;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
@@ -42,9 +43,14 @@ public class ProvinciaResource {
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 
-	@GetMapping("/listar")
+	/*@GetMapping("/listar")
 	public List<Provincia> listar() {
 		return objService.getAll();
+	}*/
+	
+	@GetMapping("/listar")
+	public List<ProvinciaProjection> listar() {
+		return objService.findAllParentEntities();
 	}
 
 	@GetMapping("/{id}")

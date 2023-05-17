@@ -1,12 +1,12 @@
 package epntech.cbdmq.pe.excepcion;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -20,6 +20,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -199,5 +201,18 @@ public class GestorExcepciones implements ErrorController {
 		LOGGER.error(exception.getMessage());
 		return createHttpResponse(BAD_REQUEST, ERROR_ENVIO_EMAIL);
 	}
+	
+	@ExceptionHandler(MailSendException.class)
+	public ResponseEntity<HttpResponse> mailSendException(MailSendException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, ERROR_ENVIO_EMAIL);
+	}
+	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<HttpResponse> messageNotReadableException(HttpMessageNotReadableException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, "Dato inválido - Revise el formato");
+	}
+	
 }
 

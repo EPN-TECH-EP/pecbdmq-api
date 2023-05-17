@@ -39,6 +39,7 @@ public class Usuario implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen_usuario_cod_usuario_seq")
+	@SequenceGenerator(name = "gen_usuario_cod_usuario_seq", sequenceName = "gen_usuario_cod_usuario_seq", allocationSize = 1)
 	@Column(nullable = false, updatable = false)
 	//@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Long codUsuario;

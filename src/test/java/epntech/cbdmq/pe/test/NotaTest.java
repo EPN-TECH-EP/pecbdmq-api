@@ -1,15 +1,12 @@
 package epntech.cbdmq.pe.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
 
 import epntech.cbdmq.pe.dominio.admin.Notas;
 import epntech.cbdmq.pe.repositorio.admin.NotaRepository;
@@ -41,8 +37,8 @@ public class NotaTest {
 	@Order(1)
 	void testGuardar() {
 		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	        Date date = java.sql.Date.valueOf(LocalDate.parse("2029-01-01", formatter));
-        
+	        LocalDateTime date = LocalDateTime.parse("2029-01-01", formatter);
+	        
 		Notas obj = new Notas();
 		obj.setCod_nota_formacion(1);
 		obj.setFechacreanota(date);
@@ -60,8 +56,8 @@ public class NotaTest {
 	@Test
 	@Order(2)
 	public void testBuscar() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        Date date = java.sql.Date.valueOf(LocalDate.parse("2029-01-01", formatter));
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	        LocalDateTime date = LocalDateTime.parse("2029-01-01", formatter);
 
         
         Notas obj = new Notas();

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Canton;
+import epntech.cbdmq.pe.dominio.admin.CantonProjection;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface CantonService {
@@ -18,5 +19,5 @@ public interface CantonService {
 
 	//void delete(int id) throws DataException;
 	
-	List<Canton> getAllByCodProvinciaId(int id);
+	List<CantonProjection> getAllByCodProvinciaId(int id);
 }

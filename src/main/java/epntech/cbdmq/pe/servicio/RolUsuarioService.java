@@ -10,6 +10,8 @@ public interface RolUsuarioService {
 	List<RolUsuario> getAll();
 
 	List<RolUsuario> getAllByUsuario(Long codUsuario);
+	
+	List<RolUsuario> getAllByRol(Long codRol);
 
 	RolUsuario save(RolUsuario obj) throws DataException;
 
@@ -21,5 +23,5 @@ public interface RolUsuarioService {
 
 	List<RolUsuario> saveAll(Iterable<RolUsuario> entities);
 	
-	void deleteAndSave(Iterable<RolUsuario> entities);
+	void deleteAndSave(Iterable<RolUsuario> entities, Long codUsuario);
 }
