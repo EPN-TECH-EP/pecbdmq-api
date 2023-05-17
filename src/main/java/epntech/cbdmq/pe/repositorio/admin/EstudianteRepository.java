@@ -3,8 +3,8 @@ package epntech.cbdmq.pe.repositorio.admin;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
-import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,5 +32,8 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 }
 	 */
 	@Query(nativeQuery = true, name = "FormacionEstudiante.findHistorico")
-	List<FormacionEstudiante> getHistoricos(@Param("codUnico") String codUnico, Pageable pageable);
+	List<FormacionEstudiante> getForHistoricos(@Param("codUnico") String codUnico, Pageable pageable);
+
+	@Query(nativeQuery = true, name = "EspecializacionEstudiante.findHistorico")
+	List<EspecializacionEstudiante> getEspHistoricos(@Param("codUnico") String codUnico, Pageable pageable);
 }

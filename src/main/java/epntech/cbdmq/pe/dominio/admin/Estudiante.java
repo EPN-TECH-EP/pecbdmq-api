@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.dominio.admin;
 
 import java.io.Serializable;
 
+import epntech.cbdmq.pe.dominio.util.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
 import org.hibernate.annotations.NamedNativeQuery;
 import org.hibernate.annotations.ResultCheckStyle;
@@ -62,6 +63,51 @@ import lombok.Data;
 					@ColumnResult(name = "nota_final_formacion"),
 					@ColumnResult(name = "resultado")
 					}))
+@NamedNativeQuery(name = "EspecializacionEstudiante.findHistorico",
+		query ="select \n" +
+				"etc.nombre_tipo_curso as \"Tipo Curso\"\n" +
+				",ecc.nombre_catalogo_curso as \"NombredelCurso\"\n" +
+				",ec.nota_minima as \"NotaMinima\"\n" +
+				",ec.fecha_inicio_curso as \"inicio\"\n" +
+				",ec.fecha_fin_curso as \"fin\"\n" +
+				",ec.estado_proceso as \"estado\"\n" +
+				",ene.usuario_mod_nota as \"calificador\" \n" +
+				",ene.nota_final_especializacion as \"NotaFinal\"\n" +
+				",ene.resultado as \"NotaResultado\"\n" +
+				",gti.nombre_tipo_instructor as \"TipoInstructor\"\n" +
+				",gdp2.apellido || gdp2.nombre  as \"Instructor\" \n" +
+				",ga.nombre_aula as \"Aula\"\n" +
+				"from {h-schema}esp_nota_especializacion ene \n" +
+				"left join {h-schema}esp_curso ec on ene.cod_curso_especializacion=ec.cod_curso_especializacion\n" +
+				"left join {h-schema}gen_estudiante ge on ge.cod_estudiante =ene.cod_estudiante\n" +
+				"left join {h-schema}gen_instructor gi on gi.cod_instructor =ec.cod_instructor\n" +
+				"left join {h-schema}gen_unidad_gestion gug on gug.cod_unidad_gestion =ec.cod_unidad_gestion  \n" +
+				"left join {h-schema}gen_aula ga on ga.cod_aula =ec.cod_aula \n" +
+				"left join {h-schema}esp_catalogo_cursos ecc on ecc.cod_catalogo_cursos =ec.cod_catalogo_cursos \n" +
+				"left join {h-schema}esp_tipo_curso etc  on etc.cod_tipo_curso =ec.cod_tipo_curso \n" +
+				"left join {h-schema}esp_curso_instructor eci on eci.cod_curso_especializacion =ec.cod_curso_especializacion and eci.cod_instructor =gi.cod_instructor \n" +
+				"left join {h-schema}gen_tipo_instructor gti on gti.cod_tipo_instructor =eci.cod_tipo_instructor  \n" +
+				"left join {h-schema}gen_dato_personal gdp2 on gdp2.cod_datos_personales =gi.cod_datos_personales \n" +
+				"where ge.codigo_unico_estudiante = :codUnico\n"
+		,
+		resultSetMapping = "EspecializacionEstudiante."
+)
+
+@SqlResultSetMapping(name = "EspecializacionEstudiante", classes = @ConstructorResult(targetClass = EspecializacionEstudiante.class, columns = {
+		@ColumnResult(name = "Tipo Curso"),
+		@ColumnResult(name = "NombredelCurso"),
+		@ColumnResult(name = "NotaMinima"),
+		@ColumnResult(name = "inicio"),
+		@ColumnResult(name = "fin"),
+		@ColumnResult(name = "estado"),
+		@ColumnResult(name = "calificador"),
+		@ColumnResult(name = "NotaFinal"),
+		@ColumnResult(name = "NotaResultado"),
+		@ColumnResult(name = "TipoInstructor"),
+		@ColumnResult(name = "Instructor"),
+		@ColumnResult(name = "Aula"),
+}))
+
 
 
 

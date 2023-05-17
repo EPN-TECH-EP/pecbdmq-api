@@ -4,6 +4,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -87,13 +88,16 @@ public class EstudianteResource {
 	}
 	
 	@GetMapping("/listardatos")
-	public List<EstudianteDatos> listarAll() {
+	public List<EstudianteDatos> listarFormHistorico() {
 		return objService.findAllEstudiante();
 	}
 
-	@PostMapping("/listarHistorico")
-	public List<FormacionEstudiante> listarAll(@RequestParam("estudiante")String codEstudiante, Pageable pageable) {
+	@PostMapping("/listarFormHistorico")
+	public List<FormacionEstudiante> listarFormHistorico(@RequestParam("estudiante")String codEstudiante, Pageable pageable) {
 		return objService.getHistoricos(codEstudiante, pageable);
 	}
-
+	@PostMapping("/listarEspHistorico")
+	public List<EspecializacionEstudiante> listarEspHistorico(@RequestParam("estudiante")String codEstudiante, Pageable pageable) {
+		return objService.getEspecializacionHistoricos(codEstudiante, pageable);
+	}
 }
