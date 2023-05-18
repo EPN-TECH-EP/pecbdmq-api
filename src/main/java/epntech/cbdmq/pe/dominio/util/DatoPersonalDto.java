@@ -11,6 +11,9 @@ public class DatoPersonalDto {
     private String cedula;
     private String nombre;
     private String apellido;
+    private int estudiante;
+    private int funcionario;
+    private int instructor;
     private Date fecha_nacimiento;
     private String tipo_sangre;
     private String tipo_nacionalidad;
@@ -33,6 +36,7 @@ public class DatoPersonalDto {
     private Boolean tiene_merito_academico;
     private String merito_deportivo_descripcion;
     private String merito_academico_descripcion;
+    private String modulo;
     private String cargo;
     private String rango;
     private String grado;
@@ -40,10 +44,13 @@ public class DatoPersonalDto {
     public DatoPersonalDto() {
     }
 
-    public DatoPersonalDto(String cedula, String nombre, String apellido, Date fecha_nacimiento, String tipo_sangre, String tipo_nacionalidad, String correo_personal, String correo_institucional, String provincia_nacimiento, String canton_nacimiento, String provincia_residencia, String canton_residencia, String num_telef_convencional, String num_telef_celular, String calle_principal_residencia, String calle_secundaria_residencia, String numero_casa, String colegio, String nombre_titulo, String pais_titulo, String ciudad_titulo, Boolean tiene_merito_deportivo, Boolean tiene_merito_academico, String merito_deportivo_descripcion, String merito_academico_descripcion, String cargo, String rango, String grado) {
+    public DatoPersonalDto(String cedula, String nombre, String apellido, int estudiante, int funcionario, int instructor, Date fecha_nacimiento, String tipo_sangre, String tipo_nacionalidad, String correo_personal, String correo_institucional, String provincia_nacimiento, String canton_nacimiento, String provincia_residencia, String canton_residencia, String num_telef_convencional, String num_telef_celular, String calle_principal_residencia, String calle_secundaria_residencia, String numero_casa, String colegio, String nombre_titulo, String pais_titulo, String ciudad_titulo, Boolean tiene_merito_deportivo, Boolean tiene_merito_academico, String merito_deportivo_descripcion, String merito_academico_descripcion, String modulo, String cargo, String rango, String grado) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.estudiante = estudiante;
+        this.funcionario = funcionario;
+        this.instructor = instructor;
         this.fecha_nacimiento = fecha_nacimiento;
         this.tipo_sangre = tipo_sangre;
         this.tipo_nacionalidad = tipo_nacionalidad;
@@ -66,6 +73,7 @@ public class DatoPersonalDto {
         this.tiene_merito_academico = tiene_merito_academico;
         this.merito_deportivo_descripcion = merito_deportivo_descripcion;
         this.merito_academico_descripcion = merito_academico_descripcion;
+        this.modulo = modulo;
         this.cargo = cargo;
         this.rango = rango;
         this.grado = grado;

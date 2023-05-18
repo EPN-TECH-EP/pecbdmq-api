@@ -17,21 +17,33 @@ import org.hibernate.annotations.SQLDelete;
 //@Where(clause = "estado <> 'ELIMINADO'")
 
 @NamedNativeQuery(name = "DatoPersonalDto.informacionDetallada",
-			query = "select gdp.cedula,gdp.nombre,gdp.apellido,gdp.fecha_nacimiento,gdp.tipo_sangre,gdp.tipo_nacionalidad,gdp.correo_personal,gdp.correo_institucional,gpn.nombre as \"provincia_nacimiento\",gcn.nombre as \"canton_nacimiento\",gpr.nombre as \"provincia_residencia\",gcr.nombre as \"canton_residencia\",gdp.num_telef_convencional,gdp.num_telef_celular,gdp.calle_principal_residencia,gdp.calle_secundaria_residencia,gdp.numero_casa,gdp.colegio,gdp.nombre_titulo,gdp.pais_titulo,gdp.ciudad_titulo,gdp.tiene_merito_deportivo,gdp.tiene_merito_academico,gdp.merito_deportivo_descripcion,gdp.merito_academico_descripcion,cg.nombre_cargo as Cargo,rg.nombre_rango as Rango,gd.nombre_grado as Grado\n" +
-					"from cbdmq.gen_dato_personal gdp \n" +
+			query = "select gdp.cedula,gdp.nombre,gdp.apellido," +
+					"case when ge.cod_datos_personales is not null then 1 else 0 end as \"Estudiante\"\n" +
+					",case when gf.cod_datos_personales is not null then 1 else 0 end as \"Funcionario\"\n" +
+					",case when gi.cod_datos_personales is not null then 1 else 0 end as \"Instructor\"" +
+					",gdp.fecha_nacimiento,gdp.tipo_sangre,gdp.tipo_nacionalidad,gdp.correo_personal,gdp.correo_institucional,gpn.nombre as \"provincia_nacimiento\",gcn.nombre as \"canton_nacimiento\",gpr.nombre as \"provincia_residencia\",gcr.nombre as \"canton_residencia\",gdp.num_telef_convencional,gdp.num_telef_celular,gdp.calle_principal_residencia,gdp.calle_secundaria_residencia,gdp.numero_casa,gdp.colegio,gdp.nombre_titulo,gdp.pais_titulo,gdp.ciudad_titulo,gdp.tiene_merito_deportivo,gdp.tiene_merito_academico,gdp.merito_deportivo_descripcion,gdp.merito_academico_descripcion,gm.descripcion as \"modulo\",cg.nombre_cargo as Cargo,rg.nombre_rango as Rango,gd.nombre_grado as Grado\n" +
+					"from cbdmq.gen_estudiante ge\n" +
+					"left join cbdmq.gen_dato_personal gdp on ge.cod_datos_personales =gdp.cod_datos_personales \n" +
 					"left join cbdmq.gen_provincia gpn on gpn.cod_provincia =gdp.cod_provincia_nacimiento \n" +
 					"left join cbdmq.gen_provincia gpr on gpr.cod_provincia =gdp.cod_provincia_residencia  \n" +
 					"left join cbdmq.gen_canton gcn on gcn.cod_canton=gdp.cod_canton_nacimiento\n" +
 					"left join cbdmq.gen_canton gcr on gcr.cod_canton=gdp.cod_canton_residencia\n" +
 					"left join cbdmq.gen_cargo cg on cg.cod_cargo=gdp.cod_cargo \n" +
 					"left join cbdmq.gen_rango rg on rg.cod_rango=gdp.cod_rango \n" +
-					"left join cbdmq.gen_grado gd on gd.cod_grado=gdp.cod_grado where gdp.cedula =:cedula",
+					"left join cbdmq.gen_grado gd on gd.cod_grado=gdp.cod_grado \n" +
+					"left join cbdmq.gen_modulo gm on gm.cod_modulo =ge.cod_modulo \n" +
+					"left join cbdmq.gen_funcionario gf on gf.cod_datos_personales =gdp.cod_datos_personales \n" +
+					"left join cbdmq.gen_instructor gi on gi.cod_datos_personales =gdp.cod_datos_personales\n" +
+					"where gdp.cedula =:cedula",
 		resultSetMapping = "DatoPersonalDto"
 )
 @SqlResultSetMapping(name = "DatoPersonalDto", classes = @ConstructorResult(targetClass = DatoPersonalDto.class, columns = {
 		@ColumnResult(name = "cedula"),
 		@ColumnResult(name = "nombre"),
 		@ColumnResult(name = "apellido"),
+		@ColumnResult(name = "Estudiante"),
+		@ColumnResult(name = "Funcionario"),
+		@ColumnResult(name = "Instructor"),
 		@ColumnResult(name = "fecha_nacimiento"),
 		@ColumnResult(name = "tipo_sangre"),
 		@ColumnResult(name = "tipo_nacionalidad"),
@@ -54,6 +66,7 @@ import org.hibernate.annotations.SQLDelete;
 		@ColumnResult(name = "tiene_merito_academico"),
 		@ColumnResult(name = "merito_deportivo_descripcion"),
 		@ColumnResult(name = "merito_academico_descripcion"),
+		@ColumnResult(name = "modulo"),
 		@ColumnResult(name = "cargo"),
 		@ColumnResult(name = "rango"),
 		@ColumnResult(name = "grado"),

@@ -91,7 +91,7 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 	}
 
 	@Override
-	public List<DatoPersonalDto> datosPersonalePersonalizado(String cedula) {
+	public DatoPersonalDto datosPersonalePersonalizado(String cedula) {
 		return repo.buscarInformaciónPersonalizada(cedula);
 	}
 
