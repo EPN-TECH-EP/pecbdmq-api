@@ -1,6 +1,8 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.FormacionConst.*;
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_PERIODO_ACTIVO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +29,13 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
 
 	@Override
-	public void saveAll(List<NotasFormacion> lista) {
+	public void saveAll(List<NotasFormacion> lista) throws DataException {
 		NotasFormacion nn = new NotasFormacion();
 		List<NotasFormacion> listaNotasFormacion = new ArrayList<>();
-		int periodo = periodoAcademicoRepository.getPAActive();
+		Integer periodo = periodoAcademicoRepository.getPAActive();
+		if(periodo == null)
+			throw new DataException(NO_PERIODO_ACTIVO);
+		
 		Integer i = 0; 
 		for (NotasFormacion notasFormacion : lista) {
 			nn = lista.get(i);

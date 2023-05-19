@@ -8,7 +8,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface NotasFormacionService {
 
-	void saveAll(List<NotasFormacion> lista);
+	void saveAll(List<NotasFormacion> lista) throws DataException ;
 	
 	List<NotasFormacion> getByEstudiante(int id);
 	
