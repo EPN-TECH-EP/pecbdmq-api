@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.servicio.ProvinciaService;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
+import epntech.cbdmq.pe.dominio.admin.ProvinciaProjection;
 import epntech.cbdmq.pe.dominio.util.Excel;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
@@ -42,6 +43,12 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+	
+	@Override
+    public List<ProvinciaProjection> findAllParentEntities(){
+		return this.repo.findAllParentEntities();
+	}
+
 
 	@Override
 	public Optional<Provincia> getById(int id) {

@@ -29,7 +29,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -38,6 +41,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -78,7 +83,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
 
-	@Value("${spring.servlet.multipart.max-file-size}")	
+	@Value("${spring.servlet.multipart.max-file-size}")
 	public DataSize TAMAÑO_MÁXIMO;
 
 	@Autowired
@@ -150,40 +155,95 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role,
-			boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
-			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-		validateNewUsernameAndEmail(EMPTY, username, email);
-		Usuario user = new Usuario();
+	public Optional<Usuario> getById(Long codigo) {
+
+		// TODO Auto-generated method stub
+		return userRepository.findById(codigo);
+
+	}
+
+	@Override
+	public Usuario crear(Usuario usuario)
+			throws NombreUsuarioExisteExcepcion,
+			EmailExisteExcepcion, IOException, UsuarioNoEncontradoExcepcion, MessagingException {
+		
+		validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(),
+				usuario.getCodDatosPersonales().getCorreo_personal());
+
 		String password = generatePassword();
-		// user.setUserId(generateUserId());
-		// user.setNombres(firstName);
-		// user.setApellidos(lastName);
+		
+		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
+				usuario.getCodDatosPersonales().getCorreo_personal());
+		
+		// datos de usuario
+		Usuario user = new Usuario();
+		
+		user.setNombreUsuario(usuario.getNombreUsuario());
 		user.setFechaRegistro(new Date());
-		user.setNombreUsuario(username);
-		// user.setEmail(email);
-		// user.setPassword(encodePassword(password));
-		user.setActive(isActive);
-		user.setNotLocked(isNonLocked);
-		// user.setUrlImagenPerfil(getTemporaryProfileImageUrl(username));
+		user.setClave(encodePassword(password));
+		user.setActive(true);
+		user.setNotLocked(true);
+
+		// datos personales
+		DatoPersonal datosRecibidos = usuario.getCodDatosPersonales();
+		DatoPersonal datos = new DatoPersonal();
+
+		datos.setApellido(datosRecibidos.getApellido());
+		datos.setCedula(datosRecibidos.getCedula());
+		datos.setCod_estacion(datosRecibidos.getCod_estacion());
+		datos.setCorreo_personal(datosRecibidos.getCorreo_personal());
+		datos.setEstado(datosRecibidos.getEstado());
+		datos.setFecha_nacimiento(datosRecibidos.getFecha_nacimiento());
+		datos.setNombre(datosRecibidos.getNombre());
+		datos.setNum_telef_convencional(datosRecibidos.getNum_telef_convencional());
+		datos.setTipo_sangre(datosRecibidos.getTipo_sangre());
+		datos.setValidacion_correo(datosRecibidos.getValidacion_correo());
+		datos.setCod_provincia_nacimiento(datosRecibidos.getCod_provincia_nacimiento());
+		datos.setCod_unidad_gestion(datosRecibidos.getCod_unidad_gestion());
+		datos.setGenero(datosRecibidos.getGenero());
+		datos.setNum_telef_celular(datosRecibidos.getNum_telef_celular());
+		datos.setReside_pais(datosRecibidos.getReside_pais());
+		datos.setCod_provincia_residencia(datosRecibidos.getCod_provincia_residencia());
+		datos.setCalle_principal_residencia(datosRecibidos.getCalle_principal_residencia());
+		datos.setCalle_secundaria_residencia(datosRecibidos.getCalle_secundaria_residencia());
+		datos.setNumero_casa(datosRecibidos.getNumero_casa());
+		datos.setColegio(datosRecibidos.getColegio());
+		datos.setTipo_nacionalidad(datosRecibidos.getTipo_nacionalidad());
+		datos.setTiene_merito_deportivo(datosRecibidos.getTiene_merito_deportivo());
+		datos.setTiene_merito_academico(datosRecibidos.getTiene_merito_academico());
+		datos.setNombre_titulo(datosRecibidos.getNombre_titulo());
+		datos.setPais_titulo(datosRecibidos.getPais_titulo());
+		datos.setCiudad_titulo(datosRecibidos.getCiudad_titulo());
+		datos.setMerito_deportivo_descripcion(datosRecibidos.getMerito_deportivo_descripcion());
+		datos.setMerito_academico_descripcion(datosRecibidos.getMerito_academico_descripcion());
+		datos.setCorreo_institucional(datosRecibidos.getCorreo_institucional());
+		datos.setCod_cargo(datosRecibidos.getCod_cargo());
+		datos.setCod_rango(datosRecibidos.getCod_rango());
+		datos.setCod_grado(datosRecibidos.getCod_grado());
+		datos.setCod_canton_nacimiento(datosRecibidos.getCod_canton_nacimiento());
+		datos.setCod_canton_residencia(datosRecibidos.getCod_canton_residencia());
+
+		// asocia datos personales con usuario
+		user.setCodDatosPersonales(datos);
+
 		userRepository.save(user);
-		// saveProfileImage(user, profileImage);
-		// TODO eliminar línea de log
-		LOGGER.info("New user password: " + password);
+
+		userRepository.flush();
+		
 		return user;
 	}
 
 	@Override
 	public Usuario actualizarUsuario(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
 			EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-		Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(), usuario.getCodDatosPersonales().getCorreo_personal());
-		
+		Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(),
+				usuario.getCodDatosPersonales().getCorreo_personal());
+
 		currentUser.setActive(usuario.isActive());
 		currentUser.setNotLocked(usuario.isNotLocked());
-		
-		
+
 		// TODO: validar campos actualizables
-		
+
 		// currentUser.setNombres(newFirstName);
 		// currentUser.setApellidos(newLastName);
 //		currentUser.setNombreUsuario(usuario);
@@ -192,27 +252,50 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 //		currentUser.setNotLocked(isNonLocked);
 		userRepository.save(currentUser);
 		// saveProfileImage(currentUser, profileImage);
-		
-		
-		//TODO: eliminar log
-		LOGGER.info("Actualizar usuario ejecutado");
-		
+
+		// TODO: eliminar log
+		// LOGGER.info("Actualizar usuario ejecutado");
+
 		return currentUser;
 	}
 
 	@Override
-	public void resetPassword(String email) throws MessagingException, EmailNoEncontradoExcepcion {
-		/*
-		 * Usuario user = userRepository.findUsuarioByEmail(email); if (user == null) {
-		 * throw new EmailNoEncontradoExcepcion(NO_EXISTE_USUARIO_EMAIL + email); }
-		 */
+	public int actualizarActive(Boolean active, String username) throws UsuarioNoEncontradoExcepcion,
+			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+		return userRepository.actualizarIsActive(active, username);
+	}
+
+	@Override
+	public int actualizarNotLock(Boolean notLock, String username) throws UsuarioNoEncontradoExcepcion,
+			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+		return userRepository.actualizarNotLocked(notLock, username);
+	}
+
+	@Override
+	public void resetPassword(String nombreUsuario) throws MessagingException, UsuarioNoEncontradoExcepcion {
+
+		Usuario usuario = userRepository.findUsuarioByNombreUsuario(nombreUsuario);
+		if (usuario == null) {
+			throw new UsuarioNoEncontradoExcepcion(NO_EXISTE_USUARIO + nombreUsuario);
+		}
+
 		String password = generatePassword();
-		// user.setPassword(encodePassword(password));
-		// userRepository.save(user);
-		// TODO eliminar línea de log
-		LOGGER.info("New user password: " + password);
-		// emailService.sendNewPasswordEmail(user.getNombres().concat("
-		// ").concat(user.getApellidos()), password, user.getEmail());
+		usuario.setClave(encodePassword(password));
+		userRepository.save(usuario);
+
+		// datos personales
+		DatoPersonal datos = usuario.getCodDatosPersonales();
+
+		// asocia datos personales con usuario
+		usuario.setCodDatosPersonales(datos);
+
+		userRepository.save(usuario);
+
+		userRepository.flush();
+
+		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
+				usuario.getCodDatosPersonales().getCorreo_personal());
+
 	}
 
 	@Override
@@ -227,6 +310,18 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public List<Usuario> getUsuarios() {
 		return userRepository.findAll();
+	}
+
+	@Override
+	public List<Usuario> getUsuariosPageable(Pageable pageable) {
+
+		return userRepository.findAllPageable(pageable);
+
+	}
+
+	@Override
+	public List<UsuarioDtoRead> getUsuariosPer(Pageable pageable) {
+		return userRepository.buscarUsuarioPersonalizado(pageable);
 	}
 
 	@Override
@@ -362,10 +457,24 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public long tamañoMáximoArchivo() {
 		return TAMAÑO_MÁXIMO.toBytes();
 	}
-	
-	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido){
+
+	public List<Usuario> findUsuariosByNombreApellido(String nombre, String apellido) {
 		return this.userRepository.findUsuariosByNombreApellido(nombre, apellido);
 	}
 
-}
+	@Override
+	public List<Usuario> findUsuariosByApellido(String apellido) {
+		return this.userRepository.findUsuariosByApellido(apellido);
+	}
 
+	@Override
+	public List<Usuario> findUsuariosByNombre(String nombre) {
+		return this.userRepository.findUsuariosByNombre(nombre);
+	}
+
+	@Override
+	public List<Usuario> findUsuariosByCorreo(String correo) {
+		return this.userRepository.findUsuariosByCorreo(correo);
+	}
+
+}

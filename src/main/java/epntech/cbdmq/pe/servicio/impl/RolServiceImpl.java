@@ -38,9 +38,10 @@ public class RolServiceImpl implements RolService{
 	@Override
 	public Rol save(Rol obj) throws DataException {
 		if (obj.getNombre().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
+			throw new DataException(REGISTRO_VACIO);		
+		
 		Optional<Rol> objGuardado = rolRepository.findByNombreIgnoreCase(obj.getNombre());
-		if (objGuardado.isPresent()) {
+		if (objGuardado.isPresent() && !objGuardado.get().getCodRol().equals(obj.getCodRol())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 
@@ -56,12 +57,7 @@ public class RolServiceImpl implements RolService{
 	@Override
 	public Rol update(Rol objActualizado) throws DataException {
 		
-		if(objActualizado.getNombre() !=null) {
-			Optional<Rol> objGuardado = rolRepository.findByNombreIgnoreCase(objActualizado.getNombre());
-			if (objGuardado.isPresent()&& !objGuardado.get().getCodRol().equals(objActualizado.getCodRol())) {
-				throw new DataException(REGISTRO_YA_EXISTE);
-			}
-		}
+		
 		return this.save(objActualizado);
 		}
 		

@@ -35,3 +35,4 @@ public class SubTipoPrueba {
 	@Column(name = "estado")
 	private String estado;
 }
+

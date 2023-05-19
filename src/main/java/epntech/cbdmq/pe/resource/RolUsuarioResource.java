@@ -36,8 +36,13 @@ public class RolUsuarioResource {
 	}
 	
 	@GetMapping("/listar/{id}")
-	public List<RolUsuario> listarPorRol(@PathVariable("id") Long codUsuario) {
+	public List<RolUsuario> listarPorUsuario(@PathVariable("id") Long codUsuario) {
 		return this.rolUsuarioService.getAllByUsuario(codUsuario);
+	}
+	
+	@GetMapping("/listarporrol/{id}")
+	public List<RolUsuario> listarPorRol(@PathVariable("id") Long codRol) {
+		return this.rolUsuarioService.getAllByRol(codRol);
 	}
 
 	@PostMapping("/crear")
@@ -57,9 +62,9 @@ public class RolUsuarioResource {
 		return ResponseEntityUtil.response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
-	@PostMapping("/asignar")	
-	public ResponseEntity<?> asignar(@RequestBody List<RolUsuario> lista) throws DataException {
-		this.rolUsuarioService.deleteAndSave(lista);
+	@PostMapping("/asignar/{id}")	
+	public ResponseEntity<?> asignar(@RequestBody List<RolUsuario> lista, @PathVariable("id") Long codUsuario) throws DataException {
+		this.rolUsuarioService.deleteAndSave(lista, codUsuario);
 		return ResponseEntityUtil.response(HttpStatus.OK, ASIGNACION_EXITO);
 	}
 }

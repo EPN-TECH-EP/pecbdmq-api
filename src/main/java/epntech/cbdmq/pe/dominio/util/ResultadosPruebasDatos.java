@@ -15,3 +15,4 @@ public class ResultadosPruebasDatos {
 	private String nombre;
 	private String apellido;
 }
+

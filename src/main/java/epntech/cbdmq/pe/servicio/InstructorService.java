@@ -22,3 +22,4 @@ public interface InstructorService {
 	void saveAllMaterias(List<InstructorMateria> obj);
 
 }
+

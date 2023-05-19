@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Canton;
+import epntech.cbdmq.pe.dominio.admin.CantonProjection;
 import epntech.cbdmq.pe.repositorio.admin.CantonRepository;
 import epntech.cbdmq.pe.servicio.CantonService;
 
@@ -29,7 +30,7 @@ public class CantonServiceImpl implements CantonService {
 	}
 
 	@Override
-	public List<Canton> getAllByCodProvinciaId(int id) {
+	public List<CantonProjection> getAllByCodProvinciaId(int id) {
 		// TODO Auto-generated method stub
 		return repo.findAllByCodProvincia(id);
 	}

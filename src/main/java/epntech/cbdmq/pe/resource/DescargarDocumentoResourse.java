@@ -32,6 +32,7 @@ import epntech.cbdmq.pe.servicio.impl.DocumentoServiceimpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_NO_EXISTE;
 
 @RestController
 @RequestMapping("/link")
@@ -48,7 +49,7 @@ public class DescargarDocumentoResourse {
 	     // Buscar el archivo en la base de datos
 	     Documento archivo = Repository.findById(id).orElse(null);
 	     if (archivo == null) {
-	         return ResponseEntity.notFound().build();
+	    	 return response(HttpStatus.BAD_REQUEST, ARCHIVO_NO_EXISTE);
 	     }
 	     // Crear un objeto Resource para el archivo
 	     File file = new File(archivo.getRuta());

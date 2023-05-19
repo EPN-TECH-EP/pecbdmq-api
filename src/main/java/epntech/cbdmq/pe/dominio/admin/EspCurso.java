@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class EspCurso {
 	@Column(name = "estado")
 	private String estado;
 	@Column(name = "nota_minima")
-	private Integer notaminima;
+	private BigDecimal notaminima;
 	@Column(name = "resultado")
 	private boolean resultado;
 

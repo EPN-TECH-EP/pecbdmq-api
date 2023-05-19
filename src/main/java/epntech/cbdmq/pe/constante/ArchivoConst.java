@@ -27,4 +27,9 @@ public class ArchivoConst {
 	public static final String PATH_RESULTADO_PRUEBAS = "Resultado Pruebas/";
 	public static final String PATH_RESULTADO_ANTIGUEDADES = "Antiguedades/";
 	
+	public static final String ARCHIVO_NO_EXISTE =" Este archivo no existe ";
+
+	public static final String FALLA_PROCESAR_EXCEL = "Falla al procesar el archivo excel";
+	public static final String PATH_RESULTADO_PRUEBAS = "Resultado Pruebas/";
+	public static final String PATH_RESULTADO_ANTIGUEDADES = "Antiguedades/";	
 }

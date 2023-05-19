@@ -211,7 +211,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			
 			PADocumento docsPA = new PADocumento();
 			docsPA = pADocumentoRepository.findByCodDocumentoAndCodPeriodoAcademico(docsUtil.getId(), repo.getPAActive());
-			
+
 			pADocumentoRepository.deleteById(docsPA.getCodPeriodoAcademicoDocumento());
 		}
 	}

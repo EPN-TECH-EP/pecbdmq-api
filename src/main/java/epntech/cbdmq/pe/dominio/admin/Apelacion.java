@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ResultCheckStyle;
@@ -44,9 +45,9 @@ public class Apelacion {
 	@Column(name = "aprobacion")
 	private String aprobacion;
 	@Column(name = "nota_actual")
-	private Integer notaactual;
+	private BigDecimal notaactual;
 	@Column(name = "nota_nueva")
-	private Integer notanueva;
+	private BigDecimal notanueva;
 	@Column(name = "respuesta")
 	private String respuesta;
 	@Column(name = "estado")

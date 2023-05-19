@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class DatoPersonal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen_dato_personal_cod_datos_personales_seq")
+	@SequenceGenerator(name = "gen_dato_personal_cod_datos_personales_seq", sequenceName = "gen_dato_personal_cod_datos_personales_seq", allocationSize = 1)
 	@Column(name = "cod_datos_personales")
 	private Integer cod_datos_personales;
 	@Column(name = "apellido")
@@ -92,37 +94,22 @@ public class DatoPersonal {
 	private String merito_academico_descripcion;
 	@Column(name = "pin_validacion_correo")
 	private String pin_validacion_correo;
-	@Column(name="cod_documento_imagen")
+	@Column(name = "correo_institucional")
+	private String correo_institucional;
+	@Column(name = "cod_cargo")
+	private Long cod_cargo;
+	@Column(name = "cod_rango")
+	private Long cod_rango;
+	@Column(name = "cod_grado")
+	private Long cod_grado;
+	@Column(name = "cod_documento_imagen")
 	private Integer cod_documento_imagen;
+	@Column(name = "cod_canton_nacimiento")
+	private Long cod_canton_nacimiento;
+	@Column(name = "cod_canton_residencia")
+	private Long cod_canton_residencia;
 	
-	/*@Column(nullable = false, updatable = false, name = "cod_datos_personales")
-	private Integer cod_datos_personales;
-	@Column(name = "cod_estacion")
-	private Integer cod_estacion; 
-	@Column(name = "cedula")
-	private String cedula;
-	@Column(name = "nombre")
-	private String nombre;
-	@Column(name = "apellido")
-	private String apellido;
-	@Column(name = "fecha_nacimiento")
-	private LocalDateTime fecha_nacimiento;
-	@Column(name = "correo_personal")
-	private String correo_personal;
-	@Column(name = "validacion_correo")
-	private String validacion_correo;
-	@Column(name = "num_telef")
-	private String num_telef;
-	@Column(name = "ciudad")
-	private String ciudad;
-	@Column(name = "tipo_sangre")
-	private String tipo_sangre;
-	@Column(name = "cod_unidad_gestion")
-	private Integer unidad;
-	@Column(name = "estado")
-	private String estado;
-	@Column(name = "cod_provincia")
-	private Integer provincia;*/
+	
 }
 
 
@@ -199,5 +186,19 @@ public class Gen_Dato_Personal {
 	private String merito_academico_descripcion;
 	@Column(name = "pin_validacion_correo")
 	private String pin_validacion_correo;
+	@Column(name = "correo_institucional")
+	private String correo_institucional;
+	@Column(name = "cod_cargo")
+	private Long cod_cargo;
+	@Column(name = "cod_rango")
+	private Long cod_rango;
+	@Column(name = "cod_grado")
+	private Long cod_grado;
+	@Column(name = "cod_documento_imagen")
+	private Long cod_documento_imagen;
+	@Column(name = "cod_canton_nacimiento")
+	private Long cod_canton_nacimiento;
+	@Column(name = "cod_canton_residencia")
+	private Long cod_canton_residencia;
 }
 */

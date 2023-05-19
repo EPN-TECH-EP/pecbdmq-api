@@ -34,7 +34,7 @@ public class Canton {
 	@Column(name = "cod_provincia")
 	private Integer codProvincia;
     
-	@OneToMany(mappedBy="codCanton")
+	@OneToMany(mappedBy="codCanton"/*, fetch = FetchType.LAZY*/)
     private Set<Parroquia> parroquias;
 		
 }
