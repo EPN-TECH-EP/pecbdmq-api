@@ -37,6 +37,7 @@ import epntech.cbdmq.pe.dominio.util.DocsUtil;
 import epntech.cbdmq.pe.dominio.util.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.servicio.impl.DocumentoServiceimpl;
 import epntech.cbdmq.pe.servicio.impl.PeriodoAcademicoServiceimpl;
 import jakarta.mail.MessagingException;
 
@@ -47,6 +48,8 @@ public class PeriodoAcademicoResource {
 	
 	@Autowired
 	private PeriodoAcademicoServiceimpl objService;
+	@Autowired
+	private DocumentoServiceimpl documentoServiceimpl;
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -157,7 +160,11 @@ public class PeriodoAcademicoResource {
 	
 	@DeleteMapping("/eliminarDocs")
 	public ResponseEntity<?> eliminarDocs(@RequestBody List<DocsUtil> documentos) throws Exception {
+		for (DocsUtil docsUtil : documentos) {
+			documentoServiceimpl.eliminarArchivo(docsUtil.getId());
+		}
 		objService.eliminar(documentos);
+		
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO);
 	}
 	
