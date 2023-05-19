@@ -9,6 +9,5 @@ import epntech.cbdmq.pe.dominio.admin.Prueba;
 
 public interface PruebaRepository extends JpaRepository<Prueba, Integer>{
 	
-	Optional<Prueba> findByprueba(String prueba);
 
 }

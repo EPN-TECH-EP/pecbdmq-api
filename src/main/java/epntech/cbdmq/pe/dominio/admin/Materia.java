@@ -35,16 +35,16 @@ public class Materia {
 	private Integer codMateria;
 	@Column(name = "nombre_materia")
 	private String nombre;
-	@Column(name = "num_horas")
-	private Integer numHoras;
+	//@Column(name = "num_horas")
+	//private Integer numHoras;
 	@Column(name = "tipo_materia")
 	private String tipoMateria;
-	@Column(name = "observacion_materia")
-	private String observacionMateria;
-	@Column(name = "peso_materia")
-	private BigDecimal pesoMateria;
-	@Column(name = "nota_minima")
-	private BigDecimal notaMinima;
+	//@Column(name = "observacion_materia")
+	//private String observacionMateria;
+	//@Column(name = "peso_materia")
+	//private BigDecimal pesoMateria;
+	//@Column(name = "nota_minima")
+	//private BigDecimal notaMinima;
 	@Column(name = "estado")
 	private String estado;
 	

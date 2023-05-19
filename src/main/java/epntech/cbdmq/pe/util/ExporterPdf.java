@@ -1,6 +1,8 @@
 package epntech.cbdmq.pe.util;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -12,7 +14,6 @@ import com.lowagie.text.FontFactory;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import com.lowagie.text.pdf.PdfPCell;
@@ -101,6 +102,38 @@ public class ExporterPdf {
 		escribirDatosDeLaTabla(tabla, lista);
 
 		documento.add(tabla);
+		documento.close();
+	}
+
+	public void exportar(HttpServletResponse response, String[] columnas, ArrayList<ArrayList<String>> lista, float[] widths, String filePath)
+			throws DocumentException, IOException {
+		
+		File file = new File(filePath);
+        file.getParentFile().mkdirs();
+        
+		Document documento = new Document(PageSize.A4);
+		PdfWriter.getInstance(documento, new FileOutputStream(filePath));
+
+		documento.open();
+
+		Font fuente = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+		fuente.setColor(Color.WHITE);
+		fuente.setSize(18);
+
+		Paragraph titulo = new Paragraph("Lista", fuente);
+		titulo.setAlignment(Paragraph.ALIGN_CENTER);
+		documento.add(titulo);
+
+		PdfPTable tabla = new PdfPTable(columnas.length);
+		tabla.setWidthPercentage(100);
+		tabla.setSpacingBefore(15);
+		tabla.setWidths(widths);
+		tabla.setWidthPercentage(110);
+
+		escribirCabeceraDeLaTabla(tabla, columnas);
+		escribirDatosDeLaTabla(tabla, lista);
+        
+		documento.add(tabla);        
 		documento.close();
 	}
 

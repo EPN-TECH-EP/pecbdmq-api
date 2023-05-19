@@ -24,8 +24,25 @@ import lombok.Data;
 @Table(name = "gen_estudiante")
 @SQLDelete(sql = "UPDATE {h-schema}gen_estudiante SET estado = 'ELIMINADO' WHERE cod_estudiante = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-
-@NamedNativeQuery(name = "EstudianteDatos.findAllEstudiante", 
+public class Estudiante{
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "cod_estudiante")
+	private Integer codEstudiante;
+	
+	@Column(name = "cod_datos_personales")
+	private Integer codDatosPersonales;
+	
+	@Column(name = "cod_modulo")
+	private Integer codModulo;
+	
+	@Column(name = "cod_unico_estudiante")
+	private String idEstudiante;
+	
+	@Column(name = "estado")
+	private String estado;
+}
+/*@NamedNativeQuery(name = "EstudianteDatos.findAllEstudiante", 
 				query = "select e.cod_estudiante, e.grado, e.resultado_estudiante, e.id_estudiante, "
 					+ "d.nombre, d.apellido, d.cedula, d.ciudad, d.correo_personal, d.fecha_nacimiento, d.num_telef, d.tipo_sangre, "
 					+ "(select s.nombre_zona from {h-schema}gen_estacion_trabajo s where d.cod_estacion = s.cod_estacion and UPPER(s.estado) != 'ELIMINADO') as estacion, "
@@ -82,7 +99,7 @@ public class Estudiante implements Serializable  {
 	
 	protected String estado;
 	
-	public Estudiante() {
+	/*public Estudiante() {
 	}
 	
 	public Estudiante(Integer codEstudiante, Integer codDatosPersonales, Integer codModulo, String grado,
@@ -97,4 +114,4 @@ public class Estudiante implements Serializable  {
 		this.estado = estado;
 	}
 	
-}
+}*/

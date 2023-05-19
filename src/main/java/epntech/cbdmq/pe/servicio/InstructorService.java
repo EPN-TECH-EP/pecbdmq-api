@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Instructor;
+import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface InstructorService {
@@ -18,6 +19,6 @@ public interface InstructorService {
 
 	    void delete(Integer codigo);
 	    
-	
+	void saveAllMaterias(List<InstructorMateria> obj);
 	
 }

@@ -45,7 +45,7 @@ public class MenuService {
 	public Menu save(Menu menu) throws DataException {
 		if (menu.getEtiqueta().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Menu objGuardado = menuRepository.findMenuByEtiquetaIgnoreCase(menu.getEtiqueta());
+		Menu objGuardado = menuRepository.findMenuByEtiquetaIgnoreCaseAndMenuPadre(menu.getEtiqueta(), menu.getMenuPadre());
 		if (objGuardado != null && !objGuardado.getCodMenu().equals(menu.getCodMenu())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}

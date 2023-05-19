@@ -74,9 +74,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 		
 		String resultado = null;
 		
-		
-			resultado=ARCHIVOS_RUTA+proceso+"/"+ id+"/";	
-
+		resultado = ARCHIVOS_RUTA + proceso + "/" + id + "/";
 
 		return resultado;
 	}
@@ -86,15 +84,14 @@ public class DocumentoServiceimpl implements DocumentoService {
 			throws IOException, ArchivoMuyGrandeExcepcion {
         String resultado;
 		
-
-		resultado= ruta(proceso, id);
+		resultado = ruta(proceso, id);
 		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
 		
 		if (!Files.exists(ruta)) {
 			Files.createDirectories(ruta);
 		}
 		
-        List<DocumentoRuta> lista= new ArrayList<>();
+		List<DocumentoRuta> lista = new ArrayList<>();
         DocumentoRuta documentos = new DocumentoRuta();
 		//Files.copy(archivo.getInputStream(), ruta.resolve(archivo.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
 		for (Iterator iterator = archivo.iterator(); iterator.hasNext();) {
@@ -103,7 +100,8 @@ public class DocumentoServiceimpl implements DocumentoService {
 				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
 			}
 			
-			Files.copy(multipartFile.getInputStream(), ruta.resolve(multipartFile.getOriginalFilename()), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(multipartFile.getInputStream(), ruta.resolve(multipartFile.getOriginalFilename()),
+					StandardCopyOption.REPLACE_EXISTING);
 			LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
 			documentos.setRuta(resultado + multipartFile.getOriginalFilename());
 			lista.add(documentos);
@@ -114,25 +112,25 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 	
 	@Override
-	public void eliminarArchivo( int id) throws IOException, ArchivoMuyGrandeExcepcion {
+	public void eliminarArchivo(int id) throws IOException, ArchivoMuyGrandeExcepcion {
 		// TODO Auto-generated method stub
-		String resultado=null;
-		Documento documentos=new Documento();
-		Optional <Documento> documento;
-		
+		String resultado = null;
+		Documento documentos = new Documento();
+		Optional<Documento> documento;
 		 
-		 //resultado=ARCHIVOS_RUTA+"/"+ id+"/";
-		 documento=repo.findById(id);
-		 documentos=documento.get();
+		System.out.println("id: " + id);
+		documento = repo.findById(id);
+		documentos = documento.get();
 		 Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
 		 //ruta =Path.of( );
 		 
 		 
 		
 		 
+		System.out.println("ruta: " + ruta);
 		 if (Files.exists(ruta)) {
 	            try {
-	            	System.out.println("ruta"+ruta);
+				System.out.println("ruta" + ruta);
 	                Files.delete(ruta);
 	            } catch (Exception e) {
 	               

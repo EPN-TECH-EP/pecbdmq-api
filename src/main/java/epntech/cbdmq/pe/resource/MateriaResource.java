@@ -52,11 +52,11 @@ public class MateriaResource {
 	public ResponseEntity<Materia> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Materia obj) throws DataException{
 		return (ResponseEntity<Materia>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
-			datosGuardados.setNumHoras(obj.getNumHoras());
+			//datosGuardados.setNumHoras(obj.getNumHoras());
 			datosGuardados.setTipoMateria(obj.getTipoMateria());
-			datosGuardados.setObservacionMateria(obj.getObservacionMateria());
-			datosGuardados.setPesoMateria(obj.getPesoMateria());
-			datosGuardados.setNotaMinima(obj.getNotaMinima());
+			//datosGuardados.setObservacionMateria(obj.getObservacionMateria());
+			//datosGuardados.setPesoMateria(obj.getPesoMateria());
+			//datosGuardados.setNotaMinima(obj.getNotaMinima());
 			datosGuardados.setEstado(obj.getEstado());
 
 			Materia datosActualizados = null;

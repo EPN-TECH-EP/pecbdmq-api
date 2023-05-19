@@ -2,6 +2,8 @@ package epntech.cbdmq.pe.helper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -122,4 +124,35 @@ public class ExcelHelper {
       throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
     }
   }
+	
+	public static void generarExcel( ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Datos");
+
+        // Header
+		Row headerRow = sheet.createRow(0);
+
+		for (int col = 0; col < cabecera.length; col++) {
+			Cell cell = headerRow.createCell(col);
+			cell.setCellValue(cabecera[col]);
+		}
+		
+        int rowIndex = 1;        
+        for (int i = 0; i < lista.size(); i++) {
+			//System.out.println("valor " + lista.get(i).get(i));
+			Row row = sheet.createRow(rowIndex++);
+
+			for (int j = 0; j < lista.get(i).size(); j++) {
+				row.createCell(j).setCellValue(String.valueOf(lista.get(i).get(j)));
+				//System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
+			}
+
+		}
+
+        File file = new File(filePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        workbook.write(outputStream);
+        workbook.close();
+    }
 }

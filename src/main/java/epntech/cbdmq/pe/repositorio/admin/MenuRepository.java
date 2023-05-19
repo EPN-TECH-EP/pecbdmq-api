@@ -28,4 +28,6 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
 	
 	List<Menu> findByMenuPadreOrderByOrden(Integer menuPadre);
 
+	Menu findMenuByEtiquetaIgnoreCaseAndMenuPadre(String etiqueta, Integer menuPadre);
+
 }

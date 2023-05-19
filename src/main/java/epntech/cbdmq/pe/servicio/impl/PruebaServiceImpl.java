@@ -23,12 +23,6 @@ public class PruebaServiceImpl implements PruebaService{
 	@Override
 	public Prueba save(Prueba obj) throws DataException {
 		
-		if(obj.getPrueba().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<Prueba> objGuardado = repo.findByprueba(obj.getPrueba());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
         return repo.save(obj);
 	}
 
@@ -46,10 +40,6 @@ public class PruebaServiceImpl implements PruebaService{
 
 	@Override
 	public Prueba update(Prueba objActualizado) throws DataException {
-		Optional<Prueba> objGuardado = repo.findByprueba(objActualizado.getPrueba());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
 		return repo.save(objActualizado);
 	}
 

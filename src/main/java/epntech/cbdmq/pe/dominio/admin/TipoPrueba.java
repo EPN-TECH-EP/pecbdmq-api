@@ -32,9 +32,11 @@ import lombok.Setter;
 public class TipoPrueba {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cod_tipo_prueba;
+    @Column(name = "cod_tipo_prueba")
+    private Integer codTipoPrueba;
+    
     @Column(name = "tipo_prueba")
-    private String prueba;
+    private String tipoPrueba;
 
     @Column(name = "estado")
 	private String estado;

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.EspCurso;
 import epntech.cbdmq.pe.dominio.admin.Instructor;
+import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.InstructorMateriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.InstructorRepository;
 import epntech.cbdmq.pe.servicio.InstructorService;
 
@@ -20,6 +22,8 @@ public class InstructorServiceImpl implements InstructorService {
 	
 	@Autowired
 	private InstructorRepository repo;
+	@Autowired
+	private InstructorMateriaRepository instructorMateriaRepository; 
 
 	@Override
 	public Instructor save(Instructor obj) throws DataException {
@@ -49,6 +53,12 @@ public class InstructorServiceImpl implements InstructorService {
 	public void delete(Integer codigo) {
 		// TODO Auto-generated method stub
 		repo.deleteById(codigo);
+	}
+
+	@Override
+	public void saveAllMaterias(List<InstructorMateria> obj) {
+		// TODO Auto-generated method stub
+		instructorMateriaRepository.saveAll(obj);
 	}
 
 }
