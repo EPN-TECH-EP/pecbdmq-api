@@ -15,9 +15,9 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 
 	Optional<Estudiante> findByidEstudiante(String id);
 	
-	@Query(nativeQuery = true)
-	List<EstudianteDatos> findAllEstudiante();
+	//@Query(nativeQuery = true)
+	//List<EstudianteDatos> findAllEstudiante();
 
-	@Query(nativeQuery = true)
-	Page<EstudianteDatos> findAllEstudiante(Pageable pageable);
+	//@Query(nativeQuery = true)
+	//Page<EstudianteDatos> findAllEstudiante(Pageable pageable);
 }

@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_REGISTRADOS;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class EstudianteResource {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@PutMapping("/{id}")
+	/*@PutMapping("/{id}")
 	public ResponseEntity<Estudiante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Estudiante obj) throws DataException{
 		return (ResponseEntity<Estudiante>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCodDatosPersonales(obj.getCodDatosPersonales());
@@ -63,7 +64,7 @@ public class EstudianteResource {
 			datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+	}*/
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
@@ -71,22 +72,31 @@ public class EstudianteResource {
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
-    }
-	
-	@GetMapping("/paginado")
+	/*@GetMapping("/paginado")
 	public ResponseEntity<?> listarDatos(Pageable pageable) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(objService.getAllEstudiante(pageable));
 		} catch (Exception e) {
 			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
 		}
-	}
+	}*/
 	
-	@GetMapping("/listardatos")
+	/*@GetMapping("/listardatos")
 	public List<EstudianteDatos> listarAll() {
 		return objService.findAllEstudiante();
+	}*/
+	
+	@PostMapping("/crearEstudiantes")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> guardarAll(@RequestParam("modulo") Integer modulo) throws DataException{
+		objService.saveEstudiantes(modulo);
+		
+		return response(HttpStatus.OK, DATOS_REGISTRADOS);
 	}
+	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
+	
 }

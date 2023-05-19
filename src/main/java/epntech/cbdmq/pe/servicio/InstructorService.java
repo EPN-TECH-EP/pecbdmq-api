@@ -4,20 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Instructor;
+import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface InstructorService {
 
-	 Instructor save(Instructor obj) throws DataException;
+	Instructor save(Instructor obj) throws DataException;
 
-	    List<Instructor> getAll();
+	List<Instructor> getAll();
 
-	    Optional<Instructor> getById(Integer codigo);
+	Optional<Instructor> getById(Integer codigo);
 
-	    Instructor update(Instructor objActualizado);
+	Instructor update(Instructor objActualizado);
 
-	    void delete(Integer codigo);
-	    
+	void delete(Integer codigo);
 	
-	
+	void saveAllMaterias(List<InstructorMateria> obj);
+
 }

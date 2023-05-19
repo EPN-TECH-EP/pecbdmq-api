@@ -1,12 +1,17 @@
 package epntech.cbdmq.pe.servicio;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
+import epntech.cbdmq.pe.dominio.util.DocsUtil;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PeriodoAcademicoService {
@@ -34,4 +39,8 @@ public interface PeriodoAcademicoService {
 	Optional<PeriodoAcademico> getActive();
 	
 	Integer getPAActivo();
+	
+	void cargarDocs(List<MultipartFile> archivos)  throws IOException, ArchivoMuyGrandeExcepcion;
+	
+	void eliminar(List<DocsUtil> docs);
 }
