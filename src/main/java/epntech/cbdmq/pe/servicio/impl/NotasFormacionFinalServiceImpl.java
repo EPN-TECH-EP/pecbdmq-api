@@ -34,6 +34,11 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 		
 		notasFormacionFinalRepository.saveAll(nn);
 	}
+
+	@Override
+	public void calcularNotas() {
+		notasFormacionFinalRepository.calcular_nota_final();
+	}
 	
 	
 

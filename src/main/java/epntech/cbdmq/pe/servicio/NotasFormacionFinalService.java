@@ -7,4 +7,6 @@ import epntech.cbdmq.pe.dominio.admin.NotasFormacionFinal;
 public interface NotasFormacionFinalService {
 
 	void cargarDisciplina(List<NotasFormacionFinal> lista);
+	
+	void calcularNotas();
 }

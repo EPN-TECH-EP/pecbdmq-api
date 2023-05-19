@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface NotasFormacionService {
 
@@ -11,7 +12,8 @@ public interface NotasFormacionService {
 	
 	List<NotasFormacion> getByEstudiante(int id);
 	
-	NotasFormacion update(NotasFormacion objActualizado);
+	NotasFormacion update(NotasFormacion objActualizado) throws DataException;
 	
 	Optional<NotasFormacion> getById(int id);
+	
 }

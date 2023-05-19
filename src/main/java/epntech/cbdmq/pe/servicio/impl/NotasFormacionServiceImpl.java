@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.FormacionConst.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodoData;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoDataRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
@@ -57,9 +59,18 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	}
 
 	@Override
-	public NotasFormacion update(NotasFormacion objActualizado) {
-		// TODO Auto-generated method stub
-		return notasFormacionRepository.save(objActualizado);
+	public NotasFormacion update(NotasFormacion objActualizado) throws DataException {
+		MateriaPeriodoData materiaPeriodoData = new MateriaPeriodoData();
+		materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(objActualizado.getCodPeriodoAcademico(), objActualizado.getCodMateria());
+	
+		if(objActualizado.getNotaSupletorio() < materiaPeriodoData.getNotaMinima()) {
+			throw new DataException(NOTA_MINIMA_MATERIA);
+		}else if(objActualizado.getNotaMateria() >= materiaPeriodoData.getNotaMinimaSupletorioInicio() && objActualizado.getNotaMateria() <= materiaPeriodoData.getNotaMinimaSupletorioFin()) {
+			objActualizado.setNotaPonderacion(materiaPeriodoData.getPesoMateria() * materiaPeriodoData.getNotaMinima());
+			return notasFormacionRepository.save(objActualizado);
+		}
+		else
+			throw new DataException(NOTA_MATERIA);
 	}
 
 	@Override
@@ -67,5 +78,4 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 		// TODO Auto-generated method stub
 		return notasFormacionRepository.findById(id);
 	}
-
 }

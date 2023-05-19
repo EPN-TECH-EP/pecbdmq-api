@@ -29,5 +29,11 @@ public class MateriaPeriodoData {
 	
 	@Column(name = "peso_materia")
 	private Double pesoMateria;
+	
+	@Column(name = "nota_minima_supletorio_inicio")
+	private Double notaMinimaSupletorioInicio;
+	
+	@Column(name = "nota_minima_supletorio_fin")
+	private Double notaMinimaSupletorioFin;
 
 }

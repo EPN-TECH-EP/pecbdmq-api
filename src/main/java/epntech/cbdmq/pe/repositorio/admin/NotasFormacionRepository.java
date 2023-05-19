@@ -16,4 +16,6 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 			+ "where t.cod_periodo_academico = cbdmq.get_pa_activo() "
 			+ "and upper(t.estado) = 'ACTIVO' ", nativeQuery=true)
 	List<NotasFormacion> getNotasFormnacion();
+	
+	
 }
