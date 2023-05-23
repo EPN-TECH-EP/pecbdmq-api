@@ -28,41 +28,59 @@ import lombok.Data;
 @Where(clause = "estado <> 'ELIMINADO'")
 
 @NamedNativeQuery(name = "FormacionEstudiante.findHistorico",
-				query ="select gm.nombre_materia as Materia,gdp2.nombre || gdp2.apellido as instructor\n" +
-						",gpon.porcentaje_final_ponderacion\n" +
-						",gpon.porcentaje_nota_materia\n" +
-						",gcnota.porcentaje_componente_nota \n" +
-						",gtn.tipo_nota \n" +
-						",gnf.aporte_academico \n" +
-						",gnf.nota_final_formacion\n" +
-						",gnf.resultado \n" +
-						"from {h-schema}gen_estudiante ge \n" +
-						"left join {h-schema}gen_modulo gmod on gmod.cod_modulo =ge.cod_modulo \n" +
+				query = "select gdp.cedula as \"Cedula\"," +
+						"gdp.nombre as \"Nombres\"," +
+						"gdp.apellido as \"Apellidos\"\n" +
+						",ge.codigo_unico_estudiante" +
+						",cg.nombre_cargo as \"Cargo\"\n" +
+						",rg.nombre_rango as \"Rango\"\n" +
+						",gd.nombre_grado as \"Grado\"\n" +
+						",gm.nombre_materia" +
+						",gdp2.nombre || gdp2.apellido as \"instructor\" \n" +
+						",gpon.porcentaje_final_ponderacion " +
+						",gnf.nota_minima" +
+						",gnf.peso_materia" +
+						",gnf.numero_horas" +
+						",gnf.nota_materia" +
+						",gnf.nota_ponderacion" +
+						",gnf.nota_disciplina" +
+						" from {h-schema}gen_dato_personal gdp \n" +
+						"right join {h-schema}gen_estudiante ge on ge.cod_datos_personales=gdp.cod_datos_personales  \n" +
+						"left join {h-schema}gen_cargo cg on cg.cod_cargo=gdp.cod_cargo \n" +
+						"left join {h-schema}gen_rango rg on rg.cod_rango=gdp.cod_rango \n" +
+						"left join {h-schema}gen_grado gd on gd.cod_grado=gdp.cod_grado \n" +
 						"left join {h-schema}gen_materia_estudiante gme on gme.cod_estudiante=ge.cod_estudiante \n" +
 						"left join {h-schema}gen_materia gm on gm.cod_materia =gme.cod_materia\n" +
 						"left join {h-schema}gen_periodo_academico gpa on gpa.cod_periodo_academico=gme.cod_periodo_academico \n" +
 						"left join {h-schema}gen_nota_formacion gnf on gnf.cod_materia=gme.cod_materia and gnf.cod_estudiante=ge.cod_estudiante \n" +
-						"left join {h-schema}gen_ponderacion gpon on gpon.cod_ponderacion =gnf.cod_ponderacion \n" +
-						"left join {h-schema}gen_componente_nota gcnota on gcnota.cod_componente_nota =gpon.cod_componente_nota \n" +
-						"left join {h-schema}gen_tipo_nota gtn on gtn.cod_tipo_nota =gpon.cod_tipo_nota \n" +
+						"left join {h-schema}gen_ponderacion gpon on gpon.cod_periodo_academico =gnf.cod_periodo_academico \n" +
+						"left join {h-schema}gen_componente_nota gcnota on gpon.cod_componente_nota=gcnota.cod_componente_nota\n" +
 						"LEFT JOIN {h-schema}gen_instructor gins ON gins.cod_instructor=gnf.cod_instructor \n" +
-						"left join {h-schema}gen_dato_personal gdp2 on gdp2.cod_datos_personales =gins.cod_datos_personales\n" +
+						"left join {h-schema}gen_dato_personal gdp2 on gdp2.cod_datos_personales =gins.cod_datos_personales \n" +
 						"where ge.codigo_unico_estudiante = :codUnico"
 						,
 					resultSetMapping = "FormacionEstudiante"
 					)	
 					
 					@SqlResultSetMapping(name = "FormacionEstudiante", classes = @ConstructorResult(targetClass = FormacionEstudiante.class, columns = {
-					@ColumnResult(name = "Materia"),
+					@ColumnResult(name = "Cedula"),
+					@ColumnResult(name = "Nombres"),
+					@ColumnResult(name = "Apellidos"),
+					@ColumnResult(name = "codigo_unico_estudiante"),
+					@ColumnResult(name = "Cargo"),
+					@ColumnResult(name = "Rango"),
+					@ColumnResult(name = "Grado"),
+					@ColumnResult(name = "nombre_materia"),
 					@ColumnResult(name = "instructor"),
 					@ColumnResult(name = "porcentaje_final_ponderacion"),
-					@ColumnResult(name = "porcentaje_nota_materia"),
-					@ColumnResult(name = "porcentaje_componente_nota"),
-					@ColumnResult(name = "tipo_nota"),
-					@ColumnResult(name = "aporte_academico"),
-					@ColumnResult(name = "nota_final_formacion"),
-					@ColumnResult(name = "resultado")
+					@ColumnResult(name = "nota_minima"),
+					@ColumnResult(name = "peso_materia"),
+					@ColumnResult(name = "numero_horas"),
+					@ColumnResult(name = "nota_materia"),
+					@ColumnResult(name = "nota_ponderacion"),
+					@ColumnResult(name = "nota_disciplina"),
 					}))
+
 @NamedNativeQuery(name = "EspecializacionEstudiante.findHistorico",
 		query ="select \n" +
 				"etc.nombre_tipo_curso as \"Tipo Curso\"\n" +
