@@ -29,4 +29,10 @@ public class ValidacionRequisitos {
 	
 	@Column(name = "observaciones")
 	private String observaciones;
+	
+	@Column(name = "estado_muestra")
+	private Boolean estadoMuestra;
+	
+	@Column(name = "observacion_muestra")
+	private String observacionMuestra;
 }
