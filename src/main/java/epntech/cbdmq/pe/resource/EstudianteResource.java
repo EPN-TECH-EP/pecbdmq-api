@@ -6,6 +6,7 @@ import java.util.List;
 
 import epntech.cbdmq.pe.dominio.util.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
+import epntech.cbdmq.pe.dominio.util.ProfesionalizacionEstudiante;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -96,8 +97,11 @@ public class EstudianteResource {
 	public List<FormacionEstudiante> listarFormHistorico(@RequestParam("estudiante")String codEstudiante, Pageable pageable) {
 		return objService.getHistoricos(codEstudiante, pageable);
 	}
-	@PostMapping("/listarEspHistorico")
-	public List<EspecializacionEstudiante> listarEspHistorico(@RequestParam("estudiante")String codEstudiante, Pageable pageable) {
-		return objService.getEspecializacionHistoricos(codEstudiante, pageable);
+	@GetMapping("/listarEspHistorico")
+	public List<EspecializacionEstudiante> listarEspHistorico() {
+		return objService.getEspecializacionHistoricos();
+	}	@GetMapping("/listarProfHistorico")
+	public List<ProfesionalizacionEstudiante> listarProfHistorico() {
+		return objService.getProfesionalizacionHistoricos();
 	}
 }

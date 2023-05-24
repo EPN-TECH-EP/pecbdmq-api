@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.util.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
+import epntech.cbdmq.pe.dominio.util.ProfesionalizacionEstudiante;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -33,6 +34,7 @@ public interface EstudianteService {
 
  */
 	List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
-	List<EspecializacionEstudiante> getEspecializacionHistoricos(String codEstudiante, Pageable pageable);
+	List<EspecializacionEstudiante> getEspecializacionHistoricos();
+	List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos();
 
 }
