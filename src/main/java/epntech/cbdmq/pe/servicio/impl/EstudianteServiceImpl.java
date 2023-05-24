@@ -77,13 +77,13 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}
 
 	@Override
-	public List<EspecializacionEstudiante> getEspecializacionHistoricos() {
-		return this.repo.getEspHistoricos();
+	public List<EspecializacionEstudiante> getEspecializacionHistoricos(String codEstudiante, Pageable pageable) {
+		return this.repo.getEspHistoricos(codEstudiante,pageable);
 	}
 
 	@Override
-	public List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos() {
-		return this.repo.getProfHistoricos();
+	public List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos(String codEstudiante, Pageable pageable) {
+		return this.repo.getProfHistoricos(codEstudiante,pageable);
 	}
 /*
 	@Override
