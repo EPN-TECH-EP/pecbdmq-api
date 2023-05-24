@@ -60,14 +60,11 @@ public class DatoPersonal {
 	private String genero;
 	@Column(name = "num_telef_celular")
 	private String num_telef_celular;
-	@Column(name = "canton_nacimiento")
-	private String canton_nacimiento;
+
 	@Column(name = "reside_pais")
 	private Boolean reside_pais;
 	@Column(name = "cod_provincia_residencia")
 	private Long cod_provincia_residencia;
-	@Column(name = "canton_residencia")
-	private String canton_residencia;
 	@Column(name = "calle_principal_residencia")
 	private String calle_principal_residencia;
 	@Column(name = "calle_secundaria_residencia")
