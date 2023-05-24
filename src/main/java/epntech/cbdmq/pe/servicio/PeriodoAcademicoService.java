@@ -41,7 +41,9 @@ public interface PeriodoAcademicoService {
 	
 	Integer getPAActivo();
 	
-	List<DocumentoRuta> cargarDocs(List<MultipartFile> archivos)  throws IOException, ArchivoMuyGrandeExcepcion, DataException;
+
+	void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion)  throws IOException, ArchivoMuyGrandeExcepcion, DataException;
+
 	
 	void eliminar(List<DocsUtil> docs);
 }

@@ -31,6 +31,8 @@ public interface DatoPersonalService {
 	
 	Documento guardarImagen(String proceso, Integer codigo, MultipartFile archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 	
+	Documento actualizarImagen(String proceso,Integer codigo,  MultipartFile archivo) throws IOException, ArchivoMuyGrandeExcepcion;
+	
 	void deleteById(int id) throws DataException;
 	
 	

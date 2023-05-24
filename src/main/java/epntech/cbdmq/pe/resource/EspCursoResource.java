@@ -49,25 +49,31 @@ public class EspCursoResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<EspCurso> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EspCurso obj) throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodcursoespecializacion(obj.getCodcursoespecializacion());
-			datosGuardados.setNombrecursoespecializacion(obj.getNombrecursoespecializacion());
-			datosGuardados.setNumerocupo(obj.getNumerocupo());
-			datosGuardados.setAdjuntoplanificacion(obj.getAdjuntoplanificacion());
-			datosGuardados.setTipocurso(obj.getTipocurso());
+		return (ResponseEntity<EspCurso>) objService.getById(codigo).map(datosGuardados -> {
+			//datosGuardados.setCod_estudiante(obj.getCod_curso_especializacion());
+			datosGuardados.setCod_instructor(obj.getCod_instructor());
+			datosGuardados.setCod_unidad_gestion(obj.getCod_unidad_gestion());
+			//datosGuardados.setCod_estudiante(obj.getCod_estudiante());
+			datosGuardados.setCod_aula(obj.getCod_aula());
+			datosGuardados.setNumero_cupo(obj.getNumero_cupo());
 			datosGuardados.setFechainiciocurso(obj.getFechainiciocurso());
 			datosGuardados.setFechafincurso(obj.getFechafincurso());
 			datosGuardados.setFechainiciocarganota(obj.getFechainiciocarganota());
 			datosGuardados.setFechafincarganota(obj.getFechafincarganota());
+			datosGuardados.setNota_minima(obj.getNota_minima());
+			datosGuardados.setAprueba(obj.getAprueba());
+			datosGuardados.setEstado_proceso(obj.getEstado_proceso());
 			datosGuardados.setEstado(obj.getEstado());
-			datosGuardados.setNotaminima(obj.getNotaminima());
+			datosGuardados.setCod_tipo_curso(obj.getCod_tipo_curso());
 			
 			EspCurso datosActualizados = null;
 			try {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				//e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

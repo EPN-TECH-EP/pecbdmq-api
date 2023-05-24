@@ -10,5 +10,6 @@ import epntech.cbdmq.pe.dominio.admin.ModuloEstados;
 public interface ModuloEstadosRepository extends JpaRepository<ModuloEstados, Integer> {
 	
 	List<ModuloEstados> findByModuloAndEstadoCatalogo(Integer modulo, Integer catalgo);
+	
 }
 

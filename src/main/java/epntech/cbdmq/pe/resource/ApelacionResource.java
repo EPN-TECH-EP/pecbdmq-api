@@ -73,7 +73,7 @@ public class ApelacionResource {
 					datosActualizados = objServices.update(datosGuardados);
 				} catch (DataException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 					
 					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 				}

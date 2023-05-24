@@ -30,19 +30,19 @@ public class Instructor {
 	private Integer cod_datos_personales;
 	@Column(name = "cod_tipo_procedencia")
 	private Integer cod_tipo_procedencia;
-	@Column(name = "cod_tipo_instructor")
+	/*@Column(name = "cod_tipo_instructor")
 	private Integer cod_tipo_instructor;
 	@Column(name = "cod_periodo_academico")
 	private Integer cod_periodo_academico;
 	@Column(name = "cod_periodo_evaluacion")
-	private Integer cod_periodo_evaluacion;
+	private Integer cod_periodo_evaluacion;*/
 	
 	
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_instructor_materia",
+    @JoinTable(name = "gen_instructor_periodo",
             joinColumns = @JoinColumn(name = "cod_instructor"),
-            inverseJoinColumns = @JoinColumn(name = "cod_materia")
+            inverseJoinColumns = @JoinColumn(name = "cod_periodo_academico")
     )
-	private List<Materia> materia = new ArrayList<>();
+	private List<PeriodoAcademico> PeriodoAcademico = new ArrayList<>();
 }

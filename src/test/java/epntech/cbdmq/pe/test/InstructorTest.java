@@ -36,15 +36,12 @@ public class InstructorTest {
 	 
 		Instructor obj = new Instructor();
 		obj.setCod_instructor(5);		
-		obj.setCod_periodo_academico(1);
-		obj.setCod_tipo_instructor(1);
+		
 
 		Instructor datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals(1, datos.getCod_periodo_academico());
 		
-		assertEquals(1, datos.getCod_tipo_instructor());
 	}
 	
 	

@@ -6,6 +6,8 @@ import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +21,10 @@ import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.util.InscripcionResult;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.InscripcionForRepository;
 import epntech.cbdmq.pe.repositorio.admin.InscripcionRepository;
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.InscripcionForService;
@@ -39,6 +43,12 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 	@Autowired
 	private InscripcionRepository repo1;
 	
+	@Autowired
+	private ConvocatoriaRepository convocatoriaRepository;
+	
+	@Autowired
+	private PeriodoAcademicoRepository periodoAcademicoRepository;
+	
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 	
 	@Autowired
@@ -50,7 +60,25 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 	@Override
 	public InscripcionResult insertarInscripcionConDocumentos(InscripcionFor inscripcion,
 			List<MultipartFile> docsInscripcion) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException, DataException {
+		Date fechaActual = new Date();
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaFormateada = formato.format(fechaActual);
+        
+        SimpleDateFormat formatoDate = new SimpleDateFormat("yyyy-MM-dd");
+        fechaActual=formatoDate.parse(fechaFormateada);
+
+		LocalTime horaActual = LocalTime.now();
+		Date FechaInicio=convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria();
+		Date FechaFin=convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
 		
+		System.out.println("fechaActual "+fechaActual);
+		
+		if(!periodoAcademicoRepository.getActive())
+			throw new DataException(PA_INACTIVO);
+		if(!((fechaActual.after(FechaInicio) && fechaActual.before(FechaFin)) || fechaActual.equals(FechaInicio) || fechaActual.equals(FechaFin)))
+			throw new DataException(FECHA_INSCRIPCION_INVALIDA);
+		else if(!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().getHoraInicioConvocatoria()) && horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().getHoraFinConvocatoria())))
+			throw new DataException(HORA_INSCRIPCION_INVALIDA);
 		if(repo1.findByCorreoPersonalIgnoreCase(inscripcion.getCorreoPersonal()).isPresent())
 			throw new DataException(CORREO_YA_EXISTE);
 		if(repo1.findOneByCedula(inscripcion.getCedula()).isPresent())

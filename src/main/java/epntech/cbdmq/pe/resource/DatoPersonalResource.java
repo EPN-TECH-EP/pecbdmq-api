@@ -121,7 +121,7 @@ public class DatoPersonalResource {
 				datosActualizados = objService.updateDatosPersonales(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
@@ -131,7 +131,7 @@ public class DatoPersonalResource {
 	@PutMapping("/eliminar/{id}")
 	public ResponseEntity<DatoPersonal> eliminarDatos(@PathVariable("id") Integer codigo,
 			@RequestBody DatoPersonal obj) {
-		return objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<DatoPersonal>) objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
 			datosGuardados.setEstado(obj.getEstado());
 
 			DatoPersonal datosActualizados = null;
@@ -139,7 +139,8 @@ public class DatoPersonalResource {
 				datosActualizados = objService.updateDatosPersonales(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
@@ -191,6 +192,22 @@ public class DatoPersonalResource {
 	
 	@PostMapping("/guardarImagen")
 	public ResponseEntity<?> guardarArchivo(@RequestParam String proceso,
+			@RequestParam Integer codigo,@RequestParam MultipartFile archivo) throws Exception {
+		
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(objService.actualizarImagen( proceso,codigo,archivo));
+		
+		} catch (Exception e) {			
+			
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
+			
+		}
+
+	}
+	
+	
+	@PutMapping("/actualizarImagen")
+	public ResponseEntity<?> actualizarArchivo(@RequestParam String proceso,
 			@RequestParam Integer codigo,@RequestParam MultipartFile archivo) throws Exception {
 		
 		try {

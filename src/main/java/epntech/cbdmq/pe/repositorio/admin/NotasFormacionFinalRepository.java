@@ -10,3 +10,4 @@ public interface NotasFormacionFinalRepository extends JpaRepository<NotasFormac
 	@Procedure(value = "cbdmq.calcular_nota_final")
 	Integer calcular_nota_final();
 }
+

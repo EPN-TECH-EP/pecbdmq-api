@@ -26,7 +26,8 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
-
+import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
+import epntech.cbdmq.pe.dominio.util.ComponenteTipo;
 import epntech.cbdmq.pe.servicio.impl.ComponenteNotaServiceImpl;
 
 
@@ -67,7 +68,7 @@ public class ComponenteNotaResource {
 				datosActualizados = objServices.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
@@ -80,16 +81,13 @@ public class ComponenteNotaResource {
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
-    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message){
-    	return new ResponseEntity<>(new HttpResponse(
-    			httpStatus.value(), 
-    			httpStatus, 
-    			httpStatus.
-    			getReasonPhrase().
-    			toUpperCase(),
-                message), 
-    			httpStatus);
-
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
+    @GetMapping("/listarComponenteTipo")
+	public List<ComponenteTipo> listarTodo() {
+		return objServices.getComponenteTipo();
     }
 
    

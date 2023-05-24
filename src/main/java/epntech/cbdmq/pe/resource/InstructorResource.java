@@ -29,13 +29,13 @@ public class InstructorResource {
 
 	@Autowired
 	private InstructorServiceImpl objService;
-
+	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Instructor obj) throws DataException {
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
-
+	
 	@GetMapping("/listar")
 	public List<Instructor> listar() {
 		return objService.getAll();
@@ -52,32 +52,32 @@ public class InstructorResource {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCod_instructor(obj.getCod_instructor());
 			datosGuardados.setCod_tipo_procedencia(obj.getCod_tipo_procedencia());
-			datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
+			/*datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_tipo_instructor());
-			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
+			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());*/
 			Instructor datosActualizados = objService.update(datosGuardados);
 			datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
-
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
 		objService.delete(codigo);
 		return new ResponseEntity<String>("Registro eliminado exitosamente", HttpStatus.OK);
 	}
-
+	
 	@PostMapping("/asignarMaterias")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> asignarMaterias(@RequestBody List<InstructorMateria> lista) throws DataException{
 		objService.saveAllMaterias(lista);
 		return response(HttpStatus.OK, EXITO);
-	}
+	    }
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
 	}
-
+	
 }

@@ -56,12 +56,10 @@ public class PonderacionResource {
 			datosGuardados.setCod_modulo(obj.getCod_modulo());
 			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
 			datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
-			datosGuardados.setCod_tipo_nota(obj.getCod_tipo_nota());
+			datosGuardados.setPorcentaje_final_ponderacion(obj.getPorcentaje_final_ponderacion());
+			//datosGuardados.setCod_tipo_nota(obj.getCod_tipo_nota());
 			
-			datosGuardados.setPorcentajefinalponderacion(obj.getPorcentajefinalponderacion());
-			datosGuardados.setPorcentajenotamateria(obj.getPorcentajenotamateria());
-			datosGuardados.setFechainiciovigencia(obj.getFechainiciovigencia());
-			datosGuardados.setFechainiciovigencia(obj.getFechafinvigencia());
+			
 			datosGuardados.setEstado(obj.getEstado());
 			
 			
@@ -70,7 +68,7 @@ public class PonderacionResource {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

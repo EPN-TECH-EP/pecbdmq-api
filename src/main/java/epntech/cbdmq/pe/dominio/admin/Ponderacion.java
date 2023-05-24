@@ -36,7 +36,7 @@ public class Ponderacion {
 	@Column(name = "cod_tipo_nota")
 	private Integer cod_tipo_nota;
 	@Column(name = "porcentaje_final_ponderacion")
-	private BigDecimal porcentajefinalponderacion;
+	private BigDecimal porcentaje_final_ponderacion;
 	@Column(name = "porcentaje_nota_materia")
 	private BigDecimal porcentajenotamateria;
 	@Column(name = "fecha_inicio_vigencia")

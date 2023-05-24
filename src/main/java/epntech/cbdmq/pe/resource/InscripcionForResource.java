@@ -131,7 +131,7 @@ public class InscripcionForResource {
 	
 	@PutMapping("/generaPin")
 	public ResponseEntity<InscripcionFor> getPin(@RequestParam("idDatoPersonal") Integer idDatoPersonal) throws DataException, MessagingException {
-		return objService.getById(idDatoPersonal).map(datosGuardados -> {
+		return (ResponseEntity<InscripcionFor>) objService.getById(idDatoPersonal).map(datosGuardados -> {
 			datosGuardados.setCodDatoPersonal(idDatoPersonal);
 
 			InscripcionFor datosActualizados = new InscripcionFor();
@@ -139,7 +139,8 @@ public class InscripcionForResource {
 				datosActualizados = objService.savePin(datosGuardados);
 			} catch (DataException | MessagingException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 			}
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

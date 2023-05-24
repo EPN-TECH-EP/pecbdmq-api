@@ -60,9 +60,49 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	@Override
-	public Documento update(Documento objActualizado) {
+	public Documento update(Documento objActualizado, MultipartFile archivo)
+			throws ArchivoMuyGrandeExcepcion, IOException {
 		// TODO Auto-generated method stub
+		Path ruta = Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()).toAbsolutePath().normalize();
+		// ruta =Path.of( );
+
+		if (Files.exists(ruta)) {
+			try {
+				Files.delete(ruta);
+			} catch (Exception e) {
+
+				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+				// e.printStackTrace();
+			}
+		}
+		
+
+		// Cargar documento
+		
+		System.out.println("parent " + ruta.getParent().toString());
+
+		if (!Files.exists(ruta.getParent())) {
+			Files.createDirectories(ruta.getParent());
+		}
+
+		List<DocumentoRuta> lista = new ArrayList<>();
+		DocumentoRuta documentos = new DocumentoRuta();
+
+		MultipartFile multipartFile = archivo;
+		if (multipartFile.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
+			throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+		}
+
+		Files.copy(multipartFile.getInputStream(), ruta.getParent().resolve(multipartFile.getOriginalFilename()),
+				StandardCopyOption.REPLACE_EXISTING);
+		//LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
+		//documentos.setRuta(ruta.getParent()  + "\\" + multipartFile.getOriginalFilename());
+		// slista.add(documentos);
+
+		objActualizado.setRuta(ruta.getParent() + "\\" + multipartFile.getOriginalFilename());
+		objActualizado.setNombre(multipartFile.getOriginalFilename());
 		return repo.save(objActualizado);
+		
 	}
 
 	@Override
@@ -71,6 +111,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	private String ruta(String proceso, String id) {
+
 		String resultado = null;
 		resultado = ARCHIVOS_RUTA + proceso + "/" + id + "/";
 
@@ -123,7 +164,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 		documento = repo.findById(id);
 		documentos = documento.get();
 		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
-		
+
 		System.out.println("ruta: " + ruta);
 		if (Files.exists(ruta)) {
 			try {
@@ -131,7 +172,8 @@ public class DocumentoServiceimpl implements DocumentoService {
 				Files.delete(ruta);
 			} catch (Exception e) {
 
-				e.printStackTrace();
+				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+				// e.printStackTrace();
 			}
 		}
 	}

@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -18,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -50,6 +52,9 @@ public class Materia {
 	
 	//@ManyToMany(mappedBy = "materias", cascade = CascadeType.ALL)
 	//public Set<Aula> aulas;
+	
+	@OneToMany(mappedBy="cod_materia")
+    private List<MateriaPeriodo> MateriaPeriodo;
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_materia_paralelo",

@@ -62,4 +62,3 @@ public class PruebaDetalle {
 	@Column(name = "orden_tipo_prueba")
 	private Integer ordenTipoPrueba;
 }
-

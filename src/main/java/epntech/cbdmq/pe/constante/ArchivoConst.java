@@ -15,6 +15,7 @@ public class ArchivoConst {
 	public static final String NO_ES_ARCHIVO_IMAGEN = " No es un archivo de imagen! Seleccione un archivo de imagen";
 
 	public static final String ARCHIVO_MUY_GRANDE = " Archivo excede el tamaño máximo permitido.";
+	public static final String ARCHIVO_NO_EXISTE =" Este archivo no existe ";
 
 	public static final String PUNTO = ".";
 	public static final String FORWARD_SLASH = "/";
@@ -23,10 +24,14 @@ public class ArchivoConst {
 	public static final String PATH_PROCESO_PERIODO_ACADEMICO = "Periodo Academico/";
 	public static final String PATH_PROCESO_INSCRIPCION_FOR = "Postulante/";
 	public static final String NO_ADJUNTO = "No existe un documento adjunto";
+
 	public static final String FALLA_PROCESAR_EXCEL = "Falla al procesar el archivo excel";
 	public static final String PATH_RESULTADO_PRUEBAS = "Resultado Pruebas/";
 	public static final String PATH_RESULTADO_ANTIGUEDADES = "Antiguedades/";
+
+	public static final String PATH_PROCESO_INSCRIPCION_VAL = "Inscritos Validos/";
 	
-	public static final String ARCHIVO_NO_EXISTE =" Este archivo no existe ";
+	
+	
 
 }
