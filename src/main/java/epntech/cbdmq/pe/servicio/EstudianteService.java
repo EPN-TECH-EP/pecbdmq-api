@@ -34,7 +34,7 @@ public interface EstudianteService {
 
  */
 	List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
-	List<EspecializacionEstudiante> getEspecializacionHistoricos();
-	List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos();
+	List<EspecializacionEstudiante> getEspecializacionHistoricos(String codEstudiante, Pageable pageable);
+	List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos(String codEstudiante, Pageable pageable);
 
 }

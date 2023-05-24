@@ -19,11 +19,11 @@ public class ProfesionalizacionEstudiante {
     private String coordinador;
     private BigDecimal notaMinima;
     private BigDecimal pesoMateria;
-    private BigInteger numeroHoras;
+    private Long numeroHoras;
     private BigDecimal notaMateria;
     private BigDecimal notaDisciplina;
 
-    public ProfesionalizacionEstudiante(String cedula, String nombre, String apellido, String codigoUnicoEstudiante, String nombreCargo, String nombreRango, String nombreGrado, String nombreMateria, String coordinador, BigDecimal notaMinima, BigDecimal pesoMateria, BigInteger numeroHoras, BigDecimal notaMateria, BigDecimal notaDisciplina) {
+    public ProfesionalizacionEstudiante(String cedula, String nombre, String apellido, String codigoUnicoEstudiante, String nombreCargo, String nombreRango, String nombreGrado, String nombreMateria, String coordinador, BigDecimal notaMinima, BigDecimal pesoMateria, Long numeroHoras, BigDecimal notaMateria, BigDecimal notaDisciplina) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;

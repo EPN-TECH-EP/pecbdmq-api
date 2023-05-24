@@ -94,14 +94,15 @@ public class EstudianteResource {
 	}
 
 	@PostMapping("/listarFormHistorico")
-	public List<FormacionEstudiante> listarFormHistorico(@RequestParam("estudiante")String codEstudiante, Pageable pageable) {
+	public List<FormacionEstudiante> listarFormHistorico(@RequestParam("codUnico")String codEstudiante, Pageable pageable) {
 		return objService.getHistoricos(codEstudiante, pageable);
 	}
-	@GetMapping("/listarEspHistorico")
-	public List<EspecializacionEstudiante> listarEspHistorico() {
-		return objService.getEspecializacionHistoricos();
-	}	@GetMapping("/listarProfHistorico")
-	public List<ProfesionalizacionEstudiante> listarProfHistorico() {
-		return objService.getProfesionalizacionHistoricos();
+	@PostMapping("/listarEspHistorico")
+	public List<EspecializacionEstudiante> listarEspHistorico(@RequestParam("codUnico")String codEstudiante, Pageable pageable) {
+		return objService.getEspecializacionHistoricos(codEstudiante,pageable);
+	}
+	@PostMapping("/listarProfHistorico")
+	public List<ProfesionalizacionEstudiante> listarProfHistorico(@RequestParam("codUnico")String codEstudiante, Pageable pageable) {
+		return objService.getProfesionalizacionHistoricos(codEstudiante, pageable);
 	}
 }

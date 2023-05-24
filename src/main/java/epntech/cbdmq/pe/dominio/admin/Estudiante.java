@@ -120,7 +120,8 @@ import lombok.Data;
 				"left join {h-schema}gen_cargo cg on cg.cod_cargo=gdp.cod_cargo \n" +
 				"left join {h-schema}gen_rango rg on rg.cod_rango=gdp.cod_rango \n" +
 				"left join {h-schema}gen_grado gd on gd.cod_grado=gdp.cod_grado  \n" +
-				"left join {h-schema}gen_dato_personal gdp2 on gdp2.cod_datos_personales =gi.cod_datos_personales \n"
+				"left join {h-schema}gen_dato_personal gdp2 on gdp2.cod_datos_personales =gi.cod_datos_personales \n"+
+				"where ge.codigo_unico_estudiante = :codUnico"
 		,
 		resultSetMapping = "EspecializacionEstudiante"
 )
@@ -178,9 +179,8 @@ import lombok.Data;
 				"left join cbdmq.gen_cargo cg on cg.cod_cargo=gdp.cod_cargo \n" +
 				"left join cbdmq.gen_rango rg on rg.cod_rango=gdp.cod_rango \n" +
 				"left join cbdmq.gen_grado gd on gd.cod_grado=gdp.cod_grado  \n" +
-				"left join cbdmq.gen_dato_personal gdp2 on gdp2.cod_datos_personales =gins.cod_datos_personales \n" +
-				"\n" +
-				"\n"
+				"left join cbdmq.gen_dato_personal gdp2 on gdp2.cod_datos_personales =gins.cod_datos_personales \n"+
+				"where ge.codigo_unico_estudiante = :codUnico"
 		,
 		resultSetMapping = "ProfesionalizacionEstudiante"
 )

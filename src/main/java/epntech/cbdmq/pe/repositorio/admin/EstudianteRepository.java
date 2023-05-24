@@ -36,8 +36,8 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 	List<FormacionEstudiante> getForHistoricos(@Param("codUnico") String codUnico, Pageable pageable);
 
 	@Query(nativeQuery = true, name = "EspecializacionEstudiante.findHistorico")
-	List<EspecializacionEstudiante> getEspHistoricos();
+	List<EspecializacionEstudiante> getEspHistoricos(@Param("codUnico") String codUnico, Pageable pageable);
 
 	@Query(nativeQuery = true, name = "ProfesionalizacionEstudiante.findHistorico")
-	List<ProfesionalizacionEstudiante> getProfHistoricos();
+	List<ProfesionalizacionEstudiante> getProfHistoricos(@Param("codUnico") String codUnico, Pageable pageable);
 }
