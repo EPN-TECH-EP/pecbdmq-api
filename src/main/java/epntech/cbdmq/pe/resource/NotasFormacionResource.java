@@ -1,6 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacionFinal;
-import epntech.cbdmq.pe.dominio.admin.TipoBaja;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.NotasFormacionFinalServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.NotasFormacionServiceImpl;
@@ -27,7 +26,7 @@ import epntech.cbdmq.pe.servicio.impl.NotasFormacionServiceImpl;
 @RestController
 @RequestMapping("/notasFormacion")
 public class NotasFormacionResource {
-	
+
 	@Autowired
 	private NotasFormacionServiceImpl notasFormacionServiceImpl;
 	@Autowired
@@ -35,41 +34,57 @@ public class NotasFormacionResource {
 
 	@PostMapping("/registrar")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody List<NotasFormacion> lista) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody List<NotasFormacion> lista) throws DataException {
 		notasFormacionServiceImpl.saveAll(lista);
 		return response(HttpStatus.OK, EXITO);
 	}
-	
+
 	@GetMapping("/estudiante/{id}")
 	public List<NotasFormacion> listar(@PathVariable("id") int codigo) {
 		return notasFormacionServiceImpl.getByEstudiante(codigo);
 	}
-	
+
 	@PostMapping("/disciplinaOSemana")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> registarDisciplinaOficialSemana(@RequestBody List<NotasFormacionFinal> lista) throws DataException{
+	public ResponseEntity<?> registarDisciplinaOficialSemana(@RequestBody List<NotasFormacionFinal> lista)
+			throws DataException {
 		notasFormacionFinalServiceImpl.cargarDisciplina(lista);
 		return response(HttpStatus.OK, EXITO);
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int id, @RequestBody NotasFormacion obj) throws DataException {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int id, @RequestBody NotasFormacion obj)
+			throws DataException {
 		return (ResponseEntity<NotasFormacion>) notasFormacionServiceImpl.getById(id).map(datosGuardados -> {
 			datosGuardados.setNotaSupletorio(obj.getNotaSupletorio());
 
 			NotasFormacion datosActualizados = null;
-			datosActualizados = notasFormacionServiceImpl.update(datosGuardados);
+			try {
+				datosActualizados = notasFormacionServiceImpl.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage());
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
-	
-	 @GetMapping("/{id}")
-	    public ResponseEntity<?> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
-	        return notasFormacionServiceImpl.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	    }
+
+	@GetMapping("/{id}")
+	public ResponseEntity<?> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
+		return notasFormacionServiceImpl.getById(codigo).map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@PostMapping("/calcularNotas")
+	public ResponseEntity<?> calcularNotas() throws DataException {
+		notasFormacionFinalServiceImpl.calcularNotas();
+		return response(HttpStatus.OK, PROCESO_EXITO);
+	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
-    }
+		return new ResponseEntity<>(
+				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+				httpStatus);
+	}
 }

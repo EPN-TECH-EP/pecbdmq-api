@@ -25,7 +25,7 @@ import epntech.cbdmq.pe.servicio.TipoBajaService;
 @Service
 public class TipoBajaServiceImpl implements TipoBajaService {
     @Autowired
-    TipoBajaRepository repo;
+    private TipoBajaRepository repo;
 
     /**
      * {@inheritDoc}

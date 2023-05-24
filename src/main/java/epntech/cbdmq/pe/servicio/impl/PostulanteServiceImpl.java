@@ -145,4 +145,10 @@ public class PostulanteServiceImpl implements PostulanteService {
 			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
 	}
 
+	@Override
+	public List<Postulante> getPostulantesAsignadosPaginado(Integer usuario, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return repo.getPostulantesAsignadosPaginado(usuario, pageable);
+	}
+
 }

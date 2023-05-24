@@ -52,9 +52,9 @@ public class InstructorResource {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCod_instructor(obj.getCod_instructor());
 			datosGuardados.setCod_tipo_procedencia(obj.getCod_tipo_procedencia());
-			datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
+			/*datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_tipo_instructor());
-			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
+			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());*/
 			Instructor datosActualizados = objService.update(datosGuardados);
 			datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

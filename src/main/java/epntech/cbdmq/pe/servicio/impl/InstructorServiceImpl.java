@@ -11,10 +11,17 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.EspCurso;
 import epntech.cbdmq.pe.dominio.admin.Instructor;
+
+import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
+import epntech.cbdmq.pe.dominio.util.InstructorPeriodo;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.InstructorPeriodoRepository;
+
 import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.InstructorMateriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.InstructorRepository;
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.InstructorService;
 
 @Service
@@ -25,10 +32,23 @@ public class InstructorServiceImpl implements InstructorService {
 	@Autowired
 	private InstructorMateriaRepository instructorMateriaRepository; 
 
+	@Autowired
+	private InstructorPeriodoRepository repo2;
+	
+	@Autowired
+	private PeriodoAcademicoRepository repo3;
+	
 	@Override
 	public Instructor save(Instructor obj) throws DataException {
+		Instructor instructor = repo.save(obj);
+		PeriodoAcademico peracademico = new PeriodoAcademico();
+		peracademico =repo3.getPeriodoAcademicoActivo();
+		InstructorPeriodo insperiodo= new InstructorPeriodo(); 
+		insperiodo.setCod_instructor(instructor.getCod_instructor());
+		insperiodo.setCod_periodo_academico(peracademico.getCodigo());
+				repo2.save(insperiodo);
 		
-		return repo.save(obj);
+		return instructor;
 	}
 
 	@Override

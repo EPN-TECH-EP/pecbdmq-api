@@ -7,6 +7,8 @@ import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,6 +36,7 @@ public class Apelacion {
 	private Integer cod_estudiante;
 	@Column(name = "cod_instructor")
 	private Integer cod_instructor;*/
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "fecha_solicitud")
 	private LocalDateTime fechasolicitud;
 	@Column(name = "nombre_prueba_revision")

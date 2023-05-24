@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ResultadoPruebaResource {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<ResultadoPrueba> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody ResultadoPrueba obj) throws DataException{
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<ResultadoPrueba>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCod_resul_prueba(obj.getCod_resul_prueba());
 			datosGuardados.setCod_funcionario(obj.getCod_funcionario());
 			datosGuardados.setCod_estudiante(obj.getCod_estudiante());
@@ -68,7 +69,8 @@ public class ResultadoPruebaResource {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

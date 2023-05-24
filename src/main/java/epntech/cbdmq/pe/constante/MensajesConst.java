@@ -34,6 +34,11 @@ public class MensajesConst {
 	public static final String ESTADO_INVALIDO = "El estado no corresponde o es inválido.";
 	public static final String ORDEN_INCORRECTO = "No existen un orden correcto de los registros";
 	public static final String DATOS_REGISTRADOS = "Datos registrados exitosamente";
+	public static final String PROCESO_EXITO = "Proceso ejecutado con éxito!";
+	public static final String NO_PERIODO_ACTIVO = "No existe Período Academico activo";
+	public static final String FECHA_INSCRIPCION_INVALIDA = "La fecha de inscripción fuera del rango permitido ";
+	public static final String HORA_INSCRIPCION_INVALIDA = "La hora de inscripción fuera del rango permitido ";
+	public static final String PA_INACTIVO = "Período Académico Inactivo";
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";

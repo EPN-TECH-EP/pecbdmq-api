@@ -27,4 +27,10 @@ public interface ConvocatoriaRepository extends JpaRepository<Convocatoria, Inte
 			+ "and UPPER(c.estado) = 'ACTIVO' "
 			+ "and UPPER(pa.estado) = 'ACTIVO' ", nativeQuery=true)
 	Set<Convocatoria> getConvocatoriaActiva();
+	
+	@Query(value="select c.* "
+			+ "from cbdmq.gen_convocatoria c "
+			+ "where c.cod_periodo_academico =  cbdmq.get_pa_activo() "
+			+ "and UPPER(c.estado) = 'ACTIVO' ", nativeQuery=true)
+	Convocatoria getConvocatoriapaactivo();
 }

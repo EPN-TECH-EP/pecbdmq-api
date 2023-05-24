@@ -41,6 +41,14 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Integer>
 			+ "order by cod_usuario ", nativeQuery=true)
 	List<Postulante> getPostulantesPaginado(Integer usuario, Pageable pageable);
 	
+	@Query(value="select p.* "
+			+ "from cbdmq.gen_postulante p "
+			+ "where p.estado = 'ASIGNADO' "
+			+ "and p.cod_usuario = :usuario "
+			+ "and p.cod_periodo_academico = cbdmq.get_pa_activo() "
+			+ "order by cod_usuario ", nativeQuery=true)
+	List<Postulante> getPostulantesAsignadosPaginado(Integer usuario, Pageable pageable);
+	
 	@Procedure(value = "cbdmq.update_state_postulante")
 	Boolean updateState(Integer codPostulante);
 	

@@ -40,7 +40,7 @@ public interface PeriodoAcademicoService {
 	
 	Integer getPAActivo();
 	
-	void cargarDocs(List<MultipartFile> archivos)  throws IOException, ArchivoMuyGrandeExcepcion;
+	void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion)  throws IOException, ArchivoMuyGrandeExcepcion;
 	
 	void eliminar(List<DocsUtil> docs);
 }

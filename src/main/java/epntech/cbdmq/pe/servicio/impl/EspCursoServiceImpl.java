@@ -22,16 +22,7 @@ public class EspCursoServiceImpl implements EspCursoService {
 	private EspCursoRepository repo;
 
 	@Override
-	public EspCurso save(EspCurso obj) throws DataException {
-		if (obj.getNombrecursoespecializacion().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		// Optional<EspCurso> objGuardado =
-		// repo.findBynombrecursoespecializacion(obj.getNombrecursoespecializacion());
-		Optional<EspCurso> objGuardado = repo.findBynombrecursoespecializacion(obj.getNombrecursoespecializacion());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-
+	public EspCurso save(EspCurso obj) throws DataException {		
 		return repo.save(obj);
 	}
 
@@ -48,14 +39,7 @@ public class EspCursoServiceImpl implements EspCursoService {
 	}
 
 	@Override
-	public EspCurso update(EspCurso objActualizado) throws DataException {
-		if (objActualizado.getNombrecursoespecializacion().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<EspCurso> objGuardado = repo
-				.findBynombrecursoespecializacion(objActualizado.getNombrecursoespecializacion());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
+	public EspCurso update(EspCurso objActualizado) throws DataException {		
 		return repo.save(objActualizado);
 	}
 

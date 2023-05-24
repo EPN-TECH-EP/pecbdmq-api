@@ -146,7 +146,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	}
 
 	@Override
-	public void cargarDocs(List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion {
+	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion {
 		// TODO Auto-generated method stub
 		String resultado;
 		Integer periodo = repo.getPAActive();
@@ -178,6 +178,8 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			
 			Documento documento = new Documento();
 			documento.setEstado("ACTIVO");
+			documento.setDescripcion(descripcion);
+			documento.setObservaciones(observacion);
 			documento.setNombre(multipartFile.getOriginalFilename());
 			documento.setRuta(resultado + multipartFile.getOriginalFilename());
 			documento = documentoRepository.save(documento);

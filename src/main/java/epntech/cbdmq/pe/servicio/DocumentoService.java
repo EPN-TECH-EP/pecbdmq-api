@@ -20,7 +20,7 @@ public interface DocumentoService {
 	
 	Optional<Documento> getById(int id);
 	
-	Documento update(Documento objActualizado);
+	Documento update(Documento objActualizado, MultipartFile archivo) throws ArchivoMuyGrandeExcepcion,IOException;
 	
 	void delete(int id);
 	

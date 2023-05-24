@@ -89,7 +89,7 @@ public class PeriodoAcademicoResource {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
@@ -130,7 +130,7 @@ public class PeriodoAcademicoResource {
 		return response(HttpStatus.OK, result);
 	}
 	
-	@GetMapping("/actualizaEstado")
+	@PostMapping("/actualizaEstado")
 	public ResponseEntity<HttpResponse> validState(@RequestParam("estado") Integer estado, @RequestParam("proceso") String proceso) {
 		Integer result = objService.validState(estado, proceso);
 		String r;
@@ -153,8 +153,8 @@ public class PeriodoAcademicoResource {
 	}
 	
 	@PostMapping("/cargarDocs")
-	public ResponseEntity<?> guardarArchivo(@RequestParam List<MultipartFile> archivos) throws Exception {
-		objService.cargarDocs(archivos);
+	public ResponseEntity<?> guardarArchivo(@RequestParam List<MultipartFile> archivos,@RequestParam String descripcion,@RequestParam String observacion) throws Exception {
+		objService.cargarDocs(archivos,descripcion,observacion);
 		return response(HttpStatus.OK, EXITO);
 	}
 	

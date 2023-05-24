@@ -1,6 +1,14 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 
+import java.math.BigDecimal;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 
 import java.time.LocalTime;
 import java.util.Date;
@@ -19,6 +27,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity(name = "gen_prueba_detalle")
