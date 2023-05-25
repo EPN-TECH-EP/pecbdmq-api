@@ -34,6 +34,7 @@ public class MensajesConst {
 	
 	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
 	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";
-	
+	public static final String NO_ENCUENTRA="No encuentra objetos relacionados";
+
 	
 }

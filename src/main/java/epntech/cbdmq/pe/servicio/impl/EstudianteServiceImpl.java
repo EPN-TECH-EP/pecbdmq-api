@@ -3,16 +3,14 @@ package epntech.cbdmq.pe.servicio.impl;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.util.EspecializacionEstudiante;
-import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
-import epntech.cbdmq.pe.dominio.util.ProfesionalizacionEstudiante;
+import epntech.cbdmq.pe.dominio.util.*;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Estudiante;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 import epntech.cbdmq.pe.repositorio.admin.EstudianteRepository;
 import epntech.cbdmq.pe.servicio.EstudianteService;
 
@@ -84,6 +82,12 @@ public class EstudianteServiceImpl implements EstudianteService {
 	@Override
 	public List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos(String codEstudiante, Pageable pageable) {
 		return this.repo.getProfHistoricos(codEstudiante,pageable);
+	}
+
+	@Override
+	public EstudianteDto getEstudianteByUsuario(String codUsuario){
+
+		return this.repo.getEstudianteByUsuario(codUsuario);
 	}
 /*
 	@Override

@@ -51,4 +51,9 @@ public class InstructorServiceImpl implements InstructorService {
 		repo.deleteById(codigo);
 	}
 
+	@Override
+	public Instructor getInstructorByUser(String coduser) {
+		return repo.getInstructorByUsuario(coduser);
+	}
+
 }

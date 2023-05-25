@@ -3,14 +3,12 @@ package epntech.cbdmq.pe.servicio;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.util.EspecializacionEstudiante;
-import epntech.cbdmq.pe.dominio.util.FormacionEstudiante;
-import epntech.cbdmq.pe.dominio.util.ProfesionalizacionEstudiante;
+import epntech.cbdmq.pe.dominio.util.*;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import epntech.cbdmq.pe.dominio.admin.Estudiante;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 
 public interface EstudianteService {
 	
@@ -36,5 +34,6 @@ public interface EstudianteService {
 	List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
 	List<EspecializacionEstudiante> getEspecializacionHistoricos(String codEstudiante, Pageable pageable);
 	List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos(String codEstudiante, Pageable pageable);
+	EstudianteDto getEstudianteByUsuario(String codUsuario);
 
 }
