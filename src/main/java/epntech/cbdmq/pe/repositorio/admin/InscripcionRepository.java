@@ -1,9 +1,9 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
@@ -21,5 +21,5 @@ public interface InscripcionRepository extends JpaRepository<InscripcionFor, Int
 	String getIdPostulante(String proceso);
 	
 	@Procedure(value = "cbdmq.validar_edad")
-	Boolean validaEdad(Date fecha);
+	Boolean validaEdad(LocalDateTime fecha);
 }

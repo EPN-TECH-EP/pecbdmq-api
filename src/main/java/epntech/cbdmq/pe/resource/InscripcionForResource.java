@@ -1,13 +1,13 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.ArchivoConst.NO_ADJUNTO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,14 +33,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
-import epntech.cbdmq.pe.dominio.admin.TipoProcedencia;
 import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.ValidacionRequisitos;
 import epntech.cbdmq.pe.dominio.util.InscripcionResult;
 import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
+import epntech.cbdmq.pe.dominio.util.PostulanteUtil;
 import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosLista;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -106,7 +105,7 @@ public class InscripcionForResource {
             JsonNode value = entry.getValue();
             //System.out.println("Clave: " + key + ", Valor: " + value.asText());
             if(key.equals("fecha_nacimiento")) {
-                Date fecha = dateFormat.parse(value.asText());
+                LocalDateTime fecha = LocalDateTime.parse(value.asText());
                 inscripcion.setFecha_nacimiento(fecha);
             }
         }
@@ -219,8 +218,8 @@ public class InscripcionForResource {
 	}
 	
 	@GetMapping("/postulantesAllPaginado")
-	public List<Postulante> getPostulantesAllPaginado(Pageable pageable) {
-		return postulanteService.getPostulantesAllPaginado(pageable);
+	public List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable) {
+		return postulanteService.getPostulantesAllPaginadoTodo(pageable);
 	}
 	
 	@PutMapping("/postulante")
@@ -258,5 +257,10 @@ public class InscripcionForResource {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
+	}
+	
+	@GetMapping("/validafechas")
+	public Boolean getFecha() throws DataException, ParseException {
+		return objService.validaFechas();
 	}
 }

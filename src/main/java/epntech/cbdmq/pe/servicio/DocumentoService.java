@@ -26,7 +26,9 @@ public interface DocumentoService {
 	
 	List<DocumentoRuta> guardarArchivo(String proceso, String id, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 	
-	void eliminarArchivo( int id) throws IOException, ArchivoMuyGrandeExcepcion;
+	void eliminarArchivo(int id) throws IOException, ArchivoMuyGrandeExcepcion;
+	
+	void eliminarArchivo(Integer convocatoria, Integer codDocumento) throws IOException;
 	
 }
 

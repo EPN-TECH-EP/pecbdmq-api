@@ -57,12 +57,98 @@ public class InscripcionForRepository{
 	public InscripcionResult insertarInscripcionConDocumentos(InscripcionFor inscripcion, List<MultipartFile> docsInscripcion)
 			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException {
 	
-		String sqlDatoPersonal = "INSERT INTO cbdmq.gen_dato_personal (apellido, cedula, cod_estacion, correo_personal, estado, fecha_nacimiento, nombre, num_telef_convencional, tipo_sangre, validacion_correo, cod_provincia_nacimiento"
-				+"cod_unidad_gestion, genero, num_telef_celular, canton_nacimiento, reside_pais, cod_provincia_residencia, canton_residencia, calle_principal_residencia, calle_secundaria_residencia, numero_casa, colegio, tipo_nacionalidad, "
-				+"tiene_merito_deportivo, tiene_merito_academico, nombre_titulo, pais_titulo, ciudad_titulo, merito_deportivo_descripcion, merito_academico_descripcion, pin_validacion_correo) "
-				+ "VALUES (:apellido, :cedula, :cod_estacion, :correo_personal, :estado, :fecha_nacimiento, :nombre, :num_telef_convencional, :tipo_sangre, :validacion_correo, :cod_provincia_nacimiento "
-				+ ":cod_unidad_gestion, :genero, :num_telef_celular, :canton_nacimiento, :reside_pais, :cod_provincia_residencia, :canton_residencia, :calle_principal_residencia, :calle_secundaria_residencia, :numero_casa, :colegio, :tipo_nacionalidad, "
-				+ ":tiene_merito_deportivo, :tiene_merito_academico, :nombre_titulo, :pais_titulo, :ciudad_titulo, :merito_deportivo_descripcion, :merito_academico_descripcion, :pin_validacion_correo)";
+		String sqlDatoPersonal = "INSERT INTO cbdmq.gen_dato_personal (apellido,\r\n"
+				+ "cedula,\r\n"
+				+ "cod_estacion,\r\n"
+				+ "correo_personal,\r\n"
+				+ "estado,\r\n"
+				+ "fecha_nacimiento,\r\n"
+				+ "nombre,\r\n"
+				+ "num_telef_convencional,\r\n"
+				+ "tipo_sangre,\r\n"
+				+ "validacion_correo,\r\n"
+				+ "cod_provincia_nacimiento,\r\n"
+				+ "cod_unidad_gestion,\r\n"
+				+ "sexo,\r\n"
+				+ "num_telef_celular,\r\n"
+				+ "reside_pais,\r\n"
+				+ "cod_provincia_residencia,\r\n"
+				+ "calle_principal_residencia,\r\n"
+				+ "calle_secundaria_residencia,\r\n"
+				+ "numero_casa,\r\n"
+				+ "colegio,\r\n"
+				+ "tipo_nacionalidad,\r\n"
+				+ "tiene_merito_deportivo,\r\n"
+				+ "tiene_merito_academico,\r\n"
+				+ "nombre_titulo_segundonivel,\r\n"
+				+ "pais_titulo_segundonivel,\r\n"
+				+ "ciudad_titulo_segundonivel,\r\n"
+				+ "merito_deportivo_descripcion,\r\n"
+				+ "merito_academico_descripcion,\r\n"
+				+ "pin_validacion_correo,\r\n"
+				+ "correo_institucional,\r\n"
+				+ "cod_cargo,\r\n"
+				+ "cod_rango,\r\n"
+				+ "cod_grado,\r\n"
+				+ "cod_documento_imagen,\r\n"
+				+ "cod_canton_nacimiento,\r\n"
+				+ "cod_canton_residencia,\r\n"
+				+ "cod_canton_tercernivel,\r\n"
+				+ "cod_provincia_tercernivel,\r\n"
+				+ "fecha_salida_institucion,\r\n"
+				+ "nivel_instruccion,\r\n"
+				+ "nombre_titulo_tercernivel,\r\n"
+				+ "nombre_titulo_cuartonivel,\r\n"
+				+ "es_vulnerable,\r\n"
+				+ "pais_titulo_cuartonivel,\r\n"
+				+ "cod_provincia_cuartonivel,\r\n"
+				+ "cod_canton_cuartonivel,) "
+				+ "VALUES (:apellido,\r\n"
+				+ ":cedula,\r\n"
+				+ ":cod_estacion,\r\n"
+				+ ":correo_personal,\r\n"
+				+ ":estado,\r\n"
+				+ ":fecha_nacimiento,\r\n"
+				+ ":nombre,\r\n"
+				+ ":num_telef_convencional,\r\n"
+				+ ":tipo_sangre,\r\n"
+				+ ":validacion_correo,\r\n"
+				+ ":cod_provincia_nacimiento,\r\n"
+				+ ":cod_unidad_gestion,\r\n"
+				+ ":sexo,\r\n"
+				+ ":num_telef_celular,\r\n"
+				+ ":reside_pais,\r\n"
+				+ ":cod_provincia_residencia,\r\n"
+				+ ":calle_principal_residencia,\r\n"
+				+ ":calle_secundaria_residencia,\r\n"
+				+ ":numero_casa,\r\n"
+				+ ":colegio,\r\n"
+				+ ":tipo_nacionalidad,\r\n"
+				+ ":tiene_merito_deportivo,\r\n"
+				+ ":tiene_merito_academico,\r\n"
+				+ ":nombre_titulo_segundonivel,\r\n"
+				+ ":pais_titulo_segundonivel,\r\n"
+				+ ":ciudad_titulo_segundonivel,\r\n"
+				+ ":merito_deportivo_descripcion,\r\n"
+				+ ":merito_academico_descripcion,\r\n"
+				+ ":pin_validacion_correo,\r\n"
+				+ ":correo_institucional,\r\n"
+				+ ":cod_cargo,\r\n"
+				+ ":cod_rango,\r\n"
+				+ ":cod_grado,\r\n"
+				+ ":cod_documento_imagen,\r\n"
+				+ ":cod_canton_nacimiento,\r\n"
+				+ ":cod_canton_residencia,\r\n"
+				+ ":cod_canton_tercernivel,\r\n"
+				+ ":cod_provincia_tercernivel,\r\n"
+				+ ":fecha_salida_institucion,\r\n"
+				+ ":nivel_instruccion,\r\n"
+				+ ":nombre_titulo_tercernivel,\r\n"
+				+ ":nombre_titulo_cuartonivel,\r\n"
+				+ ":es_vulnerable,\r\n"
+				+ ":pais_titulo_cuartonivel,\r\n"
+				+ ":cod_provincia_cuartonivel,\r\n"
+				+ ":cod_canton_cuartonivel,)";
 		
 		String sqlPostulante = "INSERT INTO cbdmq.gen_postulante (cod_datos_personales, estado, fecha_postulacion, edad_postulacion) "
 				+ "VALUES (:cod_datos_personales, :estado, :fecha_postulacion, :edad_postulacion)";
@@ -75,37 +161,53 @@ public class InscripcionForRepository{
 		
 
 		entityManager.createNativeQuery(sqlDatoPersonal)
-				.setParameter("apellido", inscripcion.getApellido())
-				.setParameter("cedula", inscripcion.getCedula())
-				.setParameter("cod_estacion", inscripcion.getCod_estacion())
-				.setParameter("correo_personal", inscripcion.getCorreoPersonal())
-				.setParameter("estado", inscripcion.getEstado())
-				.setParameter("fecha_nacimiento", inscripcion.getFecha_nacimiento())
-				.setParameter("nombre", inscripcion.getNombre())
-				.setParameter("num_telef_convencional", inscripcion.getNum_telef_convencional())
-				.setParameter("tipo_sangre", inscripcion.getTipo_sangre())
-				.setParameter("validacion_correo", inscripcion.getValidacion_correo())
-				.setParameter("cod_provincia_nacimiento", inscripcion.getCod_provincia_nacimiento())
-				.setParameter("cod_unidad_gestion", inscripcion.getCod_unidad_gestion())
-				.setParameter("genero", inscripcion.getGenero())
-				.setParameter("num_telef_celular", inscripcion.getNum_telef_celular())
-				//.setParameter("canton_nacimiento", inscripcion.getCanton_nacimiento())
-				.setParameter("reside_pais", inscripcion.getReside_pais())
-				.setParameter("cod_provincia_residencia", inscripcion.getCod_provincia_residencia())
-				//.setParameter("canton_residencia", inscripcion.getCanton_residencia())
-				.setParameter("calle_principal_residencia", inscripcion.getCalle_principal_residencia())
-				.setParameter("calle_secundaria_residencia", inscripcion.getCalle_secundaria_residencia())
-				.setParameter("numero_casa", inscripcion.getNumero_casa())
-				.setParameter("colegio", inscripcion.getColegio())
-				.setParameter("tipo_nacionalidad", inscripcion.getTipo_nacionalidad())
-				.setParameter("tiene_merito_deportivo", inscripcion.getTiene_merito_deportivo())
-				.setParameter("tiene_merito_academico", inscripcion.getTiene_merito_academico())
-				.setParameter("nombre_titulo", inscripcion.getNombre_titulo())
-				.setParameter("pais_titulo", inscripcion.getPais_titulo())
-				.setParameter("ciudad_titulo", inscripcion.getCiudad_titulo())
-				.setParameter("merito_deportivo_descripcion", inscripcion.getMerito_deportivo_descripcion())
-				.setParameter("merito_academico_descripcion", inscripcion.getMerito_academico_descripcion())
-				.setParameter("pin_validacion_correo", inscripcion.getPin_validacion_correo());
+		.setParameter("apellido", inscripcion.getApellido())
+		.setParameter("cedula", inscripcion.getCedula())
+		.setParameter("cod_estacion", inscripcion.getCod_estacion())
+		.setParameter("correo_personal", inscripcion.getCorreoPersonal())
+		.setParameter("estado", inscripcion.getEstado())
+		.setParameter("fecha_nacimiento", inscripcion.getFecha_nacimiento())
+		.setParameter("nombre", inscripcion.getNombre())
+		.setParameter("num_telef_convencional", inscripcion.getNum_telef_convencional())
+		.setParameter("tipo_sangre", inscripcion.getTipo_sangre())
+		.setParameter("validacion_correo", inscripcion.getValidacion_correo())
+		.setParameter("cod_provincia_nacimiento", inscripcion.getCod_provincia_nacimiento())
+		.setParameter("cod_unidad_gestion", inscripcion.getCod_unidad_gestion())
+		.setParameter("sexo", inscripcion.getSexo())
+		.setParameter("num_telef_celular", inscripcion.getNum_telef_celular())
+		.setParameter("reside_pais", inscripcion.getReside_pais())
+		.setParameter("cod_provincia_residencia", inscripcion.getCod_provincia_residencia())
+		.setParameter("calle_principal_residencia", inscripcion.getCalle_principal_residencia())
+		.setParameter("calle_secundaria_residencia", inscripcion.getCalle_secundaria_residencia())
+		.setParameter("numero_casa", inscripcion.getNumero_casa())
+		.setParameter("colegio", inscripcion.getColegio())
+		.setParameter("tipo_nacionalidad", inscripcion.getTipo_nacionalidad())
+		.setParameter("tiene_merito_deportivo", inscripcion.getTiene_merito_deportivo())
+		.setParameter("tiene_merito_academico", inscripcion.getTiene_merito_academico())
+		.setParameter("nombre_titulo_segundonivel", inscripcion.getNombre_titulo_segundonivel())
+		.setParameter("pais_titulo_segundonivel", inscripcion.getPais_titulo_segundonivel())
+		.setParameter("ciudad_titulo_segundonivel", inscripcion.getCiudad_titulo_segundonivel())
+		.setParameter("merito_deportivo_descripcion", inscripcion.getMerito_deportivo_descripcion())
+		.setParameter("merito_academico_descripcion", inscripcion.getMerito_academico_descripcion())
+		.setParameter("pin_validacion_correo", inscripcion.getPin_validacion_correo())
+		.setParameter("correo_institucional", inscripcion.getCorreo_institucional())
+		.setParameter("cod_cargo", inscripcion.getCod_cargo())
+		.setParameter("cod_rango", inscripcion.getCod_rango())
+		.setParameter("cod_grado", inscripcion.getCod_grado())
+		.setParameter("cod_documento_imagen", inscripcion.getCod_documento_imagen())
+		.setParameter("cod_canton_nacimiento", inscripcion.getCod_canton_nacimiento())
+		.setParameter("cod_canton_residencia", inscripcion.getCod_canton_residencia())
+		.setParameter("cod_canton_tercernivel", inscripcion.getCod_canton_tercer_nivel())
+		.setParameter("cod_provincia_tercernivel", inscripcion.getCod_provincia_tercer_nivel())
+		.setParameter("fecha_salida_institucion", inscripcion.getFecha_salida_institucion())
+		.setParameter("nivel_instruccion", inscripcion.getNivel_instruccion())
+		.setParameter("nombre_titulo_tercernivel", inscripcion.getNombre_titulo_tercernivel())
+		.setParameter("nombre_titulo_cuartonivel", inscripcion.getNombre_titulo_cuartonivel())
+		.setParameter("es_vulnerable", inscripcion.getEs_vulnerable())
+		.setParameter("pais_titulo_cuartonivel", inscripcion.getPais_titulo_cuartonivel())
+		.setParameter("cod_provincia_cuartonivel", inscripcion.getCod_provincia_cuartonivel())
+		.setParameter("cod_canton_cuartonivel", inscripcion.getCod_canton_cuartonivel())
+				;
 
 		entityManager.persist(inscripcion);
 		

@@ -2,7 +2,7 @@ package epntech.cbdmq.pe.servicio;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,5 +22,7 @@ public interface InscripcionForService {
 	
 	Optional<InscripcionFor> getById(int id);
 	
-	Boolean validaEdad(Date fecha);
+	Boolean validaEdad(LocalDateTime fecha);
+	
+	Boolean validaFechas()throws ParseException, DataException;
 }

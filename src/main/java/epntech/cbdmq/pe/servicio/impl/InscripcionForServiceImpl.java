@@ -2,17 +2,27 @@ package epntech.cbdmq.pe.servicio.impl;
 
 
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
+import static epntech.cbdmq.pe.constante.MensajesConst.CEDULA_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.CORREO_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.EDAD_NO_CUMPLE;
+import static epntech.cbdmq.pe.constante.MensajesConst.ERROR_REGISTRO;
+import static epntech.cbdmq.pe.constante.MensajesConst.FECHA_INSCRIPCION_INVALIDA;
+import static epntech.cbdmq.pe.constante.MensajesConst.HORA_INSCRIPCION_INVALIDA;
+import static epntech.cbdmq.pe.constante.MensajesConst.PA_INACTIVO;
+import static epntech.cbdmq.pe.constante.MensajesConst.PIN_INCORRECTO;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,9 +39,6 @@ import epntech.cbdmq.pe.repositorio.admin.PostulanteRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.InscripcionForService;
 import jakarta.mail.MessagingException;
-
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Service
@@ -159,7 +166,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 	}
 
 	@Override
-	public Boolean validaEdad(Date fecha) {
+	public Boolean validaEdad(LocalDateTime fecha) {
 		// TODO Auto-generated method stub
 		return repo1.validaEdad(fecha);
 	}
@@ -173,5 +180,29 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		obj.setPin_validacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
 		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
 		return repo1.save(obj);
+	}
+
+	@Override
+	public Boolean validaFechas() throws ParseException, DataException {
+		Date fechaActual = new Date();
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaFormateada = formato.format(fechaActual);
+        
+        SimpleDateFormat formatoDate = new SimpleDateFormat("yyyy-MM-dd");
+        fechaActual=formatoDate.parse(fechaFormateada);
+
+		LocalTime horaActual = LocalTime.now();
+		Date FechaInicio=convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria();
+		Date FechaFin=convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
+		
+		System.out.println("fechaActual "+fechaActual);
+		
+		if(!periodoAcademicoRepository.getActive())
+			throw new DataException(PA_INACTIVO);
+		if(!((fechaActual.after(FechaInicio) && fechaActual.before(FechaFin)) || fechaActual.equals(FechaInicio) || fechaActual.equals(FechaFin)))
+			return false;
+		else if(!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().getHoraInicioConvocatoria()) && horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().getHoraFinConvocatoria())))
+			return false;
+		return true;
 	}
 }

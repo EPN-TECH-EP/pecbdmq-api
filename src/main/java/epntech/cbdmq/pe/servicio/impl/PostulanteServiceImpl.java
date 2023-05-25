@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.util.PostulanteDatoPersonal;
+import epntech.cbdmq.pe.dominio.util.PostulanteUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteDPRepository;
 import epntech.cbdmq.pe.repositorio.admin.PostulanteRepository;
+import epntech.cbdmq.pe.repositorio.admin.PostulanteUtilRepository;
 import epntech.cbdmq.pe.servicio.PostulanteService;
 
 @Service
@@ -26,6 +28,9 @@ public class PostulanteServiceImpl implements PostulanteService {
 	
 	@Autowired
 	private PostulanteDPRepository repo1;
+	
+	@Autowired
+	private PostulanteUtilRepository postulanteUtilRepository;
 	
 	@Override
 	public Postulante save(Postulante obj, String proceso) {
@@ -108,7 +113,7 @@ public class PostulanteServiceImpl implements PostulanteService {
 	@Override
 	public List<Postulante> getPostulantesAllPaginado(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return repo.getPostulantesAllPaginado(pageable);
+		return repo.getPostulantesAllPaginadoTodo(pageable);
 	}
 
 	@Override
@@ -149,6 +154,12 @@ public class PostulanteServiceImpl implements PostulanteService {
 	public List<Postulante> getPostulantesAsignadosPaginado(Integer usuario, Pageable pageable) {
 		// TODO Auto-generated method stub
 		return repo.getPostulantesAsignadosPaginado(usuario, pageable);
+	}
+
+	@Override
+	public List<PostulanteUtil> getPostulantesAllPaginadoTodo(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return postulanteUtilRepository.getPostulantesAllPaginadoTodo(pageable);
 	}
 
 }
