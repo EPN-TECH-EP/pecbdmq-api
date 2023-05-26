@@ -18,8 +18,9 @@ public class EstudianteDto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "cod_estudiante")
     protected Integer codEstudiante;
-
+    @Column(name = "cod_datos_personales")
     protected Integer codDatosPersonales;
     protected String codigoUnicoEstudiante;
     protected String estado;

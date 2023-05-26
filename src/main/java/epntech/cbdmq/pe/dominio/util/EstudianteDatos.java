@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class EstudianteDatos extends Estudiante {
 
-	private static final long serialVersionUID = -4289535118198584986L;
+	//private static final long serialVersionUID = -4289535118198584986L;
 	
 	private String nombre;
 	private String apellido;
@@ -22,7 +22,7 @@ public class EstudianteDatos extends Estudiante {
 	private String provincia;
 	private String unidad_gestion;
 	
-	public EstudianteDatos(Integer codEstudiante, String grado, String resultadoEstudiante, String idEstudiante, 
+	/*public EstudianteDatos(Integer codEstudiante, String grado, String resultadoEstudiante, String idEstudiante, 
 			String nombre, String apellido, String cedula, String ciudad, String correo_personal, Date fecha_nacimiento,
 			String num_telef, String tipo_sangre, String estacion,  String provincia, String unidad_gestion, String estado) {
 		super();
@@ -43,7 +43,7 @@ public class EstudianteDatos extends Estudiante {
 		this.provincia = provincia;
 		this.unidad_gestion = unidad_gestion;
 		this.estado = estado;
-	}
+	}*/
 	
 	
 }

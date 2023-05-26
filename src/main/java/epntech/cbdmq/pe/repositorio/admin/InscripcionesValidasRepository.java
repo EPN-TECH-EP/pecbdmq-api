@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import epntech.cbdmq.pe.dominio.admin.Convocatorialistar;
-import epntech.cbdmq.pe.dominio.admin.InscripcionesValidas;
 import epntech.cbdmq.pe.dominio.util.InscripcionesValidasUtil;
 
 public interface InscripcionesValidasRepository extends JpaRepository<InscripcionesValidasUtil, Integer>{

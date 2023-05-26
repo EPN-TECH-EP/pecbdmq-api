@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
-import epntech.cbdmq.pe.dominio.util.PostulanteDatoPersonal;
 
 public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademico, Integer> {
 
@@ -64,4 +63,6 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
 			+ "	and UPPER(m.etiqueta) = 'FORMACIÓN' ", nativeQuery = true)
 	PeriodoAcademico getPeriodoAcademicoActivo();
 	
+	@Procedure(value = "cbdmq.get_pa_activo")
+	Integer getPAActive();
 }

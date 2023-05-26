@@ -1,7 +1,8 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.sql.Time;
-
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.hibernate.annotations.ResultCheckStyle;
@@ -38,15 +39,15 @@ public class Notas {
 	@Column(name = "cod_materia")
 	private Integer cod_materia;
 	@Column(name = "aporte_examen")
-	private Integer aporteexamen;
+	private BigDecimal aporteexamen;
 	@Column(name = "aporte_academico")
-	private Integer aporteacademico;
+	private BigDecimal aporteacademico;
 	@Column(name = "nota_final_formacion")
-	private Integer notafinalformacion;
+	private BigDecimal notafinalformacion;
 	@Column(name = "usuario_crea_nota")
 	private String usuariocreanota;
 	@Column(name = "fecha_crea_nota")
-	private Date fechacreanota;
+	private LocalDateTime fechacreanota;
 	@Column(name = "hora_crea_nota")
 	private Time horacreanota;
 	@Column(name = "usuario_mod_nota")

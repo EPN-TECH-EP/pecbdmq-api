@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class DocumentoHabilitanteResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<DocumentoHabilitante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody DocumentoHabilitante obj) {
-		return objService.getById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<DocumentoHabilitante>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setEstado(obj.getEstado());
 			
@@ -59,7 +60,9 @@ public class DocumentoHabilitanteResource {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				
+				return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());

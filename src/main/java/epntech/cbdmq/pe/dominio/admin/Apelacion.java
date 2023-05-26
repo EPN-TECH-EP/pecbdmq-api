@@ -1,10 +1,13 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +36,7 @@ public class Apelacion {
 	private Integer cod_estudiante;
 	@Column(name = "cod_instructor")
 	private Integer cod_instructor;*/
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "fecha_solicitud")
 	private LocalDateTime fechasolicitud;
 	@Column(name = "nombre_prueba_revision")
@@ -44,9 +48,9 @@ public class Apelacion {
 	@Column(name = "aprobacion")
 	private String aprobacion;
 	@Column(name = "nota_actual")
-	private Integer notaactual;
+	private BigDecimal notaactual;
 	@Column(name = "nota_nueva")
-	private Integer notanueva;
+	private BigDecimal notanueva;
 	@Column(name = "respuesta")
 	private String respuesta;
 	@Column(name = "estado")

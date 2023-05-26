@@ -45,7 +45,7 @@ public class NotaTest {
         
 		Notas obj = new Notas();
 		obj.setCod_nota_formacion(1);
-		obj.setFechacreanota(date);
+		//obj.setFechacreanota(date);
 		obj.setUsuariocreanota("texto");
 		obj.setEstado("activo");
 
@@ -66,7 +66,7 @@ public class NotaTest {
         
         Notas obj = new Notas();
 		obj.setCod_nota_formacion(1);
-		obj.setFechacreanota(date);
+		//obj.setFechacreanota(date);
 		obj.setUsuariocreanota("texto");
 		obj.setUsuariomodnota("amigo");
 		obj.setEstado("activo");

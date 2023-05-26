@@ -81,26 +81,60 @@ public class DatoPersonalResource {
 	public ResponseEntity<DatoPersonal> actualizarDatos(@PathVariable("id") Integer codigo,
 			@RequestBody DatoPersonal obj) {
 		return (ResponseEntity<DatoPersonal>) objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
-			datosGuardados.setCod_estacion(obj.getCod_estacion());
-			datosGuardados.setCedula(obj.getCedula());
-			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setCod_datos_personales(obj.getCod_datos_personales());
 			datosGuardados.setApellido(obj.getApellido());
-			datosGuardados.setFecha_nacimiento(obj.getFecha_nacimiento());
+			datosGuardados.setCedula(obj.getCedula());
+			datosGuardados.setCod_estacion(obj.getCod_estacion());
 			datosGuardados.setCorreo_personal(obj.getCorreo_personal());
-			datosGuardados.setValidacion_correo(obj.getValidacion_correo());
-			//datosGuardados.setNum_telef(obj. getNum_telef());
-			//datosGuardados.setCiudad(obj.getCiudad());
-			datosGuardados.setTipo_sangre(obj.getTipo_sangre());
-			//datosGuardados.setUnidad(obj.getUnidad());
 			datosGuardados.setEstado(obj.getEstado());
-			//datosGuardados.setProvincia(obj.getProvincia());
-
+			datosGuardados.setFecha_nacimiento(obj.getFecha_nacimiento());
+			datosGuardados.setNombre(obj.getNombre());
+			datosGuardados.setNum_telef_convencional(obj.getNum_telef_convencional());
+			datosGuardados.setTipo_sangre(obj.getTipo_sangre());
+			datosGuardados.setValidacion_correo(obj.getValidacion_correo());
+			datosGuardados.setCod_provincia_nacimiento(obj.getCod_provincia_nacimiento());
+			datosGuardados.setCod_unidad_gestion(obj.getCod_unidad_gestion());
+			datosGuardados.setSexo(obj.getSexo());
+			datosGuardados.setNum_telef_celular(obj.getNum_telef_celular());
+			datosGuardados.setReside_pais(obj.getReside_pais());
+			datosGuardados.setCod_provincia_residencia(obj.getCod_provincia_residencia());
+			datosGuardados.setCalle_principal_residencia(obj.getCalle_principal_residencia());
+			datosGuardados.setCalle_secundaria_residencia(obj.getCalle_secundaria_residencia());
+			datosGuardados.setNumero_casa(obj.getNumero_casa());
+			datosGuardados.setColegio(obj.getColegio());
+			datosGuardados.setTipo_nacionalidad(obj.getTipo_nacionalidad());
+			datosGuardados.setTiene_merito_deportivo(obj.getTiene_merito_deportivo());
+			datosGuardados.setTiene_merito_academico(obj.getTiene_merito_academico());
+			datosGuardados.setNombre_titulo_segundonivel(obj.getNombre_titulo_segundonivel());
+			datosGuardados.setPais_titulo_segundonivel(obj.getPais_titulo_segundonivel());
+			datosGuardados.setCiudad_titulo_segundonivel(obj.getCiudad_titulo_segundonivel());
+			datosGuardados.setMerito_deportivo_descripcion(obj.getMerito_deportivo_descripcion());
+			datosGuardados.setMerito_academico_descripcion(obj.getMerito_academico_descripcion());
+			datosGuardados.setPin_validacion_correo(obj.getPin_validacion_correo());
+			datosGuardados.setCorreo_institucional(obj.getCorreo_institucional());
+			datosGuardados.setCod_cargo(obj.getCod_cargo());
+			datosGuardados.setCod_rango(obj.getCod_rango());
+			datosGuardados.setCod_grado(obj.getCod_grado());
+			datosGuardados.setCod_documento_imagen(obj.getCod_documento_imagen());
+			datosGuardados.setCod_canton_nacimiento(obj.getCod_canton_nacimiento());
+			datosGuardados.setCod_canton_residencia(obj.getCod_canton_residencia());
+			datosGuardados.setCod_canton_tercer_nivel(obj.getCod_canton_tercer_nivel());
+			datosGuardados.setCod_provincia_tercer_nivel(obj.getCod_provincia_tercer_nivel());
+			datosGuardados.setFecha_salida_institucion(obj.getFecha_salida_institucion());
+			datosGuardados.setNivel_instruccion(obj.getNivel_instruccion());
+			datosGuardados.setNombre_titulo_tercernivel(obj.getNombre_titulo_tercernivel());
+			datosGuardados.setNombre_titulo_cuartonivel(obj.getNombre_titulo_cuartonivel());
+			datosGuardados.setEs_vulnerable(obj.getEs_vulnerable());
+			datosGuardados.setPais_titulo_cuartonivel(obj.getPais_titulo_cuartonivel());
+			datosGuardados.setCod_provincia_cuartonivel(obj.getCod_provincia_cuartonivel());
+			datosGuardados.setCod_canton_cuartonivel(obj.getCod_canton_cuartonivel());
+			
 			DatoPersonal datosActualizados = null;
 			try {
 				datosActualizados = objService.updateDatosPersonales(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
@@ -110,7 +144,7 @@ public class DatoPersonalResource {
 	@PutMapping("/eliminar/{id}")
 	public ResponseEntity<DatoPersonal> eliminarDatos(@PathVariable("id") Integer codigo,
 			@RequestBody DatoPersonal obj) {
-		return objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
+		return (ResponseEntity<DatoPersonal>) objService.getDatosPersonalesById(codigo).map(datosGuardados -> {
 			datosGuardados.setEstado(obj.getEstado());
 
 			DatoPersonal datosActualizados = null;
@@ -118,7 +152,8 @@ public class DatoPersonalResource {
 				datosActualizados = objService.updateDatosPersonales(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
@@ -175,6 +210,22 @@ public class DatoPersonalResource {
 	
 	@PostMapping("/guardarImagen")
 	public ResponseEntity<?> guardarArchivo(@RequestParam String proceso,
+			@RequestParam Integer codigo,@RequestParam MultipartFile archivo) throws Exception {
+		
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(objService.actualizarImagen( proceso,codigo,archivo));
+		
+		} catch (Exception e) {			
+			
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
+			
+		}
+
+	}
+	
+	
+	@PutMapping("/actualizarImagen")
+	public ResponseEntity<?> actualizarArchivo(@RequestParam String proceso,
 			@RequestParam Integer codigo,@RequestParam MultipartFile archivo) throws Exception {
 		
 		try {

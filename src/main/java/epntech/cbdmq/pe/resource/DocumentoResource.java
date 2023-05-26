@@ -48,17 +48,15 @@ public class DocumentoResource {
 
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	
-	
-	  @Value("${pecb.archivos.ruta}")
-	   private String directorioDocumentos;
-	
+	@Value("${pecb.archivos.ruta}")
+	private String directorioDocumentos;
+
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody Documento obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody Documento obj) throws DataException {
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/listar")
 	public List<Documento> listar() {
 		return objService.listAll();
@@ -66,81 +64,75 @@ public class DocumentoResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Documento> obtenerPorId(@PathVariable("id") int codigo) {
-		return objService.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return objService.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Documento> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Documento obj) throws DataException{
-
-
-	
-			
+	public ResponseEntity<Documento> actualizarDatos(@PathVariable("id") int codigo, @RequestParam Integer tipo,
+			@RequestParam String descripcion, @RequestParam String observacion, @RequestParam MultipartFile archivo)
+			throws DataException, ArchivoMuyGrandeExcepcion {
 
 		return (ResponseEntity<Documento>) objService.getById(codigo).map(datosGuardados -> {
 
-      datosGuardados.setNombre(obj.getNombre());
-			datosGuardados.setTipo(obj.getTipo());
+			datosGuardados.setTipo(tipo);
 
+			datosGuardados.setDescripcion(descripcion);
 
-			datosGuardados.setAutorizacion(obj.getAutorizacion());
-
-      datosGuardados.setDescripcion(obj.getDescripcion());
-			                         
-			datosGuardados.setObservaciones(obj.getObservaciones());
-			datosGuardados.setRuta(obj.getRuta());
-			
+			datosGuardados.setObservaciones(observacion);
 
 			Documento datosActualizados = null;
-			datosActualizados = objService.update(datosGuardados);
+			try {
+				datosActualizados = objService.update(datosGuardados, archivo);
+			} catch (ArchivoMuyGrandeExcepcion | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return response(HttpStatus.BAD_REQUEST, e.getMessage());
+			}
+
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
-			objService.delete(codigo);
+		objService.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
-	
+
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
-    }
-	
+		return new ResponseEntity<>(
+				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+				httpStatus);
+	}
+
 	@PostMapping("/guardarArchivo")
-	public List<DocumentoRuta> guardarArchivo(@RequestParam String proceso,
-			@RequestParam String id,@RequestParam List<MultipartFile> archivo) throws Exception {
-		List<DocumentoRuta>lista= new ArrayList<>();
+	public List<DocumentoRuta> guardarArchivo(@RequestParam String proceso, @RequestParam String id,
+			@RequestParam List<MultipartFile> archivo) throws Exception {
+		List<DocumentoRuta> lista = new ArrayList<>();
 		try {
-			lista= objService.guardarArchivo( proceso,id,archivo);
-		
-		} catch (Exception e) {			
+			lista = objService.guardarArchivo(proceso, id, archivo);
+
+		} catch (Exception e) {
 			HttpHeaders headers = new HttpHeaders();
 			headers.add("errorHeader", e.getMessage());
-			
-			
+
 		}
 		return lista;
 	}
-	
-	
-	@PostMapping(value= "/eliminardocumentoconvocatoria/{id}")
-    public ResponseEntity<HttpResponse> eliminarArchivo(@PathVariable("id") int id) throws IOException, ArchivoMuyGrandeExcepcion {
-	    
-		objService.eliminarArchivo(id);
-        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-    }
 
-	/*@GetMapping("/maxArchivo")
-	public long tamañoMáximoArchivo() {
+	@PostMapping(value = "/eliminardocumentoconvocatoria")
+	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Integer convocatoria, @RequestParam Integer codDocumento)
+			throws IOException {
 
-		try {
-			return documentoService.tamañoMáximoArchivo();
-		} catch (Exception e) {
-			this.LOGGER.error(e.getMessage());
-			return -1;
-		}
-	}*/
-	
+		objService.eliminarArchivo(convocatoria,codDocumento);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
+
+	/*
+	 * @GetMapping("/maxArchivo") public long tamañoMáximoArchivo() {
+	 * 
+	 * try { return documentoService.tamañoMáximoArchivo(); } catch (Exception e) {
+	 * this.LOGGER.error(e.getMessage()); return -1; } }
+	 */
+
 }

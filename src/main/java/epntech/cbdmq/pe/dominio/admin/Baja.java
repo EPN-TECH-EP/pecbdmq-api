@@ -1,12 +1,14 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 
-import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,21 +33,23 @@ public class Baja {
 	@Column(name = "cod_tipo_baja")
 	private Integer cod_tipo_baja;
 	@Column(name = "fecha_baja")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime fechabaja;
 	@Column(name = "descripcion_baja")
 	private String descripcionbaja;
 	@Column(name = "usuario_crea_baja")
 	private String nombre;
 	@Column(name = "fecha_crea_baja")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime fechacreabaja;
 	@Column(name = "hora_crea_baja")
-	private Time horacreabaja;
+	private LocalTime horacreabaja;
 	@Column(name = "usuario_mod_baja")
 	private String usuariomodbaja;
 	@Column(name = "fecha_mod_baja")
 	private LocalDateTime fechamodbaja;
 	@Column(name = "hora_mod_baja")
-	private Time horamodbaja;
+	private LocalTime horamodbaja;
 	
 	@Column(name = "estado")
 	private String estado;

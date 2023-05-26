@@ -5,6 +5,10 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.time.LocalTime;
 import java.util.Date;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -19,7 +23,8 @@ import lombok.Data;
 @Data
 @Entity(name = "gen_prueba")
 @Table(name = "gen_prueba")
-
+@SQLDelete(sql = "UPDATE {h-schema}gen_subtipo_prueba SET estado = 'ELIMINADO' WHERE cod_subtipo_prueba = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class Prueba {
 
 	@Id
@@ -27,11 +32,8 @@ public class Prueba {
 	@Column(name = "cod_prueba")
 	private Integer cod_prueba;
 	
-	@Column(name = "cod_tipo_prueba")
-	private Integer cod_tipo_prueba;
-	
-	@Column(name = "nombre_prueba")
-	private String prueba;
+	@Column(name = "cod_subtipo_prueba")
+	private Integer cod_subtipo_prueba;
 	
 	@Column(name = "descripcion_prueba")
 	private String descripcion_prueba;
@@ -48,5 +50,13 @@ public class Prueba {
 	@JsonFormat(pattern = "HH:mm")
 	private LocalTime hora;
 	
+	@Column(name = "estado")
+	private String estado;
+	
+	@Column(name = "cod_periodo_academico")
+	private Integer cod_periodo_academico;
+	
+	@Column(name = "cod_curso_especializacion")
+	private Integer cod_curso_especializacion;
 	
 }

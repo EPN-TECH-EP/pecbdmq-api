@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.NO_ENCUENTRA;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_REGISTRADOS;
 
 import java.util.List;
 
@@ -38,60 +39,24 @@ public class EstudianteResource {
     public ResponseEntity<?> guardar(@RequestBody Estudiante obj) throws DataException {
         return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
     }
+}
 
-    @GetMapping("/listar")
-    public List<Estudiante> listar() {
-        return objService.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Estudiante> obtenerPorId(@PathVariable("id") int codigo) {
-        return objService.getById(codigo).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Estudiante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Estudiante obj) throws DataException {
-        return (ResponseEntity<Estudiante>) objService.getById(codigo).map(datosGuardados -> {
-            datosGuardados.setCodDatosPersonales(obj.getCodDatosPersonales());
-            datosGuardados.setCodModulo(obj.getCodModulo());
-            datosGuardados.setGrado(obj.getGrado());
-            datosGuardados.setResultadoEstudiante(obj.getResultadoEstudiante());
-            datosGuardados.setIdEstudiante(obj.getIdEstudiante());
-            datosGuardados.setEstado(obj.getEstado());
-
-            Estudiante datosActualizados = null;
-            datosActualizados = objService.update(datosGuardados);
-            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
-        objService.delete(codigo);
-        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-    }
-
-    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
-    }
-
-    @GetMapping("/paginado")
-    public ResponseEntity<?> listarDatos(Pageable pageable) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(objService.getAllEstudiante(pageable));
-        } catch (Exception e) {
-            return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
-        }
-    }
+	/*@PutMapping("/{id}")
+	public ResponseEntity<Estudiante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Estudiante obj) throws DataException{
+		return (ResponseEntity<Estudiante>) objService.getById(codigo).map(datosGuardados -> {
+			datosGuardados.setCodDatosPersonales(obj.getCodDatosPersonales());
+			datosGuardados.setCodModulo(obj.getCodModulo());
+			datosGuardados.setGrado(obj.getGrado());
+			datosGuardados.setResultadoEstudiante(obj.getResultadoEstudiante());
+			datosGuardados.setIdEstudiante(obj.getIdEstudiante());
+			datosGuardados.setEstado(obj.getEstado());
 
     @GetMapping("/listardatos")
     public List<EstudianteDatos> listarFormHistorico() {
         return objService.findAllEstudiante();
     }
-
     @PostMapping("/listarFormHistorico")
+
     public List<FormacionEstudiante> listarFormHistorico(@RequestParam("codUnico") String codEstudiante, Pageable pageable) {
         return objService.getHistoricos(codEstudiante, pageable);
     }
@@ -105,14 +70,6 @@ public class EstudianteResource {
     public List<ProfesionalizacionEstudiante> listarProfHistorico(@RequestParam("codUnico") String codEstudiante, Pageable pageable) {
         return objService.getProfesionalizacionHistoricos(codEstudiante, pageable);
     }
-
-    @PostMapping("/ByUser")
-    public EstudianteDto listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
-        EstudianteDto estudiante = objService.getEstudianteByUsuario(codUsuario);
-		System.out.println(estudiante);
-        if (estudiante == null) {
-            throw new DataException(NO_ENCUENTRA);
-        }
-        return estudiante;
-    }
 }
+
+	 */

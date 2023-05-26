@@ -9,6 +9,6 @@ import epntech.cbdmq.pe.dominio.admin.Materia;
 
 public interface EspCursoRepository  extends JpaRepository<EspCurso, Integer> {
 
-	Optional<EspCurso> findBynombrecursoespecializacion(String nombre);
+
 	
 }

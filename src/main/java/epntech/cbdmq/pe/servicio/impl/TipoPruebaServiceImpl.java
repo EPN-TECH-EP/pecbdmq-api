@@ -30,9 +30,9 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
    
     @Override
     public TipoPrueba save(TipoPrueba obj) throws DataException {
-    	if(obj.getPrueba().trim().isEmpty())
+    	if(obj.getTipoPrueba().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoPrueba> objGuardado = repo.findByPruebaIgnoreCase(obj.getPrueba());
+		Optional<TipoPrueba> objGuardado = repo.findByTipoPruebaIgnoreCase(obj.getTipoPrueba());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -63,8 +63,8 @@ public class TipoPruebaServiceImpl implements TipoPruebaService {
      */
     @Override
     public TipoPrueba update(TipoPrueba objActualizado)  throws DataException{
-    	Optional<TipoPrueba> objGuardado = repo.findByPruebaIgnoreCase(objActualizado.getPrueba());
-    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_prueba().equals(objActualizado.getCod_tipo_prueba())) {
+    	Optional<TipoPrueba> objGuardado = repo.findByTipoPruebaIgnoreCase(objActualizado.getTipoPrueba());
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoPrueba().equals(objActualizado.getCodTipoPrueba())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
     	return repo.save(objActualizado);

@@ -19,7 +19,7 @@ public interface ModuloEstadosDataRepository extends JpaRepository<ModuloEstados
 			+ "AND UPPER(c.estado) = 'ACTIVO' "
 			+ "and upper(me.estado) != 'ELIMINADO' "
 			+ "and m.cod_modulo = :modulo "
-			+ "order by 2 ", nativeQuery=true)
+			+ "order by me.orden ", nativeQuery=true)
 	List<ModuloEstadosData> getByModulo(@Param("modulo") Integer modulo);
 	
 	@Query(value="select me.cod_modulo_estados as codigo, m.etiqueta as modulo, c.nombre_catalogo_estados as estado_catalogo, me.orden, me.estado as estado "

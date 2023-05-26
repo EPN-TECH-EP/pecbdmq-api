@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.EXITO;
+
 import java.util.List;
 
 import epntech.cbdmq.pe.dominio.util.EstudianteDto;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Instructor;
+import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InstructorServiceImpl;
 
@@ -24,7 +27,7 @@ public class InstructorResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody Instructor obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody Instructor obj) throws DataException {
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -35,18 +38,18 @@ public class InstructorResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Instructor> obtenerPorId(@PathVariable("id") Integer codigo) {
-		return objService.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return objService.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Instructor obj) throws DataException{
+	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Instructor obj)
+			throws DataException {
 		return objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCod_instructor(obj.getCod_instructor());
 			datosGuardados.setCod_tipo_procedencia(obj.getCod_tipo_procedencia());
-			datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
+			/*datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_tipo_instructor());
-			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
+			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());*/
 			Instructor datosActualizados = objService.update(datosGuardados);
 			datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
@@ -56,7 +59,7 @@ public class InstructorResource {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
 		objService.delete(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente",HttpStatus.OK);
+		return new ResponseEntity<String>("Registro eliminado exitosamente", HttpStatus.OK);
 	}
 	//TODO la clase instructor no esta acorde a la ultima BD
 	@PostMapping("/ByUser")
@@ -68,10 +71,17 @@ public class InstructorResource {
 		return instructor;
 	}
 	
-	 private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-	                message), httpStatus);
+	@PostMapping("/asignarMaterias")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> asignarMaterias(@RequestBody List<InstructorMateria> lista) throws DataException{
+		objService.saveAllMaterias(lista);
+		return response(HttpStatus.OK, EXITO);
 	    }
 	
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+		return new ResponseEntity<>(
+				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+				httpStatus);
+	}
 	
 }

@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.excepcion;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -10,13 +11,17 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import java.io.IOException;
 import java.util.Objects;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -37,6 +42,7 @@ import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.NombreUsuarioExisteExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.UsuarioNoEncontradoExcepcion;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.NoResultException;
 
 @RestControllerAdvice
@@ -49,6 +55,7 @@ public class GestorExcepciones implements ErrorController {
 	private static final String CUENTA_DESHABILITADA = "Cuenta deshabilitada - Contacte al administrador";
 	private static final String ERROR_PROCESO_ARCHIVO = "Error al procesar el archivo";
 	private static final String PERMISOS_INSUFICIENTES = "Permisos insuficientes para esta acción";
+	private static final String ERROR_ENVIO_EMAIL = "Error al enviar email, verifique que la dirección ingresada sea válida.";
 	public static final String RUTA_ERROR = "/error";
 
 	@ExceptionHandler(DisabledException.class)
@@ -171,5 +178,41 @@ public class GestorExcepciones implements ErrorController {
 	public ResponseEntity<HttpResponse> dataException(DataException exception) {
 		return createHttpResponse(BAD_REQUEST, exception.getMessage());
 	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<HttpResponse> dataIntegrityViolationException(DataIntegrityViolationException exception) {
+		
+		Throwable cause = exception.getCause();
+		
+		String constraintName = ((ConstraintViolationException)exception.getCause()).getConstraintName();
+		
+		if (cause != null && cause instanceof ConstraintViolationException) {
+			if (constraintName.contains("_un")) {
+				return createHttpResponse(BAD_REQUEST, REGISTRO_YA_EXISTE);
+			}
+		} 
+			LOGGER.error(exception.getMessage());
+			exception.printStackTrace();
+			return createHttpResponse(INTERNAL_SERVER_ERROR, ERROR_INTERNO_SERVIDOR);	
+	}
+	
+	@ExceptionHandler(MessagingException.class)
+	public ResponseEntity<HttpResponse> messsagingException(MessagingException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, ERROR_ENVIO_EMAIL);
+	}
+	
+	@ExceptionHandler(MailSendException.class)
+	public ResponseEntity<HttpResponse> mailSendException(MailSendException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, ERROR_ENVIO_EMAIL);
+	}
+	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<HttpResponse> messageNotReadableException(HttpMessageNotReadableException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, "Dato inválido - Revise el formato");
+	}
+	
 }
 

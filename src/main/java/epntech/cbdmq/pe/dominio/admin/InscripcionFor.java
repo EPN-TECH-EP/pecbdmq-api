@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,9 +44,8 @@ public class InscripcionFor {
 	private String correoPersonal;
 	@Column(name = "estado")
 	private String estado;
-	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "fecha_nacimiento")
-	private Date fecha_nacimiento;
+	private LocalDateTime fecha_nacimiento;
 	@Column(name = "nombre")
 	private String nombre;
 	@Column(name = "num_telef_convencional")
@@ -58,18 +58,20 @@ public class InscripcionFor {
 	private Integer cod_provincia_nacimiento;
 	@Column(name = "cod_unidad_gestion")
 	private Integer cod_unidad_gestion;
-	@Column(name = "genero")
-	private String genero;
+	//@Column(name = "genero")
+	//private String genero;
+	@Column(name = "sexo")
+	private String sexo;
 	@Column(name = "num_telef_celular")
 	private String num_telef_celular;
-	@Column(name = "canton_nacimiento")
-	private String canton_nacimiento;
+	//@Column(name = "canton_nacimiento")
+	//private String canton_nacimiento;
 	@Column(name = "reside_pais")
 	private Boolean reside_pais;
 	@Column(name = "cod_provincia_residencia")
 	private Long cod_provincia_residencia;
-	@Column(name = "canton_residencia")
-	private String canton_residencia;
+	//@Column(name = "canton_residencia")
+	//private String canton_residencia;
 	@Column(name = "calle_principal_residencia")
 	private String calle_principal_residencia;
 	@Column(name = "calle_secundaria_residencia")
@@ -84,21 +86,65 @@ public class InscripcionFor {
 	private Boolean tiene_merito_deportivo;
 	@Column(name = "tiene_merito_academico")
 	private Boolean tiene_merito_academico;
-	@Column(name = "nombre_titulo")
+/*	@Column(name = "nombre_titulo")
 	private String nombre_titulo;
 	@Column(name = "pais_titulo")
 	private String pais_titulo;
 	@Column(name = "ciudad_titulo")
-	private String ciudad_titulo;
+	private String ciudad_titulo;*/
+	
+	@Column(name = "nombre_titulo_segundonivel")
+	private String nombre_titulo_segundonivel;
+	@Column(name = "pais_titulo_segundonivel")
+	private String pais_titulo_segundonivel;
+	@Column(name = "ciudad_titulo_segundonivel")
+	private String ciudad_titulo_segundonivel;
+
 	@Column(name = "merito_deportivo_descripcion")
 	private String merito_deportivo_descripcion;
 	@Column(name = "merito_academico_descripcion")
 	private String merito_academico_descripcion;
 	@Column(name = "pin_validacion_correo")
 	private String pin_validacion_correo;
+	@Column(name = "correo_institucional")
+	private String correo_institucional;
+	@Column(name = "cod_cargo")
+	private Long cod_cargo;
+	@Column(name = "cod_rango")
+	private Long cod_rango;
+	@Column(name = "cod_grado")
+	private Long cod_grado;
+	@Column(name = "cod_documento_imagen")
+	private Integer cod_documento_imagen;
+	@Column(name = "cod_canton_nacimiento")
+	private Long cod_canton_nacimiento;
+	@Column(name = "cod_canton_residencia")
+	private Long cod_canton_residencia;
+/*	@Column(name = "titulo_tercer_nivel")
+	private String titulo_tercer_nivel;
+	@Column(name = "cod_canton_tercer_nivel")
+	private Long cod_canton_tercer_nivel;
+	@Column(name = "cod_provincia_tercer_nivel")
+	private Long cod_provincia_tercer_nivel;*/
 	
-	/*@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "gen_documento_dato_personal", joinColumns = @JoinColumn(name = "cod_datos_personales"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))
-	private Set<DocumentoDatoPersonal> documentos = new HashSet<>();*/
-	
+	@Column(name = "cod_canton_tercer_nivel")
+	private Integer cod_canton_tercer_nivel;
+	@Column(name = "cod_provincia_tercer_nivel")
+	private Integer cod_provincia_tercer_nivel;
+	@Column(name = "fecha_salida_institucion")
+	private LocalDateTime fecha_salida_institucion;
+	@Column(name = "nivel_instruccion")
+	private String nivel_instruccion;
+	@Column(name = "nombre_titulo_tercernivel")
+	private String nombre_titulo_tercernivel;
+	@Column(name = "nombre_titulo_cuartonivel")
+	private String nombre_titulo_cuartonivel;
+	@Column(name = "es_vulnerable")
+	private Boolean es_vulnerable;
+	@Column(name = "pais_titulo_cuartonivel")
+	private String pais_titulo_cuartonivel;
+	@Column(name = "cod_provincia_cuartonivel")
+	private Long cod_provincia_cuartonivel;
+	@Column(name = "cod_canton_cuartonivel")
+	private Long cod_canton_cuartonivel;	
 }

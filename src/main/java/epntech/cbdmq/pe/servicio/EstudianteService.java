@@ -24,13 +24,12 @@ public interface EstudianteService {
 	
 	Optional<Estudiante> getByIdEstudiante(String id);
 	
-	Page<EstudianteDatos> getAllEstudiante(Pageable pageable) throws Exception;
+	//Page<EstudianteDatos> getAllEstudiante(Pageable pageable) throws Exception;
 
-	List<EstudianteDatos> findAllEstudiante();
-/*
-	List<?> findPeriodosAcademicos(Integer id, Pageable pageable);
+	//List<EstudianteDatos> findAllEstudiante();
+	
+	void saveEstudiantes(Integer modulo);
 
- */
 	List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
 	List<EspecializacionEstudiante> getEspecializacionHistoricos(String codEstudiante, Pageable pageable);
 	List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos(String codEstudiante, Pageable pageable);

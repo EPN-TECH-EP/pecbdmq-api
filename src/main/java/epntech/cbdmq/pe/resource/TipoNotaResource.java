@@ -58,12 +58,13 @@ public class TipoNotaResource {
         return (ResponseEntity<TipoNota>) objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setNota(obj.getNota().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
+            datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
             TipoNota datosActualizados = null;
 			try {
 				datosActualizados = objServices.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

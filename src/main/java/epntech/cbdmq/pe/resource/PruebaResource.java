@@ -33,7 +33,6 @@ public class PruebaResource {
 	@PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody Prueba obj) throws DataException {
-		obj.setPrueba(obj.getPrueba().toUpperCase());
     	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 	@GetMapping("/listar")
@@ -52,18 +51,21 @@ public class PruebaResource {
     public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Prueba obj) throws DataException {
         return objServices.getById(codigo).map(datosGuardados -> {
             
-            datosGuardados.setPrueba(obj.getPrueba().toUpperCase());
             datosGuardados.setDescripcion_prueba(obj.getDescripcion_prueba());
             datosGuardados.setFecha_inicio(obj.getFecha_inicio());
             datosGuardados.setFecha_fin(obj.getFecha_fin());
             datosGuardados.setHora(obj.getHora());
+            datosGuardados.setEstado(obj.getEstado());
+            datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
+            datosGuardados.setCod_curso_especializacion(obj.getCod_curso_especializacion());
+            datosGuardados.setCod_subtipo_prueba(obj.getCod_subtipo_prueba());
          
             Prueba datosActualizados = null;
 			try {
 				datosActualizados = objServices.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

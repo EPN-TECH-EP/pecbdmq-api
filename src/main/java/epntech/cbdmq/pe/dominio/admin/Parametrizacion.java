@@ -40,9 +40,9 @@ public class Parametrizacion {
 	@Column(name = "cod_tipo_fecha")
 	private Integer codtipofecha;*/
 	@Column(name = "fecha_inicio_param")
-	private Date fechainicioparam;
+	private LocalDateTime fechainicioparam;
 	@Column(name = "fecha_fin_param")
-	private Date fechafinparam;
+	private LocalDateTime fechafinparam;
 	@Column(name = "hora_inicio_param")
 	private LocalTime horainicioparam;
 	@Column(name = "hora_fin_param")

@@ -126,7 +126,7 @@ public class EmailService {
 
 	}
 	
-	private SimpleMailMessage /* Message */ notificacionSendEmail(Date fecha, String mensaje, String email)
+	private SimpleMailMessage /* Message */ notificacionSendEmail(LocalDateTime fecha, String mensaje, String email)
 			throws MessagingException {
 
 		SimpleMailMessage message = new SimpleMailMessage();
@@ -139,7 +139,7 @@ public class EmailService {
 		return message;
 	}
 	
-	public void notificacionEmail(Date fecha, String mensaje, String email) throws MessagingException {
+	public void notificacionEmail(LocalDateTime fecha, String mensaje, String email) throws MessagingException {
 		JavaMailSender emailSender = this.getJavaMailSender();
 		SimpleMailMessage message = this.notificacionSendEmail(fecha, mensaje, email);
 

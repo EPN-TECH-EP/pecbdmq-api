@@ -238,42 +238,21 @@ import lombok.Data;
 		@ColumnResult(name = "unidad_gestion"),
 		@ColumnResult(name = "estado")
 }))
-
-public class Estudiante implements Serializable  {
-
-	
-
-	private static final long serialVersionUID = 1935713547872014437L;
-
+public class Estudiante{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	protected Integer codEstudiante;
-	
-	protected Integer codDatosPersonales;
-	
-	protected Integer codModulo;
-	
-	protected String grado;
-	
-	protected String resultadoEstudiante;
-	
-	protected String idEstudiante;
-	
-	protected String estado;
-	
-	public Estudiante() {
-	}
-	
-	public Estudiante(Integer codEstudiante, Integer codDatosPersonales, Integer codModulo, String grado,
-			String resultadoEstudiante, String idEstudiante, String estado) {
-		super();
-		this.codEstudiante = codEstudiante;
-		this.codDatosPersonales = codDatosPersonales;
-		this.codModulo = codModulo;
-		this.grado = grado;
-		this.resultadoEstudiante = resultadoEstudiante;
-		this.idEstudiante = idEstudiante;
-		this.estado = estado;
-	}
-	
+	@Column(name = "cod_estudiante")
+	private Integer codEstudiante;
+
+	@Column(name = "cod_datos_personales")
+	private Integer codDatosPersonales;
+
+	@Column(name = "cod_modulo")
+	private Integer codModulo;
+
+	@Column(name = "cod_unico_estudiante")
+	private String idEstudiante;
+	@Column(name = "estado")
+
+	private String estado;
 }

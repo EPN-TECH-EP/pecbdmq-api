@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +41,10 @@ public class MateriaParalelo {
 	private String observacionMateria;
 	
 	@Column(name = "peso_materia")
-	private Integer pesoMateria;
+	private BigDecimal pesoMateria;
 	
 	@Column(name = "nota_minima")
-	private Integer notaMinima;
+	private BigDecimal notaMinima;
 	
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

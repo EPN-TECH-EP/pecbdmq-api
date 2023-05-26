@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -32,15 +34,26 @@ public class EspCurso {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_curso_especializacion")
-	private Integer codcursoespecializacion;
-	@Column(name = "nombre_curso_especializacion")
-	private String nombrecursoespecializacion;
+	private Integer cod_curso_especializacion;
+	
+	@Column(name = "cod_instructor")
+	private Integer cod_instructor;
+	
+	@Column(name = "cod_unidad_gestion")
+	private Integer cod_unidad_gestion;
+	
+	/*@Column(name = "cod_estudiante")
+	private Integer cod_estudiante;*/
+	
+	@Column(name = "cod_aula")
+	private Integer cod_aula;
+	
 	@Column(name = "numero_cupo")
-	private Integer numerocupo;
+	private Integer numero_cupo;
+	
 	@Column(name = "adjunto_planificacion")
-	private String adjuntoplanificacion;
-	@Column(name = "tipo_curso")
-	private String tipocurso;
+	private String adjunto_planificacion;
+	
 	@Column(name = "fecha_inicio_curso")
 	private LocalDateTime fechainiciocurso;
 	@Column(name = "fecha_fin_curso")
@@ -49,10 +62,26 @@ public class EspCurso {
 	private LocalDateTime fechainiciocarganota;
 	@Column(name = "fecha_fin_carga_nota")
 	private LocalDateTime fechafincarganota;
+	@Column(name = "nota_minima")
+	private BigDecimal nota_minima;
+	
+	@Column(name = "aprueba_creacion_curso")
+	private Boolean aprueba;
+	
+	@Column(name = "estado_proceso")
+	private String estado_proceso;
+	
+	@Column(name = "cod_catalogo_cursos")
+	private Integer cod_catalogo_curso;
+	
 	@Column(name = "estado")
 	private String estado;
-	@Column(name = "nota_minima")
-	private Integer notaminima;
+
+	
+	@Column(name = "cod_tipo_curso")
+	private Integer cod_tipo_curso;
+
+
 	@Column(name = "resultado")
 	private boolean resultado;
 
@@ -60,4 +89,7 @@ public class EspCurso {
 	@JoinTable(name = "gen_paralelo_curso", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), 
 	inverseJoinColumns = @JoinColumn(name = "cod_paralelo"))
 	private List<Paralelo> paralelos = new ArrayList<>();
+	
+	@OneToMany(mappedBy="cod_catalogo_cursos")
+    private List<CatalogoCurso> NombreCurso;
 }

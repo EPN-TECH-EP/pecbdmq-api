@@ -32,4 +32,7 @@ public class TipoNota {
     private String nota;
     @Column(name = "estado")
    	private String estado;
+	@Column(name = "cod_componente_nota")
+	private Integer cod_componente_nota;
+    
 }

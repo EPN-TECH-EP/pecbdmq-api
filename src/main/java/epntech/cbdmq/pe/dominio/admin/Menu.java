@@ -3,7 +3,6 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.io.Serializable;
 
 import org.hibernate.annotations.NamedNativeQuery;
-import org.springframework.data.jpa.repository.Query;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
@@ -12,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -52,7 +53,7 @@ import lombok.Data;
 		+ "	m.icono, "
 		+ "	permisos "
 		+ "	from cbdmq.gen_menu m,	 "
-		+ "	(select cod_menu, permisos from cbdmq.gen_menu_rol gmr where cod_rol in "
+		+ "	(select distinct cod_menu, permisos from cbdmq.gen_menu_rol gmr where cod_rol in "
 		+ "	(select cod_rol	from cbdmq.gen_rol_usuario ru where cod_usuario =  "
 		+ "	(select u.cod_usuario from cbdmq.gen_usuario u where u.nombre_usuario = :id_usuario))) permisos "
 		+ "	where m.cod_menu = permisos.cod_menu "
@@ -69,20 +70,21 @@ import lombok.Data;
 		@ColumnResult(name = "icono"),
 		@ColumnResult(name = "permisos")		
 }))
-
 public class Menu implements Serializable {
 	
 	private static final long serialVersionUID = 2695780129293062043L;
 
 	//@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "gen_menu_cod_menu_seq")
+	@SequenceGenerator(name = "gen_menu_cod_menu_seq", sequenceName = "gen_menu_cod_menu_seq", allocationSize = 1)
 	@Column(nullable = false, updatable = false)
 	protected Integer codMenu;
 
 	protected String etiqueta;
 	protected String ruta;
-	protected Integer menu_padre;
+	@Column(name = "menu_padre")
+	protected Integer menuPadre;
 	protected Integer orden;
 	protected String icono;
 	protected String descripcion;
@@ -95,7 +97,7 @@ public class Menu implements Serializable {
 		this.codMenu = codMenu;
 		this.etiqueta = etiqueta;
 		this.ruta = ruta;
-		this.menu_padre = menu_padre;
+		this.menuPadre = menu_padre;
 		this.orden = orden;
 		this.icono = icono;
 		this.descripcion = descripcion;

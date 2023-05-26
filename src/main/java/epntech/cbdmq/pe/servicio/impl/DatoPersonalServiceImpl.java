@@ -233,5 +233,38 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 		return documento;
 	}
 
+	@Override
+	public Documento actualizarImagen(String proceso,Integer codigo, MultipartFile archivo)
+			throws IOException, ArchivoMuyGrandeExcepcion {
+		/*String resultado;
+		resultado= ruta(proceso, codigo);
+		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
+		Optional<Usuario> usuario = usuarioRepository.findById(Long.valueOf(codigo));
+		Documento documentoAnterior = documentoRepository.getReferenceById(usuario.get().getCodDatosPersonales().getCod_documento_imagen());
+		
+		if (documentoAnterior != null) {
+			
+            Path rutaAnterior = Paths.get(documentoAnterior.getRuta());
+            Files.deleteIfExists(rutaAnterior);
+            documentoRepository.delete(documentoAnterior);
+        }
+		String nombreArchivo = archivo.getOriginalFilename();
+        Path rutaNueva = Paths.get(ruta + proceso+codigo + "/" + nombreArchivo);
+        Files.createDirectories(rutaNueva.getParent());
+        Files.copy(archivo.getInputStream(), rutaNueva, StandardCopyOption.REPLACE_EXISTING);
+        
+        
+        Documento nuevoDocumento = new Documento();
+        nuevoDocumento.setEstado("ACTIVO");
+        nuevoDocumento.setNombre(nombreArchivo);
+        nuevoDocumento.setRuta(rutaNueva.toString());
+        documentoRepository.save(nuevoDocumento);
+        
+        usuario.get().getCodDatosPersonales().setCod_documento_imagen(nuevoDocumento.getCodigo());
+        usuarioRepository.save(usuario.get());
+		return nuevoDocumento;*/
+		return null;
+	}
+
 
 }

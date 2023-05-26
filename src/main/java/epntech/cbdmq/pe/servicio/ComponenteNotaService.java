@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
+import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
+import epntech.cbdmq.pe.dominio.util.ComponenteTipo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 /**
@@ -23,4 +25,6 @@ public interface ComponenteNotaService {
     ComponenteNota update(ComponenteNota objActualizado)throws DataException;
 
     void delete(int id);
+    
+    List<ComponenteTipo> getComponenteTipo();
 }

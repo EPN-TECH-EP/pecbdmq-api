@@ -20,13 +20,15 @@ public interface DocumentoService {
 	
 	Optional<Documento> getById(int id);
 	
-	Documento update(Documento objActualizado);
+	Documento update(Documento objActualizado, MultipartFile archivo) throws ArchivoMuyGrandeExcepcion,IOException;
 	
 	void delete(int id);
 	
 	List<DocumentoRuta> guardarArchivo(String proceso, String id, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 	
-	void eliminarArchivo( int id) throws IOException, ArchivoMuyGrandeExcepcion;
+	void eliminarArchivo(int id) throws IOException, ArchivoMuyGrandeExcepcion;
+	
+	void eliminarArchivo(Integer convocatoria, Integer codDocumento) throws IOException;
 	
 }
 

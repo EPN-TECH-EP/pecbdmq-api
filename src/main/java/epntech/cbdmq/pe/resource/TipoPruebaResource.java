@@ -40,7 +40,7 @@ public class TipoPruebaResource {
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody TipoPrueba obj) throws DataException {
-    	obj.setPrueba(obj.getPrueba().toUpperCase());
+    	obj.setTipoPrueba(obj.getTipoPrueba().toUpperCase());
     	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
     }
 
@@ -57,14 +57,14 @@ public class TipoPruebaResource {
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoPrueba obj)  throws DataException{
         return (ResponseEntity<TipoPrueba>) objServices.getById(codigo).map(datosGuardados -> {
-            datosGuardados.setPrueba(obj.getPrueba().toUpperCase());
+            datosGuardados.setTipoPrueba(obj.getTipoPrueba());
             datosGuardados.setEstado(obj.getEstado());
             TipoPrueba datosActualizados = null;
 			try {
 				datosActualizados = objServices.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
             return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

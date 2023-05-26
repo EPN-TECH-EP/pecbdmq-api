@@ -154,36 +154,95 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		return user;
 	}
 
+	@Override
+	public Optional<Usuario> getById(Long codigo) {
 
-@Override
-    public Optional<Usuario> getById(Long codigo) {
+		// TODO Auto-generated method stub
+		return userRepository.findById(codigo);
 
-            // TODO Auto-generated method stub
-            return userRepository.findById(codigo);
-
-    }
+	}
 
 	@Override
-	public Usuario nuevoUsuario(String firstName, String lastName, String username, String email, String role,
-			boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
-			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-		validateNewUsernameAndEmail(EMPTY, username, email);
-		Usuario user = new Usuario();
+	public Usuario crear(Usuario usuario)
+			throws NombreUsuarioExisteExcepcion,
+			EmailExisteExcepcion, IOException, UsuarioNoEncontradoExcepcion, MessagingException {
+		
+		validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(),
+				usuario.getCodDatosPersonales().getCorreo_personal());
+
 		String password = generatePassword();
-		// user.setUserId(generateUserId());
-		// user.setNombres(firstName);
-		// user.setApellidos(lastName);
+		
+		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
+				usuario.getCodDatosPersonales().getCorreo_personal());
+		
+		// datos de usuario
+		Usuario user = new Usuario();
+		
+		user.setNombreUsuario(usuario.getNombreUsuario());
 		user.setFechaRegistro(new Date());
-		user.setNombreUsuario(username);
-		// user.setEmail(email);
-		// user.setPassword(encodePassword(password));
-		user.setActive(isActive);
-		user.setNotLocked(isNonLocked);
-		// user.setUrlImagenPerfil(getTemporaryProfileImageUrl(username));
+		user.setClave(encodePassword(password));
+		user.setActive(true);
+		user.setNotLocked(true);
+
+		// datos personales
+		DatoPersonal datosRecibidos = usuario.getCodDatosPersonales();
+		DatoPersonal datos = new DatoPersonal();
+
+		datos.setCod_datos_personales(datosRecibidos.getCod_datos_personales());
+		datos.setApellido(datosRecibidos.getApellido());
+		datos.setCedula(datosRecibidos.getCedula());
+		datos.setCod_estacion(datosRecibidos.getCod_estacion());
+		datos.setCorreo_personal(datosRecibidos.getCorreo_personal());
+		datos.setEstado(datosRecibidos.getEstado());
+		datos.setFecha_nacimiento(datosRecibidos.getFecha_nacimiento());
+		datos.setNombre(datosRecibidos.getNombre());
+		datos.setNum_telef_convencional(datosRecibidos.getNum_telef_convencional());
+		datos.setTipo_sangre(datosRecibidos.getTipo_sangre());
+		datos.setValidacion_correo(datosRecibidos.getValidacion_correo());
+		datos.setCod_provincia_nacimiento(datosRecibidos.getCod_provincia_nacimiento());
+		datos.setCod_unidad_gestion(datosRecibidos.getCod_unidad_gestion());
+		datos.setSexo(datosRecibidos.getSexo());
+		datos.setNum_telef_celular(datosRecibidos.getNum_telef_celular());
+		datos.setReside_pais(datosRecibidos.getReside_pais());
+		datos.setCod_provincia_residencia(datosRecibidos.getCod_provincia_residencia());
+		datos.setCalle_principal_residencia(datosRecibidos.getCalle_principal_residencia());
+		datos.setCalle_secundaria_residencia(datosRecibidos.getCalle_secundaria_residencia());
+		datos.setNumero_casa(datosRecibidos.getNumero_casa());
+		datos.setColegio(datosRecibidos.getColegio());
+		datos.setTipo_nacionalidad(datosRecibidos.getTipo_nacionalidad());
+		datos.setTiene_merito_deportivo(datosRecibidos.getTiene_merito_deportivo());
+		datos.setTiene_merito_academico(datosRecibidos.getTiene_merito_academico());
+		datos.setNombre_titulo_segundonivel(datosRecibidos.getNombre_titulo_segundonivel());
+		datos.setPais_titulo_segundonivel(datosRecibidos.getPais_titulo_segundonivel());
+		datos.setCiudad_titulo_segundonivel(datosRecibidos.getCiudad_titulo_segundonivel());
+		datos.setMerito_deportivo_descripcion(datosRecibidos.getMerito_deportivo_descripcion());
+		datos.setMerito_academico_descripcion(datosRecibidos.getMerito_academico_descripcion());
+		datos.setPin_validacion_correo(datosRecibidos.getPin_validacion_correo());
+		datos.setCorreo_institucional(datosRecibidos.getCorreo_institucional());
+		datos.setCod_cargo(datosRecibidos.getCod_cargo());
+		datos.setCod_rango(datosRecibidos.getCod_rango());
+		datos.setCod_grado(datosRecibidos.getCod_grado());
+		datos.setCod_documento_imagen(datosRecibidos.getCod_documento_imagen());
+		datos.setCod_canton_nacimiento(datosRecibidos.getCod_canton_nacimiento());
+		datos.setCod_canton_residencia(datosRecibidos.getCod_canton_residencia());
+		datos.setCod_canton_tercer_nivel(datosRecibidos.getCod_canton_tercer_nivel());
+		datos.setCod_provincia_tercer_nivel(datosRecibidos.getCod_provincia_tercer_nivel());
+		datos.setFecha_salida_institucion(datosRecibidos.getFecha_salida_institucion());
+		datos.setNivel_instruccion(datosRecibidos.getNivel_instruccion());
+		datos.setNombre_titulo_tercernivel(datosRecibidos.getNombre_titulo_tercernivel());
+		datos.setNombre_titulo_cuartonivel(datosRecibidos.getNombre_titulo_cuartonivel());
+		datos.setEs_vulnerable(datosRecibidos.getEs_vulnerable());
+		datos.setPais_titulo_cuartonivel(datosRecibidos.getPais_titulo_cuartonivel());
+		datos.setCod_provincia_cuartonivel(datosRecibidos.getCod_provincia_cuartonivel());
+		datos.setCod_canton_cuartonivel(datosRecibidos.getCod_canton_cuartonivel());
+
+		// asocia datos personales con usuario
+		user.setCodDatosPersonales(datos);
+
 		userRepository.save(user);
-		// saveProfileImage(user, profileImage);
-		// TODO eliminar línea de log
-		//LOGGER.info("New user password: " + password);
+
+		userRepository.flush();
+		
 		return user;
 	}
 
@@ -208,22 +267,23 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		// saveProfileImage(currentUser, profileImage);
 
 		// TODO: eliminar log
-		//LOGGER.info("Actualizar usuario ejecutado");
+		// LOGGER.info("Actualizar usuario ejecutado");
 
 		return currentUser;
 	}
 
+	@Override
+	public int actualizarActive(Boolean active, String username) throws UsuarioNoEncontradoExcepcion,
+			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+		return userRepository.actualizarIsActive(active, username);
+	}
 
 	@Override
-    public int actualizarActive(Boolean active, String username) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-        return userRepository.actualizarIsActive(active, username);
-    }
+	public int actualizarNotLock(Boolean notLock, String username) throws UsuarioNoEncontradoExcepcion,
+			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
+		return userRepository.actualizarNotLocked(notLock, username);
+	}
 
-    @Override
-    public int actualizarNotLock(Boolean notLock, String username) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
-        return userRepository.actualizarNotLocked(notLock, username);
-    }
-    
 	@Override
 	public void resetPassword(String nombreUsuario) throws MessagingException, UsuarioNoEncontradoExcepcion {
 
@@ -265,19 +325,17 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		return userRepository.findAll();
 	}
 
-	 @Override
-    public List<Usuario> getUsuariosPageable(Pageable pageable){
+	@Override
+	public List<Usuario> getUsuariosPageable(Pageable pageable) {
 
+		return userRepository.findAllPageable(pageable);
 
-        return userRepository.findAllPageable(pageable);
+	}
 
-
-    }
-
-    @Override
-    public List<UsuarioDtoRead> getUsuariosPer(Pageable pageable) {
-        return userRepository.buscarUsuarioPersonalizado(pageable);
-    }
+	@Override
+	public List<UsuarioDtoRead> getUsuariosPer(Pageable pageable) {
+		return userRepository.buscarUsuarioPersonalizado(pageable);
+	}
 
 	@Override
 	public Usuario findUserByUsername(String username) {
@@ -428,8 +486,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-    public List<Usuario> findUsuariosByCorreo(String correo) {
-        return this.userRepository.findUsuariosByCorreo(correo);
-    }
+	public List<Usuario> findUsuariosByCorreo(String correo) {
+		return this.userRepository.findUsuariosByCorreo(correo);
+	}
 
 }

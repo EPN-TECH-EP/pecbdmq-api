@@ -44,9 +44,9 @@ public class MateriaTest {
         paralelos.add(paralelo);
         	
 		obj.setNombre("Test");
-		obj.setNotaMinima(new BigDecimal(10.0));
+		//obj.setNotaMinima(new BigDecimal(10.0));
 
-		obj.setObservacionMateria("pruebas unitarias");
+		//obj.setObservacionMateria("pruebas unitarias");
 		obj.setParalelos(paralelos);
 		obj.setEstado("activo");
 
@@ -54,8 +54,8 @@ public class MateriaTest {
 		assertNotNull(datos);
 
 		assertEquals("Test", datos.getNombre());
-		assertEquals(10, datos.getNotaMinima());
-		assertEquals("pruebas unitarias", datos.getObservacionMateria());
+		//assertEquals(10, datos.getNotaMinima());
+		//assertEquals("pruebas unitarias", datos.getObservacionMateria());
 		assertEquals("activo", datos.getEstado());
 	}
 
@@ -66,7 +66,7 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		obj.setNotaMinima(new BigDecimal(10));
+		//obj.setNotaMinima(new BigDecimal(10));
 
 		obj.setEstado("activo");
 
@@ -84,7 +84,7 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		obj.setNotaMinima(new BigDecimal(10));
+		//obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 
 		repo.save(obj);
@@ -114,7 +114,7 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		obj.setNotaMinima(new BigDecimal(10));
+		//obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 		repo.save(obj);
 
