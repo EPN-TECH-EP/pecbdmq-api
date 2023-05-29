@@ -125,7 +125,8 @@ public class ExcelHelper {
     }
   }
 	
-	public static void generarExcel( ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera) throws IOException {
+	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera)
+			throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Datos");
 
@@ -156,6 +157,5 @@ public class ExcelHelper {
         workbook.close();
     }
 
-    }
-
+}
 

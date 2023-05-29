@@ -146,10 +146,14 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	}
 
 	@Override
-	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion {
+	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+
 		// TODO Auto-generated method stub
 		String resultado;
 		Integer periodo = repo.getPAActive();
+
+		if(periodo == null)
+			throw new DataException(NO_PERIODO_ACTIVO);
 
 		resultado = ruta();
 		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();

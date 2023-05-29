@@ -4,8 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 
-
-public interface InstructorMateriaRepository extends JpaRepository<InstructorMateria, Integer>{
-
+public interface InstructorMateriaRepository extends JpaRepository<InstructorMateria, Integer> {
 
 }

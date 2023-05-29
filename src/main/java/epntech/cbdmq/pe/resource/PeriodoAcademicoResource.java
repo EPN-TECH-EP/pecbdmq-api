@@ -53,7 +53,7 @@ public class PeriodoAcademicoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException, ParseException{
+	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException, ParseException {
 		Date date = new Date();
 		SimpleDateFormat formato1 = new SimpleDateFormat("yyyy-MM-dd");
 		Date fecha = formato1.parse(formato1.format(date));
@@ -70,13 +70,13 @@ public class PeriodoAcademicoResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<PeriodoAcademico> obtenerPorId(@PathVariable("id") int codigo) {
-		return objService.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return objService.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
-	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo, @RequestBody PeriodoAcademico obj) throws DataException {
+	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo,
+			@RequestBody PeriodoAcademico obj) throws DataException {
 		return (ResponseEntity<PeriodoAcademico>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setModuloEstados(obj.getModuloEstados());
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
@@ -103,8 +103,9 @@ public class PeriodoAcademicoResource {
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
+		return new ResponseEntity<>(
+				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+				httpStatus);
     }
 	
 	@GetMapping("/listartodo")
@@ -124,7 +125,8 @@ public class PeriodoAcademicoResource {
 	}
 	
 	@GetMapping("/siguienteEstado")
-	public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id, @RequestParam("proceso") String proceso) {
+	public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id,
+			@RequestParam("proceso") String proceso) {
 		String result = objService.updateNextState(id, proceso).toString();
 				
 		return response(HttpStatus.OK, result);
@@ -148,8 +150,7 @@ public class PeriodoAcademicoResource {
 	
 	@GetMapping("/")
 	public ResponseEntity<PeriodoAcademico> getPeriodo() {
-		return objService.getActive().map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return objService.getActive().map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping("/cargarDocs")

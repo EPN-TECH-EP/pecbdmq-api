@@ -56,20 +56,14 @@ public class DatoPersonal {
 	private Integer cod_provincia_nacimiento;
 	@Column(name = "cod_unidad_gestion")
 	private Integer cod_unidad_gestion;
-	//@Column(name = "genero")
-	//private String genero;
 	@Column(name = "sexo")
 	private String sexo;
 	@Column(name = "num_telef_celular")
 	private String num_telef_celular;
-	//@Column(name = "canton_nacimiento")
-	//private String canton_nacimiento;
 	@Column(name = "reside_pais")
 	private Boolean reside_pais;
 	@Column(name = "cod_provincia_residencia")
 	private Long cod_provincia_residencia;
-	//@Column(name = "canton_residencia")
-	//private String canton_residencia;
 	@Column(name = "calle_principal_residencia")
 	private String calle_principal_residencia;
 	@Column(name = "calle_secundaria_residencia")
@@ -84,20 +78,12 @@ public class DatoPersonal {
 	private Boolean tiene_merito_deportivo;
 	@Column(name = "tiene_merito_academico")
 	private Boolean tiene_merito_academico;
-/*	@Column(name = "nombre_titulo")
-	private String nombre_titulo;
-	@Column(name = "pais_titulo")
-	private String pais_titulo;
-	@Column(name = "ciudad_titulo")
-	private String ciudad_titulo;*/
-	
 	@Column(name = "nombre_titulo_segundonivel")
 	private String nombre_titulo_segundonivel;
 	@Column(name = "pais_titulo_segundonivel")
 	private String pais_titulo_segundonivel;
 	@Column(name = "ciudad_titulo_segundonivel")
 	private String ciudad_titulo_segundonivel;
-
 	@Column(name = "merito_deportivo_descripcion")
 	private String merito_deportivo_descripcion;
 	@Column(name = "merito_academico_descripcion")
@@ -118,17 +104,6 @@ public class DatoPersonal {
 	private Long cod_canton_nacimiento;
 	@Column(name = "cod_canton_residencia")
 	private Long cod_canton_residencia;
-/*	@Column(name = "titulo_tercer_nivel")
-	private String titulo_tercer_nivel;
-	@Column(name = "cod_canton_tercer_nivel")
-	private Long cod_canton_tercer_nivel;
-	@Column(name = "cod_provincia_tercer_nivel")
-	private Long cod_provincia_tercer_nivel;*/
-	
-	@Column(name = "cod_canton_tercer_nivel")
-	private Integer cod_canton_tercer_nivel;
-	@Column(name = "cod_provincia_tercer_nivel")
-	private Integer cod_provincia_tercer_nivel;
 	@Column(name = "fecha_salida_institucion")
 	private LocalDateTime fecha_salida_institucion;
 	@Column(name = "nivel_instruccion")
@@ -141,9 +116,7 @@ public class DatoPersonal {
 	private Boolean es_vulnerable;
 	@Column(name = "pais_titulo_cuartonivel")
 	private String pais_titulo_cuartonivel;
-	@Column(name = "cod_provincia_cuartonivel")
-	private Long cod_provincia_cuartonivel;
-	@Column(name = "cod_canton_cuartonivel")
-	private Long cod_canton_cuartonivel;
+	@Column(name = "pais_titulo_tercernivel")
+	private String pais_titulo_tercernivel;
 }
 

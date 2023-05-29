@@ -8,6 +8,7 @@ import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.dominio.util.DocsUtil;
@@ -40,7 +41,9 @@ public interface PeriodoAcademicoService {
 	
 	Integer getPAActivo();
 	
-	void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion)  throws IOException, ArchivoMuyGrandeExcepcion;
+
+	void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion)  throws IOException, ArchivoMuyGrandeExcepcion, DataException;
+
 	
 	void eliminar(List<DocsUtil> docs);
 }
