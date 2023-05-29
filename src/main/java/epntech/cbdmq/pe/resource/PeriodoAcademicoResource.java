@@ -106,7 +106,9 @@ public class PeriodoAcademicoResource {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
+
 	}
+
 
 	@GetMapping("/listartodo")
 	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
