@@ -21,17 +21,24 @@ import lombok.Data;
 public class SubTipoPrueba {
 
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cod_subtipo_prueba")
-	private Integer codSubtipoPrueba;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@EqualsAndHashCode.Include()
 	
-	@Column(name = "cod_tipo_prueba")
-	private Integer codTipoPrueba;
+
+	@Column(name = "cod_subtipo_prueba")
+	private Integer cod_subtipo_prueba;
+	
+	/*@Column(name = "cod_tipo_prueba")
+	private Integer cod_tipo_prueba;*/
+
 	
 	@Column(name = "nombre")
 	private String nombre;
-	
 	@Column(name = "estado")
 	private String estado;
+	
+	  @ManyToOne
+	    @JoinColumn(name ="cod_tipo_prueba")
+	 	private TipoPrueba tipo;
 }
 

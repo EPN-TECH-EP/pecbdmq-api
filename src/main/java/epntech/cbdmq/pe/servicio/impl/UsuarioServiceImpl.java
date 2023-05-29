@@ -188,6 +188,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		DatoPersonal datosRecibidos = usuario.getCodDatosPersonales();
 		DatoPersonal datos = new DatoPersonal();
 
+		datos.setCod_datos_personales(datosRecibidos.getCod_datos_personales());
 		datos.setApellido(datosRecibidos.getApellido());
 		datos.setCedula(datosRecibidos.getCedula());
 		datos.setCod_estacion(datosRecibidos.getCod_estacion());
@@ -200,7 +201,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		datos.setValidacion_correo(datosRecibidos.getValidacion_correo());
 		datos.setCod_provincia_nacimiento(datosRecibidos.getCod_provincia_nacimiento());
 		datos.setCod_unidad_gestion(datosRecibidos.getCod_unidad_gestion());
-		datos.setGenero(datosRecibidos.getGenero());
+		datos.setSexo(datosRecibidos.getSexo());
 		datos.setNum_telef_celular(datosRecibidos.getNum_telef_celular());
 		datos.setReside_pais(datosRecibidos.getReside_pais());
 		datos.setCod_provincia_residencia(datosRecibidos.getCod_provincia_residencia());
@@ -211,17 +212,29 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		datos.setTipo_nacionalidad(datosRecibidos.getTipo_nacionalidad());
 		datos.setTiene_merito_deportivo(datosRecibidos.getTiene_merito_deportivo());
 		datos.setTiene_merito_academico(datosRecibidos.getTiene_merito_academico());
-		datos.setNombre_titulo(datosRecibidos.getNombre_titulo());
-		datos.setPais_titulo(datosRecibidos.getPais_titulo());
-		datos.setCiudad_titulo(datosRecibidos.getCiudad_titulo());
+		datos.setNombre_titulo_segundonivel(datosRecibidos.getNombre_titulo_segundonivel());
+		datos.setPais_titulo_segundonivel(datosRecibidos.getPais_titulo_segundonivel());
+		datos.setCiudad_titulo_segundonivel(datosRecibidos.getCiudad_titulo_segundonivel());
 		datos.setMerito_deportivo_descripcion(datosRecibidos.getMerito_deportivo_descripcion());
 		datos.setMerito_academico_descripcion(datosRecibidos.getMerito_academico_descripcion());
+		datos.setPin_validacion_correo(datosRecibidos.getPin_validacion_correo());
 		datos.setCorreo_institucional(datosRecibidos.getCorreo_institucional());
 		datos.setCod_cargo(datosRecibidos.getCod_cargo());
 		datos.setCod_rango(datosRecibidos.getCod_rango());
 		datos.setCod_grado(datosRecibidos.getCod_grado());
+		datos.setCod_documento_imagen(datosRecibidos.getCod_documento_imagen());
 		datos.setCod_canton_nacimiento(datosRecibidos.getCod_canton_nacimiento());
 		datos.setCod_canton_residencia(datosRecibidos.getCod_canton_residencia());
+		datos.setCod_canton_tercer_nivel(datosRecibidos.getCod_canton_tercer_nivel());
+		datos.setCod_provincia_tercer_nivel(datosRecibidos.getCod_provincia_tercer_nivel());
+		datos.setFecha_salida_institucion(datosRecibidos.getFecha_salida_institucion());
+		datos.setNivel_instruccion(datosRecibidos.getNivel_instruccion());
+		datos.setNombre_titulo_tercernivel(datosRecibidos.getNombre_titulo_tercernivel());
+		datos.setNombre_titulo_cuartonivel(datosRecibidos.getNombre_titulo_cuartonivel());
+		datos.setEs_vulnerable(datosRecibidos.getEs_vulnerable());
+		datos.setPais_titulo_cuartonivel(datosRecibidos.getPais_titulo_cuartonivel());
+		datos.setCod_provincia_cuartonivel(datosRecibidos.getCod_provincia_cuartonivel());
+		datos.setCod_canton_cuartonivel(datosRecibidos.getCod_canton_cuartonivel());
 
 		// asocia datos personales con usuario
 		user.setCodDatosPersonales(datos);

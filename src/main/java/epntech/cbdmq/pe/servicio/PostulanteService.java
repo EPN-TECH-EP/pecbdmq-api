@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
+import epntech.cbdmq.pe.dominio.util.PostulanteUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PostulanteService {
@@ -34,5 +35,7 @@ public interface PostulanteService {
 	List<Postulante> getPostulantesAllPaginado(Pageable pageable);
 	
 	List<Postulante> getMuestra();
+	
+	List<PostulanteUtil> getPostulantesAllPaginadoTodo(Pageable pageable);
 	
 }

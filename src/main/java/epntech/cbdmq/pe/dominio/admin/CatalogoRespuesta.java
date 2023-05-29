@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "gen_catalogo_pregunta")
+@Table(name = "gen_catalogo_respuesta")
 public class CatalogoRespuesta {
 
 	

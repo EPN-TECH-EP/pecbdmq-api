@@ -57,7 +57,8 @@ public class ParametrizaPruebaDetalle {
 	@OneToMany(mappedBy="cod_parametriza_prueba_resumen")
     private List<ParametrizaPruebaResumen> Pruebaresumen;
 	
-	@OneToMany(mappedBy="codSubtipoPrueba")
+
+	@OneToMany(mappedBy="cod_subtipo_prueba")
     private List<SubTipoPrueba> Subtipoprueba;
 	  
 	

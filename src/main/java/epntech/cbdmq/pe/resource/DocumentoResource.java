@@ -120,11 +120,11 @@ public class DocumentoResource {
 		return lista;
 	}
 
-	@PostMapping(value = "/eliminardocumentoconvocatoria/{id}")
-	public ResponseEntity<HttpResponse> eliminarArchivo(@PathVariable("id") int id)
-			throws IOException, ArchivoMuyGrandeExcepcion {
+	@PostMapping(value = "/eliminardocumentoconvocatoria")
+	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Integer convocatoria, @RequestParam Integer codDocumento)
+			throws IOException {
 
-		objService.eliminarArchivo(id);
+		objService.eliminarArchivo(convocatoria,codDocumento);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 

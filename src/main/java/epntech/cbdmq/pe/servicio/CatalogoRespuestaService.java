@@ -16,7 +16,7 @@ public interface CatalogoRespuestaService  {
 
     Optional<CatalogoRespuesta> getById(Integer codigo);
 
-    Baja update(CatalogoRespuesta objActualizado)throws DataException;
+    CatalogoRespuesta update(CatalogoRespuesta objActualizado)throws DataException;
 
     void delete(Integer codigo);
 	
