@@ -5,6 +5,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacionFinal;
+import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.NotasFormacionFinalServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.NotasFormacionServiceImpl;
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping("/notasFormacion")
@@ -35,8 +38,19 @@ public class NotasFormacionResource {
 
 	@PostMapping("/registrar")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody List<NotasFormacion> lista) throws DataException {
-		notasFormacionServiceImpl.saveAll(lista);
+	public ResponseEntity<?> guardar(@RequestBody List<NotasFormacion> lista) {
+		try {
+			notasFormacionServiceImpl.saveAll(lista);
+		} catch (DataException e) {
+			return response(HttpStatus.BAD_REQUEST, e.getMessage());
+		}catch (MessagingException e) {
+			return response(HttpStatus.BAD_REQUEST, e.getMessage());
+		}catch (PSQLException e) {
+			return response(HttpStatus.BAD_REQUEST, e.getMessage());
+		}catch(Exception e){
+			return response(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+		
 		return response(HttpStatus.OK, EXITO);
 	}
 
@@ -82,7 +96,7 @@ public class NotasFormacionResource {
 		notasFormacionFinalServiceImpl.calcularNotas();
 		return response(HttpStatus.OK, PROCESO_EXITO);
 	}
-	
+
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),

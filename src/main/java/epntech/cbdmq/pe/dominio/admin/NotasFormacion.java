@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -59,4 +61,7 @@ public class NotasFormacion {
 	
 	@Column(name = "nota_supletorio")
 	private Double notaSupletorio;
+	
+	@Column(name = "fecha_ingreso")
+	private LocalDateTime fechaIngreso;
 }
