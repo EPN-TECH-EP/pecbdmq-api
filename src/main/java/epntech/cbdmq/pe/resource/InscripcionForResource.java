@@ -217,6 +217,11 @@ public class InscripcionForResource {
 		return postulanteService.getPostulantesPaginado(usuario, pageable);
 	}
 	
+	@GetMapping("/postulantesAsignadosPaginado/{usuario}")
+	public List<Postulante> getPostulantesAsignados(@PathVariable("usuario") Integer usuario, Pageable pageable) {
+		return postulanteService.getPostulantesAsignadosPaginado(usuario, pageable);
+	}
+	
 	@GetMapping("/postulantesAllPaginado")
 	public List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable) {
 		return postulanteService.getPostulantesAllPaginadoTodo(pageable);

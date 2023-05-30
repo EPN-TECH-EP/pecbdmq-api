@@ -10,3 +10,4 @@ public interface ResultadoPruebasFisicasRepository extends JpaRepository<Resulta
 	
 	
 }
+

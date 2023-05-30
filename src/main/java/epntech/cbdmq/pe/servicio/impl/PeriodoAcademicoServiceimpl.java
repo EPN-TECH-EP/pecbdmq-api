@@ -146,10 +146,17 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	}
 
 	@Override
-	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion {
+	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+
 		// TODO Auto-generated method stub
 		String resultado;
 		Integer periodo = repo.getPAActive();
+		
+		if(periodo == null)
+			throw new DataException(NO_PERIODO_ACTIVO);
+
+		if(periodo == null)
+			throw new DataException(NO_PERIODO_ACTIVO);
 
 		resultado = ruta();
 		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
@@ -193,6 +200,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			pADocumentoRepository.save(docsPA);
 
 		}
+		
 	}
 
 	private String ruta() {
@@ -213,7 +221,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			
 			PADocumento docsPA = new PADocumento();
 			docsPA = pADocumentoRepository.findByCodDocumentoAndCodPeriodoAcademico(docsUtil.getId(), repo.getPAActive());
-	
+
 			pADocumentoRepository.deleteById(docsPA.getCodPeriodoAcademicoDocumento());
 		}
 	}

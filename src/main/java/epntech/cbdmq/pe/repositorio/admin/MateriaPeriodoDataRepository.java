@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,3 +9,4 @@ public interface MateriaPeriodoDataRepository extends JpaRepository<MateriaPerio
 
 	MateriaPeriodoData findByCodPeriodoAcademicoAndCodMateria(Integer periodo, Integer materia);
 }
+

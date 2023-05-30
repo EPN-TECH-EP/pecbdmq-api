@@ -60,3 +60,4 @@ public class Prueba {
 	private Integer cod_curso_especializacion;
 	
 }
+

@@ -48,3 +48,4 @@ public class NotasFormacionFinal {
 	@Column(name = "ponderacion_disciplina")
 	private Double ponderacionDisciplina;
 }
+

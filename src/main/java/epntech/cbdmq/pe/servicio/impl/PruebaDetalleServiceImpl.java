@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
