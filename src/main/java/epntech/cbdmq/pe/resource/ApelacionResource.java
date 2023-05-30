@@ -1,11 +1,9 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
+import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,75 +20,77 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Apelacion;
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.admin.ApelacionRepository;
-import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.servicio.impl.ApelacionServiceImpl;
-
 
 @RestController
 @RequestMapping("/apelacion")
 public class ApelacionResource {
 
 	@Autowired
-	private ApelacionRepository repo;
-	@Autowired
-    private ApelacionServiceImpl objServices;
-	
+	private ApelacionServiceImpl objServices;
+
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody Apelacion obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody Apelacion obj) throws DataException, ParseException {
 		return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/listar")
-    public List<Apelacion> listar() {
-        return objServices.getAll();
-    }
+	public List<Apelacion> listar() {
+		return objServices.getAll();
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Apelacion> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
+		return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Apelacion> actualizarDatos(@PathVariable("id") Integer id, @RequestBody Apelacion obj)
+			throws DataException {
+		return (ResponseEntity<Apelacion>) objServices.getById(id).map(datosGuardados -> {
+			datosGuardados.setObservacionEstudiante(obj.getObservacionEstudiante());
+			datosGuardados.setObservacionInstructor(obj.getObservacionInstructor());
+			datosGuardados.setAprobacion(obj.getAprobacion());
+			datosGuardados.setNotaNueva(obj.getNotaNueva());
+			datosGuardados.setEstado(obj.getEstado());
+			Apelacion datosActualizados = null;
+			try {
+				datosActualizados = objServices.update(datosGuardados);
+				return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+			} catch (DataException e) {
+				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+			}
+			
+		}).orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
+		objServices.delete(codigo);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
 	
-	 @GetMapping("/{id}")
-	    public ResponseEntity<Apelacion> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
-	        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	    }
-	 
-	 @PutMapping("/{id}")
-	    public ResponseEntity<Apelacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Apelacion obj) throws DataException{
-	        return (ResponseEntity<Apelacion>) objServices.getById(codigo).map(datosGuardados -> {
-	        	datosGuardados.setNombre(obj.getNombre().toUpperCase());
-	            datosGuardados.setFechasolicitud(obj.getFechasolicitud());
-	            
-	            datosGuardados.setObservacionaspirante(obj.getObservacionaspirante());
-	            datosGuardados.setObservaciondocente(obj.getObservaciondocente());
-	            datosGuardados.setAprobacion(obj.getAprobacion());
-	            datosGuardados.setNotaactual(obj.getNotaactual());
-	            datosGuardados.setNotanueva(obj.getNotanueva());
-	            datosGuardados.setRespuesta(obj.getRespuesta());
-	            datosGuardados.setEstado(obj.getEstado());
-	            Apelacion datosActualizados = null;
-				try {
-					datosActualizados = objServices.update(datosGuardados);
-				} catch (DataException e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-					
-					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-				}
-	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-	        }).orElseGet(() -> ResponseEntity.notFound().build());
-	    }
-	 
-	 
-	 @DeleteMapping("/{id}")
-		public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
-			objServices.delete(codigo);
-			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-		}
-	    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-	                message), httpStatus);
-	    }
+	@GetMapping("/listarByEstudiante/{id}")
+	public List<Apelacion> listarByEstudiante(@PathVariable("id") Integer id) {
+		return objServices.getByEstudiante(id);
+	}
 	
+	@GetMapping("/listarByInstructor/{id}")
+	public List<Apelacion> listarByInstructor(@PathVariable("id") Integer id) {
+		return objServices.getByInstructor(id);
+	}
 	
+	@GetMapping("/fechaApelacion/{cod_nota}")
+	public Boolean fechaApelacion(@PathVariable("cod_nota") Integer cod_nota) throws DataException {
+		return objServices.validaFechaApelacion(cod_nota);
+	}
+
+	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+		return new ResponseEntity<>(
+				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+				httpStatus);
+	}
+
 }
