@@ -242,11 +242,8 @@ public class Estudiante{
 
 	@Column(name = "cod_datos_personales")
 	private Integer codDatosPersonales;
-
-	@Column(name = "cod_modulo")
-	private Integer codModulo;
-
-	@Column(name = "cod_unico_estudiante")
+	
+	@Column(name = "codigo_unico_estudiante")
 	private String idEstudiante;
 	@Column(name = "estado")
 

@@ -45,24 +45,24 @@ import jakarta.mail.MessagingException;
 @RequestMapping("/periodoacademico")
 //@CrossOrigin(origins = "${cors.urls}")
 public class PeriodoAcademicoResource {
-	
+
 	@Autowired
 	private PeriodoAcademicoServiceimpl objService;
 	@Autowired
 	private DocumentoServiceimpl documentoServiceimpl;
-	
+
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException, ParseException{
+	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException, ParseException {
 		Date date = new Date();
 		SimpleDateFormat formato1 = new SimpleDateFormat("yyyy-MM-dd");
 		Date fecha = formato1.parse(formato1.format(date));
-		
+
 		obj.setFechaInicio(fecha);
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
-		
+
 	}
-	
+
 	@GetMapping("/listar")
 	public List<PeriodoAcademico> listar() {
 		return objService.getAll();
@@ -70,13 +70,13 @@ public class PeriodoAcademicoResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<PeriodoAcademico> obtenerPorId(@PathVariable("id") int codigo) {
-		return objService.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return objService.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
-	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo, @RequestBody PeriodoAcademico obj) throws DataException {
+	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo,
+			@RequestBody PeriodoAcademico obj) throws DataException {
 		return (ResponseEntity<PeriodoAcademico>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setModuloEstados(obj.getModuloEstados());
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
@@ -101,32 +101,36 @@ public class PeriodoAcademicoResource {
 		objService.deleteById(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
-	
+
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-                message), httpStatus);
-    }
-	
+		return new ResponseEntity<>(
+				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+				httpStatus);
+
+	}
+
+
 	@GetMapping("/listartodo")
 	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
 		return objService.getAllPeriodoAcademico();
 	}
-	
+
 	@GetMapping("/validaestado")
 	public ResponseEntity<HttpResponse> getEstado() {
 		String result = objService.getEstado();
-		
+
 		if (result == null) {
 			result = "SIN PERIODO";
 		}
-		
+
 		return response(HttpStatus.OK, result);
 	}
-	
+
 	@GetMapping("/siguienteEstado")
-	public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id, @RequestParam("proceso") String proceso) {
+	public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id,
+			@RequestParam("proceso") String proceso) {
 		String result = objService.updateNextState(id, proceso).toString();
-				
+
 		return response(HttpStatus.OK, result);
 	}
 	
@@ -134,38 +138,37 @@ public class PeriodoAcademicoResource {
 	public ResponseEntity<HttpResponse> validState(@RequestParam("estado") Integer estado, @RequestParam("proceso") String proceso) {
 		Integer result = objService.validState(estado, proceso);
 		String r;
-		
+
 		if (result == 1)
 			return response(HttpStatus.OK, REGISTRO_ACTUALIZADO);
 		else
 			return response(HttpStatus.BAD_REQUEST, ESTADO_INCORRECTO);
 	}
-	
+
 	@GetMapping("/documentos")
 	public Set<Documento> listarDocumentos() {
 		return objService.getDocumentos();
 	}
-	
+
 	@GetMapping("/")
 	public ResponseEntity<PeriodoAcademico> getPeriodo() {
-		return objService.getActive().map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return objService.getActive().map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
-	
+
 	@PostMapping("/cargarDocs")
 	public ResponseEntity<?> guardarArchivo(@RequestParam List<MultipartFile> archivos,@RequestParam String descripcion,@RequestParam String observacion) throws Exception {
 		objService.cargarDocs(archivos,descripcion,observacion);
 		return response(HttpStatus.OK, EXITO);
 	}
-	
+
 	@DeleteMapping("/eliminarDocs")
 	public ResponseEntity<?> eliminarDocs(@RequestBody List<DocsUtil> documentos) throws Exception {
 		for (DocsUtil docsUtil : documentos) {
 			documentoServiceimpl.eliminarArchivo(docsUtil.getId());
 		}
 		objService.eliminar(documentos);
-		
+
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO);
 	}
-	
+
 }

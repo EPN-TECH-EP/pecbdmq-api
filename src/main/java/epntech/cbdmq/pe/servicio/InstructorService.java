@@ -11,13 +11,13 @@ import org.springframework.data.domain.Pageable;
 
 public interface InstructorService {
 
-	 Instructor save(Instructor obj) throws DataException;
+	Instructor save(Instructor obj) throws DataException;
 
-	    List<Instructor> getAll();
+	List<Instructor> getAll();
 
-	    Optional<Instructor> getById(Integer codigo);
+	Optional<Instructor> getById(Integer codigo);
 
-	    Instructor update(Instructor objActualizado);
+	Instructor update(Instructor objActualizado);
 
 	    void delete(Integer codigo);
 		Instructor getInstructorByUser(String coduser);
@@ -27,4 +27,6 @@ public interface InstructorService {
 	List<EspecializacionInstructor> getEspecializacionHistoricos(Integer codInstructor, Pageable pageable);
 	List<ProfesionalizacionInstructor> getProfesionalizacionHistoricos(Integer codInstructor, Pageable pageable);
 	
+
 }
+

@@ -122,7 +122,6 @@ public class DocumentoServiceimpl implements DocumentoService {
 	private String ruta(String proceso, String id) {
 
 		String resultado = null;
-
 		resultado = ARCHIVOS_RUTA + proceso + "/" + id + "/";
 
 		return resultado;
@@ -145,6 +144,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 		// Files.copy(archivo.getInputStream(),
 		// ruta.resolve(archivo.getOriginalFilename()),
 		// StandardCopyOption.REPLACE_EXISTING);
+
 		for (Iterator iterator = archivo.iterator(); iterator.hasNext();) {
 			MultipartFile multipartFile = (MultipartFile) iterator.next();
 			if (multipartFile.getSize() > TAMAÑO_MÁXIMO.toBytes()) {

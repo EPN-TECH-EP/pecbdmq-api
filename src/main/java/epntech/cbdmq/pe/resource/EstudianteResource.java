@@ -55,8 +55,8 @@ public class EstudianteResource {
     }
 
     @PostMapping("/ByUser")
-    public EstudianteDto listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
-        EstudianteDto estudiante = objService.getEstudianteByUsuario(codUsuario);
+    public Estudiante listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
+        Estudiante estudiante = objService.getEstudianteByUsuario(codUsuario);
         System.out.println(estudiante);
         if (estudiante == null) {
             throw new DataException(NO_ENCUENTRA);

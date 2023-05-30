@@ -30,3 +30,4 @@ public interface ResultadoPruebasDatosRepository extends JpaRepository<Resultado
 	@Query(value = "select * from cbdmq.get_approved_applicants(:prueba)", nativeQuery=true)
 	List<ResultadosPruebasDatos> get_approved_applicants(Integer prueba);
 }
+

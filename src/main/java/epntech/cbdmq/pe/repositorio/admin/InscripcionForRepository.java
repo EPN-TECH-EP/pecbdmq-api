@@ -93,16 +93,13 @@ public class InscripcionForRepository{
 				+ "cod_documento_imagen,\r\n"
 				+ "cod_canton_nacimiento,\r\n"
 				+ "cod_canton_residencia,\r\n"
-				+ "cod_canton_tercernivel,\r\n"
-				+ "cod_provincia_tercernivel,\r\n"
 				+ "fecha_salida_institucion,\r\n"
 				+ "nivel_instruccion,\r\n"
 				+ "nombre_titulo_tercernivel,\r\n"
 				+ "nombre_titulo_cuartonivel,\r\n"
 				+ "es_vulnerable,\r\n"
 				+ "pais_titulo_cuartonivel,\r\n"
-				+ "cod_provincia_cuartonivel,\r\n"
-				+ "cod_canton_cuartonivel,) "
+				+ "pais_titulo_tercernivel) "
 				+ "VALUES (:apellido,\r\n"
 				+ ":cedula,\r\n"
 				+ ":cod_estacion,\r\n"
@@ -139,16 +136,13 @@ public class InscripcionForRepository{
 				+ ":cod_documento_imagen,\r\n"
 				+ ":cod_canton_nacimiento,\r\n"
 				+ ":cod_canton_residencia,\r\n"
-				+ ":cod_canton_tercernivel,\r\n"
-				+ ":cod_provincia_tercernivel,\r\n"
 				+ ":fecha_salida_institucion,\r\n"
 				+ ":nivel_instruccion,\r\n"
 				+ ":nombre_titulo_tercernivel,\r\n"
 				+ ":nombre_titulo_cuartonivel,\r\n"
 				+ ":es_vulnerable,\r\n"
 				+ ":pais_titulo_cuartonivel,\r\n"
-				+ ":cod_provincia_cuartonivel,\r\n"
-				+ ":cod_canton_cuartonivel,)";
+				+ ":pais_titulo_tercernivel)";
 		
 		String sqlPostulante = "INSERT INTO cbdmq.gen_postulante (cod_datos_personales, estado, fecha_postulacion, edad_postulacion) "
 				+ "VALUES (:cod_datos_personales, :estado, :fecha_postulacion, :edad_postulacion)";
@@ -197,16 +191,13 @@ public class InscripcionForRepository{
 		.setParameter("cod_documento_imagen", inscripcion.getCod_documento_imagen())
 		.setParameter("cod_canton_nacimiento", inscripcion.getCod_canton_nacimiento())
 		.setParameter("cod_canton_residencia", inscripcion.getCod_canton_residencia())
-		.setParameter("cod_canton_tercernivel", inscripcion.getCod_canton_tercer_nivel())
-		.setParameter("cod_provincia_tercernivel", inscripcion.getCod_provincia_tercer_nivel())
 		.setParameter("fecha_salida_institucion", inscripcion.getFecha_salida_institucion())
 		.setParameter("nivel_instruccion", inscripcion.getNivel_instruccion())
 		.setParameter("nombre_titulo_tercernivel", inscripcion.getNombre_titulo_tercernivel())
 		.setParameter("nombre_titulo_cuartonivel", inscripcion.getNombre_titulo_cuartonivel())
 		.setParameter("es_vulnerable", inscripcion.getEs_vulnerable())
 		.setParameter("pais_titulo_cuartonivel", inscripcion.getPais_titulo_cuartonivel())
-		.setParameter("cod_provincia_cuartonivel", inscripcion.getCod_provincia_cuartonivel())
-		.setParameter("cod_canton_cuartonivel", inscripcion.getCod_canton_cuartonivel())
+		.setParameter("pais_titulo_tercernivel", inscripcion.getPais_titulo_tercernivel())
 				;
 
 		entityManager.persist(inscripcion);

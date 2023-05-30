@@ -33,6 +33,6 @@ public interface EstudianteService {
 	List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
 	List<EspecializacionEstudiante> getEspecializacionHistoricos(String codEstudiante, Pageable pageable);
 	List<ProfesionalizacionEstudiante> getProfesionalizacionHistoricos(String codEstudiante, Pageable pageable);
-	EstudianteDto getEstudianteByUsuario(String codUsuario);
+	Estudiante getEstudianteByUsuario(String codUsuario);
 
 }

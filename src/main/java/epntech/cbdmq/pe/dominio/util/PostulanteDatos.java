@@ -29,7 +29,7 @@ public class PostulanteDatos {
 	private String nombre;
 	private Date fechaNacimiento;
 	private String tipoSangre;
-	private String genero;
+	private String sexo;
 	private String cantonNacimiento;
 	private String cantonResidencia;
 	private String callePrincipalResidencia;
@@ -38,9 +38,9 @@ public class PostulanteDatos {
 	private String colegio;
 	private String tipoNacionalidad;
 	private String numTelefCelular;
-	private String nombreTitulo;
-	private String paisTitulo;
-	private String ciudadTitulo;
+	private String nombreTituloSegundonivel;
+	private String paisTituloSegundonivel;
+	private String ciudadTituloSegundonivel;
 	private String meritoAcademicoDescripcion;
 	private String meritoDeportivoDescripcion;
 	private String provinciaNacimiento;

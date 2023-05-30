@@ -18,9 +18,8 @@ public class EspecializacionInstructor {
     private Date fechaFinCurso;
     private Date fechaInicioCargaNota;
     private Date fechaFinCargaNota;
-    private String estadoProceso;
 
-    public EspecializacionInstructor(String nombreCargo, String nombreRango, String nombreGrado, String nombreTipoInstructor, String instructor, String nombreAula, String nombreTipoCurso, String nombreCatalogoCurso, Date fechaInicioCurso, Date fechaFinCurso, Date fechaInicioCargaNota, Date fechaFinCargaNota, String estadoProceso) {
+    public EspecializacionInstructor(String nombreCargo, String nombreRango, String nombreGrado, String nombreTipoInstructor, String instructor, String nombreAula, String nombreTipoCurso, String nombreCatalogoCurso, Date fechaInicioCurso, Date fechaFinCurso, Date fechaInicioCargaNota, Date fechaFinCargaNota) {
         this.nombreCargo = nombreCargo;
         this.nombreRango = nombreRango;
         this.nombreGrado = nombreGrado;
@@ -33,6 +32,5 @@ public class EspecializacionInstructor {
         this.fechaFinCurso = fechaFinCurso;
         this.fechaInicioCargaNota = fechaInicioCargaNota;
         this.fechaFinCargaNota = fechaFinCargaNota;
-        this.estadoProceso = estadoProceso;
     }
 }

@@ -90,10 +90,8 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 		return repo.findAll();
 	}
 
-	@Override
-	public DatoPersonalDto datosPersonalePersonalizado(String cedula) {
-		return repo.buscarInformaciónPersonalizada(cedula);
-	}
+
+
 
 
 	@Override

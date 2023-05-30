@@ -35,7 +35,6 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
 	@Query(nativeQuery = true, name = "DatoPersonalDto.informacionDetallada")
 	List<DatoPersonalDto> buscarInformaciónPersonalizada(@Param("cedula") String cedula,Pageable pageable);
 	 */
-	@Query(nativeQuery = true, name = "DatoPersonalDto.informacionDetallada")
-	DatoPersonalDto buscarInformaciónPersonalizada(@Param("cedula") String cedula);
+
 
 }

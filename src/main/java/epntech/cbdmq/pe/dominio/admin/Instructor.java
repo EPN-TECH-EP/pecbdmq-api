@@ -58,7 +58,6 @@ import org.hibernate.annotations.NamedNativeQuery;
 				",cur.fecha_fin_curso  \n" +
 				",cur.fecha_inicio_carga_nota  \n" +
 				",cur.fecha_fin_carga_nota  \n" +
-				",cur.estado_proceso\n" +
 				"from cbdmq.esp_curso cur\n" +
 				"left join cbdmq.gen_instructor gi on gi.cod_instructor =cur.cod_instructor\n" +
 				"left join cbdmq.gen_unidad_gestion gug on gug.cod_unidad_gestion =cur.cod_unidad_gestion  \n" +
@@ -89,7 +88,6 @@ import org.hibernate.annotations.NamedNativeQuery;
 		@ColumnResult(name = "fecha_fin_curso"),
 		@ColumnResult(name = "fecha_inicio_carga_nota"),
 		@ColumnResult(name = "fecha_fin_carga_nota"),
-		@ColumnResult(name = "estado_proceso"),
 }))
 
 @NamedNativeQuery(name = "ProfesionalizacionInstructor.findHistorico",

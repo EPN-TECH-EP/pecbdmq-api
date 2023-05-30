@@ -9,7 +9,7 @@ public class FormacionInstructor {
     private String rango;
     private String grado;
     private String nombreMateria;
-    private Integer cod_periodo_academico;
+    private Integer codPeriodoAcademico;
 
     public FormacionInstructor(String instructor, String cargo, String rango, String grado, String nombreMateria, Integer cod_periodo_academico) {
         this.instructor = instructor;
@@ -17,6 +17,6 @@ public class FormacionInstructor {
         this.rango = rango;
         this.grado = grado;
         this.nombreMateria = nombreMateria;
-        this.cod_periodo_academico = cod_periodo_academico;
+        this.codPeriodoAcademico = cod_periodo_academico;
     }
 }

@@ -117,17 +117,15 @@ public class DatoPersonalResource {
 			datosGuardados.setCod_grado(obj.getCod_grado());
 			datosGuardados.setCod_documento_imagen(obj.getCod_documento_imagen());
 			datosGuardados.setCod_canton_nacimiento(obj.getCod_canton_nacimiento());
-			datosGuardados.setCod_canton_residencia(obj.getCod_canton_residencia());
-			datosGuardados.setCod_canton_tercer_nivel(obj.getCod_canton_tercer_nivel());
-			datosGuardados.setCod_provincia_tercer_nivel(obj.getCod_provincia_tercer_nivel());
+			datosGuardados.setCod_canton_residencia(obj.getCod_canton_residencia());			
 			datosGuardados.setFecha_salida_institucion(obj.getFecha_salida_institucion());
 			datosGuardados.setNivel_instruccion(obj.getNivel_instruccion());
 			datosGuardados.setNombre_titulo_tercernivel(obj.getNombre_titulo_tercernivel());
 			datosGuardados.setNombre_titulo_cuartonivel(obj.getNombre_titulo_cuartonivel());
 			datosGuardados.setEs_vulnerable(obj.getEs_vulnerable());
 			datosGuardados.setPais_titulo_cuartonivel(obj.getPais_titulo_cuartonivel());
-			datosGuardados.setCod_provincia_cuartonivel(obj.getCod_provincia_cuartonivel());
-			datosGuardados.setCod_canton_cuartonivel(obj.getCod_canton_cuartonivel());
+			datosGuardados.setPais_titulo_tercernivel(obj.getPais_titulo_tercernivel());
+			
 			
 			DatoPersonal datosActualizados = null;
 			try {
@@ -176,11 +174,7 @@ public class DatoPersonalResource {
 			return response(HttpStatus.NOT_FOUND, e.getMessage());
 		}
 	}
-	@GetMapping("/buscarHistorico")
-	public ResponseEntity<?> searchHistorico(@RequestParam("cedula") String cedula){
 
-			return ResponseEntity.status(HttpStatus.OK).body(objService.datosPersonalePersonalizado(cedula));
-	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {

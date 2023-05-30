@@ -32,8 +32,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Estudiante;
 import epntech.cbdmq.pe.dominio.admin.Instructor;
-import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
 import epntech.cbdmq.pe.excepcion.dominio.*;
@@ -222,17 +222,15 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		datos.setCod_grado(datosRecibidos.getCod_grado());
 		datos.setCod_documento_imagen(datosRecibidos.getCod_documento_imagen());
 		datos.setCod_canton_nacimiento(datosRecibidos.getCod_canton_nacimiento());
-		datos.setCod_canton_residencia(datosRecibidos.getCod_canton_residencia());
-		datos.setCod_canton_tercer_nivel(datosRecibidos.getCod_canton_tercer_nivel());
-		datos.setCod_provincia_tercer_nivel(datosRecibidos.getCod_provincia_tercer_nivel());
+		datos.setCod_canton_residencia(datosRecibidos.getCod_canton_residencia());		
 		datos.setFecha_salida_institucion(datosRecibidos.getFecha_salida_institucion());
 		datos.setNivel_instruccion(datosRecibidos.getNivel_instruccion());
 		datos.setNombre_titulo_tercernivel(datosRecibidos.getNombre_titulo_tercernivel());
 		datos.setNombre_titulo_cuartonivel(datosRecibidos.getNombre_titulo_cuartonivel());
 		datos.setEs_vulnerable(datosRecibidos.getEs_vulnerable());
 		datos.setPais_titulo_cuartonivel(datosRecibidos.getPais_titulo_cuartonivel());
-		datos.setCod_provincia_cuartonivel(datosRecibidos.getCod_provincia_cuartonivel());
-		datos.setCod_canton_cuartonivel(datosRecibidos.getCod_canton_cuartonivel());
+		datos.setPais_titulo_tercernivel(datosRecibidos.getPais_titulo_tercernivel());
+		
 
 		// asocia datos personales con usuario
 		user.setCodDatosPersonales(datos);
@@ -491,7 +489,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public UsuarioInfoDto getUsuarioInfo(String codUser) throws DataException {
 		Instructor instructor = instructorService.getInstructorByUser(codUser);
-		EstudianteDto estudianteDto = estudianteService.getEstudianteByUsuario(codUser);
+		Estudiante estudianteDto = estudianteService.getEstudianteByUsuario(codUser);
 
 		if (instructor == null && estudianteDto == null) {
 			throw new DataException(NO_ENCUENTRA);
@@ -501,7 +499,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 			usuarioInfo.setCodInstructor(instructor.getCod_instructor());
 		}
 		if(estudianteDto!=null) {
-			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getCodigoUnicoEstudiante());
+			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getIdEstudiante());
 		}
 
 		return usuarioInfo;

@@ -120,7 +120,7 @@ public class DocumentoResource {
 		return lista;
 	}
 
-	@PostMapping(value = "/eliminardocumentoconvocatoria")
+	@DeleteMapping(value = "/eliminardocumentoconvocatoria")
 	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Integer convocatoria, @RequestParam Integer codDocumento)
 			throws IOException {
 

@@ -103,7 +103,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}
 
 	@Override
-	public EstudianteDto getEstudianteByUsuario(String codUsuario){
+	public Estudiante getEstudianteByUsuario(String codUsuario){
 
 		return this.repo.getEstudianteByUsuario(codUsuario);
 	}
