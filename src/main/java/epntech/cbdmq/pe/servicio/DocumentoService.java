@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface DocumentoService {
 
@@ -28,7 +29,7 @@ public interface DocumentoService {
 	
 	void eliminarArchivo(int id) throws IOException, ArchivoMuyGrandeExcepcion;
 	
-	void eliminarArchivo(Integer convocatoria, Integer codDocumento) throws IOException;
+	void eliminarArchivo(Integer convocatoria, Integer codDocumento) throws IOException,DataException;
 	
 }
 
