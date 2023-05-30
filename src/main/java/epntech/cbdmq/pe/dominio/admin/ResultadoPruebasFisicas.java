@@ -59,8 +59,5 @@ public class ResultadoPruebasFisicas {
 	@Column(name = "resultado_tiempo")
 	private Time resultadoTiempo;
 	
-	
-	
-		
-	
 }
+

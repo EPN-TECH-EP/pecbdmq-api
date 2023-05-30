@@ -151,6 +151,9 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		// TODO Auto-generated method stub
 		String resultado;
 		Integer periodo = repo.getPAActive();
+		
+		if(periodo == null)
+			throw new DataException(NO_PERIODO_ACTIVO);
 
 		if(periodo == null)
 			throw new DataException(NO_PERIODO_ACTIVO);
@@ -197,6 +200,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			pADocumentoRepository.save(docsPA);
 
 		}
+		
 	}
 
 	private String ruta() {
@@ -217,7 +221,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			
 			PADocumento docsPA = new PADocumento();
 			docsPA = pADocumentoRepository.findByCodDocumentoAndCodPeriodoAcademico(docsUtil.getId(), repo.getPAActive());
-	
+
 			pADocumentoRepository.deleteById(docsPA.getCodPeriodoAcademicoDocumento());
 		}
 	}

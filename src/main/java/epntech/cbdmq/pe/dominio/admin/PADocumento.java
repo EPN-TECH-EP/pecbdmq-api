@@ -22,3 +22,4 @@ public class PADocumento {
 	@Column(name = "cod_documento")
 	private Integer codDocumento;
 }
+

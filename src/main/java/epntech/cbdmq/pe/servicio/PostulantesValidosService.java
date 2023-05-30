@@ -25,3 +25,4 @@ public interface PostulantesValidosService {
 	
 	List<PostulantesValidos> getPostulantesAprovadosPrueba(Integer codPrueba);
 }
+

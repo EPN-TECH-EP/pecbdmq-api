@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.servicio;
 
 
@@ -28,3 +29,4 @@ Optional<PruebaDetalle> getBySubtipoAndPA(Integer subtipo, Integer periodo);
 	void delete(int id) throws DataException;
 
 }
+

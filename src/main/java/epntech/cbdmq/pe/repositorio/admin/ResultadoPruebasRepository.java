@@ -12,3 +12,4 @@ public interface ResultadoPruebasRepository extends JpaRepository<ResultadoPrueb
 	Optional<ResultadoPruebas> findByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba);
 	
 }
+
