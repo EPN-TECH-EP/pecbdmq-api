@@ -19,7 +19,7 @@ import lombok.Data;
 public class PostulanteDatos {
 
 	@Id
-	private Integer codPostulante;	
+	private Integer codigo;	
 	private String idPostulante;
 	private Date fechaPostulacion;
 	private Integer edadPostulacion;
@@ -45,6 +45,7 @@ public class PostulanteDatos {
 	private String meritoDeportivoDescripcion;
 	private String provinciaNacimiento;
 	private String provinciaResidencia;
+	private String correoPersonal;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "gen_postulante_documento", joinColumns = @JoinColumn(name = "cod_postulante"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))
