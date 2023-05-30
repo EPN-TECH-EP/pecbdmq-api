@@ -30,12 +30,6 @@ public class Apelacion {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_apelacion")
 	private Integer cod_apelacion;
-	/*@Column(name = "cod_modulo")
-	private Integer cod_modulo;
-	@Column(name = "cod_estudiante")
-	private Integer cod_estudiante;
-	@Column(name = "cod_instructor")
-	private Integer cod_instructor;*/
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "fecha_solicitud")
 	private LocalDateTime fechasolicitud;
