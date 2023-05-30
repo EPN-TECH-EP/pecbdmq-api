@@ -15,15 +15,14 @@ public class FormacionEstudiante {
     private String nombreGrado;
     private String materia;
     private String instructor;
-    private BigDecimal porcentajeFinal;
     private BigDecimal notaMinima;
     private BigDecimal pesoMateria;
-    private Integer numeroHoras;
+    private Long numeroHoras;
     private BigDecimal notaMateria;
     private BigDecimal notaPonderacion;
     private BigDecimal notaDisciplina;
 
-    public FormacionEstudiante(String cedula, String nombres, String apellidos, String codigoUnico, String nombreCargo, String nombreRango, String nombreGrado, String materia, String instructor, BigDecimal porcentajeFinal, BigDecimal notaMinima, BigDecimal pesoMateria, Integer numeroHoras, BigDecimal notaMateria, BigDecimal notaPonderacion, BigDecimal notaDisciplina) {
+    public FormacionEstudiante(String cedula, String nombres, String apellidos, String codigoUnico, String nombreCargo, String nombreRango, String nombreGrado, String materia, String instructor, BigDecimal notaMinima, BigDecimal pesoMateria, Long numeroHoras, BigDecimal notaMateria, BigDecimal notaPonderacion, BigDecimal notaDisciplina) {
         this.cedula = cedula;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -33,7 +32,6 @@ public class FormacionEstudiante {
         this.nombreGrado = nombreGrado;
         this.materia = materia;
         this.instructor = instructor;
-        this.porcentajeFinal = porcentajeFinal;
         this.notaMinima = notaMinima;
         this.pesoMateria = pesoMateria;
         this.numeroHoras = numeroHoras;

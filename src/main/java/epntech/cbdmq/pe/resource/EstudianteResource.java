@@ -39,24 +39,7 @@ public class EstudianteResource {
     public ResponseEntity<?> guardar(@RequestBody Estudiante obj) throws DataException {
         return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
     }
-}
-
-	/*@PutMapping("/{id}")
-	public ResponseEntity<Estudiante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Estudiante obj) throws DataException{
-		return (ResponseEntity<Estudiante>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodDatosPersonales(obj.getCodDatosPersonales());
-			datosGuardados.setCodModulo(obj.getCodModulo());
-			datosGuardados.setGrado(obj.getGrado());
-			datosGuardados.setResultadoEstudiante(obj.getResultadoEstudiante());
-			datosGuardados.setIdEstudiante(obj.getIdEstudiante());
-			datosGuardados.setEstado(obj.getEstado());
-
-    @GetMapping("/listardatos")
-    public List<EstudianteDatos> listarFormHistorico() {
-        return objService.findAllEstudiante();
-    }
     @PostMapping("/listarFormHistorico")
-
     public List<FormacionEstudiante> listarFormHistorico(@RequestParam("codUnico") String codEstudiante, Pageable pageable) {
         return objService.getHistoricos(codEstudiante, pageable);
     }
@@ -70,6 +53,16 @@ public class EstudianteResource {
     public List<ProfesionalizacionEstudiante> listarProfHistorico(@RequestParam("codUnico") String codEstudiante, Pageable pageable) {
         return objService.getProfesionalizacionHistoricos(codEstudiante, pageable);
     }
+
+    @PostMapping("/ByUser")
+    public EstudianteDto listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
+        EstudianteDto estudiante = objService.getEstudianteByUsuario(codUsuario);
+        System.out.println(estudiante);
+        if (estudiante == null) {
+            throw new DataException(NO_ENCUENTRA);
+        }
+        return estudiante;
+    }
 }
 
-	 */
+

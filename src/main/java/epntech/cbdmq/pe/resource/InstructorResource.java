@@ -4,8 +4,9 @@ import static epntech.cbdmq.pe.constante.MensajesConst.EXITO;
 
 import java.util.List;
 
-import epntech.cbdmq.pe.dominio.util.EstudianteDto;
+import epntech.cbdmq.pe.dominio.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +83,20 @@ public class InstructorResource {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
+	}
+	@PostMapping("/listarFormHistorico")
+	public List<FormacionInstructor> listarFormHistorico(@RequestParam("codInstructor") Integer codInstructor, Pageable pageable) {
+		return objService.getFormHistoricos(codInstructor, pageable);
+	}
+
+	@PostMapping("/listarEspHistorico")
+	public List<EspecializacionInstructor> listarEspHistorico(@RequestParam("codInstructor") Integer codInstructor, Pageable pageable) {
+		return objService.getEspecializacionHistoricos(codInstructor, pageable);
+	}
+
+	@PostMapping("/listarProfHistorico")
+	public List<ProfesionalizacionInstructor> listarProfHistorico(@RequestParam("codInstructor") Integer codInstructor, Pageable pageable) {
+		return objService.getProfesionalizacionHistoricos(codInstructor, pageable);
 	}
 	
 }

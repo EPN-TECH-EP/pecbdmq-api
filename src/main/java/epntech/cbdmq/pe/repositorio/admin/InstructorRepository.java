@@ -1,8 +1,10 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
+import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.util.EstudianteDto;
+import epntech.cbdmq.pe.dominio.util.*;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import epntech.cbdmq.pe.dominio.admin.Instructor;
@@ -21,5 +23,13 @@ public interface InstructorRepository extends JpaRepository<Instructor, Integer>
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario =:codUsuario")
 	Instructor getInstructorByUsuario(@Param("codUsuario") String coUsuario);
+	@Query(nativeQuery = true, name = "FormacionInstructor.findHistorico")
+	List<FormacionInstructor> getForHistoricos(@Param("codInstructor") Integer codUnico, Pageable pageable);
+
+	@Query(nativeQuery = true, name = "EspecializacionInstructor.findHistorico")
+	List<EspecializacionInstructor> getEspHistoricos(@Param("codInstructor") Integer codUnico, Pageable pageable);
+
+	@Query(nativeQuery = true, name = "ProfesionalizacionInstructor.findHistorico")
+	List<ProfesionalizacionInstructor> getProfHistoricos(@Param("codInstructor") Integer codUnico, Pageable pageable);
 	
 }
