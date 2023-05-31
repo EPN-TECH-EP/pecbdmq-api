@@ -29,7 +29,7 @@ public class MateriaPeriodoData {
 	
 	@Column(name = "peso_materia")
 	private Double pesoMateria;
-
+	
 	@Column(name = "nota_minima_supletorio_inicio")
 	private Double notaMinimaSupletorioInicio;
 	
@@ -37,3 +37,4 @@ public class MateriaPeriodoData {
 	private Double notaMinimaSupletorioFin;
 
 }
+

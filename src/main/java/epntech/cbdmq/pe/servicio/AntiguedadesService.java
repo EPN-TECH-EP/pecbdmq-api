@@ -21,3 +21,4 @@ public interface AntiguedadesService {
 			throws DocumentException, IOException, DataException;
 
 }
+

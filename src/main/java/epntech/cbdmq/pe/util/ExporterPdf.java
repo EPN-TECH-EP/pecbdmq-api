@@ -1,7 +1,9 @@
+
 package epntech.cbdmq.pe.util;
 
 import java.awt.Color;
 import java.io.File;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import jakarta.servlet.http.HttpServletResponse;
 
+
+
 @Component
 
 
@@ -50,7 +54,6 @@ public class ExporterPdf {
 			celda.setPhrase(new Phrase(elemento, fuente));
 			tabla.addCell(celda);
 		}
-		
 
 	}
 
@@ -63,18 +66,17 @@ public class ExporterPdf {
 		XSSFFont fuente = libro.createFont();
 		fuente.setFontHeight(14);
 		estilo.setFont(fuente);
-		//System.out.println("lista " + lista);
+
 		for (int i = 0; i < lista.size(); i++) {
 			//System.out.println("valor " + lista.get(i).get(i));
 			Row fila = hoja.createRow(nueroFilas++);
-			
+
 			for (int j = 0; j < lista.get(i).size(); j++) {
 				//Cell celda = fila.createCell(i);
 				tabla.addCell(String.valueOf(lista.get(i).get(j)));
 			}
 
 		}
-
 	}
 
 	public void exportar(HttpServletResponse response, String[] columnas, ArrayList<ArrayList<String>> lista, float[] widths)
@@ -104,7 +106,7 @@ public class ExporterPdf {
 		documento.add(tabla);
 		documento.close();
 	}
-
+	
 	public void exportar(HttpServletResponse response, String[] columnas, ArrayList<ArrayList<String>> lista, float[] widths, String filePath)
 			throws DocumentException, IOException {
 		

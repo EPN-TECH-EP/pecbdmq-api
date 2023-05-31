@@ -97,3 +97,4 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	}
 
 }
+

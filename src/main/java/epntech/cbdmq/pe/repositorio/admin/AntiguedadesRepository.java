@@ -71,5 +71,4 @@ public interface AntiguedadesRepository extends JpaRepository<AntiguedadesDatos,
 			+ "limit (select c.cupo_hombres from cbdmq.gen_convocatoria c where c.cod_periodo_academico = cbdmq.get_pa_activo() and upper(c.estado) = 'ACTIVO')", nativeQuery=true)
 	Set<AntiguedadesDatos> getAntiguedadesMasculino();
 	
-
 }

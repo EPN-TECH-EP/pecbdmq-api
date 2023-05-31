@@ -11,3 +11,4 @@ public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, In
 	Optional<PruebaDetalle> findByCodSubtipoPruebaAndCodPeriodoAcademico(Integer subtipo, Integer periodo);
 
 }
+

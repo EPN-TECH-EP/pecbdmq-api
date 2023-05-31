@@ -9,3 +9,4 @@ public interface MateriaPeriodoDataRepository extends JpaRepository<MateriaPerio
 
 	MateriaPeriodoData findByCodPeriodoAcademicoAndCodMateria(Integer periodo, Integer materia);
 }
+

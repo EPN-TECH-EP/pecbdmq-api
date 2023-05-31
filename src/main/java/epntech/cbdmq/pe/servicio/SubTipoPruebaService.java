@@ -8,3 +8,4 @@ public interface SubTipoPruebaService {
 
 	Optional<SubTipoPrueba> findByTipoPrueba(Integer id); 
 }
+
