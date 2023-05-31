@@ -26,15 +26,12 @@ public class EncuestaFormularioServiceImpl implements EncuestaFormularioService{
 	}
 
 	@Override
-	public List<EncuestaFormulario> getAll() {
+	public List<EncuestaFormulario> getAll(Integer codEncuesta) {
 		// TODO Auto-generated method stub
-		return encuestaFormularioRepository.findAll();
+		return encuestaFormularioRepository.encuesta(codEncuesta);
 	}
 
-	/*@Override
-	public Set<EncuestaFormulario> set() {
-		// TODO Auto-generated method stub
-		return encuestaFormularioRepository.saveAll();
-	}*/
+
+
 
 }

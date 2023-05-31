@@ -54,8 +54,8 @@ public class ParametrizaPruebaDetalle {
 	@Column(name = "cod_subtipo_prueba")
 	private Integer cod_subtipo_prueba;
 	
-	@OneToMany(mappedBy="cod_parametriza_prueba_resumen")
-    private List<ParametrizaPruebaResumen> Pruebaresumen;
+	/*@OneToMany(mappedBy="cod_parametriza_prueba_resumen")
+    private List<ParametrizaPruebaResumen> Pruebaresumen;*/
 	
 
 	@OneToMany(mappedBy="cod_subtipo_prueba")

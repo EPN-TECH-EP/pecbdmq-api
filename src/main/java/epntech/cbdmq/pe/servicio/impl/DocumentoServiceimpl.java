@@ -89,10 +89,12 @@ public class DocumentoServiceimpl implements DocumentoService {
 			}
 
 			// Cargar documento
+			System.out.println("ruta"+ruta);
 
 			System.out.println("parent " + ruta.getParent().toString());
 
 			if (!Files.exists(ruta.getParent())) {
+				System.out.println("ruta"+ruta);
 				Files.createDirectories(ruta.getParent());
 			}
 
