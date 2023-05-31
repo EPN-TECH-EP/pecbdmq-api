@@ -16,13 +16,13 @@ import lombok.Data;
 @Entity
 @Table(name = "gen_postulante")
 @SQLDelete(sql = "UPDATE {h-schema}gen_postulante SET estado = 'ELIMINADO' WHERE cod_postulante = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado <> 'ELIMINADO'")
+@Where(clause = "coalesce(estado, '') <> 'ELIMINADO'")
 public class Postulante {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_postulante")
-	private Integer codPostulante;
+	private Long codPostulante;
 	
 	@Column(name = "cod_datos_personales")
 	private Integer codDatoPersonal;

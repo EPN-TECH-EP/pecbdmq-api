@@ -10,12 +10,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
-import epntech.cbdmq.pe.dominio.admin.DatoPersonalDocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.DocumentoDatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.DocumentoPostulante;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.PostulanteDocumentoFor;
@@ -206,7 +203,7 @@ public class InscripcionForRepository{
 		//System.out.println("inscripcion.getFecha_nacimiento(): " + inscripcion.getFecha_nacimiento());
 		
 		StoredProcedureQuery query = entityManager.createStoredProcedureQuery("cbdmq.get_edad");
-		query.registerStoredProcedureParameter("fecha", Date.class, ParameterMode.IN);
+		query.registerStoredProcedureParameter("fecha", LocalDateTime.class, ParameterMode.IN);
 		query.setParameter("fecha", inscripcion.getFecha_nacimiento());
 		query.execute();
 		Object edad = query.getSingleResult();
@@ -219,7 +216,7 @@ public class InscripcionForRepository{
 
 		PostulanteFor postulante = new PostulanteFor();
 		postulante.setCodDatoPersonal(inscripcion.getCodDatoPersonal());
-		postulante.setEstado(inscripcion.getEstado());
+		postulante.setEstado("PENDIENTE");
 		postulante.setFechaPostulacion(fechaPostulacion);
 		postulante.setEdadPostulacion(Integer.parseInt(edad.toString()));
 		

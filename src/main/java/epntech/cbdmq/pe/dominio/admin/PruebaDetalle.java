@@ -61,4 +61,14 @@ public class PruebaDetalle {
 	
 	@Column(name = "orden_tipo_prueba")
 	private Integer ordenTipoPrueba;
+	
+	@Column(name = "puntaje_minimo")
+	private Double puntajeMinimo;
+	
+	@Column(name = "puntaje_maximo")
+	private Double puntajeMaximo;
+	
+	@Column(name = "tiene_puntaje")
+	private Boolean tienePuntaje;
+	
 }

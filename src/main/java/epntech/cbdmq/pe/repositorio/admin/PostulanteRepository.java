@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.query.Procedure;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 
-public interface PostulanteRepository extends JpaRepository<Postulante, Integer> {
+public interface PostulanteRepository extends JpaRepository<Postulante, Long> {
 	
 	@Procedure(value = "cbdmq.get_id")
 	String getIdPostulante(String proceso);

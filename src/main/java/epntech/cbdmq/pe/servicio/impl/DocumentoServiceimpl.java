@@ -1,7 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-
+import static epntech.cbdmq.pe.constante.MensajesConst.CONVOCATORIA_NO_EXISTE;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,7 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaDocumentoRepository;
+import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.servicio.DocumentoService;
 
@@ -37,6 +39,9 @@ public class DocumentoServiceimpl implements DocumentoService {
 
 	@Autowired
 	private ConvocatoriaDocumentoRepository convocatoriaDocumentoRepository;
+
+	@Autowired
+	private ConvocatoriaRepository convocatoriaRepository; 
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -84,10 +89,12 @@ public class DocumentoServiceimpl implements DocumentoService {
 			}
 
 			// Cargar documento
+			System.out.println("ruta"+ruta);
 
 			System.out.println("parent " + ruta.getParent().toString());
 
 			if (!Files.exists(ruta.getParent())) {
+				System.out.println("ruta"+ruta);
 				Files.createDirectories(ruta.getParent());
 			}
 
@@ -189,11 +196,14 @@ public class DocumentoServiceimpl implements DocumentoService {
 
 	@Override
 	public void eliminarArchivo(Integer convocatoria, Integer codDocumento)
-			throws IOException {
+			throws IOException, DataException {
 		String resultado = null;
 		Documento documentos = new Documento();
 		Optional<Documento> documento;
 
+		if(convocatoriaRepository.findById(convocatoria).isEmpty())
+			throw new IOException(CONVOCATORIA_NO_EXISTE);
+		
 		// System.out.println("id: " + codDocumento);
 		documento = repo.findById(codDocumento);
 		documentos = documento.get();

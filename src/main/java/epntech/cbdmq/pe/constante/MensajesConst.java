@@ -36,6 +36,8 @@ public class MensajesConst {
 	public static final String DATOS_REGISTRADOS = "Datos registrados exitosamente";
 	public static final String PROCESO_EXITO = "Proceso ejecutado con éxito!";
 	public static final String NO_PERIODO_ACTIVO = "No existe Período Academico activo";
+	public static final String CONVOCATORIA_NO_EXISTE = "No existe convocatoria ";
+
 	public static final String FECHA_INSCRIPCION_INVALIDA = "La fecha de inscripción fuera del rango permitido ";
 	public static final String HORA_INSCRIPCION_INVALIDA = "La hora de inscripción fuera del rango permitido ";
 	public static final String PA_INACTIVO = "Período Académico Inactivo";

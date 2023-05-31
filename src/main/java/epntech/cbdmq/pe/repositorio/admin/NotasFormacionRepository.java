@@ -16,4 +16,14 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 			+ "where t.cod_periodo_academico = cbdmq.get_pa_activo() "
 			+ "and upper(t.estado) = 'ACTIVO' ", nativeQuery=true)
 	List<NotasFormacion> getNotasFormnacion();
+	
+	@Query(value = "select count(*) "
+			+ "from cbdmq.gen_nota_formacion f "
+			+ "where upper(f.estado) = 'ACTIVO' "
+			+ "and cod_instructor = :codInstructor "
+			+ "and cod_materia = :codMateria "
+			+ "and cod_estudiante = :codEstudiante "
+			+ "and cod_periodo_academico =  cbdmq.get_pa_activo() ", nativeQuery=true)
+	Integer existeNota(Integer codInstructor, Integer codMateria, Integer codEstudiante);
 }
+

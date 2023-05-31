@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -23,7 +22,7 @@ import lombok.Data;
 public class SubTipoPrueba {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	//@EqualsAndHashCode.Include()
 	
 
@@ -39,7 +38,8 @@ public class SubTipoPrueba {
 	@Column(name = "estado")
 	private String estado;
 	
-	  @ManyToOne
+	/* @ManyToOne
 	    @JoinColumn(name ="cod_tipo_prueba")
-	 	private TipoPrueba tipo;
+	 	private TipoPrueba tipo;*/
 }
+
