@@ -26,6 +26,7 @@ import epntech.cbdmq.pe.dominio.admin.BajaDocumento;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.Estudiante;
+import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.UsuarioRepository;
@@ -35,6 +36,7 @@ import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
+import epntech.cbdmq.pe.repositorio.admin.UsuarioDatoPersonalRepository;
 import epntech.cbdmq.pe.servicio.BajaService;
 
 @Service
@@ -54,6 +56,8 @@ public class BajaServiceImpl implements BajaService {
 	private DatoPersonalRepository datoPersonalRepository;
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	@Autowired
+	private UsuarioDatoPersonalRepository usuarioDatoPersonalRepository;
 	
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -163,7 +167,9 @@ public class BajaServiceImpl implements BajaService {
 		dp = datoPersonal.get();
 		dp.setEstado(ESTADO_BAJA);
 		
-		Usuario usuario = usuarioRepository.findUsuarioByNombreUsuario(dp.getCedula());
+		UsuarioDatoPersonal usuarioDatoPersonal = usuarioDatoPersonalRepository.getByCodDatoPersonal(Long.valueOf(obj.getCodDatosPersonales()));
+	
+		Usuario usuario = usuarioRepository.findUsuarioByNombreUsuario(usuarioDatoPersonal.getNombreUsuario());
 		Usuario u = new Usuario();
 		u = usuario;
 
