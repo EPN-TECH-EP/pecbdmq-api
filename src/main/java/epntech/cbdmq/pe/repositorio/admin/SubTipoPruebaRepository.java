@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
 
 public interface SubTipoPruebaRepository extends JpaRepository<SubTipoPrueba, Integer> {
+	//Optional<SubTipoPrueba> findByCodTipoPrueba(Integer id);
 
 }

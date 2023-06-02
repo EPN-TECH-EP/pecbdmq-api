@@ -14,7 +14,7 @@ public class SeguridadConst {
     public static final String ACCESO_DENEGADO = "No tiene permisos para acceder a esta página";
     public static final String METOD_HTTP_OPTIONS = "OPTIONS";
 
-    public static final String[] URLS_PUBLICAS = { "/usuario/login", "/usuario/registro", "/usuario/imagen/**", "/usuario/guardarArchivo", "/usuario/maxArchivo", "/apis/test/informes/**", "/link/**", "/usuario/resetPassword/**","/swagger-ui/**","/api-docs/**"};
+    public static final String[] URLS_PUBLICAS = { "/usuario/login", "/usuario/registro", "/usuario/imagen/**", "/usuario/guardarArchivo", "/usuario/maxArchivo", "/apis/test/informes/**", "/link/**", "/usuario/resetPassword/**","/swagger-ui/**","/api-docs/**", "/provincia/**", "/canton/**", "/inscripcionfor/**" };
 
     //public static final String[] PUBLIC_URLS = { "**" };
 }

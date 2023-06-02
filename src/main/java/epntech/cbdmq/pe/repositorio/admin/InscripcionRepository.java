@@ -22,6 +22,8 @@ public interface InscripcionRepository extends JpaRepository<InscripcionFor, Int
 
 	Optional<InscripcionFor> findByCorreoPersonalIgnoreCase(String Correo);
 	
+	List<InscripcionFor> findAllByCorreoPersonalIgnoreCase(String Correo);
+	
 	@Procedure(value = "cbdmq.get_id")
 	String getIdPostulante(String proceso);
 	

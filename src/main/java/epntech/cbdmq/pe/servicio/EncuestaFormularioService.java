@@ -11,9 +11,8 @@ public interface EncuestaFormularioService {
 
 	EncuestaFormulario save(EncuestaFormulario obj) throws DataException;
 
-    List<EncuestaFormulario> getAll();
+    List<EncuestaFormulario> getAll(Integer codEncuesta);
 	
     
-    //Set<EncuestaFormulario> set();
     
 }

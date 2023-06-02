@@ -78,7 +78,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		Date FechaInicio=convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria();
 		Date FechaFin=convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
 		
-		System.out.println("fechaActual "+fechaActual);
+		//System.out.println("fechaActual "+fechaActual);
 		
 		if(!periodoAcademicoRepository.getActive())
 			throw new DataException(PA_INACTIVO);
@@ -86,7 +86,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 			throw new DataException(FECHA_INSCRIPCION_INVALIDA);
 		else if(!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().getHoraInicioConvocatoria()) && horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().getHoraFinConvocatoria())))
 			throw new DataException(HORA_INSCRIPCION_INVALIDA);
-		if(repo1.findByCorreoPersonalIgnoreCase(inscripcion.getCorreoPersonal()).isPresent())
+		if(!repo1.findAllByCorreoPersonalIgnoreCase(inscripcion.getCorreoPersonal()).isEmpty())
 			throw new DataException(CORREO_YA_EXISTE);
 		if(repo1.findOneByCedula(inscripcion.getCedula()).isPresent())
 			throw new DataException(CEDULA_YA_EXISTE);

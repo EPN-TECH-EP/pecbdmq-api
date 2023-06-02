@@ -1,10 +1,12 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,26 +27,25 @@ public class Sanciones {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_sancion")
-	private Integer cod_sancion;
-	@Column(name = "cod_baja")
-	private Integer cod_baja;
-	@Column(name = "cod_modulo")
-	private Integer cod_modulo;
+	private Integer codSancion;
 	@Column(name = "cod_documento")
-	private Integer cod_documento;
+	private Integer codDocumento;
 	@Column(name = "cod_estudiante")
-	private Integer cod_estudiante;
-	@Column(name = "cod_tipo_sancion")
-	private Integer cod_tipo_sancion;
-	@Column(name = "oficial_semana")
-	private String oficialsemana;
+	private Integer codEstudiante;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "fecha_sancion")
-	private LocalDateTime fechasancion;
+	private Date fechaSancion;
 	@Column(name = "observacion_sancion")
-	private String observacionsancion;
-	@Column(name = "ruta_adjunto_sancion")
-	private String rutaadjuntosancion;
+	private String observacionSancion;
 	@Column(name = "estado")
 	private String estado;
+	@Column(name = "cod_instructor")
+	private Integer codInstructor;
+	@Column(name = "cod_falta_periodo")
+	private Integer codFaltaPeriodo;
+	@Column(name = "cod_falta_semestre")
+	private Integer codFaltaSemestre;
+	@Column(name = "cod_falta_curso")
+	private Integer codFaltaCurso;
 	
 }
