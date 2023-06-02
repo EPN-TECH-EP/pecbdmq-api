@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -34,6 +35,7 @@ public class Materia {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_materia")
+	@Schema(example = "1", required = true)
 	private Integer codMateria;
 	@Column(name = "nombre_materia")
 	private String nombre;
