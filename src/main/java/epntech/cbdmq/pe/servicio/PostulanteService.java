@@ -16,9 +16,9 @@ public interface PostulanteService {
 	
 	List<Postulante> getAll();
 	
-	Optional<Postulante> getById(int id);
+	Optional<Postulante> getById(Long id);
 	
-	void delete(int id) throws DataException;
+	void delete(Long id) throws DataException;
 	
 	Postulante update(Postulante objActualizado) throws DataException; //PARA ASIGNAR UN POSTULANTE
 	

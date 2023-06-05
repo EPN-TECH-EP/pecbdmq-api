@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import epntech.cbdmq.pe.dominio.admin.Falta;
 
-public interface FaltaRepository extends JpaRepository<Falta, Integer>{
+public interface Faltarepository extends JpaRepository<Falta, Integer>{
 
 }

@@ -1,4 +1,3 @@
-
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.util.Date;

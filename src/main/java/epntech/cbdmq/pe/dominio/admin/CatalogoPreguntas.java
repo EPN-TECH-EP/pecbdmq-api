@@ -36,11 +36,19 @@ public class CatalogoPreguntas {
 	private String estado;
 	
 	
+
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_encuesta_pregunta",
             joinColumns = @JoinColumn(name = "cod_catalogo_pregunta"),
             inverseJoinColumns = @JoinColumn(name = "cod_encuesta_pregunta")
     )
 	private List<EncuestaPregunta> encuesta = new ArrayList<>();
+
+	/*@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "gen_encuesta_formulario",
+            joinColumns = @JoinColumn(name = "cod_catalogo_pregunta"),
+            inverseJoinColumns = @JoinColumn(name = "cod_catalogo_respuesta")
+    )
+	private List<CatalogoRespuesta> respuesta = new ArrayList<>();*/
 	
 }

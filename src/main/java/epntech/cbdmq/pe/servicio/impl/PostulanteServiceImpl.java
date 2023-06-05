@@ -46,13 +46,13 @@ public class PostulanteServiceImpl implements PostulanteService {
 	}
 
 	@Override
-	public Optional<Postulante> getById(int id) {
+	public Optional<Postulante> getById(Long id) {
 		// TODO Auto-generated method stub
 		return repo.findById(id);
 	}
 
 	@Override
-	public void delete(int id) throws DataException {
+	public void delete(Long id) throws DataException {
 		// TODO Auto-generated method stub
 		repo.deleteById(id);
 	}

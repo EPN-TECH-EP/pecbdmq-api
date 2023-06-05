@@ -42,13 +42,13 @@ public class PostulanteResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Postulante> obtenerPorId(@PathVariable("id") int codigo) {
+	public ResponseEntity<Postulante> obtenerPorId(@PathVariable("id") Long codigo) {
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Long codigo) throws DataException {
 			objService.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}

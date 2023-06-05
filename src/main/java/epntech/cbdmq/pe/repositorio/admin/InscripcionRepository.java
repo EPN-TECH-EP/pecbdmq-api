@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ public interface InscripcionRepository extends JpaRepository<InscripcionFor, Int
 	Optional<InscripcionFor> findOneByCedula(String Cedula);
 
 	Optional<InscripcionFor> findByCorreoPersonalIgnoreCase(String Correo);
+	
+	List<InscripcionFor> findAllByCorreoPersonalIgnoreCase(String Correo);
 	
 	@Procedure(value = "cbdmq.get_id")
 	String getIdPostulante(String proceso);

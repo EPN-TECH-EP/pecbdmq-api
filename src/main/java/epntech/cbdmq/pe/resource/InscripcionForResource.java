@@ -5,8 +5,8 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
@@ -40,6 +41,7 @@ import epntech.cbdmq.pe.dominio.admin.ValidacionRequisitos;
 import epntech.cbdmq.pe.dominio.util.InscripcionResult;
 import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
 import epntech.cbdmq.pe.dominio.util.PostulanteUtil;
+import epntech.cbdmq.pe.dominio.util.ValidaPinInscripcionFormacionUtil;
 import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosLista;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -95,9 +97,8 @@ public class InscripcionForResource {
 		JsonNode jsonNode = objectMapper.readTree(datosPersonales);
 		System.out.println("jsonNode: " + jsonNode);
 		
-		InscripcionFor inscripcion = objectMapper.readValue(datosPersonales, InscripcionFor.class);
+		InscripcionFor inscripcion = objectMapper.readValue(datosPersonales, InscripcionFor.class);		
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
         while (fields.hasNext()) {
             Map.Entry<String, JsonNode> entry = fields.next();
@@ -105,7 +106,10 @@ public class InscripcionForResource {
             JsonNode value = entry.getValue();
             //System.out.println("Clave: " + key + ", Valor: " + value.asText());
             if(key.equals("fecha_nacimiento")) {
-                LocalDateTime fecha = LocalDateTime.parse(value.asText());
+            	
+            	ZonedDateTime parsedDate = ZonedDateTime.parse(value.asText());
+            	
+                LocalDateTime fecha = parsedDate.toLocalDateTime();
                 inscripcion.setFecha_nacimiento(fecha);
             }
         }
@@ -128,14 +132,20 @@ public class InscripcionForResource {
 		}
 	}
 	
-	@PutMapping("/generaPin")
-	public ResponseEntity<InscripcionFor> getPin(@RequestParam("idDatoPersonal") Integer idDatoPersonal) throws DataException, MessagingException {
-		return (ResponseEntity<InscripcionFor>) objService.getById(idDatoPersonal).map(datosGuardados -> {
-			datosGuardados.setCodDatoPersonal(idDatoPersonal);
+	@PostMapping("/generaPin/{codPostulante}")
+	public ResponseEntity<InscripcionFor> getPin(@PathVariable("codPostulante") Long codPostulante) throws DataException, MessagingException {
+		
+		//return (ResponseEntity<InscripcionFor>) objService.getById(idDatoPersonal).map(datosGuardados -> {
+		return (ResponseEntity<InscripcionFor>) objPostulanteService.getById(codPostulante).map(datosGuardados -> {
+			
+			
+			InscripcionFor inscripcion = objService.getById(datosGuardados.getCodDatoPersonal()).get();
+			
+			//datosGuardados.setCodDatoPersonal(idDatoPersonal);
 
 			InscripcionFor datosActualizados = new InscripcionFor();
 			try {
-				datosActualizados = objService.savePin(datosGuardados);
+				datosActualizados = objService.savePin(inscripcion);
 			} catch (DataException | MessagingException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
@@ -146,38 +156,39 @@ public class InscripcionForResource {
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
-	@GetMapping("/validaPin")
-	public ResponseEntity<HttpResponse> validaPin(@RequestParam("pin") String pin, @RequestParam("idDatoPersonal") Integer idDatoPersonal, @RequestParam("idPostulante") Integer idPostulante)
+	@PostMapping("/validaPin")
+	// @RequestParam("pin") String pin, @RequestParam("idDatoPersonal") Integer idDatoPersonal, @RequestParam("idPostulante") Long idPostulante
+	public ResponseEntity<HttpResponse> validaPin(@RequestBody ValidaPinInscripcionFormacionUtil validaPin)
 			throws DataException, MessagingException {
 		InscripcionFor dato;
 		Postulante p;
 
 		try {
-			dato = objService.getById(idDatoPersonal).get();
+			dato = objService.getById(validaPin.getIdDatoPersonal()).get();
 		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE + " - " + idDatoPersonal);
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 		}
 		
 		try {
-			p = objPostulanteService.getById(idPostulante).get();
+			p = objPostulanteService.getById(validaPin.getIdPostulante()).get();
 		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE + " - " + idPostulante);
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 		}
 			
 		Postulante postulante = new Postulante();
-		postulante.setCodPostulante(idPostulante);
-		postulante.setCodDatoPersonal(idDatoPersonal);
+		postulante.setCodPostulante(validaPin.getIdPostulante());
+		postulante.setCodDatoPersonal(validaPin.getIdDatoPersonal());
 		postulante.setEstado("ACTIVO");
 		
-		return response(HttpStatus.OK, objService.savePostulante(postulante, "F", pin, dato.getPin_validacion_correo(), dato.getCorreoPersonal()));
+		return response(HttpStatus.OK, objService.savePostulante(postulante, "F", validaPin.getPin(), dato.getPin_validacion_correo(), dato.getCorreoPersonal()));
 	}
 	
-	@PutMapping("/reenvioPin")
+	@PostMapping("/reenvioPin")
 	public ResponseEntity<?> reenvioPin(@RequestBody InscripcionFor obj) throws DataException, MessagingException {
 		try {
 			objService.getById(obj.getCodDatoPersonal()).get();
 		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE + " - " + obj.getCodDatoPersonal().toString());
+			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 		}
 		
 		return objService.getById(obj.getCodDatoPersonal()).map(datosGuardados -> {
