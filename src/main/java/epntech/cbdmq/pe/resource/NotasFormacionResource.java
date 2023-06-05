@@ -59,6 +59,7 @@ public class NotasFormacionResource {
 		return notasFormacionServiceImpl.getByEstudiante(codigo);
 	}
 
+	/*registro nota disciplina por el Oficial de Semana*/
 	@PostMapping("/disciplinaOSemana")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> registarDisciplinaOficialSemana(@RequestBody List<NotasFormacionFinal> lista)
@@ -67,6 +68,7 @@ public class NotasFormacionResource {
 		return response(HttpStatus.OK, EXITO);
 	}
 
+	/*método para actualizar la nota de supletorio*/
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int id, @RequestBody NotasFormacion obj)
 			throws DataException {
@@ -91,12 +93,28 @@ public class NotasFormacionResource {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	/*método para calcular las notas finales*/
 	@PostMapping("/calcularNotas")
 	public ResponseEntity<?> calcularNotas() throws DataException {
 		notasFormacionFinalServiceImpl.calcularNotas();
 		return response(HttpStatus.OK, PROCESO_EXITO);
 	}
+	
+	/*actualiza el estado a true del campo realizo_prueba del estudiante*/
+	@PostMapping("/actualizaEstadoRealizoEncuesta/{id}")
+	public ResponseEntity<?> actualizaEstadoRealizoEncuesta(@PathVariable("id") Long id)
+			throws DataException {
+		notasFormacionFinalServiceImpl.cambiaEstadoRealizoEncuesta(id);
+		return response(HttpStatus.OK, PROCESO_EXITO);
+	}
 
+	/*método para saber si realizó o no la encuesta, true(si realizó), false(no realizó)*/
+	@GetMapping("/realizoEncuesta/{id}")
+	public ResponseEntity<?> realizoEncuenta(@PathVariable("id") Long codigo) {
+		return response(HttpStatus.OK, Boolean.toString(notasFormacionFinalServiceImpl.realizoEncuesta(codigo)));
+		
+	}
+	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),

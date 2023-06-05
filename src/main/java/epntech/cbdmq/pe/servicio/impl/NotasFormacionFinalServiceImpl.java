@@ -4,6 +4,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.NO_PERIODO_ACTIVO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,24 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 	public void calcularNotas() {
 		notasFormacionFinalRepository.calcular_nota_final();
 	}
-	
-	
+
+	@Override
+	public void cambiaEstadoRealizoEncuesta(Long codEstudiante) {
+		// TODO Auto-generated method stub
+		notasFormacionFinalRepository.actualizarEstadorealizoEncuesta(codEstudiante);
+	}
+
+	@Override
+	public Boolean realizoEncuesta(Long codEstudiante) {
+		// TODO Auto-generated method stub
+		return notasFormacionFinalRepository.realizoEncuesta(codEstudiante);
+	}
+
+	@Override
+	public Optional<NotasFormacionFinal> getByEstudiante(Long codEstudiante) {
+		// TODO Auto-generated method stub
+		return notasFormacionFinalRepository.getByEstudiante(codEstudiante);
+	}
 
 }
 
