@@ -33,8 +33,7 @@ import epntech.cbdmq.pe.servicio.impl.MateriaServiceImpl;
 
 @RestController
 @RequestMapping("/materia")
-@Tag(name = "MATERIAAA", description = "Devulve todas las materias con sus respectivos detalles")
-//@CrossOrigin(origins = "${cors.urls}")
+@Tag(name = "MATERIA", description = "API que devuelve las diferentes opeaciones en lo que respecta a las materias")
 public class MateriaResource {
 
     @Autowired
@@ -56,7 +55,7 @@ public class MateriaResource {
     @Operation(summary = "Trae una materia por ID")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Materia.class), mediaType = "application/json")}),
-            @ApiResponse(responseCode = "404", description = "The Tutorial with given Id was not found.", content = {@Content(schema = @Schema())})
+            @ApiResponse(responseCode = "404", description = "La materia no fue encontrada", content = {@Content(schema = @Schema())})
     })
     @GetMapping("/{id}")
     public ResponseEntity<Materia> obtenerPorId(@PathVariable("id") int codigo) {
@@ -65,7 +64,7 @@ public class MateriaResource {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Materia> actualizarDatos(@Parameter(description = "Objeto de tipo materia, en donde se encuentran las propiedades ya actualizadas", required = true) @PathVariable("id") int codigo,
+    public ResponseEntity<Materia> actualizarDatos(@Parameter(description = "Objeto de tipo materia, en donde se encuentran las propiedades ya actualizadas") @PathVariable("id") int codigo,
                                                    @RequestBody Materia obj) throws DataException {
         return (ResponseEntity<Materia>) objService.getById(codigo).map(datosGuardados -> {
             datosGuardados.setNombre(obj.getNombre().toUpperCase());
