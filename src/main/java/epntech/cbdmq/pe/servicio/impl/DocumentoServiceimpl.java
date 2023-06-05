@@ -43,8 +43,6 @@ public class DocumentoServiceimpl implements DocumentoService {
 	@Autowired
 	private ConvocatoriaRepository convocatoriaRepository; 
 
-	@Autowired
-	private ConvocatoriaRepository convocatoriaRepository; 
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
