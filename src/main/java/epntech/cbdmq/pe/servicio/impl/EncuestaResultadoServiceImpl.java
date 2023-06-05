@@ -9,49 +9,49 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Falta;
+import epntech.cbdmq.pe.dominio.admin.EncuestaResultado;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.admin.FaltaRepository;
-import epntech.cbdmq.pe.servicio.FaltaService;
+import epntech.cbdmq.pe.repositorio.admin.EncuestaResultadoRepository;
+import epntech.cbdmq.pe.servicio.EncuestaResultadoService;
 
 @Service
-public class FaltaServiceImpl implements FaltaService{
+public class EncuestaResultadoServiceImpl implements EncuestaResultadoService{
 
 	@Autowired
-	private FaltaRepository faltaRepository;
+	private EncuestaResultadoRepository encuestaResultadoRepository;
 	
 	@Override
-	public Falta save(Falta obj) throws DataException {
+	public EncuestaResultado save(EncuestaResultado obj) throws DataException {
 		// TODO Auto-generated method stub
-		return faltaRepository.save(obj);
+		return encuestaResultadoRepository.save(obj);
 	}
 
 	@Override
-	public List<Falta> getAll() {
+	public List<EncuestaResultado> getAll() {
 		// TODO Auto-generated method stub
-		return faltaRepository.findAll();
+		return encuestaResultadoRepository.findAll();
 	}
 
 	@Override
-	public Optional<Falta> getById(int id) {
+	public Optional<EncuestaResultado> getById(int id) {
 		// TODO Auto-generated method stub
-		return faltaRepository.findById(id);
+		return encuestaResultadoRepository.findById(id);
 	}
 
 	@Override
-	public Falta update(Falta objActualizado) throws DataException {
+	public EncuestaResultado update(EncuestaResultado objActualizado) throws DataException {
 		// TODO Auto-generated method stub
-		return faltaRepository.save(objActualizado);
+		return encuestaResultadoRepository.save(objActualizado);
 	}
 
 	@Override
 	public void delete(int id) throws DataException {
-		Optional<?> objGuardado = faltaRepository.findById(id);
+		Optional<?> objGuardado = encuestaResultadoRepository.findById(id);
 		if (objGuardado.isEmpty()) {
 			throw new DataException(REGISTRO_NO_EXISTE);
 		}
 		try {
-			faltaRepository.deleteById(id);
+			encuestaResultadoRepository.deleteById(id);
 		} catch (Exception e) {
 			if (e.getMessage().contains("constraint")) {
 				throw new DataException(DATOS_RELACIONADOS);

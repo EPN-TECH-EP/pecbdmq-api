@@ -15,7 +15,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.AulaServiceImpl;
 
 @RestController
-@RequestMapping("/aula")
+@RequestMapping("/aula")//El crud para Crear el aula, listar, obtener por Id, actuliazar por Id y elimanar por el Id
 //@CrossOrigin(origins = "${cors.urls}")
 public class AulaResource {
 	

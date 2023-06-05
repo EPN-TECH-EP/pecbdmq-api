@@ -88,8 +88,8 @@ public class EstudianteResource {
 	
 	@PostMapping("/crearEstudiantes")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardarAll(@RequestParam("modulo") Integer modulo) throws DataException{
-		objService.saveEstudiantes(modulo);
+	public ResponseEntity<?> guardarAll() throws DataException{
+		objService.saveEstudiantes();
 		
 		return response(HttpStatus.OK, DATOS_REGISTRADOS);
 	}

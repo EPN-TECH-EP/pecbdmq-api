@@ -11,6 +11,6 @@ public interface EstudianteForRepository extends JpaRepository<EstudianteFor, In
 	String getIdAspirante(String proceso);
 	
 	@Procedure(value = "cbdmq.insert_estudiantes")
-	Integer insertEstudiantes(Integer modulo);
+	Integer insertEstudiantes();
 }
 
