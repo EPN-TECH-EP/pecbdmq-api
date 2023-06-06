@@ -49,16 +49,16 @@ public class BajaResource {
 	    public ResponseEntity<Baja> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Baja obj) {
 	        return (ResponseEntity<Baja>) objServices.getById(codigo).map(datosGuardados -> {
 	            
-	            datosGuardados.setCod_modulo(obj.getCod_modulo());
-	            datosGuardados.setCod_baja(obj.getCod_baja());
-	            datosGuardados.setFechacreabaja(obj.getFechabaja());
+	         
+	            
+	            datosGuardados.setCod_tipo_baja(obj.getCod_tipo_baja());
 	            datosGuardados.setDescripcionbaja(obj.getDescripcionbaja());
-	            datosGuardados.setNombre(obj.getNombre());
-	            datosGuardados.setFechacreabaja(obj.getFechacreabaja());
-	            datosGuardados.setHoracreabaja(obj.getHoracreabaja());
-	            datosGuardados.setUsuariomodbaja(obj.getUsuariomodbaja());
-	            datosGuardados.setFechamodbaja(obj.getFechamodbaja());
-	            datosGuardados.setHoramodbaja(obj.getHoramodbaja());
+	            datosGuardados.setFechabajaactual(obj.getFechabajaactual());
+	            datosGuardados.setCodestudiante(obj.getCodestudiante());
+	            datosGuardados.setCodperiodoacademico(obj.getCodperiodoacademico());
+	            datosGuardados.setCodsemestre(obj.getCodsemestre());
+	            datosGuardados.setCod_sancion(obj.getCod_sancion());
+	           
 	           // datosGuardados.setRutaadjuntobaja(obj.getRutaadjuntobaja());
 	            datosGuardados.setCod_baja(obj.getCod_baja());           
 	            datosGuardados.setEstado(obj.getEstado());

@@ -28,29 +28,29 @@ public class Baja {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_baja")
 	private Integer cod_baja;
-	@Column(name = "cod_modulo")
-	private Integer cod_modulo;
+	
 	@Column(name = "cod_tipo_baja")
 	private Integer cod_tipo_baja;
-	@Column(name = "fecha_baja")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime fechabaja;
+	
+	@Column(name = "fecha_baja_actual")
+	private LocalDateTime fechabajaactual;
+	
 	@Column(name = "descripcion_baja")
 	private String descripcionbaja;
-	@Column(name = "usuario_crea_baja")
-	private String nombre;
-	@Column(name = "fecha_crea_baja")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime fechacreabaja;
-	@Column(name = "hora_crea_baja")
-	private LocalTime horacreabaja;
-	@Column(name = "usuario_mod_baja")
-	private String usuariomodbaja;
-	@Column(name = "fecha_mod_baja")
-	private LocalDateTime fechamodbaja;
-	@Column(name = "hora_mod_baja")
-	private LocalTime horamodbaja;
 	
 	@Column(name = "estado")
 	private String estado;
+	
+	@Column(name = "cod_estudiante")
+	private Integer codestudiante;
+	
+	@Column(name = "cod_periodo_academico")
+	private Integer codperiodoacademico;
+	
+	@Column(name = "cod_semestre")
+	private Integer codsemestre;
+	
+	@Column(name = "cod_sancion")
+	private Integer cod_sancion;
+	
 }

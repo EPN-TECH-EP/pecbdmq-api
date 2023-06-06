@@ -208,6 +208,8 @@ public class DocumentoServiceimpl implements DocumentoService {
 		if(convocatoriaRepository.findById(convocatoria).isEmpty())
 			throw new IOException(CONVOCATORIA_NO_EXISTE);
 		
+		
+		
 		// System.out.println("id: " + codDocumento);
 		documento = repo.findById(codDocumento);
 		documentos = documento.get();

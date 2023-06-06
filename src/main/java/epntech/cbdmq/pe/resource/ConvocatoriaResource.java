@@ -55,7 +55,7 @@ public class ConvocatoriaResource {
 	}
 	
 	@GetMapping("/")
-	public Set<Convocatoria> obtenerConvocatoriaActiva() {
+	public Set<Convocatoria> obtenerConvocatoriaActiva() throws DataException {
 		return objService.getConvocatoriaActiva();
 	}
 

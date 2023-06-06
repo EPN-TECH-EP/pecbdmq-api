@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.Baja;
 import epntech.cbdmq.pe.dominio.admin.Delegado;
+import epntech.cbdmq.pe.dominio.util.DelegadoPK;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DelegadoServiceImpl;
 
@@ -44,5 +46,14 @@ public class DelegadoResource {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
+	
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Delegado> obtenerUsuarioPorId(@PathVariable("id") Integer codUsuario) throws DataException {
+        return objService.getByIdUsuario(codUsuario).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+	
+	
+	
 
 }

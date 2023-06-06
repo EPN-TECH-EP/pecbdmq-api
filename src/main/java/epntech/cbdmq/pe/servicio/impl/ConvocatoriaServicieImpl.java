@@ -1,10 +1,9 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -98,9 +97,13 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 	}
 
 	@Override
-	public Set<Convocatoria> getConvocatoriaActiva() {
-		// TODO Auto-generated method stub
-		return repo.getConvocatoriaActiva();
+	public Set<Convocatoria> getConvocatoriaActiva() throws DataException {
+		Set<Convocatoria> convocatoria=new HashSet<>();
+		convocatoria=repo.getConvocatoriaActiva();
+		if(convocatoria.size()==0) {
+			throw new DataException(CONVOCATORIA_NO_EXISTE);
+		}
+		return convocatoria;
 	}
 
 }

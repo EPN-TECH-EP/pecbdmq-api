@@ -24,14 +24,6 @@ public class BajaServiceImpl implements BajaService{
 	
 	@Override
 	public Baja save(Baja obj) throws DataException {
-		if (obj.getNombre().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<Baja> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-
-		obj.setNombre(obj.getNombre().toUpperCase());
 		return repo.save(obj);
 	}
 
@@ -49,12 +41,6 @@ public class BajaServiceImpl implements BajaService{
 
 	@Override
 	public Baja update(Baja objActualizado) throws DataException {
-		if(objActualizado.getNombre() !=null) {
-			Optional<Baja> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-			if (objGuardado.isPresent()&& !objGuardado.get().getCod_baja().equals(objActualizado.getClass())) {
-				throw new DataException(REGISTRO_YA_EXISTE);
-			}
-		}
 			return repo.save(objActualizado);
 		}
 
