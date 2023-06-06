@@ -13,7 +13,7 @@ import epntech.cbdmq.pe.dominio.util.PostulanteDatos;
 
 public interface PostulanteDatosRepository extends JpaRepository<PostulanteDatos, Integer> {
 	
-	@Query(value="select p.cod_postulante as codigo, p.id_postulante, p.fecha_postulacion, p.edad_postulacion, "
+	@Query(value="select p.cod_postulante, p.id_postulante, p.fecha_postulacion, p.edad_postulacion, "
 			+ "dp.cod_datos_personales, dp.apellido, dp.cedula, dp.nombre, dp.fecha_nacimiento, "
 			+ "dp.tipo_sangre, dp.sexo, "
 			+ "(select	gc.nombre from	cbdmq.gen_canton gc	where		UPPER(gc.estado) = 'ACTIVO'		and gc.cod_canton = dp.cod_canton_nacimiento) canton_nacimiento, "

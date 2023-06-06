@@ -80,9 +80,9 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}*/
 
 	@Override
-	public void saveEstudiantes(Integer modulo) {
+	public void saveEstudiantes() {
 		// TODO Auto-generated method stub
-		estudianteForRepository.insertEstudiantes(modulo);
+		estudianteForRepository.insertEstudiantes();
 	}
 
 	

@@ -27,6 +27,6 @@ public interface EstudianteService {
 
 	//List<EstudianteDatos> findAllEstudiante();
 	
-	void saveEstudiantes(Integer modulo);
+	void saveEstudiantes();
 
 }

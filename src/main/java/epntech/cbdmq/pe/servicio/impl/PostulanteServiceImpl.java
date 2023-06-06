@@ -68,9 +68,9 @@ public class PostulanteServiceImpl implements PostulanteService {
 	}
 	
 	@Override
-	public List<Postulante> getPostulantesPaginado(Integer usuario, Pageable pageable) {
+	public List<PostulanteUtil> getPostulantesPaginado(Integer usuario, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return repo.getPostulantesPaginado(usuario, pageable);
+		return postulanteUtilRepository.getPostulantesPaginado(usuario, pageable);
 	}
 
 	@Override
@@ -111,9 +111,9 @@ public class PostulanteServiceImpl implements PostulanteService {
 	}
 
 	@Override
-	public List<Postulante> getPostulantesAllPaginado(Pageable pageable) {
+	public List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return repo.getPostulantesAllPaginadoTodo(pageable);
+		return postulanteUtilRepository.getPostulantesAllPaginadoTodo(pageable);
 	}
 
 	@Override

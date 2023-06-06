@@ -52,7 +52,7 @@ public class EncuestaResumenResource {
 	 @PutMapping("/{id}")
 	    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EncuestaResumen obj) throws DataException {
 	        return (ResponseEntity<EncuestaResumen>) objServices.getById(codigo).map(datosGuardados -> {
-	        	datosGuardados.setCod_modulo(obj.getCod_modulo());
+	        	//datosGuardados.setCod_modulo(obj.getCod_modulo());
 	            datosGuardados.setDescripcion(obj.getDescripcion().toUpperCase());
 	            datosGuardados.setFecha_inicio(obj.getFecha_inicio());
 	            datosGuardados.setFecha_fin(obj.getFecha_fin());
