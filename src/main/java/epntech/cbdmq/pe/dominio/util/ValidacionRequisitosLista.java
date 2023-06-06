@@ -9,13 +9,19 @@ import lombok.Data;
 public class ValidacionRequisitosLista {
 
 	@Id
-	private Integer cod_validacion_requisitos;
+	private Integer codValidacion;
 	
-	private Integer cod_requisitos;
+	private Integer codRequisitos;
 	
-	private String nombre_requisito;
+	private String nombreRequisito;
 	
 	private Boolean estado;
 	
 	private String observaciones;
+	
+	private Integer codPostulante;
+	
+	private Boolean estadoMuestra;
+	
+	private String observacionMuestra;
 }

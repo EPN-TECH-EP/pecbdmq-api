@@ -39,6 +39,7 @@ public class EstudianteResource {
     public ResponseEntity<?> guardar(@RequestBody Estudiante obj) throws DataException {
         return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
     }
+
     @PostMapping("/listarFormHistorico")
     public List<FormacionEstudiante> listarFormHistorico(@RequestParam("codUnico") String codEstudiante, Pageable pageable) {
         return objService.getHistoricos(codEstudiante, pageable);
@@ -48,6 +49,7 @@ public class EstudianteResource {
     public List<EspecializacionEstudiante> listarEspHistorico(@RequestParam("codUnico") String codEstudiante, Pageable pageable) {
         return objService.getEspecializacionHistoricos(codEstudiante, pageable);
     }
+
 
     @PostMapping("/listarProfHistorico")
     public List<ProfesionalizacionEstudiante> listarProfHistorico(@RequestParam("codUnico") String codEstudiante, Pageable pageable) {
@@ -62,6 +64,41 @@ public class EstudianteResource {
             throw new DataException(NO_ENCUENTRA);
         }
         return estudiante;
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
+        objService.delete(codigo);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
+	
+	/*@GetMapping("/paginado")
+	public ResponseEntity<?> listarDatos(Pageable pageable) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(objService.getAllEstudiante(pageable));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
+		}
+	}*/
+	
+	/*@GetMapping("/listardatos")
+	public List<EstudianteDatos> listarAll() {
+		return objService.findAllEstudiante();
+	}*/
+
+    @PostMapping("/crearEstudiantes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardarAll() throws DataException {
+        objService.saveEstudiantes();
+
+        return response(HttpStatus.OK, DATOS_REGISTRADOS);
+    }
+
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+
     }
 }
 

@@ -113,7 +113,8 @@ public class DocumentoServiceimpl implements DocumentoService {
 			// documentos.setRuta(ruta.getParent() + "\\" +
 			// multipartFile.getOriginalFilename());
 			// slista.add(documentos);
-			objActualizado.setRuta(ruta.getParent() + "\\" + multipartFile.getOriginalFilename());
+			String r=ruta.getParent() + "/" + multipartFile.getOriginalFilename();
+			objActualizado.setRuta(r);
 			objActualizado.setNombre(multipartFile.getOriginalFilename());
 		}
 
@@ -181,10 +182,10 @@ public class DocumentoServiceimpl implements DocumentoService {
 		documentos = documento.get();
 		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
 
-		System.out.println("ruta: " + ruta);
+		//System.out.println("ruta: " + ruta);
 		if (Files.exists(ruta)) {
 			try {
-				System.out.println("ruta" + ruta);
+				//System.out.println("ruta" + ruta);
 				Files.delete(ruta);
 			} catch (Exception e) {
 

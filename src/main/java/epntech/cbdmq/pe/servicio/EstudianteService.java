@@ -28,7 +28,7 @@ public interface EstudianteService {
 
 	//List<EstudianteDatos> findAllEstudiante();
 	
-	void saveEstudiantes(Integer modulo);
+	void saveEstudiantes();
 
 	List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
 	List<EspecializacionEstudiante> getEspecializacionHistoricos(String codEstudiante, Pageable pageable);
