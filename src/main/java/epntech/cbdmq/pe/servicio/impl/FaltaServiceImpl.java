@@ -28,7 +28,10 @@ public class FaltaServiceImpl implements FaltaService{
 
 		return faltaRepository.save(obj);
 
+
 	}	
+
+	
 
 	@Override
 	public List<Falta> getAll() {

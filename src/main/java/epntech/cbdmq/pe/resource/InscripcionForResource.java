@@ -175,12 +175,12 @@ public class InscripcionForResource {
 			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 		}
 			
-		Postulante postulante = new Postulante();
-		postulante.setCodPostulante(validaPin.getIdPostulante());
-		postulante.setCodDatoPersonal(validaPin.getIdDatoPersonal());
-		postulante.setEstado("ACTIVO");
+		//Postulante postulante = new Postulante();
+		p.setCodPostulante(validaPin.getIdPostulante());
+		p.setCodDatoPersonal(validaPin.getIdDatoPersonal());
+		//postulante.setEstado("PENDIENTE");
 		
-		return response(HttpStatus.OK, objService.savePostulante(postulante, "F", validaPin.getPin(), dato.getPin_validacion_correo(), dato.getCorreoPersonal()));
+		return response(HttpStatus.OK, objService.savePostulante(p, "F", validaPin.getPin(), dato.getPin_validacion_correo(), dato.getCorreoPersonal()));
 	}
 	
 	@PostMapping("/reenvioPin")
@@ -224,7 +224,7 @@ public class InscripcionForResource {
 	}
 	
 	@GetMapping("/postulantesPaginado/{usuario}")
-	public List<Postulante> getPostulantesPaginado(@PathVariable("usuario") Integer usuario, Pageable pageable) {
+	public List<PostulanteUtil> getPostulantesPaginado(@PathVariable("usuario") Integer usuario, Pageable pageable) {
 		return postulanteService.getPostulantesPaginado(usuario, pageable);
 	}
 	

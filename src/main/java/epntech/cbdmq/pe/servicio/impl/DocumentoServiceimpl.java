@@ -185,10 +185,10 @@ public class DocumentoServiceimpl implements DocumentoService {
 		documentos = documento.get();
 		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
 
-		System.out.println("ruta: " + ruta);
+		//System.out.println("ruta: " + ruta);
 		if (Files.exists(ruta)) {
 			try {
-				System.out.println("ruta" + ruta);
+				//System.out.println("ruta" + ruta);
 				Files.delete(ruta);
 			} catch (Exception e) {
 

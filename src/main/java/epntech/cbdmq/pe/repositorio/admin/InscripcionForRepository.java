@@ -216,7 +216,7 @@ public class InscripcionForRepository{
 
 		PostulanteFor postulante = new PostulanteFor();
 		postulante.setCodDatoPersonal(inscripcion.getCodDatoPersonal());
-		postulante.setEstado("PENDIENTE");
+		postulante.setEstado("ACTIVO");
 		postulante.setFechaPostulacion(fechaPostulacion);
 		postulante.setEdadPostulacion(Integer.parseInt(edad.toString()));
 		
