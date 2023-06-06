@@ -31,10 +31,7 @@ public class Documento {
 	private Integer codigo;
 	
 	@Column(name = "autorizacion")
-
 	private String autorizacion;
-	
-
 	
 	@Column(name = "cod_tipo_documento")
 	private Integer tipo;
@@ -44,12 +41,8 @@ public class Documento {
 	
 	@Column(name = "estado_validacion")
 	private String estadoValidacion;
-	
 
-	@Column(name = "codigo_unico_documento")
-	private String idDocumento;
-
-@Column(name = "nombre_documento")
+    @Column(name = "nombre_documento")
 	private String nombre;
 	
 	@Column(name = "observaciones")
