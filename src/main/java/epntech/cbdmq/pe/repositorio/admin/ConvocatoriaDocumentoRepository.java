@@ -15,4 +15,6 @@ public interface ConvocatoriaDocumentoRepository extends JpaRepository<Convocato
     @Modifying
 	@Query(value="delete from cbdmq.gen_convocatoria_documento where cod_convocatoria = :convocatoria and cod_documento = :codDocumento", nativeQuery=true)
 	void deleteByCodConvocatoriaAndCodDocumento(Integer convocatoria, Integer codDocumento);
+	
+	
 }

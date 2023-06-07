@@ -33,4 +33,7 @@ public interface ConvocatoriaRepository extends JpaRepository<Convocatoria, Inte
 			+ "where c.cod_periodo_academico =  cbdmq.get_pa_activo() "
 			+ "and UPPER(c.estado) = 'ACTIVO' ", nativeQuery=true)
 	Convocatoria getConvocatoriapaactivo();
+	
+	@Procedure(value = "cbdmq.get_convocatoria_activa_formacion")
+	Integer getConvocatoriaActivaFormacion();
 }

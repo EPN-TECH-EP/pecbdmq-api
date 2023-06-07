@@ -199,15 +199,20 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	@Override
-	public void eliminarArchivo(Integer convocatoria, Integer codDocumento)
+	public void eliminarArchivo( Integer codDocumento)
 			throws IOException, DataException {
 		String resultado = null;
 		Documento documentos = new Documento();
 		Optional<Documento> documento;
 
+		System.out.println("ruta: " + resultado);
+		
+		Integer convocatoria = convocatoriaRepository.getConvocatoriaActivaFormacion();
+		
+		
 		if(convocatoriaRepository.findById(convocatoria).isEmpty())
 			throw new IOException(CONVOCATORIA_NO_EXISTE);
-		
+		System.out.println("resultado"+resultado);
 		
 		
 		// System.out.println("id: " + codDocumento);
@@ -215,7 +220,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 		documentos = documento.get();
 		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
 
-		// System.out.println("ruta: " + ruta);
+		 System.out.println("ruta: " + ruta);
 		if (Files.exists(ruta)) {
 			try {
 				System.out.println("ruta" + ruta);

@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.repositorio.admin.DelegadoDAORepository;
 import epntech.cbdmq.pe.repositorio.admin.DelegadoRepository;
+import epntech.cbdmq.pe.repositorio.admin.DelegadoUtilRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.DelegadoService;
 import epntech.cbdmq.pe.dominio.admin.Delegado;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.util.DelegadoPK;
+import epntech.cbdmq.pe.dominio.util.DelegadoUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 @Service
@@ -22,6 +24,10 @@ public class DelegadoServiceImpl implements DelegadoService {
 
 	@Autowired
 	private DelegadoRepository repo;
+	
+	@ Autowired
+	private DelegadoUtilRepository delegadoUtilRepository; 
+	
 	@Autowired
 	private DelegadoDAORepository repoDAO;
 	@Autowired
@@ -60,5 +66,13 @@ public class DelegadoServiceImpl implements DelegadoService {
 			throw new DataException(REGISTRO_NO_EXISTE);
 		return delegado;
 	}
+
+	@Override
+	public List<DelegadoUtil> delegado() {
+		// TODO Auto-generated method stub
+		return delegadoUtilRepository.getDelegados();
+	}
+
+	
 
 }
