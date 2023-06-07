@@ -199,7 +199,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	@Override
-	public void eliminarArchivo( Integer codDocumento)
+	public void eliminarArchivoConvotatoria( Integer codDocumento)
 			throws IOException, DataException {
 		String resultado = null;
 		Documento documentos = new Documento();
@@ -235,4 +235,6 @@ public class DocumentoServiceimpl implements DocumentoService {
 
 		}
 	}
+
+	
 }

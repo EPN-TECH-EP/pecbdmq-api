@@ -131,7 +131,7 @@ public class DocumentoResource {
 
 
 		try {
-		objService.eliminarArchivo(codDocumento);
+		objService.eliminarArchivoConvotatoria(codDocumento);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 
 		}catch(IOException e){

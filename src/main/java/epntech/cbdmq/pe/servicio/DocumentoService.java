@@ -29,7 +29,9 @@ public interface DocumentoService {
 	
 	void eliminarArchivo(int id) throws IOException, ArchivoMuyGrandeExcepcion;
 	
-	void eliminarArchivo( Integer codDocumento) throws IOException,DataException;
+	void eliminarArchivoConvotatoria( Integer codDocumento) throws IOException,DataException;
+	
+
 	
 }
 

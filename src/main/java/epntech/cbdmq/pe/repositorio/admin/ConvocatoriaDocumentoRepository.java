@@ -17,4 +17,5 @@ public interface ConvocatoriaDocumentoRepository extends JpaRepository<Convocato
 	void deleteByCodConvocatoriaAndCodDocumento(Integer convocatoria, Integer codDocumento);
 	
 	
+	
 }
