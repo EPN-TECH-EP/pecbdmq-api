@@ -36,11 +36,9 @@ public class EspCurso {
 	@Column(name = "cod_curso_especializacion")
 	private Integer cod_curso_especializacion;
 	
-	@Column(name = "cod_instructor")
-	private Integer cod_instructor;
+
 	
-	@Column(name = "cod_unidad_gestion")
-	private Integer cod_unidad_gestion;
+
 	
 	/*@Column(name = "cod_estudiante")
 	private Integer cod_estudiante;*/
@@ -50,9 +48,7 @@ public class EspCurso {
 	
 	@Column(name = "numero_cupo")
 	private Integer numero_cupo;
-	
-	@Column(name = "adjunto_planificacion")
-	private String adjunto_planificacion;
+
 	
 	@Column(name = "fecha_inicio_curso")
 	private LocalDateTime fechainiciocurso;
@@ -67,9 +63,7 @@ public class EspCurso {
 	
 	@Column(name = "aprueba_creacion_curso")
 	private Boolean aprueba;
-	
-	@Column(name = "estado_proceso")
-	private String estado_proceso;
+
 	
 	@Column(name = "cod_catalogo_cursos")
 	private Integer cod_catalogo_curso;
@@ -82,8 +76,7 @@ public class EspCurso {
 	private Integer cod_tipo_curso;
 
 
-	@Column(name = "resultado")
-	private boolean resultado;
+
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinTable(name = "gen_paralelo_curso", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), 

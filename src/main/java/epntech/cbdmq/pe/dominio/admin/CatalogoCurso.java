@@ -22,10 +22,6 @@ public class CatalogoCurso {
 	private String nombre;
 	@Column(name = "descripcion_catalogo_curso")
 	private String descripcion;
-	@Column(name = "numero_horas")
-	private Long numero_horas;
-	@Column(name = "nota_minima")
-	private Double nota_minima;
 	@Column(name = "estado")
 	private String estado;
 	
