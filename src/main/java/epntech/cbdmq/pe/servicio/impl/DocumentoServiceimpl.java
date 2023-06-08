@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.CONVOCATORIA_NO_EXISTE;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -186,17 +187,21 @@ public class DocumentoServiceimpl implements DocumentoService {
 		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
 
 		//System.out.println("ruta: " + ruta);
-		if (Files.exists(ruta)) {
+		
 			try {
 				//System.out.println("ruta" + ruta);
+				if (Files.exists(ruta)) {
 				Files.delete(ruta);
+				}else {
+					LOGGER.error(ARCHIVO_NO_EXISTE +":"+ruta);
+				}
 			} catch (Exception e) {
 
 				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
 				// e.printStackTrace();
 			}
 		}
-	}
+	
 
 	@Override
 	public void eliminarArchivoConvotatoria( Integer codDocumento)
@@ -216,20 +221,30 @@ public class DocumentoServiceimpl implements DocumentoService {
 		
 		
 		// System.out.println("id: " + codDocumento);
-		documento = repo.findById(codDocumento);
-		documentos = documento.get();
-		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
+		
+		/*if(documento.isEmpty()) {
+			throw new DataException(ARCHIVO_NO_EXISTE);
+		}*/
+		
+	
 
-		 System.out.println("ruta: " + ruta);
-		if (Files.exists(ruta)) {
 			try {
-				System.out.println("ruta" + ruta);
-				Files.delete(ruta);
+				Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
+				
+				if (Files.exists(ruta)) { 
+					System.out.println("ruta" + ruta);
+					documento = repo.findById(codDocumento);
+					documentos = documento.get();
+					Files.delete(ruta);
+				}else {
+					 LOGGER.error(ARCHIVO_NO_EXISTE +":"+ruta);	
+				}
+				
 				repo.deleteById(codDocumento);
 				convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);
 			} catch (Exception e) {
 
-				throw new IOException(e.getMessage());
+				throw new DataException(ARCHIVO_NO_EXISTE);
 				// e.printStackTrace();
 			}
 
@@ -237,4 +252,4 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	
-}
+

@@ -155,8 +155,6 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		if(periodo == null)
 			throw new DataException(NO_PERIODO_ACTIVO);
 
-		if(periodo == null)
-			throw new DataException(NO_PERIODO_ACTIVO);
 
 		resultado = ruta();
 		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();

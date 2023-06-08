@@ -1,7 +1,8 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.MensajesConst.CONVOCATORIA_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_PERIODO_ACTIVO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_NO_EXISTE;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,6 +12,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,7 @@ import jakarta.mail.MessagingException;
 @Service
 public class PerDocumentosForServiceImpl implements PerDocumentosForService {
 
+	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
 
@@ -61,35 +65,52 @@ public class PerDocumentosForServiceImpl implements PerDocumentosForService {
 		Documento documentos = new Documento();
 		Optional<Documento> documento;
 
-		System.out.println("ruta: " + resultado);
+		
 
 		Integer peracademico = periodoAcademicoRepository.getPAActive();
 
 		if (periodoAcademicoRepository.findById(peracademico).isEmpty())
-			throw new IOException(CONVOCATORIA_NO_EXISTE);
-		System.out.println("resultado" + resultado);
+			throw new IOException(NO_PERIODO_ACTIVO);
+		
 
-		// System.out.println("id: " + codDocumento);
-		documento = repo.findById(codDocumento);
-		documentos = documento.get();
-		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
+		 //System.out.println("id: " + codDocumento);
+		
+         
 
-		System.out.println("ruta: " + ruta);
-		if (Files.exists(ruta)) {
+		
+		//System.out.println("Estoy entrando");
+		
+		/*if(documento.isEmpty()) {
+			throw new DataException(ARCHIVO_NO_EXISTE);
+		}*/
+		
+	
 			try {
-				System.out.println("ruta" + ruta);
+				Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
+				if (Files.exists(ruta)) {
+				documento = repo.findById(codDocumento);
+				documentos = documento.get();
+				//System.out.println("ruta" + ruta);
 				Files.delete(ruta);
+				
+				System.out.println("Si entre");
+				}else {
+					LOGGER.error(ARCHIVO_NO_EXISTE +":"+ruta);
+				}
 				periodoAcademicoDocRepository.deleteByCodDocumento(peracademico, codDocumento);
 				repo.deleteById(codDocumento);
 				
 			} catch (Exception e) {
 
-				throw new IOException(e.getMessage());
+				throw new DataException(ARCHIVO_NO_EXISTE);
 				// e.printStackTrace();
+				
 				// e.printStackTrace();
 			}
-		}
 	}
+		
+
+	
 
 	@Override
 	public void actualizarArchivoFromacion(Integer codDocumento, MultipartFile archivo) throws IOException, DataException {
@@ -102,11 +123,15 @@ public class PerDocumentosForServiceImpl implements PerDocumentosForService {
 		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
 
 		System.out.println("ruta: " + ruta);
-		if (Files.exists(ruta)) {
+		
 			try {
 				System.out.println("ruta" + ruta);
+				if (Files.exists(ruta)) {
+					
 				Files.delete(ruta);
-				
+				}/*else {
+			    LOGGER.error(ARCHIVO_NO_EXISTE +":"+ruta);
+				}*/
 				MultipartFile multipartFile = archivo;
 				if (multipartFile.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
 					throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
@@ -127,7 +152,7 @@ public class PerDocumentosForServiceImpl implements PerDocumentosForService {
 				// e.printStackTrace();
 				// e.printStackTrace();
 			}
-		}
+		
 	}
 
 }

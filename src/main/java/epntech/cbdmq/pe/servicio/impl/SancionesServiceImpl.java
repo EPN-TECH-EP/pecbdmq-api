@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_SANCIONES;
 
 import java.io.IOException;
@@ -11,6 +12,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ import epntech.cbdmq.pe.servicio.SancionesService;
 @Service
 public class SancionesServiceImpl implements SancionesService {
 
+	private Logger LOGGER = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	private SancionesRepository repo;
 	@Autowired
@@ -111,32 +116,42 @@ public class SancionesServiceImpl implements SancionesService {
 		if (!archivo.isEmpty()) {
 			Path ruta = Paths.get(documentoRepository.findById(objActualizado.getCodDocumento()).get().getRuta()).toAbsolutePath()
 					.normalize();
-
-			if (Files.exists(ruta)) {
-				try {
-					Files.delete(ruta);
-				} catch (Exception e) {
-
-					throw new DataException(e.getMessage());
-					// e.printStackTrace();
-				}
-			}
 			
-			if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
-				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
-			}
-
 			ruta = ruta.getParent();
 			Files.copy(archivo.getInputStream(), ruta.resolve(archivo.getOriginalFilename()),
 					StandardCopyOption.REPLACE_EXISTING);
 
 			//System.out.println("ruta: " + ruta);
 			Documento documento = new Documento();
-			documento = documentoRepository.findById(objActualizado.getCodDocumento()).get();
-			documento.setNombre(archivo.getOriginalFilename());
-			documento.setRuta(ruta + "\\" + archivo.getOriginalFilename());
-			documento = documentoRepository.save(documento);
-		}
+			
+			
+			
+				try {
+					if (Files.exists(ruta)) {
+						documento = documentoRepository.findById(objActualizado.getCodDocumento()).get();
+						documento.setNombre(archivo.getOriginalFilename());
+						documento.setRuta(ruta + "\\" + archivo.getOriginalFilename());
+						documento = documentoRepository.save(documento);
+
+					Files.delete(ruta);
+					}else {
+						 LOGGER.error(ARCHIVO_NO_EXISTE +":"+ruta);	
+					}
+				} catch (Exception e) {
+
+					throw new DataException(ARCHIVO_NO_EXISTE);
+					// e.printStackTrace();
+				}
+			}
+		
+		
+			if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
+				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+			}
+			
+
+			
+		
 
 		return repo.save(objActualizado);
 	}

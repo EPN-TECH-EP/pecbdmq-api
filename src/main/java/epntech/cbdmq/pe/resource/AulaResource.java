@@ -68,6 +68,8 @@ public class AulaResource {
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
+	
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
 			objService.delete(codigo);
