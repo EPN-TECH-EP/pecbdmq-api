@@ -28,8 +28,10 @@ public class EncuestaPreguntaRespuesta {
 	//@EqualsAndHashCode.Include()
 	@Column(name = "cod_encuesta_pregunta_respuesta")
 	private Long cod_encuesta_pregunta_respuesta;
+	
 	@Column(name = "cod_encuesta_pregunta")
     private Long cod_encuesta_pregunta;
+	
 	@Column(name = "cod_catalogo_respuesta")
 	private Long cod_catalogo_respuesta;
 		

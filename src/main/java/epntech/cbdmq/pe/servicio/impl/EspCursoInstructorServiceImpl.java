@@ -45,18 +45,8 @@ public class EspCursoInstructorServiceImpl implements EspCursoInstructorService{
 	}
 
 	@Override
-	public void delete(int id) throws DataException {
-		Optional<?> objGuardado = espCursoInstructorRepository.findById(id);
-		if (objGuardado.isEmpty()) {
-			throw new DataException(REGISTRO_NO_EXISTE);
-		}
-		try {
-			espCursoInstructorRepository.deleteById(id);
-		} catch (Exception e) {
-			if (e.getMessage().contains("constraint")) {
-				throw new DataException(DATOS_RELACIONADOS);
-			}
-		}
+	public void delete(int id) throws DataException { 
+		espCursoInstructorRepository.deleteById(id);
 		
 	}
 
