@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Falta;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.FaltaServiceImpl;
@@ -56,7 +55,7 @@ public class FaltaResource {
 		
 	
 		return (ResponseEntity<Falta>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre_falta(obj.getNombre_falta().toUpperCase());
+			datosGuardados.setNombreFalta(obj.getNombreFalta().toUpperCase());
 			datosGuardados.setEstado(obj.getEstado());
 
 			Falta  datosActualizados = null;

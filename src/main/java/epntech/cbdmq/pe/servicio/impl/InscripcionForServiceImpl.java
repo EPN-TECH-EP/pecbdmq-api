@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
@@ -92,13 +91,13 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 			throw new DataException(CORREO_YA_EXISTE);
 		if (repo1.findOneByCedula(inscripcion.getCedula()).isPresent())
 			throw new DataException(CEDULA_YA_EXISTE);
-		if (repo1.validaEdad(inscripcion.getFecha_nacimiento()).equals(false))
+		if (repo1.validaEdad(inscripcion.getFechaNacimiento()).equals(false))
 			throw new DataException(EDAD_NO_CUMPLE);
 		else {
 			String code = getRandomCode();
-			inscripcion.setPin_validacion_correo(code);
+			inscripcion.setPinValidacionCorreo(code);
 
-			inscripcion.setPin_validacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
+			inscripcion.setPinValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
 
 			emailService.validateCodeEmail(inscripcion.getNombre(), code, inscripcion.getCorreoPersonal());
 
@@ -193,7 +192,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		code = getRandomCode();
 		System.out.println("code: " + code);
 		obj.setCorreoPersonal(obj.getCorreoPersonal());
-		obj.setPin_validacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
+		obj.setPinValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
 		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
 		return repo1.save(obj);
 	}

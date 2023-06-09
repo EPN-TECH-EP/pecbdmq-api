@@ -23,7 +23,6 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.TipoNotaServiceImpl;
-import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
@@ -58,7 +57,7 @@ public class TipoNotaResource {
         return (ResponseEntity<TipoNota>) objServices.getById(codigo).map(datosGuardados -> {
             datosGuardados.setNota(obj.getNota().toUpperCase());
             datosGuardados.setEstado(obj.getEstado());
-            datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
+            datosGuardados.setCodComponenteNota(obj.getCodComponenteNota());
             TipoNota datosActualizados = null;
 			try {
 				datosActualizados = objServices.update(datosGuardados);

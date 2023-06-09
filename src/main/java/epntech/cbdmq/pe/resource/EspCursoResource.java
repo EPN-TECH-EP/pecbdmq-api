@@ -51,20 +51,20 @@ public class EspCursoResource {
 	public ResponseEntity<EspCurso> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EspCurso obj) throws DataException{
 		return (ResponseEntity<EspCurso>) objService.getById(codigo).map(datosGuardados -> {
 			//datosGuardados.setCod_estudiante(obj.getCod_curso_especializacion());
-			datosGuardados.setCod_instructor(obj.getCod_instructor());
-			datosGuardados.setCod_unidad_gestion(obj.getCod_unidad_gestion());
+			datosGuardados.setCodInstructor(obj.getCodInstructor());
+			datosGuardados.setCodUnidadGestion(obj.getCodUnidadGestion());
 			//datosGuardados.setCod_estudiante(obj.getCod_estudiante());
-			datosGuardados.setCod_aula(obj.getCod_aula());
-			datosGuardados.setNumero_cupo(obj.getNumero_cupo());
-			datosGuardados.setFechainiciocurso(obj.getFechainiciocurso());
-			datosGuardados.setFechafincurso(obj.getFechafincurso());
-			datosGuardados.setFechainiciocarganota(obj.getFechainiciocarganota());
-			datosGuardados.setFechafincarganota(obj.getFechafincarganota());
-			datosGuardados.setNota_minima(obj.getNota_minima());
+			datosGuardados.setCodAula(obj.getCodAula());
+			datosGuardados.setNumeroCupo(obj.getNumeroCupo());
+			datosGuardados.setFechaInicioCurso(obj.getFechaInicioCurso());
+			datosGuardados.setFechaFinCurso(obj.getFechaFinCurso());
+			datosGuardados.setFechaInicioCargaNota(obj.getFechaInicioCargaNota());
+			datosGuardados.setFechaFinCargaNota(obj.getFechaFinCargaNota());
+			datosGuardados.setNotaMinima(obj.getNotaMinima());
 			datosGuardados.setAprueba(obj.getAprueba());
-			datosGuardados.setEstado_proceso(obj.getEstado_proceso());
+			datosGuardados.setEstadoProceso(obj.getEstadoProceso());
 			datosGuardados.setEstado(obj.getEstado());
-			datosGuardados.setCod_tipo_curso(obj.getCod_tipo_curso());
+			datosGuardados.setCodTipoCurso(obj.getCodTipoCurso());
 			
 			EspCurso datosActualizados = null;
 			try {

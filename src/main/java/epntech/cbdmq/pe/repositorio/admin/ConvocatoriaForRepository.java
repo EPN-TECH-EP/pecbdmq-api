@@ -28,7 +28,6 @@ import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.dominio.util.DatosFile;
 import epntech.cbdmq.pe.dominio.util.PeriodoAcademicoFor;
@@ -176,8 +175,8 @@ public class ConvocatoriaForRepository {
 			entityManager.createNativeQuery(sqlConvocatoriaDocumento).setParameter("cod_convocatoria", codConvocatoria)
 					.setParameter("cod_documento", elemento.getCodigoDocumento());
 			
-			convocatoriaDocumentoFor.setCod_convocatoria(codConvocatoria);
-			convocatoriaDocumentoFor.setCod_documento(elemento.getCodigoDocumento());
+			convocatoriaDocumentoFor.setCodConvocatoria(codConvocatoria);
+			convocatoriaDocumentoFor.setCodDocumento(elemento.getCodigoDocumento());
 			entityManager.persist(convocatoriaDocumentoFor);
 			codigoDocumento = elemento.getCodigoDocumento();
 		}		

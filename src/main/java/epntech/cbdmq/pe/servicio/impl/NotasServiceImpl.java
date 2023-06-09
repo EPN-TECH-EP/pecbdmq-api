@@ -26,9 +26,9 @@ public class NotasServiceImpl implements NotaService {
 	
 	@Override
 	public Notas save(Notas obj) throws DataException {
-		if(obj.getUsuariocreanota().trim().isEmpty())
+		if(obj.getUsuarioCreaNota().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<?> objGuardado = repo.findByusuariocreanota(obj.getUsuariocreanota());
+		Optional<?> objGuardado = repo.findByUsuarioCreaNota(obj.getUsuarioCreaNota());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}

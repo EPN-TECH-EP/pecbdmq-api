@@ -44,16 +44,16 @@ public class NotaTest {
 	        Date date = java.sql.Date.valueOf(LocalDate.parse("2029-01-01", formatter));
         
 		Notas obj = new Notas();
-		obj.setCod_nota_formacion(1);
+		obj.setCodNotaFormacion(1);
 		//obj.setFechacreanota(date);
-		obj.setUsuariocreanota("texto");
+		obj.setUsuarioCreaNota("texto");
 		obj.setEstado("activo");
 
 		Notas datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getUsuariocreanota());
-		assertEquals(date, datos.getFechacreanota());
+		assertEquals("texto", datos.getUsuarioCreaNota());
+		assertEquals(date, datos.getFechaCreaNota());
 		assertEquals("activo", datos.getEstado());
 	}
 	
@@ -65,17 +65,17 @@ public class NotaTest {
 
         
         Notas obj = new Notas();
-		obj.setCod_nota_formacion(1);
+		obj.setCodNotaFormacion(1);
 		//obj.setFechacreanota(date);
-		obj.setUsuariocreanota("texto");
-		obj.setUsuariomodnota("amigo");
+		obj.setUsuarioCreaNota("texto");
+		obj.setUsuarioModNota("amigo");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		Optional<Notas> obj1 = repo.findByusuariocreanota("texto");
+		Optional<Notas> obj1 = repo.findByUsuarioCreaNota("texto");
 
-		assertThat(obj1.get().getUsuariocreanota()).isEqualTo("texto");
+		assertThat(obj1.get().getUsuarioCreaNota()).isEqualTo("texto");
 	}
 	
 	
@@ -86,22 +86,22 @@ public class NotaTest {
 
 		Notas obj = new Notas();
 
-		obj.setUsuariocreanota("texto");
-		obj.setUsuariomodnota("amigo");
+		obj.setUsuarioCreaNota("texto");
+		obj.setUsuarioModNota("amigo");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<Notas> obj1 = repo.findByusuariocreanota("texto");
+		Optional<Notas> obj1 = repo.findByUsuarioCreaNota("texto");
 
 		String datoNuevo = "NombreNuevo";
 
-		obj.setUsuariomodnota(datoNuevo);
-		obj.setCod_nota_formacion(obj1.get().getCod_nota_formacion());
+		obj.setUsuarioModNota(datoNuevo);
+		obj.setCodNotaFormacion(obj1.get().getCodNotaFormacion());
 
-		Optional<Notas> objModificado = repo.findByusuariocreanota("texto");
-		assertThat(objModificado.get().getUsuariomodnota()).isEqualTo(datoNuevo);
+		Optional<Notas> objModificado = repo.findByUsuarioCreaNota("texto");
+		assertThat(objModificado.get().getUsuarioModNota()).isEqualTo(datoNuevo);
 	}
 	
 	@Test
@@ -117,14 +117,14 @@ public class NotaTest {
 		String nombre = "Test";
 
 		Notas obj = new Notas();
-		obj.setCod_nota_formacion(1);
-		obj.setUsuariocreanota("texto");
-		obj.setUsuariomodnota("amigo");
+		obj.setCodNotaFormacion(1);
+		obj.setUsuarioCreaNota("texto");
+		obj.setUsuarioModNota("amigo");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findByusuariocreanota("texto").get().getCod_nota_formacion();
+		int id = repo.findByUsuarioCreaNota("texto").get().getCodNotaFormacion();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

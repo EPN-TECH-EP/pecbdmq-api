@@ -40,7 +40,7 @@ public class TipoBajaTest {
 	void testGuardar() {
 	 
 		TipoBaja obj = new TipoBaja();
-		obj.setCod_tipo_baja(1);		
+		obj.setCodTipoBaja(1);
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 
@@ -59,7 +59,7 @@ public class TipoBajaTest {
 		
 		
 		TipoBaja obj = new TipoBaja();
-		obj.setCod_tipo_baja(1);		
+		obj.setCodTipoBaja(1);
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 
@@ -77,7 +77,7 @@ public class TipoBajaTest {
 		String nombre = "Test";
 
 		TipoBaja obj = new TipoBaja();
-		obj.setCod_tipo_baja(1);		
+		obj.setCodTipoBaja(1);
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 
@@ -89,7 +89,7 @@ public class TipoBajaTest {
 		String datoNuevo = "texto";
 
 		obj.setBaja(datoNuevo);
-		obj.setCod_tipo_baja(obj1.get().getCod_tipo_baja());
+		obj.setCodTipoBaja(obj1.get().getCodTipoBaja());
 
 		Optional<TipoBaja> objModificado = repo.findByBajaIgnoreCase("texto");
 		assertThat(objModificado.get().getBaja()).isEqualTo(datoNuevo);
@@ -107,13 +107,13 @@ public class TipoBajaTest {
 		String nombre = "Test";
 
 		TipoBaja obj = new TipoBaja();
-		obj.setCod_tipo_baja(1);		
+		obj.setCodTipoBaja(1);
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findByBajaIgnoreCase("texto").get().getCod_tipo_baja();
+		int id = repo.findByBajaIgnoreCase("texto").get().getCodTipoBaja();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

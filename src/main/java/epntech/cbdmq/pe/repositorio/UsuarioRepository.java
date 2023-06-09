@@ -32,7 +32,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	@Query(value = "select u from Usuario u where lower(u.codDatosPersonales.nombre) like lower(concat('%', :nombre, '%'))")
 	public List<Usuario> findUsuariosByNombre(@Param("nombre") String nombre) ;
 
-	@Query(value = "SELECT u FROM Usuario u WHERE u.codDatosPersonales.correo_personal like %:correo%")
+	@Query(value = "SELECT u FROM Usuario u WHERE u.codDatosPersonales.correoPersonal like %:correo%")
 	public List<Usuario> findUsuariosByCorreo(@Param("correo") String correo) ;
 
 	@Query(value = "SELECT u FROM Usuario u")

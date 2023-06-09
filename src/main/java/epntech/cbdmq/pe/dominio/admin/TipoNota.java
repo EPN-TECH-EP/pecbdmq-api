@@ -27,12 +27,12 @@ import lombok.Data;
 public class TipoNota {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cod_tipo_nota;
+    private Integer codTipoNota;
     @Column(name = "tipo_nota")
     private String nota;
     @Column(name = "estado")
    	private String estado;
 	@Column(name = "cod_componente_nota")
-	private Integer cod_componente_nota;
+	private Integer codComponenteNota;
     
 }

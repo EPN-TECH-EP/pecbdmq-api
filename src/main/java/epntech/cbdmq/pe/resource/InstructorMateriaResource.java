@@ -18,10 +18,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.impl.AulaServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.InstructorMateriaServiceImpl;
 
 @RestController
@@ -56,8 +54,8 @@ public class InstructorMateriaResource {
 		
 	
 		return (ResponseEntity<InstructorMateria>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setEs_coordinador(obj.getEs_coordinador());
-			datosGuardados.setEs_asistente(obj.getEs_asistente());
+			datosGuardados.setEsCoordinador(obj.getEsCoordinador());
+			datosGuardados.setEsAsistente(obj.getEsAsistente());
 			
 
 			InstructorMateria datosActualizados = null;

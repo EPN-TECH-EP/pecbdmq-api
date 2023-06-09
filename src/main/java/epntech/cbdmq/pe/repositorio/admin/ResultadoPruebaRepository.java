@@ -10,6 +10,6 @@ import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
 public interface ResultadoPruebaRepository extends JpaRepository<ResultadoPrueba, Integer>{
 
 	
-	Optional<ResultadoPrueba> findBycumpleprueba(String cumpleprueba);
+	Optional<ResultadoPrueba> findByCumplePrueba(String cumpleprueba);
 	
 }

@@ -1,25 +1,16 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -40,87 +31,87 @@ public class InscripcionFor {
 	@Column(name = "cedula")
 	private String cedula;
 	@Column(name = "cod_estacion")
-	private Integer cod_estacion;
+	private Integer codEstacion;
 	@Column(name = "correo_personal")
 	private String correoPersonal;
 	@Column(name = "estado")
 	private String estado;
 	@Column(name = "fecha_nacimiento")
-	private LocalDateTime fecha_nacimiento;
+	private LocalDateTime fechaNacimiento;
 	@Column(name = "nombre")
 	private String nombre;
 	@Column(name = "num_telef_convencional")
-	private String num_telef_convencional;
+	private String numTelefConvencional;
 	@Column(name = "tipo_sangre")
-	private String tipo_sangre;
+	private String tipoSangre;
 	@Column(name = "validacion_correo")
-	private String validacion_correo;
+	private String validacionCorreo;
 	@Column(name = "cod_provincia_nacimiento")
-	private Integer cod_provincia_nacimiento;
+	private Integer codProvinciaNacimiento;
 	@Column(name = "cod_unidad_gestion")
-	private Integer cod_unidad_gestion;
+	private Integer codUnidadGestion;
 	@Column(name = "sexo")
 	private String sexo;
 	@Column(name = "num_telef_celular")
-	private String num_telef_celular;
+	private String numTelefCelular;
 	@Column(name = "reside_pais")
-	private Boolean reside_pais;
+	private Boolean residePais;
 	@Column(name = "cod_provincia_residencia")
-	private Long cod_provincia_residencia;
+	private Long codProvinciaResidencia;
 	@Column(name = "calle_principal_residencia")
-	private String calle_principal_residencia;
+	private String callePrincipalResidencia;
 	@Column(name = "calle_secundaria_residencia")
-	private String calle_secundaria_residencia;
+	private String calleSecundariaResidencia;
 	@Column(name = "numero_casa")
-	private String numero_casa;
+	private String numeroCasa;
 	@Column(name = "colegio")
 	private String colegio;
 	@Column(name = "tipo_nacionalidad")
-	private String tipo_nacionalidad;
+	private String tipoNacionalidad;
 	@Column(name = "tiene_merito_deportivo")
-	private Boolean tiene_merito_deportivo;
+	private Boolean tieneMeritoDeportivo;
 	@Column(name = "tiene_merito_academico")
-	private Boolean tiene_merito_academico;
+	private Boolean tieneMeritoAcademico;
 	@Column(name = "nombre_titulo_segundonivel")
-	private String nombre_titulo_segundonivel;
+	private String nombreTituloSegundonivel;
 	@Column(name = "pais_titulo_segundonivel")
-	private String pais_titulo_segundonivel;
+	private String paisTituloSegundoNivel;
 	@Column(name = "ciudad_titulo_segundonivel")
-	private String ciudad_titulo_segundonivel;
+	private String ciudadTituloSegundoNivel;
 	@Column(name = "merito_deportivo_descripcion")
-	private String merito_deportivo_descripcion;
+	private String meritoDeportivoDescripcion;
 	@Column(name = "merito_academico_descripcion")
-	private String merito_academico_descripcion;
+	private String meritoAcademicoDescripcion;
 	@Column(name = "pin_validacion_correo")
-	private String pin_validacion_correo;
+	private String pinValidacionCorreo;
 	@Column(name = "correo_institucional")
-	private String correo_institucional;
+	private String correoInstitucional;
 	@Column(name = "cod_cargo")
-	private Long cod_cargo;
+	private Long codCargo;
 	@Column(name = "cod_rango")
-	private Long cod_rango;
+	private Long codRango;
 	@Column(name = "cod_grado")
-	private Long cod_grado;
+	private Long codGrado;
 	@Column(name = "cod_documento_imagen")
-	private Integer cod_documento_imagen;
+	private Integer codDocumentoImagen;
 	@Column(name = "cod_canton_nacimiento")
-	private Long cod_canton_nacimiento;
+	private Long codCantonNacimiento;
 	@Column(name = "cod_canton_residencia")
-	private Long cod_canton_residencia;
+	private Long codCantonResidencia;
 	@Column(name = "fecha_salida_institucion")
-	private LocalDateTime fecha_salida_institucion;
+	private LocalDateTime fechaSalidaInstitucion;
 	@Column(name = "nivel_instruccion")
-	private String nivel_instruccion;
+	private String nivelInstruccion;
 	@Column(name = "nombre_titulo_tercernivel")
-	private String nombre_titulo_tercernivel;
+	private String nombreTituloTercernivel;
 	@Column(name = "nombre_titulo_cuartonivel")
-	private String nombre_titulo_cuartonivel;
+	private String nombreTituloCuartoNivel;
 	@Column(name = "es_vulnerable")
-	private Boolean es_vulnerable;
+	private Boolean esVulnerable;
 	@Column(name = "pais_titulo_cuartonivel")
-	private String pais_titulo_cuartonivel;
+	private String paisTituloCuartoNivel;
 	@Column(name = "pais_titulo_tercernivel")
-	private String pais_titulo_tercernivel;
+	private String paisTituloTercerNivel;
 	
 	
 	/*@Column(name = "apellido")

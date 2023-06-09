@@ -44,16 +44,16 @@ public class BajaTest {
         LocalDateTime date = LocalDateTime.parse("2029-01-01 00:00:00", formatter);
         
 		Baja obj = new Baja();
-		obj.setCod_modulo(1);
-		obj.setFechabaja(date);
-		obj.setDescripcionbaja("texto");
+		obj.setCodModulo(1);
+		obj.setFechaBaja(date);
+		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 		Baja datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getDescripcionbaja());
-		assertEquals(date, datos.getFechabaja());
+		assertEquals("texto", datos.getDescripcionBaja());
+		assertEquals(date, datos.getFechaBaja());
 		assertEquals("activo", datos.getEstado());
 	}
 
@@ -65,16 +65,16 @@ public class BajaTest {
 
         
     	Baja obj = new Baja();
-		obj.setFechabaja(date);
+		obj.setFechaBaja(date);
 		obj.setNombre("Pedro");
-		obj.setDescripcionbaja("texto");
+		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
 		Optional<Baja> obj1 = repo.findByNombreIgnoreCase("Pedro");
 
-		assertThat(obj1.get().getDescripcionbaja()).isEqualTo("texto");
+		assertThat(obj1.get().getDescripcionBaja()).isEqualTo("texto");
 	}
 
 	@Test
@@ -84,8 +84,8 @@ public class BajaTest {
 
 		Baja obj = new Baja();
 		obj.setNombre("Pedro");
-		obj.setCod_modulo(1);
-		obj.setDescripcionbaja("texto");
+		obj.setCodModulo(1);
+		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 
@@ -95,11 +95,11 @@ public class BajaTest {
 
 		String datoNuevo = "NombreNuevo";
 
-		obj.setDescripcionbaja(datoNuevo);
-		obj.setCod_baja(obj1.get().getCod_baja());
+		obj.setDescripcionBaja(datoNuevo);
+		obj.setCodBaja(obj1.get().getCodBaja());
 
 		Optional<Baja> objModificado = repo.findByNombreIgnoreCase("Pedro");
-		assertThat(objModificado.get().getDescripcionbaja()).isEqualTo(datoNuevo);
+		assertThat(objModificado.get().getDescripcionBaja()).isEqualTo(datoNuevo);
 	}
 
 	@Test
@@ -116,11 +116,11 @@ public class BajaTest {
 
 		Baja obj = new Baja();
 		obj.setNombre("Pedro");
-		obj.setDescripcionbaja(nombre);
+		obj.setDescripcionBaja(nombre);
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombreIgnoreCase("Pedro").get().getCod_baja();
+		int id = repo.findByNombreIgnoreCase("Pedro").get().getCodBaja();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

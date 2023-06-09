@@ -1,7 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +18,7 @@ public class CatalogoRespuesta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_catalogo_respuesta")
-	private Integer cod_catalogo_respuesta;
+	private Integer codCatalogoRespuesta;
 	@Column(name = "respuesta")
 	private String respuesta;
 	@Column(name = "estado")

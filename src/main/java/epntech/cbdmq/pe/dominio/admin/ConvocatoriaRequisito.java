@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -11,8 +12,10 @@ import lombok.Data;
 public class ConvocatoriaRequisito {
 	
 	@Id
-	private Integer cod_convocatoria;
+	@Column(name = "cod_convocatoria")
+	private Integer codConvocatoria;
 	@Id
+	@Column(name = "cod_requisito")
 	private Integer cod_requisito;
 
 }

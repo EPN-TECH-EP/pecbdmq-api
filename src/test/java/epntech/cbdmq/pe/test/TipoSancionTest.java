@@ -41,7 +41,7 @@ public class TipoSancionTest {
 		
         
 		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
+		obj.setCodTipoSancion(1);
 		
 		obj.setSancion("texto");
 		obj.setEstado("activo");
@@ -61,7 +61,7 @@ public class TipoSancionTest {
 
         
         TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(1);
+		obj.setCodTipoSancion(1);
 		
 		obj.setSancion("texto");
 		obj.setEstado("activo");
@@ -79,7 +79,7 @@ public class TipoSancionTest {
 		String nombre = "Test";
 
 		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
+		obj.setCodTipoSancion(5);
 		obj.setSancion("NombreNuevo");
 		obj.setEstado("activo");
 
@@ -91,7 +91,7 @@ public class TipoSancionTest {
 		String datoNuevo = "NombreNuevo";
 
 		obj.setSancion(datoNuevo);
-		obj.setCod_tipo_sancion(obj1.get().getCod_tipo_sancion());
+		obj.setCodTipoSancion(obj1.get().getCodTipoSancion());
 
 		Optional<TipoSancion> objModificado = repo.findBySancionIgnoreCase("NombreNuevo");
 		assertThat(objModificado.get().getSancion()).isEqualTo(datoNuevo);
@@ -111,13 +111,13 @@ public class TipoSancionTest {
 		String nombre = "Test";
 
 		TipoSancion obj = new TipoSancion();
-		obj.setCod_tipo_sancion(5);		
+		obj.setCodTipoSancion(5);
 		obj.setSancion("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findBySancionIgnoreCase("texto").get().getCod_tipo_sancion();
+		int id = repo.findBySancionIgnoreCase("texto").get().getCodTipoSancion();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

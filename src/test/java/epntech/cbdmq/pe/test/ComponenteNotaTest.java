@@ -39,7 +39,7 @@ public class ComponenteNotaTest {
 	void testGuardar() {
 	 
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCod_componente_nota(2);		
+		obj.setCodComponenteNota(2);
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 
@@ -58,7 +58,7 @@ public class ComponenteNotaTest {
 		
 		
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCod_componente_nota(2);		
+		obj.setCodComponenteNota(2);
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 
@@ -76,7 +76,7 @@ public class ComponenteNotaTest {
 		String nombre = "Test";
 
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCod_componente_nota(2);		
+		obj.setCodComponenteNota(2);
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 
@@ -88,7 +88,7 @@ public class ComponenteNotaTest {
 		String datoNuevo = "texto";
 
 		obj.setNombre(datoNuevo);
-		obj.setCod_componente_nota(obj1.get().getCod_componente_nota());
+		obj.setCodComponenteNota(obj1.get().getCodComponenteNota());
 
 		Optional<ComponenteNota> objModificado = repo.findByNombreIgnoreCase("texto");
 		assertThat(objModificado.get().getNombre()).isEqualTo(datoNuevo);
@@ -107,13 +107,13 @@ public class ComponenteNotaTest {
 		String nombre = "Test";
 
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCod_componente_nota(2);		
+		obj.setCodComponenteNota(2);
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findByNombreIgnoreCase("texto").get().getCod_componente_nota();
+		int id = repo.findByNombreIgnoreCase("texto").get().getCodComponenteNota();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

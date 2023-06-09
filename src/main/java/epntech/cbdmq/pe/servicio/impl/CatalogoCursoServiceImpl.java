@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
@@ -52,7 +51,7 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	public CatalogoCurso update(CatalogoCurso objActualizado) throws DataException {
 		if(objActualizado.getNombre() !=null) {
 			Optional<CatalogoCurso> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-			if (objGuardado.isPresent()&& !objGuardado.get().getCod_catalogo_cursos().equals(objActualizado.getCod_catalogo_cursos())) {
+			if (objGuardado.isPresent()&& !objGuardado.get().getCodCatalogoCursos().equals(objActualizado.getCodCatalogoCursos())) {
 				throw new DataException(REGISTRO_YA_EXISTE);
 			}
 		}

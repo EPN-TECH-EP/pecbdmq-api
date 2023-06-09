@@ -1,7 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import java.util.List;
-
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -25,9 +23,9 @@ public class EvaluacionDocente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_evaluacion_docente")
-	private Integer cod_evaluacion_docente;
+	private Integer codEvaluacionDocente;
 	@Column(name = "cod_instructor")
-	private Integer cod_instructor;
+	private Integer codInstructor;
 	@Column(name = "pregunta")
 	private String nombre;
 	@Column(name = "estado")

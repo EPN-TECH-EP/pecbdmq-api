@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Baja;
 import epntech.cbdmq.pe.dominio.admin.Prueba;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.PruebaServiceImpl;
@@ -51,14 +50,14 @@ public class PruebaResource {
     public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Prueba obj) throws DataException {
         return objServices.getById(codigo).map(datosGuardados -> {
             
-            datosGuardados.setDescripcion_prueba(obj.getDescripcion_prueba());
-            datosGuardados.setFecha_inicio(obj.getFecha_inicio());
-            datosGuardados.setFecha_fin(obj.getFecha_fin());
+            datosGuardados.setDescripcionPrueba(obj.getDescripcionPrueba());
+            datosGuardados.setFechaInicio(obj.getFechaInicio());
+            datosGuardados.setFechaFin(obj.getFechaFin());
             datosGuardados.setHora(obj.getHora());
             datosGuardados.setEstado(obj.getEstado());
-            datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
-            datosGuardados.setCod_curso_especializacion(obj.getCod_curso_especializacion());
-            datosGuardados.setCod_subtipo_prueba(obj.getCod_subtipo_prueba());
+            datosGuardados.setCodPeriodoAcademico(obj.getCodPeriodoAcademico());
+            datosGuardados.setCodCursoEspecializacion(obj.getCodCursoEspecializacion());
+            datosGuardados.setCodSubtipoPrueba(obj.getCodSubtipoPrueba());
          
             Prueba datosActualizados = null;
 			try {

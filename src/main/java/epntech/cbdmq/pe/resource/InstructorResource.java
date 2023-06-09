@@ -50,8 +50,8 @@ public class InstructorResource {
 	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Instructor obj)
 			throws DataException {
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCod_instructor(obj.getCod_instructor());
-			datosGuardados.setCod_tipo_procedencia(obj.getCod_tipo_procedencia());
+			datosGuardados.setCodInstructor(obj.getCodInstructor());
+			datosGuardados.setCodTipoProcedencia(obj.getCodTipoProcedencia());
 			/*datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());*/

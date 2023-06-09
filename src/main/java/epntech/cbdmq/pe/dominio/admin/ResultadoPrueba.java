@@ -32,29 +32,29 @@ public class ResultadoPrueba {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_resul_prueba")
-	private Integer cod_resul_prueba;
+	private Integer codResulPrueba;
 	@Column(name = "cod_funcionario")
-	private Integer cod_funcionario;
+	private Integer codFuncionario;
 	@Column(name = "cod_estudiante")
-	private Integer cod_estudiante;
+	private Integer codEstudiante;
 	@Column(name = "cod_modulo")
-	private Integer cod_modulo;
+	private Integer codModulo;
 	@Column(name = "cod_postulante")
-	private Integer cod_postulante;
+	private Integer codPostulante;
 	@Column(name = "cod_periodo_evaluacion")
-	private Integer cod_periodo_evaluacion;
+	private Integer codPeriodoEvaluacion;
 	@Column(name = "cod_personal_ope")
-	private Integer cod_personal_ope;
+	private Integer codPersonalOpe;
 	@Column(name = "cod_prueba")
-	private Integer cod_prueba;
+	private Integer codPrueba;
 	@Column(name = "cod_parametriza_fisica")
-	private Integer cod_parametriza_fisica;
+	private Integer codParametrizaFisica;
 	@Column(name = "cod_tipo_prueba")
-	private Integer cod_tipo_prueba;
+	private Integer codTipoPrueba;
 	@Column(name = "resultado")
 	private Integer resultado;
 	@Column(name = "cumple_prueba")
-	private String cumpleprueba; 
+	private String cumplePrueba;
 	@Column(name = "estado")
 	private String estado;
 	
@@ -64,7 +64,7 @@ public class ResultadoPrueba {
             joinColumns = @JoinColumn(name = "cod_parametriza_fisica"),
             inverseJoinColumns = @JoinColumn(name = "cod_datos_personales")
     )
-	private List<PruebaFisica> Pruebafisca = new ArrayList<>();
+	private List<PruebaFisica> pruebaFisica = new ArrayList<>();
 	
 	
 }
