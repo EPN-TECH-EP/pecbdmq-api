@@ -3,11 +3,12 @@ package epntech.cbdmq.pe.servicio;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
+import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
 import org.springframework.data.domain.Pageable;
 
-import epntech.cbdmq.pe.dominio.admin.Estudiante;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 
 public interface EstudianteService {
 	
@@ -28,5 +29,6 @@ public interface EstudianteService {
 	//List<EstudianteDatos> findAllEstudiante();
 	
 	void saveEstudiantes();
+	Estudiante getEstudianteByUsuario(String codUsuario);
 
 }

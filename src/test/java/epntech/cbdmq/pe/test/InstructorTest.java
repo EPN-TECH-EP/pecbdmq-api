@@ -15,9 +15,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import epntech.cbdmq.pe.dominio.admin.Instructor;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 
-import epntech.cbdmq.pe.repositorio.admin.InstructorRepository;
+import epntech.cbdmq.pe.repositorio.fichaPersonal.InstructorRepository;
 
 
 

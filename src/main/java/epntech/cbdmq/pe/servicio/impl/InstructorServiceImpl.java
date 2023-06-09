@@ -3,19 +3,23 @@ package epntech.cbdmq.pe.servicio.impl;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionInstructor;
+import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionInstructor;
+import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionInstructor;
+import epntech.cbdmq.pe.dominio.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Instructor;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
-import epntech.cbdmq.pe.dominio.util.InstructorPeriodo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.InstructorPeriodoRepository;
 
 import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.repositorio.admin.InstructorMateriaRepository;
-import epntech.cbdmq.pe.repositorio.admin.InstructorRepository;
+import epntech.cbdmq.pe.repositorio.fichaPersonal.InstructorRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.InstructorService;
 
@@ -74,6 +78,11 @@ public class InstructorServiceImpl implements InstructorService {
 	public void saveAllMaterias(List<InstructorMateria> obj) {
 		// TODO Auto-generated method stub
 		instructorMateriaRepository.saveAll(obj);
+	}
+
+	@Override
+	public Instructor getInstructorByUser(String coduser) {
+		return repo.getInstructorByUsuario(coduser);
 	}
 
 }

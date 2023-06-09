@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 
 import jakarta.persistence.Table;
 import lombok.Data;

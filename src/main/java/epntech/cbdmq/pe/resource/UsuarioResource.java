@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
 import epntech.cbdmq.pe.excepcion.dominio.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -321,9 +322,15 @@ public class UsuarioResource extends GestorExcepciones {
 		try {
 			return usuarioService.tamañoMáximoArchivo();
 		} catch (Exception e) {
+
 			this.LOGGER.error(e.getMessage());
 			return -1;
 		}
+	}
+	@PostMapping("/buscarUsuarioInfo")
+	public ResponseEntity<UsuarioInfoDto> getUsuarioInfo(@RequestParam String codUser) throws DataException {
+		UsuarioInfoDto user = usuarioService.getUsuarioInfo(codUser);
+		return new ResponseEntity<>(user, OK);
 	}
 
 }

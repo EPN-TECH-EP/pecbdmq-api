@@ -2,7 +2,7 @@ package epntech.cbdmq.pe.dominio.util;
 
 import java.util.Date;
 
-import epntech.cbdmq.pe.dominio.admin.Estudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import lombok.Data;
 
 @Data

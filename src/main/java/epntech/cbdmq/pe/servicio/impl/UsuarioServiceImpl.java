@@ -11,6 +11,7 @@ import static epntech.cbdmq.pe.constante.ArchivoConst.NO_ES_ARCHIVO_IMAGEN;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_DEFECTO_IMAGEN_USUARIO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_IMAGEN_USUARIO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PUNTO;
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_ENCUENTRA;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_ENCONTRADO;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NO_EXISTE_USUARIO;
@@ -31,7 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
+import epntech.cbdmq.pe.excepcion.dominio.*;
+import epntech.cbdmq.pe.servicio.*;
+import epntech.cbdmq.pe.servicio.EstudianteService;
+import epntech.cbdmq.pe.servicio.InstructorService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -55,15 +63,7 @@ import epntech.cbdmq.pe.dominio.UserPrincipal;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.enumeracion.Role;
-import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.NombreUsuarioExisteExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.UsuarioNoEncontradoExcepcion;
 import epntech.cbdmq.pe.repositorio.UsuarioRepository;
-import epntech.cbdmq.pe.servicio.EmailService;
-import epntech.cbdmq.pe.servicio.IntentoLoginService;
-import epntech.cbdmq.pe.servicio.UsuarioService;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -75,6 +75,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	private BCryptPasswordEncoder passwordEncoder;
 	private IntentoLoginService loginAttemptService;
 	private EmailService emailService;
+	private InstructorService instructorService;
+	private EstudianteService estudianteService;
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -84,11 +86,13 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	public UsuarioServiceImpl(UsuarioRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-			IntentoLoginService loginAttemptService, EmailService emailService) {
+			IntentoLoginService loginAttemptService, EmailService emailService,EstudianteService estudianteService, InstructorService instructorService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.loginAttemptService = loginAttemptService;
 		this.emailService = emailService;
+		this.estudianteService=estudianteService;
+		this.instructorService=instructorService;
 	}
 
 	@Override
@@ -482,6 +486,26 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public List<Usuario> findUsuariosByCorreo(String correo) {
 		return this.userRepository.findUsuariosByCorreo(correo);
+	}
+
+	@Override
+	public UsuarioInfoDto getUsuarioInfo(String codUser) throws DataException {
+		Instructor instructor = instructorService.getInstructorByUser(codUser);
+		Estudiante estudianteDto = estudianteService.getEstudianteByUsuario(codUser);
+
+		if (instructor == null && estudianteDto == null) {
+			throw new DataException(NO_ENCUENTRA);
+		}
+		UsuarioInfoDto usuarioInfo = new UsuarioInfoDto();
+		if(instructor!=null) {
+			usuarioInfo.setCodInstructor(instructor.getCodInstructor());
+		}
+		if(estudianteDto!=null) {
+			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getIdEstudiante());
+		}
+
+		return usuarioInfo;
+
 	}
 
 }

@@ -7,21 +7,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Instructor;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InstructorServiceImpl;
+
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_ENCUENTRA;
 
 @RestController
 @RequestMapping("/instructor")
@@ -65,6 +59,15 @@ public class InstructorResource {
 	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
 		objService.delete(codigo);
 		return new ResponseEntity<String>("Registro eliminado exitosamente", HttpStatus.OK);
+	}
+	//TODO la clase instructor no esta acorde a la ultima BD
+	@PostMapping("/ByUser")
+	public Instructor listarInstructorByUsuario(@RequestParam("codUsuario")String codUsuario) throws DataException {
+		Instructor instructor= objService.getInstructorByUser(codUsuario);
+		if(instructor==null){
+			throw new DataException(NO_ENCUENTRA);
+		}
+		return instructor;
 	}
 	
 	@PostMapping("/asignarMaterias")

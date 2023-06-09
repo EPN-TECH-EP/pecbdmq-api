@@ -5,18 +5,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
+import epntech.cbdmq.pe.excepcion.dominio.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.Usuario;
-import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.NombreUsuarioExisteExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.UsuarioNoEncontradoExcepcion;
 import jakarta.mail.MessagingException;
 
 public interface UsuarioService {
@@ -73,4 +68,5 @@ public interface UsuarioService {
 	public List<Usuario> findUsuariosByNombre(String nombre);
 
 	public List<Usuario> findUsuariosByCorreo(String correo);
+	public UsuarioInfoDto getUsuarioInfo(String codUser) throws DataException;
 }
