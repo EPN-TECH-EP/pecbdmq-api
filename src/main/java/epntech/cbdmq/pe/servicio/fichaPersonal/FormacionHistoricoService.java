@@ -10,4 +10,5 @@ public interface FormacionHistoricoService {
     List<FormacionEstudiante> getHistoricos(String codEstudiante, Pageable pageable);
 
     List<FormacionInstructor> getFormHistoricos(Integer codEstudiante, Pageable pageable);
+    List<?>  listaMateriasHistorico();
 }

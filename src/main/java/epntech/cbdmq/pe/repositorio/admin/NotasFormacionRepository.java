@@ -25,5 +25,11 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 			+ "and cod_estudiante = :codEstudiante "
 			+ "and cod_periodo_academico =  cbdmq.get_pa_activo() ", nativeQuery=true)
 	Integer existeNota(Integer codInstructor, Integer codMateria, Integer codEstudiante);
+
+	@Query(value = "select gm.nombre ,gpa.descripcion from NotasFormacion gnf \n" +
+			"left join gen_materia gm on gnf.codMateria = gm.codMateria \n" +
+			"left join gen_periodo_academico gpa on gnf.codPeriodoAcademico = gpa.codigo \n" +
+			"group by gm.nombre,gpa.descripcion")
+	List<?> listaMateriasHistorico();
 }
 
