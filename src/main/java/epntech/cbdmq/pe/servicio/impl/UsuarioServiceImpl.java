@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Estudiante;
+import epntech.cbdmq.pe.dominio.admin.Instructor;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
 import epntech.cbdmq.pe.excepcion.dominio.*;
@@ -499,7 +501,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		}
 		UsuarioInfoDto usuarioInfo = new UsuarioInfoDto();
 		if(instructor!=null) {
-			usuarioInfo.setCodInstructor(instructor.getCod_instructor());
+			usuarioInfo.setCodInstructor(instructor.getCodInstructor());
 		}
 		if(estudianteDto!=null) {
 			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getIdEstudiante());

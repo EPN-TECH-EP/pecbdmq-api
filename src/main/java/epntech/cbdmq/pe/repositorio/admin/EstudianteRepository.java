@@ -32,7 +32,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 	List<ProfesionalizacionEstudiante> getProfHistoricos(@Param("codUnico") String codUnico, Pageable pageable);
 	@Query("select ge from Estudiante ge\n" +
 			"join Usuario gu \n" +
-			"on ge.codDatosPersonales = gu.codDatosPersonales.cod_datos_personales\n" +
+			"on ge.codDatosPersonales = gu.codDatosPersonales.codDatosPersonales\n" +
 			"where gu.isActive =true\n" +
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario=:codUsuario")

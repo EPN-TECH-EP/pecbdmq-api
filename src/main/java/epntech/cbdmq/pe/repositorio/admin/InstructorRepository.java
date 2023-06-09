@@ -18,7 +18,7 @@ public interface InstructorRepository extends JpaRepository<Instructor, Integer>
 	Optional<Instructor> findById(Integer codigo);
 	@Query("select gi from gen_instructor gi \n" +
 			"join Usuario gu \n" +
-			"on gi.cod_datos_personales= gu.codDatosPersonales.cod_datos_personales\n" +
+			"on gi.codDatosPersonales= gu.codDatosPersonales.codDatosPersonales\n" +
 			"where gu.isActive =true\n" +
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario =:codUsuario")

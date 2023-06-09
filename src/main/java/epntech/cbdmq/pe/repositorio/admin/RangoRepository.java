@@ -16,6 +16,6 @@ import java.util.List;
 
 @Repository
 public interface RangoRepository extends JpaRepository<Rango, Integer> {
-    @Query("SELECT r FROM Rango r WHERE r.codGrado.codGrado = :grado")
-    List<Rango> findByGrado(@Param("grado") Integer grado);
+    @Query(nativeQuery = true, name = "RangoDtoRead.listarPersonalizado")
+    List<RangoDtoRead> findByGrado(@Param("codGrado") Integer grado );
 }
