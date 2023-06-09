@@ -26,10 +26,6 @@ public class Requisito {
 	@Column(name = "cod_requisito")
 	private Integer codigoRequisito;
 	
-	@Column(name = "cod_funcionario")
-	private Integer codFuncionario;
-	
-
 	@Column(name = "nombre_requisito")
 	private String nombre;
 	

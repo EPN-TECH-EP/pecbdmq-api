@@ -11,24 +11,25 @@ import java.util.zip.ZipOutputStream;
 
 import org.springframework.stereotype.Component;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.FOLDER_MAX_SIZE; 
+import static epntech.cbdmq.pe.constante.MensajesConst.FOLDER_MAX_SIZE;
 
 @Component
 public class Compress {
 
 	private static final String PROPERTIES_FILE = "application.properties";
 
-    private Properties properties;
-	
-	public void zip(String path) throws IOException {
+	private Properties properties;
+
+	public void zip(String path) throws Exception {
 		properties = new Properties();
-        try (InputStream stream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
-            properties.load(stream);
-        }
-        
-		Long size = Long.valueOf(properties.getProperty("pecb.folder-size"));
-		
-		if (getFolderSize(path) <= size){
+		try (InputStream stream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
+			properties.load(stream);
+		}
+
+		String folderSizeString = properties.getProperty("pecb.folder-size");
+		Long size = Long.valueOf(folderSizeString);		
+
+		if (getFolderSize(path) <= size) {
 			String sourceFile = path;
 			FileOutputStream fos = new FileOutputStream(path + ".zip");
 			ZipOutputStream zipOut = new ZipOutputStream(fos);
@@ -37,8 +38,7 @@ public class Compress {
 			zipFile(fileToZip, fileToZip.getName(), zipOut);
 			zipOut.close();
 			fos.close();
-		}
-		else {
+		} else {
 			throw new IOException(FOLDER_MAX_SIZE + size + " MB");
 		}
 	}
@@ -84,7 +84,7 @@ public class Compress {
 			}
 		}
 		size = size / 1000000;
-		//System.out.println("Folder size: " + size + " MB");
+		// System.out.println("Folder size: " + size + " MB");
 		return size;
 	}
 

@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.ArchivoConst.FORWARD_SLASH;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -67,12 +68,13 @@ public class DocumentoServiceimpl implements DocumentoService {
 	public Documento update(Documento objActualizado, MultipartFile archivo)
 			throws ArchivoMuyGrandeExcepcion, IOException {
 		// TODO Auto-generated method stub
-
+		
 		if (!archivo.isEmpty()) {
+			//System.out.println("ruta: " +  Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()));
 			Path ruta = Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()).toAbsolutePath()
 					.normalize();
 			// ruta =Path.of( );
-
+			
 			if (Files.exists(ruta)) {
 				try {
 					Files.delete(ruta);
@@ -106,7 +108,8 @@ public class DocumentoServiceimpl implements DocumentoService {
 			// documentos.setRuta(ruta.getParent() + "\\" +
 			// multipartFile.getOriginalFilename());
 			// slista.add(documentos);
-			objActualizado.setRuta(ruta.getParent() + "\\" + multipartFile.getOriginalFilename());
+			String r = ruta.getParent() + "/" + multipartFile.getOriginalFilename();
+			objActualizado.setRuta(r);
 			objActualizado.setNombre(multipartFile.getOriginalFilename());
 		}
 

@@ -221,7 +221,8 @@ public class InscripcionForRepository{
 		postulante.setCodDatoPersonal(inscripcion.getCodDatoPersonal());
 		postulante.setEstado(inscripcion.getEstado());
 		postulante.setFechaPostulacion(fechaPostulacion);
-		postulante.setEdadPostulacion(Integer.parseInt(edad.toString()));
+		//postulante.setEdadPostulacion(Integer.parseInt(edad.toString()));
+		postulante.setEdadPostulacion((int) edad);
 		
 		entityManager.createNativeQuery(sqlPostulante)
 			.setParameter("cod_datos_personales", postulante.getCodDatoPersonal())

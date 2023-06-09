@@ -103,19 +103,28 @@ public class ResultadoPruebasHelper {
 					switch (cellIdx) {
 					case 0:
 
-						//dato.setCodModulo(Integer.parseInt(currentCell.getStringCellValue()));
+						// dato.setCodModulo(Integer.parseInt(currentCell.getStringCellValue()));
 						break;
 					case 1:
-
-						dato.setCodPostulante(Integer.parseInt(currentCell.getStringCellValue()));
+						String codPruebaDetalleStr = currentCell.getStringCellValue();
+						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+							// dato.setCodPostulante(Integer.parseInt(currentCell.getStringCellValue()));
+							dato.setCodPruebaDetalle((int) currentCell.getNumericCellValue());
+						}
 						break;
 					case 2:
-
-						dato.setCodPruebaDetalle(Integer.parseInt(currentCell.getStringCellValue()));
+						codPruebaDetalleStr = currentCell.getStringCellValue();
+						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+							// dato.setCodPruebaDetalle(Integer.parseInt(currentCell.getStringCellValue()));
+							dato.setCodPruebaDetalle((int) currentCell.getNumericCellValue());
+						}
 						break;
 					case 3:
-
-						dato.setNotaPromedioFinal(Double.parseDouble(currentCell.getStringCellValue()));
+						codPruebaDetalleStr = currentCell.getStringCellValue();
+						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+							// dato.setNotaPromedioFinal(Double.parseDouble(currentCell.getStringCellValue()));
+							dato.setNotaPromedioFinal((double) currentCell.getNumericCellValue());
+						}
 						break;
 					case 4:
 
@@ -168,25 +177,45 @@ public class ResultadoPruebasHelper {
 					Cell currentCell = cellsInRow.next();
 					switch (cellIdx) {
 					case 0:
-						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
-						dato.setCodPostulante(Integer.parseInt(currentCell.getStringCellValue()));
+						// System.out.println("currentCell.getStringCellValue(): " +
+						// currentCell.getStringCellValue());
+						String codPruebaDetalleStr = currentCell.getStringCellValue();
+						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+							// dato.setCodPostulante(Integer.parseInt(currentCell.getStringCellValue()));
+							dato.setCodPostulante((int) currentCell.getNumericCellValue());
+						}
 						break;
 					case 1:
-						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
-						dato.setCodPrueba(Integer.parseInt(currentCell.getStringCellValue()));
+						// System.out.println("currentCell.getStringCellValue(): " +
+						// currentCell.getStringCellValue());
+						codPruebaDetalleStr = currentCell.getStringCellValue();
+						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+							//dato.setCodPrueba(Integer.parseInt(currentCell.getStringCellValue()));
+							dato.setCodPrueba((int) currentCell.getNumericCellValue());
+						}
 						break;
 					case 2:
-						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
-						dato.setResultado(Integer.parseInt(currentCell.getStringCellValue()));
+						// System.out.println("currentCell.getStringCellValue(): " +
+						// currentCell.getStringCellValue());
+						codPruebaDetalleStr = currentCell.getStringCellValue();
+						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+							//dato.setResultado(Integer.parseInt(currentCell.getStringCellValue()));
+							dato.setResultado((int) currentCell.getNumericCellValue());
+						}
 						break;
 					case 3:
-						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
+						// System.out.println("currentCell.getStringCellValue(): " +
+						// currentCell.getStringCellValue());
 						dato.setResultadoTiempo(Time.valueOf(currentCell.getStringCellValue()));
 						break;
 					case 4:
-						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
-						dato.setNotaPromedioFinal(Double.parseDouble(currentCell.getStringCellValue()));
-						
+						// System.out.println("currentCell.getStringCellValue(): " +
+						// currentCell.getStringCellValue());
+						codPruebaDetalleStr = currentCell.getStringCellValue();
+						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+							//dato.setNotaPromedioFinal(Double.parseDouble(currentCell.getStringCellValue()));
+							dato.setNotaPromedioFinal((double) currentCell.getNumericCellValue());
+						}
 						break;
 					default:
 						break;
@@ -205,22 +234,22 @@ public class ResultadoPruebasHelper {
 			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
 		}
 	}
-	
-	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Datos");
 
-        // Header
+	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Datos");
+
+		// Header
 		Row headerRow = sheet.createRow(0);
 
 		for (int col = 0; col < HEADERs.length; col++) {
 			Cell cell = headerRow.createCell(col);
 			cell.setCellValue(HEADERs[col]);
 		}
-		
-        int rowIndex = 1;
-        
-        for (ResultadosPruebasDatos dato : datos) {
+
+		int rowIndex = 1;
+
+		for (ResultadosPruebasDatos dato : datos) {
 			Row row = sheet.createRow(rowIndex++);
 
 			row.createCell(0).setCellValue(dato.getCodPostulante());
@@ -228,44 +257,44 @@ public class ResultadoPruebasHelper {
 			row.createCell(2).setCellValue(dato.getCedula());
 			row.createCell(3).setCellValue(dato.getNombre());
 			row.createCell(4).setCellValue(dato.getApellido());
-			
-		}    
 
-        File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        FileOutputStream outputStream = new FileOutputStream(file);
-        workbook.write(outputStream);
-        workbook.close();
-    }
-	
-	public static void generarExcel( ArrayList<ArrayList<String>> lista, String filePath) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Datos");
+		}
 
-        // Header
+		File file = new File(filePath);
+		file.getParentFile().mkdirs();
+		FileOutputStream outputStream = new FileOutputStream(file);
+		workbook.write(outputStream);
+		workbook.close();
+	}
+
+	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath) throws IOException {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Datos");
+
+		// Header
 		Row headerRow = sheet.createRow(0);
 
 		for (int col = 0; col < HEADERs.length; col++) {
 			Cell cell = headerRow.createCell(col);
 			cell.setCellValue(HEADERs[col]);
 		}
-		
-        int rowIndex = 1;        
-        for (int i = 0; i < lista.size(); i++) {
-			//System.out.println("valor " + lista.get(i).get(i));
+
+		int rowIndex = 1;
+		for (int i = 0; i < lista.size(); i++) {
+			// System.out.println("valor " + lista.get(i).get(i));
 			Row row = sheet.createRow(rowIndex++);
 
 			for (int j = 0; j < lista.get(i).size(); j++) {
 				row.createCell(j).setCellValue(String.valueOf(lista.get(i).get(j)));
-				//System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
+				// System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
 			}
 
 		}
 
-        File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        FileOutputStream outputStream = new FileOutputStream(file);
-        workbook.write(outputStream);
-        workbook.close();
-    }
+		File file = new File(filePath);
+		file.getParentFile().mkdirs();
+		FileOutputStream outputStream = new FileOutputStream(file);
+		workbook.write(outputStream);
+		workbook.close();
+	}
 }

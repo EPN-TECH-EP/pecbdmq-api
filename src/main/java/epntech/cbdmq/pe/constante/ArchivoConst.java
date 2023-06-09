@@ -26,6 +26,7 @@ public class ArchivoConst {
 	public static final String NO_ADJUNTO = "No existe un documento adjunto";
 	public static final String PATH_SANCIONES = "Sanciones/";
 	public static final String PATH_BAJAS = "Bajas/";
+	public static final String PATH_PROCESO_ESPECIALIZACION = "Especializacion/";
 
 
 	public static final String FALLA_PROCESAR_EXCEL = "Falla al procesar el archivo excel";
