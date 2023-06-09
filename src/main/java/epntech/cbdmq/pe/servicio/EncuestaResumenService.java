@@ -19,4 +19,6 @@ public interface EncuestaResumenService {
 	
 	void delete(int id);
 	
+	Boolean existeEncuesta();
+	
 }

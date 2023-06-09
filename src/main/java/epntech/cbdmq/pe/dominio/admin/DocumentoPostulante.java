@@ -43,10 +43,7 @@ public class DocumentoPostulante {
 	private String descripcion;
 	
 	@Column(name = "estado_validacion")
-	private String estadoValidacion;
-	
-	@Column(name = "codigo_unico_documento")
-	private String codigoUnico;
+	private String estadoValidacion;	
 	
 	@Column(name = "nombre_documento")
 	private String nombre;

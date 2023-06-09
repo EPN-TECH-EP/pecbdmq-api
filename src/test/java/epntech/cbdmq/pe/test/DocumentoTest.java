@@ -39,7 +39,7 @@ public class DocumentoTest {
         
         Documento obj = new Documento();
 		obj.setNombre("Test");
-		obj.setAutorizacion("Autorizacion");
+		//obj.setAutorizacion("Autorizacion");
 		obj.setDescripcion("test-abc");
 		obj.setNombre("Test");
 		obj.setRuta("c:\\documentos");

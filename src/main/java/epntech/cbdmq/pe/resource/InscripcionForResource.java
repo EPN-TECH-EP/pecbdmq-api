@@ -33,7 +33,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
@@ -51,6 +50,7 @@ import epntech.cbdmq.pe.servicio.impl.PostulanteServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.UsuarioDatoPersonalServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.ValidacionRequisitosForServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.ValidacionRequisitosServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
 
 @RestController
@@ -128,7 +128,7 @@ public class InscripcionForResource {
 			return objService.getInscripcionById(codigo).map(ResponseEntity::ok)
 					.orElseGet(() -> ResponseEntity.notFound().build());
 		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
+			return response(HttpStatus.NOT_FOUND, "Error: No existen datos de inscripción.");
 		}
 	}
 	
@@ -233,12 +233,13 @@ public class InscripcionForResource {
 		return postulanteService.getPostulantesAsignadosPaginado(usuario, pageable);
 	}
 	
+	@Operation(summary = "Lista de las inscripciones asignadas. FE: ReasignaciónInscripcion")
 	@GetMapping("/postulantesAllPaginado")
 	public List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable) {
 		return postulanteService.getPostulantesAllPaginadoTodo(pageable);
 	}
 	
-	@PutMapping("/postulante")
+	@PutMapping("/postulanteAsignar")
 	public Postulante asignarPostulante(@RequestBody Postulante postulante) throws DataException {
 		return postulanteService.update(postulante);
 	}
@@ -279,4 +280,9 @@ public class InscripcionForResource {
 	public Boolean getFecha() throws DataException, ParseException {
 		return objService.validaFechas();
 	}
+	
+	@GetMapping("/inscripcionPorCedula/{cedula}")
+	public Boolean findByCedula(@PathVariable("cedula") String cedula) throws DataException, ParseException {
+		return objService.findByCedula(cedula);
+	} 
 }

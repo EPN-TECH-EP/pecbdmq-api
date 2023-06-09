@@ -258,7 +258,7 @@ public class InscripcionForRepository{
 					.setParameter("tipo", documento.getTipo())
 					.setParameter("descripcion", documento.getDescripcion())
 					.setParameter("estadoValidacion", documento.getEstadoValidacion())
-					.setParameter("codigoUnico", documento.getCodigoUnico())
+					//.setParameter("codigoUnico", documento.getCodigoUnico())
 					.setParameter("nombre", documento.getNombre())
 					.setParameter("observaciones", documento.getObservaciones())
 					.setParameter("ruta", documento.getRuta())

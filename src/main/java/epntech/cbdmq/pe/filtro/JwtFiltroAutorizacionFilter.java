@@ -2,6 +2,8 @@ package epntech.cbdmq.pe.filtro;
 
 import static epntech.cbdmq.pe.constante.SeguridadConst.METOD_HTTP_OPTIONS;
 import static epntech.cbdmq.pe.constante.SeguridadConst.PREFIJO_TOKEN;
+import static epntech.cbdmq.pe.constante.SeguridadConst.HEADER_APP;
+import static epntech.cbdmq.pe.constante.SeguridadConst.APP_KEY;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -9,9 +11,12 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -25,6 +30,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtFiltroAutorizacionFilter extends OncePerRequestFilter {
 	private JWTTokenProvider jwtTokenProvider;
+	
+	/*@Value("${pecb.app-key}")
+	private String APP_KEY;*/
 
 	public JwtFiltroAutorizacionFilter(JWTTokenProvider jwtTokenProvider) {
 		this.jwtTokenProvider = jwtTokenProvider;
@@ -39,6 +47,13 @@ public class JwtFiltroAutorizacionFilter extends OncePerRequestFilter {
 			} else {
 				String authorizationHeader = request.getHeader(AUTHORIZATION);
 				if (authorizationHeader == null || !authorizationHeader.startsWith(PREFIJO_TOKEN)) {
+					
+					//request.getRequestURI()
+					RequestMatcher matcher = new RequestHeaderRequestMatcher(HEADER_APP,
+			                APP_KEY);
+					
+					matcher.matches(request);
+					
 					filterChain.doFilter(request, response);
 					return;
 				}

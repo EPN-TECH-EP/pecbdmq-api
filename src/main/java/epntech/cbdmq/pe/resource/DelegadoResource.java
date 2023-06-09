@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.resource;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.Baja;
 import epntech.cbdmq.pe.dominio.admin.Delegado;
+import epntech.cbdmq.pe.dominio.util.DelegadoPK;
+import epntech.cbdmq.pe.dominio.util.DelegadoUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DelegadoServiceImpl;
 
@@ -35,8 +39,8 @@ public class DelegadoResource {
 
 	
 	@DeleteMapping()
-	public ResponseEntity<HttpResponse> eliminarDatos(@RequestBody Delegado obj) throws DataException {
-			objService.delete(obj.getCodUsuario(), obj.getCodPeriodoAcademico());
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("codDelegado") Integer codDelegado) throws DataException {
+			objService.delete(codDelegado);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
@@ -44,5 +48,19 @@ public class DelegadoResource {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
+	
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Delegado> obtenerUsuarioPorId(@PathVariable("id") Integer codUsuario) throws DataException {
+        return objService.getByIdUsuario(codUsuario).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+	
+	@GetMapping("/obtenerdelegado")
+	public List<DelegadoUtil>ObtenerTodo(){
+		return objService.delegado();
+	}
+	
+	
+	
 
 }

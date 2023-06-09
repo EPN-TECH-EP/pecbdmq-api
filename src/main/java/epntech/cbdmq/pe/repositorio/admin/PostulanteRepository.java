@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.repositorio.admin;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -78,4 +79,6 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Long> {
 			+ "AND UPPER(gdp.estado) = 'ACTIVO' \r\n"
 			+ "order by cod_usuario ", nativeQuery=true)
 	List<Postulante> getPostulantesAllPaginadoTodo(Pageable pageable);
+
+	Optional<Postulante> findByCodDatoPersonal(Integer codDatoPersonal);
 }
