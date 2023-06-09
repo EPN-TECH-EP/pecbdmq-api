@@ -49,12 +49,12 @@ public class ParametrizacionResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Parametrizacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Parametrizacion obj) throws DataException{
 		return (ResponseEntity<Parametrizacion>) objService.getbyId(codigo).map(datosGuardados -> {
-			datosGuardados.setCodparametriza(obj.getCodparametriza());
-			datosGuardados.setFechainicioparam(obj.getFechainicioparam());
-			datosGuardados.setFechafinparam(obj.getFechafinparam());
-			datosGuardados.setHorainicioparam(obj.getHorainicioparam());
-			datosGuardados.setHorafinparam(obj.getHorafinparam());
-			datosGuardados.setObservacionparametriza(obj.getObservacionparametriza());
+			datosGuardados.setCodParametriza(obj.getCodParametriza());
+			datosGuardados.setFechaInicioParam(obj.getFechaInicioParam());
+			datosGuardados.setFechaFinParam(obj.getFechaFinParam());
+			datosGuardados.setHoraInicioParam(obj.getHoraInicioParam());
+			datosGuardados.setHoraFinParam(obj.getHoraFinParam());
+			datosGuardados.setObservacionParametriza(obj.getObservacionParametriza());
 			datosGuardados.setEstado(obj.getEstado());
 			
 			Parametrizacion datosActualizados = null;

@@ -5,7 +5,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import epntech.cbdmq.pe.constante.Tablas;
-import epntech.cbdmq.pe.dominio.admin.TipoBaja;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,11 +19,11 @@ import lombok.Data;
 @Table(name = Tablas.TAB_NOMBRE_TIPO_BAJA, schema =Tablas.SEC_NOMBRE_DBO)
 @SQLDelete(sql = "UPDATE {h-schema}gen_tipo_baja SET estado = 'ELIMINADO' WHERE cod_tipo_baja = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-public class Tipo_baja {
+public class TipoBaja {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_tipo_baja")
-    private Integer cod_tipo_baja;
+    private Integer codTipoBaja;
     @Column(name = "tipo_baja")
     private String baja;
     @Column(name = "estado")

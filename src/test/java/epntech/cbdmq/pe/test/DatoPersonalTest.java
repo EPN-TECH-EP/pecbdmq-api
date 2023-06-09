@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -21,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.Rollback;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
@@ -44,17 +41,17 @@ public class DatoPersonalTest {
         
         DatoPersonal obj = new DatoPersonal();
 		obj.setNombre("Test");
-		obj.setFecha_nacimiento(date);
+		obj.setFechaNacimiento(date);
 		obj.setCedula("123");
 		obj.setApellido("Abc");
-		obj.setCorreo_personal("test@correo.com");
+		obj.setCorreoPersonal("test@correo.com");
 		obj.setEstado("activo");
 
 		DatoPersonal datos = repo.save(obj);
 		assertNotNull(datos);
 		assertEquals("Test", datos.getNombre());
-		assertEquals(date, datos.getFecha_nacimiento());
-		assertEquals("test@correo.com", datos.getCorreo_personal());
+		assertEquals(date, datos.getFechaNacimiento());
+		assertEquals("test@correo.com", datos.getCorreoPersonal());
 		assertEquals("activo", datos.getEstado());
 	}
 
@@ -68,7 +65,7 @@ public class DatoPersonalTest {
         DatoPersonal obj = new DatoPersonal();
 		obj.setNombre(nombre);
 		obj.setCedula("123");
-		obj.setFecha_nacimiento(date);
+		obj.setFechaNacimiento(date);
 		obj.setEstado("activo");
 
 		repo.save(obj);

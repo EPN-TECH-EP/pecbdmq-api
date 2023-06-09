@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.ParametrizaPruebaDetalle;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ParametrizaPruebaDetalleServiceImpl;
@@ -48,13 +47,13 @@ public class ParametrizaPruebaDetalleServiceResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<ParametrizaPruebaDetalle> actualizarDatos(@PathVariable("id") int codigo, @RequestBody ParametrizaPruebaDetalle obj) throws DataException{
 		return (ResponseEntity<ParametrizaPruebaDetalle>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setEdad_inicio_meses(obj.getEdad_inicio_meses());
-			datosGuardados.setEdad_fin_meses(obj.getEdad_fin_meses());
+			datosGuardados.setEdadInicioMeses(obj.getEdadInicioMeses());
+			datosGuardados.setEdadFinMeses(obj.getEdadFinMeses());
 			datosGuardados.setSexo(obj.getSexo());
 			datosGuardados.setCalificacion(obj.getCalificacion());
-			datosGuardados.setCod_parametriza_prueba_resumen(obj.getCod_parametriza_prueba_resumen());
-			datosGuardados.setMinutos_segundos(obj.getMinutos_segundos());
-			datosGuardados.setCod_subtipo_prueba(obj.getCod_subtipo_prueba());
+			datosGuardados.setCodParametrizaPruebaResumen(obj.getCodParametrizaPruebaResumen());
+			datosGuardados.setMinutosSegundos(obj.getMinutosSegundos());
+			datosGuardados.setCodSubtipoPrueba(obj.getCodSubtipoPrueba());
 			datosGuardados.setEstado(obj.getEstado());
 			//datosGuardados.setCod_prueba_detalle(obj.getCod_prueba_detalle());
 			//datosGuardados.setCodparametrizapruebaresumen(obj.getCodparametrizapruebaresumen());

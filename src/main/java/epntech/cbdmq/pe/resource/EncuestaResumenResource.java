@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.EncuestaResumen;
-import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.EncuestaResumenServiceImpl;
 
@@ -54,8 +53,8 @@ public class EncuestaResumenResource {
 	        return (ResponseEntity<EncuestaResumen>) objServices.getById(codigo).map(datosGuardados -> {
 	        	//datosGuardados.setCod_modulo(obj.getCod_modulo());
 	            datosGuardados.setDescripcion(obj.getDescripcion().toUpperCase());
-	            datosGuardados.setFecha_inicio(obj.getFecha_inicio());
-	            datosGuardados.setFecha_fin(obj.getFecha_fin());
+	            datosGuardados.setFechaInicio(obj.getFechaInicio());
+	            datosGuardados.setFechaFin(obj.getFechaFin());
 	            datosGuardados.setEstado(obj.getEstado());
 	            
 	            EncuestaResumen datosActualizados = null;

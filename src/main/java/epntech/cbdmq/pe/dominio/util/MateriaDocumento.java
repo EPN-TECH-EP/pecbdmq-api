@@ -1,11 +1,6 @@
 package epntech.cbdmq.pe.dominio.util;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -16,9 +11,11 @@ public class MateriaDocumento {
 
 	
 	@Id
-	private Integer cod_materia;
+	@Column(name = "cod_materia")
+	private Integer codMateria;
 	@Id
-	private Integer cod_documento;
+	@Column(name = "cod_documento")
+	private Integer codDocumento;
 	
 	
 }

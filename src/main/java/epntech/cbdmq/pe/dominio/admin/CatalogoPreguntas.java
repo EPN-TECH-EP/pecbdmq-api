@@ -26,7 +26,7 @@ public class CatalogoPreguntas {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include()
 	@Column(name = "cod_catalogo_pregunta")
-	private Integer cod_catalogo_pregunta;
+	private Integer codCatalogoPregunta;
 	
 	@Column(name = "pregunta")
 	private String pregunta;

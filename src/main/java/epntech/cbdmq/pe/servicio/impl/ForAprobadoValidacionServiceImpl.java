@@ -98,7 +98,7 @@ public class ForAprobadoValidacionServiceImpl implements forAprobadosValidacionS
 
 	public static String[] datoToStringArray(InscripcionesValidasUtil dato) {
 		
-		return new String[] { dato.getId_postulante().toString() };
+		return new String[] { dato.getIdPostulante().toString() };
 	}
 
 	public static ArrayList<ArrayList<String>> datosToArrayList(List<InscripcionesValidasUtil> datos) {
@@ -130,8 +130,8 @@ private void generaDocumento(String ruta, String nombre, Integer periodo) {
 	documento = documentoRepository.save(documento);
 	
 	forAprobadosValidacion doc = new forAprobadosValidacion(); 
-	doc.setCod_periodo_academico(periodo);
-	doc.setCod_documento(documento.getCodigo());
+	doc.setCodPeriodoAcademico(periodo);
+	doc.setCodDocumento(documento.getCodigo());
 	//System.out.println("documento.getCodigo(): " + documento.getCodigo());
 	
 	AprobadosRepository.save(doc);

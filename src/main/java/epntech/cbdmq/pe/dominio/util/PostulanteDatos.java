@@ -38,9 +38,9 @@ public class PostulanteDatos {
 	private String colegio;
 	private String tipoNacionalidad;
 	private String numTelefCelular;
-	private String nombreTituloSegundonivel;
-	private String paisTituloSegundonivel;
-	private String ciudadTituloSegundonivel;
+	private String nombreTituloSegundoNivel;
+	private String paisTituloSegundoNivel;
+	private String ciudadTituloSegundoNivel;
 	private String meritoAcademicoDescripcion;
 	private String meritoDeportivoDescripcion;
 	private String provinciaNacimiento;

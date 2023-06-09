@@ -10,10 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.TipoInstructor;
-import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.TipoInstructorRepository;
-import epntech.cbdmq.pe.repositorio.admin.TipoNotaRepository;
 import epntech.cbdmq.pe.servicio.TipoInstructorService;
 
 @Service
@@ -48,7 +46,7 @@ public class TipoInstructorServiceImpl implements TipoInstructorService{
 	@Override
 	public TipoInstructor update(TipoInstructor objActualizado) throws DataException  {
 		Optional<TipoInstructor> objGuardado = repo.findBynombretipoinstructorIgnoreCase(objActualizado.getNombretipoinstructor());
-		if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_instructor().equals(objActualizado.getCod_tipo_instructor())) {
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoInstructor().equals(objActualizado.getCodTipoInstructor())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return repo.save(objActualizado);

@@ -8,8 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,8 +77,8 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 		}
 
 		code = getRandomCode();
-		obj.setValidacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
-		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreo_personal());
+		obj.setValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
+		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
 		return repo.save(obj);
 	}
 
@@ -222,10 +220,10 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 			
 			Optional<Usuario> usuario = usuarioRepository.findById(Long.valueOf(codigo));
 			
-			Optional<DatoPersonal> datopersonal =repo.findById(usuario.get().getCodDatosPersonales().getCod_datos_personales()); 
+			Optional<DatoPersonal> datopersonal =repo.findById(usuario.get().getCodDatosPersonales().getCodDatosPersonales());
 			DatoPersonal dato=new DatoPersonal();
 			dato =datopersonal.get();
-			dato.setCod_documento_imagen(documento.getCodigo());
+			dato.setCodDocumentoImagen(documento.getCodigo());
 			repo.save(dato);
 			
 		return documento;

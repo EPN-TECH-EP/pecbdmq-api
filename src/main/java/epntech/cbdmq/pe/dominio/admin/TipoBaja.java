@@ -29,7 +29,7 @@ public class TipoBaja {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_tipo_baja")
-    private Integer cod_tipo_baja;
+    private Integer codTipoBaja;
     @Column(name = "tipo_baja")
     private String baja;
     @Column(name = "estado")

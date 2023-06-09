@@ -12,10 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Apelacion;
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
-import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.dominio.util.ComponenteTipo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.ComponenteTipoRepository;
@@ -76,7 +73,7 @@ public class ComponenteNotaServiceImpl implements ComponenteNotaService {
     public ComponenteNota update(ComponenteNota objActualizado) throws DataException {
     	if(objActualizado.getNombre() !=null) {
     		Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-    		if (objGuardado.isPresent()&& !objGuardado.get().getCod_componente_nota().equals(objActualizado.getCod_componente_nota())) {
+    		if (objGuardado.isPresent()&& !objGuardado.get().getCodComponenteNota().equals(objActualizado.getCodComponenteNota())) {
     			throw new DataException(REGISTRO_YA_EXISTE);
     		}
     	}

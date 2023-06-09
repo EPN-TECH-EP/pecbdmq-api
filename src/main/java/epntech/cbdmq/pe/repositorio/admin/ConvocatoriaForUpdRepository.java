@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisito;
-import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.dominio.util.DatosFile;
 import epntech.cbdmq.pe.dominio.util.PeriodoAcademicoFor;
@@ -43,11 +37,8 @@ import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.impl.DocumentoServiceimpl;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.persistence.StoredProcedureQuery;
-import jakarta.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -121,7 +112,7 @@ public class ConvocatoriaForUpdRepository {
 				+ "VALUES (:cod_convocatoria, :cod_requisito)";
 
 		//en este sentencia utiliza el nombre de la clase, entidad ConvocatoriaRequisito
-		String sqlConvocatoriaRequisitoDel = "delete from ConvocatoriaRequisito e where e.cod_convocatoria = :cod_convocatoria ";
+		String sqlConvocatoriaRequisitoDel = "delete from ConvocatoriaRequisito e where e.codConvocatoria = :cod_convocatoria ";
 
 
 		// CONVOCATORIA
@@ -202,7 +193,7 @@ public class ConvocatoriaForUpdRepository {
 
 			for (RequisitoFor elemento : requisitos) {
 				ConvocatoriaRequisito cr = new ConvocatoriaRequisito();
-				cr.setCod_convocatoria(convocatoria.getCodConvocatoria());
+				cr.setCodConvocatoria(convocatoria.getCodConvocatoria());
 				cr.setCod_requisito(elemento.getCodigoRequisito());
 				
 				entityManager.createNativeQuery(sqlConvocatoriaRequisito)

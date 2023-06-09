@@ -38,8 +38,8 @@ public class MateriaServiceImpl implements MateriaService {
 		PeriodoAcademico peracademico = new PeriodoAcademico();//Traemos la clase PerAcademico
 		peracademico =repo3.getPeriodoAcademicoActivo();//Obtenermos el periodoAcademico Activo
 		MateriaPeriodo matperiodo= new MateriaPeriodo();//Traemos la clase Materia Periodo
-		matperiodo.setCod_periodo_academico(peracademico.getCodigo());//Obtenemos los valores y returnamos valores en la tabla
-		matperiodo.setCod_materia(materia.getCodMateria());		
+		matperiodo.setCodPeriodoAcademico(peracademico.getCodigo());//Obtenemos los valores y returnamos valores en la tabla
+		matperiodo.setCodMateria(materia.getCodMateria());
 		repo2.save(matperiodo);
 		
 		if(obj.getNombre().trim().isEmpty())

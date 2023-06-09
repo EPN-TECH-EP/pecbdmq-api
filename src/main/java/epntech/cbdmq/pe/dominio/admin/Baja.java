@@ -27,29 +27,29 @@ public class Baja {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_baja")
-	private Integer cod_baja;
+	private Integer codBaja;
 	@Column(name = "cod_modulo")
-	private Integer cod_modulo;
+	private Integer codModulo;
 	@Column(name = "cod_tipo_baja")
-	private Integer cod_tipo_baja;
+	private Integer codTipoBaja;
 	@Column(name = "fecha_baja")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime fechabaja;
+	private LocalDateTime fechaBaja;
 	@Column(name = "descripcion_baja")
-	private String descripcionbaja;
+	private String descripcionBaja;
 	@Column(name = "usuario_crea_baja")
 	private String nombre;
 	@Column(name = "fecha_crea_baja")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime fechacreabaja;
+	private LocalDateTime fechaCreaBaja;
 	@Column(name = "hora_crea_baja")
-	private LocalTime horacreabaja;
+	private LocalTime horaCreaBaja;
 	@Column(name = "usuario_mod_baja")
-	private String usuariomodbaja;
+	private String usuarioModBaja;
 	@Column(name = "fecha_mod_baja")
-	private LocalDateTime fechamodbaja;
+	private LocalDateTime fechaModBaja;
 	@Column(name = "hora_mod_baja")
-	private LocalTime horamodbaja;
+	private LocalTime horaModBaja;
 	
 	@Column(name = "estado")
 	private String estado;

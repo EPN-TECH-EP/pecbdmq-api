@@ -34,46 +34,53 @@ public class EspCurso {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_curso_especializacion")
-	private Integer cod_curso_especializacion;
+	private Integer codCursoEspecializacion;
 	
-
+	@Column(name = "cod_instructor")
+	private Integer codInstructor;
 	
-
+	@Column(name = "cod_unidad_gestion")
+	private Integer codUnidadGestion;
 	
 	/*@Column(name = "cod_estudiante")
 	private Integer cod_estudiante;*/
 	
 	@Column(name = "cod_aula")
-	private Integer cod_aula;
+	private Integer codAula;
 	
 	@Column(name = "numero_cupo")
-	private Integer numero_cupo;
-
+	private Integer numeroCupo;
+	
+	@Column(name = "adjunto_planificacion")
+	private String adjuntoPlanificacion;
 	
 	@Column(name = "fecha_inicio_curso")
-	private LocalDateTime fechainiciocurso;
+	private LocalDateTime fechaInicioCurso;
 	@Column(name = "fecha_fin_curso")
-	private LocalDateTime fechafincurso;
+	private LocalDateTime fechaFinCurso;
 	@Column(name = "fecha_inicio_carga_nota")
-	private LocalDateTime fechainiciocarganota;
+	private LocalDateTime fechaInicioCargaNota;
 	@Column(name = "fecha_fin_carga_nota")
-	private LocalDateTime fechafincarganota;
+	private LocalDateTime fechaFinCargaNota;
 	@Column(name = "nota_minima")
-	private BigDecimal nota_minima;
+	private BigDecimal notaMinima;
 	
 	@Column(name = "aprueba_creacion_curso")
 	private Boolean aprueba;
 
 	
+	@Column(name = "estado_proceso")
+	private String estadoProceso;
+	
 	@Column(name = "cod_catalogo_cursos")
-	private Integer cod_catalogo_curso;
+	private Integer codCatalogoCurso;
 	
 	@Column(name = "estado")
 	private String estado;
 
 	
 	@Column(name = "cod_tipo_curso")
-	private Integer cod_tipo_curso;
+	private Integer codTipoCurso;
 
 
 
@@ -83,6 +90,6 @@ public class EspCurso {
 	inverseJoinColumns = @JoinColumn(name = "cod_paralelo"))
 	private List<Paralelo> paralelos = new ArrayList<>();
 	
-	@OneToMany(mappedBy="cod_catalogo_cursos")
-    private List<CatalogoCurso> NombreCurso;
+	@OneToMany(mappedBy="codCatalogoCursos")
+    private List<CatalogoCurso> nombreCurso;
 }

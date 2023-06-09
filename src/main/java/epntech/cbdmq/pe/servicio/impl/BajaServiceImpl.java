@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Baja;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.BajaRepository;
@@ -51,7 +50,7 @@ public class BajaServiceImpl implements BajaService{
 	public Baja update(Baja objActualizado) throws DataException {
 		if(objActualizado.getNombre() !=null) {
 			Optional<Baja> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-			if (objGuardado.isPresent()&& !objGuardado.get().getCod_baja().equals(objActualizado.getClass())) {
+			if (objGuardado.isPresent()&& !objGuardado.get().getCodBaja().equals(objActualizado.getClass())) {
 				throw new DataException(REGISTRO_YA_EXISTE);
 			}
 		}

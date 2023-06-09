@@ -53,8 +53,8 @@ public class CatalogoCursoResource {
 		return (ResponseEntity<CatalogoCurso>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setDescripcion(obj.getDescripcion());
-			datosGuardados.setNumero_horas(obj.getNumero_horas());	
-			datosGuardados.setNota_minima(obj.getNota_minima());
+			datosGuardados.setNumeroHoras(obj.getNumeroHoras());
+			datosGuardados.setNotaMinima(obj.getNotaMinima());
 			datosGuardados.setEstado(obj.getEstado());
 			
 			

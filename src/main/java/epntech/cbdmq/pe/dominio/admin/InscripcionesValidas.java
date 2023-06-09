@@ -14,11 +14,11 @@ public class InscripcionesValidas {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_aprobados_validacion")
-	private Integer cod_aprobados_validacion;
+	private Integer codAprobadosValidacion;
 	@Column(name = "cod_periodo_academico")
-	private Long cod_periodo_academico;
+	private Long codPeriodoAcademico;
 	@Column(name = "cod_documento")
-	private Long cod_documento;
+	private Long codDocumento;
 	
 	
 	

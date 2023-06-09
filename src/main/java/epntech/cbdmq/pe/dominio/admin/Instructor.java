@@ -126,11 +126,11 @@ public class Instructor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_instructor")
-	private Integer cod_instructor;
+	private Integer codInstructor;
 	@Column(name = "cod_datos_personales")
-	private Integer cod_datos_personales;
+	private Integer codDatosPersonales;
 	@Column(name = "cod_tipo_procedencia")
-	private Integer cod_tipo_procedencia;
+	private Integer codTipoProcedencia;
 	/*@Column(name = "cod_tipo_instructor")
 	private Integer cod_tipo_instructor;
 	@Column(name = "cod_periodo_academico")

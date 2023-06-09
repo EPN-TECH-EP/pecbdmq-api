@@ -53,7 +53,7 @@ public class EncuestaResultadoResource {
 		
 	
 		return (ResponseEntity<EncuestaResultado>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCod_encuesta_pregunta_respuesta(obj.getCod_encuesta_pregunta_respuesta());
+			datosGuardados.setCodEncuestaPreguntaRespuesta(obj.getCodEncuestaPreguntaRespuesta());
 			datosGuardados.setResultado(obj.getResultado());
 			datosGuardados.setEstado(obj.getEstado());
 

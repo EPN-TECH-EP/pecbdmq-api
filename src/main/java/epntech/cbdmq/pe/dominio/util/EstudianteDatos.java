@@ -14,13 +14,13 @@ public class EstudianteDatos extends Estudiante {
 	private String apellido;
 	private String cedula; 
 	private String ciudad;
-	private String correo_personal;
-	private Date fecha_nacimiento;
-	private String num_telef;
-	private String tipo_sangre;
+	private String correoPersonal;
+	private Date fechaNacimiento;
+	private String numTelef;
+	private String tipoSangre;
 	private String estacion;
 	private String provincia;
-	private String unidad_gestion;
+	private String unidadGestion;
 	
 	/*public EstudianteDatos(Integer codEstudiante, String grado, String resultadoEstudiante, String idEstudiante, 
 			String nombre, String apellido, String cedula, String ciudad, String correo_personal, Date fecha_nacimiento,

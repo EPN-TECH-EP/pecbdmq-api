@@ -35,7 +35,7 @@ public class InstructorTest {
 	void testGuardar() {
 	 
 		Instructor obj = new Instructor();
-		obj.setCod_instructor(5);		
+		obj.setCodInstructor(5);
 		
 
 		Instructor datos = repo.save(obj);

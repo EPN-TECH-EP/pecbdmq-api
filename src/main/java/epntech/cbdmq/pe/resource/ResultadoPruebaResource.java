@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ResultadoPruebaServiceImpl;
@@ -50,18 +49,18 @@ public class ResultadoPruebaResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<ResultadoPrueba> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody ResultadoPrueba obj) throws DataException{
 		return (ResponseEntity<ResultadoPrueba>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCod_resul_prueba(obj.getCod_resul_prueba());
-			datosGuardados.setCod_funcionario(obj.getCod_funcionario());
-			datosGuardados.setCod_estudiante(obj.getCod_estudiante());
-			datosGuardados.setCod_modulo(obj.getCod_modulo());
-			datosGuardados.setCod_postulante(obj.getCod_postulante());
-			datosGuardados.setCod_periodo_evaluacion(obj.getCod_periodo_evaluacion());
-			datosGuardados.setCod_personal_ope(obj.getCod_personal_ope());
-			datosGuardados.setCod_prueba(obj.getCod_prueba());
-			datosGuardados.setCod_parametriza_fisica(obj.getCod_parametriza_fisica());
-			datosGuardados.setCod_tipo_prueba(obj.getCod_tipo_prueba());
+			datosGuardados.setCodResulPrueba(obj.getCodResulPrueba());
+			datosGuardados.setCodFuncionario(obj.getCodFuncionario());
+			datosGuardados.setCodEstudiante(obj.getCodEstudiante());
+			datosGuardados.setCodModulo(obj.getCodModulo());
+			datosGuardados.setCodPostulante(obj.getCodPostulante());
+			datosGuardados.setCodPeriodoEvaluacion(obj.getCodPeriodoEvaluacion());
+			datosGuardados.setCodPersonalOpe(obj.getCodPersonalOpe());
+			datosGuardados.setCodPrueba(obj.getCodPrueba());
+			datosGuardados.setCodParametrizaFisica(obj.getCodParametrizaFisica());
+			datosGuardados.setCodTipoPrueba(obj.getCodTipoPrueba());
 			datosGuardados.setResultado(obj.getResultado());
-			datosGuardados.setCumpleprueba(obj.getCumpleprueba());
+			datosGuardados.setCumplePrueba(obj.getCumplePrueba());
 			
 			datosGuardados.setEstado(obj.getEstado());
 			ResultadoPrueba datosActualizados = null;

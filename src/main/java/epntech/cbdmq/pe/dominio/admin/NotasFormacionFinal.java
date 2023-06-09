@@ -49,5 +49,5 @@ public class NotasFormacionFinal {
 	private Double ponderacionDisciplina;
 	
 	@Column(name = "puntaje_sancion")
-	private Double puntaje_sancion;
+	private Double puntajeSancion;
 }
