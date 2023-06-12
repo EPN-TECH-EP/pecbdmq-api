@@ -5,11 +5,9 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import epntech.cbdmq.pe.dominio.admin.Convocatoria;
 import epntech.cbdmq.pe.dominio.admin.Documento;
-import jakarta.transaction.Transactional;
 
 public interface PeriodoAcademicoDocRepository extends JpaRepository<Documento, Integer> {
 	

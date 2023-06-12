@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -27,31 +28,31 @@ public class InstructorMateria {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
 	@Column(name = "cod_instructor")
-	private Integer cod_instructor;
+	private Integer codInstructor;
 	
 	@Column(name = "cod_materia")
-	private Integer cod_materia;
+	private Integer codMateria;
 	
 	@Column(name = "cod_instructor_materia")
-	private Integer cod_instructor_materia;
+	private Integer codInstructorMateria;
 	
 	@Column(name = "es_coordinador")
-	private Boolean es_coordinador;
+	private Boolean esCoordinador;
 	
 	@Column(name = "es_asistente")
-	private Boolean es_asistente;
+	private Boolean esAsistente;
 	
 	@Column(name = "cod_periodo_academico")
-	private Integer cod_periodo_academico;
+	private Integer codPeriodoAcademico;
 	
 	@Column(name = "cod_semestre")
-	private Integer cod_semestre;
+	private Integer codSemestre;
 	
 	@Column(name = "cod_paralelo")
-	private Integer cod_paralelo;
+	private Integer codParalelo;
 	
 	@Column(name = "cod_aula")
-	private Integer cod_aula;
+	private Integer codAula;
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 

@@ -26,6 +26,6 @@ public interface ConvocatoriaService {
 
 	List<Convocatorialistar> getConvocatorialistar();
 	
-	Set<Convocatoria> getConvocatoriaActiva() throws DataException ;
+	Set<Convocatoria> getConvocatoriaActiva() throws DataException;
 
 }

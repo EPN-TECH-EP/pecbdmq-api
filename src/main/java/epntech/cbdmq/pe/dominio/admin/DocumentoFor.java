@@ -33,7 +33,7 @@ public class DocumentoFor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_documento")
-	private Integer codigoDocumento;
+	private Integer codDocumento;
 	
 	@Column(name = "autorizacion")
 	private String autorizacion;

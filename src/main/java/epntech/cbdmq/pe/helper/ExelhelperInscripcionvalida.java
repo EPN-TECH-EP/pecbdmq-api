@@ -15,7 +15,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.util.Excel;
 import epntech.cbdmq.pe.dominio.util.InscripcionesValidasUtil;
 
 public class ExelhelperInscripcionvalida {
@@ -49,7 +48,7 @@ public class ExelhelperInscripcionvalida {
 		      for (InscripcionesValidasUtil dato : datos) {
 		        Row row = sheet.createRow(rowIdx++);
 
-		        row.createCell(0).setCellValue(dato.getId_postulante());
+		        row.createCell(0).setCellValue(dato.getIdPostulante());
 		        
 		      }
 
@@ -93,7 +92,7 @@ public class ExelhelperInscripcionvalida {
 		            break;
 
 		          case 1:
-		            dato.setId_postulante(currentCell.getStringCellValue());
+		            dato.setIdPostulante(currentCell.getStringCellValue());
 		            break;
 
 		          default:

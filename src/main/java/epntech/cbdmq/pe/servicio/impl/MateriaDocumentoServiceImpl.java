@@ -10,7 +10,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,12 +113,12 @@ public class MateriaDocumentoServiceImpl implements MateriaDocumentoService {
 			documento.setNombre(multipartFile.getOriginalFilename());
 			documento.setRuta(resultado + multipartFile.getOriginalFilename());
 			documento = documentoRepository.save(documento);
-			System.out.println("documento.getCodigo() " + documento.getCodigo());
+			System.out.println("documento.getCodigo() " + documento.getCodDocumento());
 			System.out.println("materia " + materia);
 			
 			MateriaDocumento matdoc = new MateriaDocumento(); 
-			matdoc.setCod_documento(documento.getCodigo());
-			matdoc.setCod_materia(materia); 
+			matdoc.setCodDocumento(documento.getCodDocumento());
+			matdoc.setCodMateria(materia);
 			repo.save(matdoc);
 
 		}

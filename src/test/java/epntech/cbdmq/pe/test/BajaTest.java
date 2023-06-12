@@ -45,13 +45,13 @@ public class BajaTest {
         
 		Baja obj = new Baja();
 	
-		obj.setDescripcionbaja("texto");
+		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 		Baja datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getDescripcionbaja());
+		assertEquals("texto", datos.getDescripcionBaja());
 	
 		assertEquals("activo", datos.getEstado());
 	}
@@ -65,7 +65,7 @@ public class BajaTest {
         
     	Baja obj = new Baja();
 		
-		obj.setDescripcionbaja("texto");
+		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
@@ -82,7 +82,7 @@ public class BajaTest {
 
 		Baja obj = new Baja();
 		
-		obj.setDescripcionbaja("texto");
+		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 
@@ -91,7 +91,7 @@ public class BajaTest {
 
 		String datoNuevo = "NombreNuevo";
 
-		obj.setDescripcionbaja(datoNuevo);
+		obj.setDescripcionBaja(datoNuevo);
 
 
 		
@@ -112,7 +112,7 @@ public class BajaTest {
 
 		Baja obj = new Baja();
 		
-		obj.setDescripcionbaja(nombre);
+		obj.setDescripcionBaja(nombre);
 		obj.setEstado("activo");
 		repo.save(obj);
 

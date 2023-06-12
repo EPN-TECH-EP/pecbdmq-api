@@ -110,7 +110,7 @@ public class InscripcionForResource {
             	ZonedDateTime parsedDate = ZonedDateTime.parse(value.asText());
             	
                 LocalDateTime fecha = parsedDate.toLocalDateTime();
-                inscripcion.setFecha_nacimiento(fecha);
+                inscripcion.setFechaNacimiento(fecha);
             }
         }
 
@@ -180,7 +180,7 @@ public class InscripcionForResource {
 		p.setCodDatoPersonal(validaPin.getIdDatoPersonal());
 		//postulante.setEstado("PENDIENTE");
 		
-		return response(HttpStatus.OK, objService.savePostulante(p, "F", validaPin.getPin(), dato.getPin_validacion_correo(), dato.getCorreoPersonal()));
+		return response(HttpStatus.OK, objService.savePostulante(p, "F", validaPin.getPin(), dato.getPinValidacionCorreo(), dato.getCorreoPersonal()));
 	}
 	
 	@PostMapping("/reenvioPin")

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Baja;
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.BajaServiceImpl;
 
@@ -49,18 +48,18 @@ public class BajaResource {
 	    public ResponseEntity<Baja> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Baja obj) {
 	        return (ResponseEntity<Baja>) objServices.getById(codigo).map(datosGuardados -> {
 	            
-	         
-	            
-	            datosGuardados.setCod_tipo_baja(obj.getCod_tipo_baja());
-	            datosGuardados.setDescripcionbaja(obj.getDescripcionbaja());
-	            datosGuardados.setFechabajaactual(obj.getFechabajaactual());
-	            datosGuardados.setCodestudiante(obj.getCodestudiante());
-	            datosGuardados.setCodperiodoacademico(obj.getCodperiodoacademico());
-	            datosGuardados.setCodsemestre(obj.getCodsemestre());
-	            datosGuardados.setCod_sancion(obj.getCod_sancion());
-	           
+	            datosGuardados.setCodModulo(obj.getCodModulo());
+	            datosGuardados.setCodBaja(obj.getCodBaja());
+	            datosGuardados.setFechaCreaBaja(obj.getFechaBaja());
+	            datosGuardados.setDescripcionBaja(obj.getDescripcionBaja());
+	            datosGuardados.setNombre(obj.getNombre());
+	            datosGuardados.setFechaCreaBaja(obj.getFechaCreaBaja());
+	            datosGuardados.setHoraCreaBaja(obj.getHoraCreaBaja());
+	            datosGuardados.setUsuarioModBaja(obj.getUsuarioModBaja());
+	            datosGuardados.setFechaModBaja(obj.getFechaModBaja());
+	            datosGuardados.setHoraModBaja(obj.getHoraModBaja());
 	           // datosGuardados.setRutaadjuntobaja(obj.getRutaadjuntobaja());
-	            datosGuardados.setCod_baja(obj.getCod_baja());           
+	            datosGuardados.setCodBaja(obj.getCodBaja());
 	            datosGuardados.setEstado(obj.getEstado());
 	            Baja datosActualizados=null;
 				try {

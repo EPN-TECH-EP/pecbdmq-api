@@ -12,8 +12,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.TipoFuncionario;
-import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.dominio.admin.TipoSancion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.TipoSancionRepository;
@@ -66,7 +64,7 @@ public class TipoSancionServiceImpl implements TipoSancionService {
     @Override
     public TipoSancion update(TipoSancion objActualizado) throws DataException {
     	Optional<TipoSancion> objGuardado = repo.findBySancionIgnoreCase(objActualizado.getSancion());
-    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_sancion().equals(objActualizado.getCod_tipo_sancion())) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoSancion().equals(objActualizado.getCodTipoSancion())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

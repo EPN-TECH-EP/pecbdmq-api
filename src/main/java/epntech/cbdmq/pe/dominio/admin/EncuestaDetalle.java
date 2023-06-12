@@ -1,0 +1,28 @@
+package epntech.cbdmq.pe.dominio.admin;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+
+@Entity
+@Table(name = "gen_encuesta_detalle")
+public class EncuestaDetalle {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EqualsAndHashCode.Include()
+	@Column(name = "cod_encuesta_detalle")
+	private Integer codEncuestaDetalle;
+	@Column(name = "cod_encuesta_resumen")
+	private Integer codEncuestaResumen;
+	@Column(name = "cod_catalogo_pregunta")
+	private Integer codCatalogoPregunta;
+	@Column(name = "cod_catalogo_respuesta")
+	private Integer codCatalogoRespuesta;
+	
+	
+}

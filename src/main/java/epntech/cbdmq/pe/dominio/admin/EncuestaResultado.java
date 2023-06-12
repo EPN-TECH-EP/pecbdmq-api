@@ -28,19 +28,19 @@ public class EncuestaResultado {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_encuesta_pregunta_respuesta")
-	private Long cod_encuesta_pregunta_respuesta;
+	private Long codEncuestaPreguntaRespuesta;
 	
 	@Column(name = "resultado")
 	private Boolean resultado;
 	
 	@Column(name = "cod_encuesta_resultado")
-	private Long cod_encuesta_resultado;
+	private Long codEncuestaResultado;
 	
 	@Column(name = "estado")
 	private String estado;
 	
-	  @OneToMany(mappedBy = "cod_encuesta_pregunta_respuesta", cascade = CascadeType.ALL)
-	    private List<EncuestaPreguntaRespuesta> encuestapreguntarespuesta = new ArrayList<>();
+	  @OneToMany(mappedBy = "codEncuestaPreguntaRespuesta", cascade = CascadeType.ALL)
+	    private List<EncuestaPreguntaRespuesta> encuestaPreguntaRespuesta = new ArrayList<>();
 	
 	/*@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_encuesta_pregunta_respuesta",

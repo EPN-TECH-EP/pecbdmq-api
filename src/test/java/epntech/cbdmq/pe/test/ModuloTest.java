@@ -38,7 +38,7 @@ public class ModuloTest {
 	void testGuardar() {
 	 
 		Modulo obj = new Modulo();
-		obj.setCod_modulo(1);		
+		obj.setCodModulo(1);		
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");
 
@@ -56,7 +56,7 @@ public class ModuloTest {
 		
 		
 		Modulo obj = new Modulo();
-		obj.setCod_modulo(1);	
+		obj.setCodModulo(1);	
 		obj.setEtiqueta("texto");
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");
@@ -74,7 +74,7 @@ public class ModuloTest {
 	public void testActualizar() {
 
 		Modulo obj = new Modulo();
-		obj.setCod_modulo(1);	
+		obj.setCodModulo(1);	
 		obj.setEtiqueta("texto");
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");
@@ -87,7 +87,7 @@ public class ModuloTest {
 		String datoNuevo = "texto";
 
 		obj.setEtiqueta(datoNuevo);
-		obj.setCod_modulo(obj1.get().getCod_modulo());
+		obj.setCodModulo(obj1.get().getCodModulo());
 
 		Optional<Modulo> objModificado = repo.findByEtiquetaIgnoreCase("texto");
 		assertThat(objModificado.get().getEtiqueta()).isEqualTo(datoNuevo);
@@ -106,14 +106,14 @@ public class ModuloTest {
 	public void testEliminar() {
 
 		Modulo obj = new Modulo();
-		obj.setCod_modulo(1);	
+		obj.setCodModulo(1);	
 		obj.setEtiqueta("texto");
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findByEtiquetaIgnoreCase("texto").get().getCod_modulo();
+		int id = repo.findByEtiquetaIgnoreCase("texto").get().getCodModulo();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

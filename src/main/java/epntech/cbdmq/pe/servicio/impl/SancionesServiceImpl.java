@@ -101,7 +101,7 @@ public class SancionesServiceImpl implements SancionesService {
 		documento.setRuta(ruta + "\\" + multipartFile.getOriginalFilename());
 		documento = documentoRepository.save(documento);
 
-		return documento.getCodigo();
+		return documento.getCodDocumento();
 	}
 
 	@Override

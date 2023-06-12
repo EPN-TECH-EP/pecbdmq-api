@@ -3,17 +3,21 @@ package epntech.cbdmq.pe.resource;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Baja;
 import epntech.cbdmq.pe.dominio.admin.Delegado;
-import epntech.cbdmq.pe.dominio.util.DelegadoPK;
 import epntech.cbdmq.pe.dominio.util.DelegadoUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DelegadoServiceImpl;
@@ -38,7 +42,7 @@ public class DelegadoResource {
 	}
 
 	
-	@DeleteMapping()
+	@DeleteMapping("/{codDelegado}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("codDelegado") Integer codDelegado) throws DataException {
 			objService.delete(codDelegado);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);

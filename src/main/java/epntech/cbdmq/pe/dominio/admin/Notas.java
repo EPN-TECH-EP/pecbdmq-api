@@ -27,35 +27,35 @@ public class Notas {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_nota_formacion")
-	private Integer cod_nota_formacion;
+	private Integer codNotaFormacion;
 	@Column(name = "cod_instructor")
-	private Integer cod_instructor;
+	private Integer codInstructor;
 	@Column(name = "cod_curso_especializacion")
-	private Integer cod_curso_especializacion;
+	private Integer codCursoEspecializacion;
 	@Column(name = "cod_ponderacion")
-	private Integer cod_ponderacion;
+	private Integer codPonderacion;
 	@Column(name = "cod_estudiante")
-	private Integer cod_estudiante;
+	private Integer codEstudiante;
 	@Column(name = "cod_materia")
-	private Integer cod_materia;
+	private Integer codMateria;
 	@Column(name = "aporte_examen")
-	private BigDecimal aporteexamen;
+	private BigDecimal aporteExamen;
 	@Column(name = "aporte_academico")
-	private BigDecimal aporteacademico;
+	private BigDecimal aporteAcademico;
 	@Column(name = "nota_final_formacion")
-	private BigDecimal notafinalformacion;
+	private BigDecimal notaFinalFormacion;
 	@Column(name = "usuario_crea_nota")
-	private String usuariocreanota;
+	private String usuarioCreaNota;
 	@Column(name = "fecha_crea_nota")
-	private LocalDateTime fechacreanota;
+	private LocalDateTime fechaCreaNota;
 	@Column(name = "hora_crea_nota")
-	private Time horacreanota;
+	private Time horaCreaNota;
 	@Column(name = "usuario_mod_nota")
-	private String usuariomodnota;
+	private String usuarioModNota;
 	@Column(name = "fecha_mod_nota")
-	private Date fechamodnota;
+	private Date fechaModNota;
 	@Column(name = "hora_mod_nota")
-	private Time horamodnota;
+	private Time horaModNota;
 	@Column(name = "estado")
 	private String estado;
 	

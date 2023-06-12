@@ -96,13 +96,13 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		if(this.findByCorreoPersonal(inscripcion.getCorreoPersonal()))
 			throw new DataException(CORREO_YA_EXISTE);*/
 		
-		if (repo1.validaEdad(inscripcion.getFecha_nacimiento()).equals(false))
+		if (repo1.validaEdad(inscripcion.getFechaNacimiento()).equals(false))
 			throw new DataException(EDAD_NO_CUMPLE);
 		else {
 			String code = getRandomCode();
-			inscripcion.setPin_validacion_correo(code);
+			inscripcion.setPinValidacionCorreo(code);
 
-			inscripcion.setPin_validacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
+			inscripcion.setPinValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
 
 			emailService.validateCodeEmail(inscripcion.getNombre(), code, inscripcion.getCorreoPersonal());
 
@@ -197,7 +197,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		code = getRandomCode();
 		System.out.println("code: " + code);
 		obj.setCorreoPersonal(obj.getCorreoPersonal());
-		obj.setPin_validacion_correo(BCrypt.hashpw(code, BCrypt.gensalt()));
+		obj.setPinValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
 		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
 		return repo1.save(obj);
 	}

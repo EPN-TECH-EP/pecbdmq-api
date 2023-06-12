@@ -120,8 +120,8 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		documento = documentoRepo.save(documento);
 
 		PeriodoAcademicoDocumentoFor doc = new PeriodoAcademicoDocumentoFor();
-		doc.setCod_periodo_academico(periodoAcademicoRepository.getPAActive());;
-		doc.setCod_documento(documento.getCodigo());
+		doc.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());;
+		doc.setCodDocumento(documento.getCodDocumento());
 		// System.out.println("documento.getCodigo(): " + documento.getCodigo());
 	}
 

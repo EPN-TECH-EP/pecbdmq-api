@@ -57,7 +57,7 @@ public class PostulanteServiceImpl implements PostulanteService {
 		repo.deleteById(id);
 	}
 
-	public Optional<PostulanteDatoPersonal> getByCedula(String cedula) {
+	public Optional<PostulanteDatoPersonal> getByCedula(String cedula){
 		return repo1.getByCedula(cedula);
 	}
 
@@ -79,10 +79,9 @@ public class PostulanteServiceImpl implements PostulanteService {
 		Boolean bandera = false;
 
 		postulante = repo.findById(objActualizado.getCodPostulante());
-		if (postulante.isPresent()) {
+		if(postulante.isPresent()) {
 
-			if (postulante.get().getEstado().equalsIgnoreCase("PENDIENTE")
-					&& objActualizado.getEstado().equalsIgnoreCase("ASIGNADO"))
+			if(postulante.get().getEstado().equalsIgnoreCase("PENDIENTE") &&  objActualizado.getEstado().equalsIgnoreCase("ASIGNADO"))
 				bandera = true;
 			else
 				bandera = false;

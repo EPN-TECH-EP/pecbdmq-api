@@ -11,9 +11,9 @@ import epntech.cbdmq.pe.dominio.admin.Parametrizacion;
 public interface ParametrizacionRepository extends JpaRepository<Parametrizacion, Integer>{
 	//Optional<Parametrizacion>findById(Integer codigo);
 	
-	Optional<Parametrizacion> findByObservacionparametriza(String observacion);
+	Optional<Parametrizacion> findByObservacionParametriza(String observacion);
 
-	Optional<Parametrizacion> findByFechainicioparamAndFechafinparam(Date fechainicioparam ,Date fechafinparam);
+	Optional<Parametrizacion> findByFechaInicioParamAndFechaFinParam(Date fechainicioparam , Date fechafinparam);
 	
 	
 }

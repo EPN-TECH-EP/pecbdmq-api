@@ -13,6 +13,6 @@ import java.util.List;
 
 @Repository
 public interface RangoRepository extends JpaRepository<Rango, Integer> {
-    @Query("SELECT r FROM Rango r WHERE r.codGrado.cod_grado = :grado")
+    @Query("SELECT r FROM Rango r WHERE r.codGrado.codGrado = :grado")
     List<Rango> findByGrado(@Param("grado") Integer grado);
 }

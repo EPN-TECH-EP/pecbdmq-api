@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Modulo;
-import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ModuloRepository;
 import epntech.cbdmq.pe.servicio.ModuloService;
@@ -40,7 +39,7 @@ public class ModuloServiceImpl implements ModuloService {
     @Override
     public Modulo update(Modulo objActualizado) throws DataException {
     	Optional<Modulo> objGuardado = repo.findByEtiquetaIgnoreCase(objActualizado.getEtiqueta());
-    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_modulo().equals(objActualizado.getCod_modulo())) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCodModulo().equals(objActualizado.getCodModulo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

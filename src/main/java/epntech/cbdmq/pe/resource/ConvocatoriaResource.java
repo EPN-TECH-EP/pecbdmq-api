@@ -54,7 +54,7 @@ public class ConvocatoriaResource {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
-	@GetMapping("/")
+	@GetMapping("/activa")
 	public Set<Convocatoria> obtenerConvocatoriaActiva() throws DataException {
 		return objService.getConvocatoriaActiva();
 	}

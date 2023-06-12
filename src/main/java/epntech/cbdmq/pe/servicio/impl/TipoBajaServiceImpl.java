@@ -12,7 +12,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Modulo;
 import epntech.cbdmq.pe.dominio.admin.TipoBaja;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.TipoBajaRepository;
@@ -66,7 +65,7 @@ public class TipoBajaServiceImpl implements TipoBajaService {
     @Override
     public TipoBaja update(TipoBaja objActualizado) throws DataException  {
     	Optional<TipoBaja> objGuardado = repo.findByBajaIgnoreCase(objActualizado.getBaja());
-    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_baja().equals(objActualizado.getCod_tipo_baja())) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoBaja().equals(objActualizado.getCodTipoBaja())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

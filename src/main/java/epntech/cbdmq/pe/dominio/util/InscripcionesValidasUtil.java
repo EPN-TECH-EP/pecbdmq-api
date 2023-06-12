@@ -10,7 +10,7 @@ import lombok.Data;
 public class InscripcionesValidasUtil {
 
 	@Id
-	private String id_postulante;
+	private String idPostulante;
 	
 	
 }

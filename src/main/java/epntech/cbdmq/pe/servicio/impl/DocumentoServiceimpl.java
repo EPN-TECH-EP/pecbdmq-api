@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.MensajesConst.CONVOCATORIA_NO_EXISTE;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.constante.ArchivoConst;
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoForDoc;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
@@ -74,7 +77,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 		// TODO Auto-generated method stub
 
 		if (!archivo.isEmpty()) {
-			Path ruta = Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()).toAbsolutePath()
+			Path ruta = Paths.get(repo.findById(objActualizado.getCodDocumento()).get().getRuta()).toAbsolutePath()
 					.normalize();
 			// ruta =Path.of( );
 
@@ -164,6 +167,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 					StandardCopyOption.REPLACE_EXISTING);
 			LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
 			documentos.setRuta(resultado + multipartFile.getOriginalFilename());
+			documentos.setNombre(multipartFile.getOriginalFilename());
 			lista.add(documentos);
 
 		}
@@ -209,8 +213,19 @@ public class DocumentoServiceimpl implements DocumentoService {
 		// busca documento y elimina de tablas
 		documentoOpt = repo.findById(codDocumento);
 		documento = documentoOpt.get();
+		
+		List<ConvocatoriaDocumentoForDoc> listaConvDoc = convocatoriaDocumentoRepository.findAllByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);
+		
+		if (listaConvDoc != null && !listaConvDoc.isEmpty()) {
+			convocatoriaDocumentoRepository.deleteAllByCodConvocatoria(convocatoria);
+		}
+		
+		//convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);**
+		//convocatoriaDocumentoRepository.flush();
+		
+		
 		repo.deleteById(codDocumento);
-		convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);
+		
 
 		// elimina de FS
 		Path ruta = null;
@@ -219,8 +234,56 @@ public class DocumentoServiceimpl implements DocumentoService {
 			ruta = Paths.get(documento.getRuta()).toAbsolutePath().normalize();
 			Files.delete(ruta);
 		} catch (Exception e) {
-			throw new IOException(e.getMessage());
+			//throw new IOException(e.getMessage());
+			LOGGER.error("No se puede eliminar le documento en la ruta: " + ruta);
 		}
 
+	}
+	
+	@Override
+	public void guardarArchivoConvocatoria(List<MultipartFile> docsConvocatoria)
+			throws IOException, DataException, ArchivoMuyGrandeExcepcion {
+
+		Documento documento = null;
+		Optional<Documento> documentoOpt;
+
+		// obtiene convocatoria
+		Integer convocatoria = convocatoriaRepository.getConvocatoriaActivaFormacion();
+
+		if (convocatoriaRepository.findById(convocatoria).isEmpty())
+			throw new IOException(CONVOCATORIA_NO_EXISTE);
+
+	
+		// guarda los archivos en FS 
+		List<DocumentoRuta> listaDocRuta = this.guardarArchivo(ArchivoConst.PATH_PROCESO_CONVOCATORIA, convocatoria.toString(), docsConvocatoria);
+		
+		
+		// registra archivos en gen_documento
+		
+		List<Integer> listaIdsDocs = new ArrayList<Integer>();
+		
+		for (DocumentoRuta documentoRuta : listaDocRuta) {
+			documento = new Documento();
+			
+			documento.setEstado("ACTIVO");
+			documento.setRuta(documentoRuta.getRuta());
+			documento.setNombre(documentoRuta.getNombre());
+			
+			Documento newDocumento = this.repo.save(documento);
+			
+			listaIdsDocs.add(newDocumento.getCodDocumento());			
+		}
+		
+		// registra documentos en tabla intermedia
+		ConvocatoriaDocumentoForDoc convocatoriaDocumento = null;
+		
+		for (Integer codDocumento : listaIdsDocs) {
+			convocatoriaDocumento = new ConvocatoriaDocumentoForDoc();
+			convocatoriaDocumento.setCodConvocatoria(convocatoria);
+			convocatoriaDocumento.setCodDocumento(codDocumento);
+			
+			this.convocatoriaDocumentoRepository.save(convocatoriaDocumento);
+		}
+		
 	}
 }

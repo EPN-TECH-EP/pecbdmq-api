@@ -26,10 +26,10 @@ public class Falta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_falta")
-	private Integer cod_falta;
+	private Integer codFalta;
 	
 	@Column(name = "nombre_falta")
-	private String nombre_falta;
+	private String nombreFalta;
 	
 	@Column(name = "estado")
 	private String estado;

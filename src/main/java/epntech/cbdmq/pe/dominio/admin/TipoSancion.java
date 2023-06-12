@@ -27,7 +27,7 @@ import lombok.Data;
 public class TipoSancion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cod_tipo_sancion;
+    private Integer codTipoSancion;
     @Column(name = "tipo_sancion")
     private String sancion;
     @Column(name = "estado")

@@ -25,11 +25,11 @@ public class EncuestaPregunta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_encuesta_pregunta")
-	private Long cod_encuesta_pregunta;
+	private Long codEncuestaPregunta;
 	@Column(name = "cod_encuesta_resumen")
-	private Long cod_encuesta_resumen;
+	private Long codEncuestaResumen;
 	@Column(name = "cod_catalogo_pregunta")
-	private Long cod_catalogo_pregunta;
+	private Long codCatalogoPregunta;
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_encuesta_pregunta_respuesta",

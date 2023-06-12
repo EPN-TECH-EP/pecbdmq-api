@@ -54,7 +54,7 @@ public class CatalogoPreguntaServiceImpl implements CatalogoPreguntasService{
 	public CatalogoPreguntas update(CatalogoPreguntas objActualizado) throws DataException {
 		if(objActualizado.getPregunta() !=null) {
 			Optional<CatalogoPreguntas> objGuardado = repo.findByPreguntaIgnoreCase(objActualizado.getPregunta());
-			if (objGuardado.isPresent()&& !objGuardado.get().getCod_catalogo_pregunta().equals(objActualizado.getCod_catalogo_pregunta())) {
+			if (objGuardado.isPresent()&& !objGuardado.get().getCodCatalogoPregunta().equals(objActualizado.getCodCatalogoPregunta())) {
 				throw new DataException(REGISTRO_YA_EXISTE);
 			}
 		}

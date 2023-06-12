@@ -10,11 +10,11 @@ import lombok.Data;
 public class PostulanteDatoPersonal {
 
 	@Id
-	private Integer cod_postulante;	
-	private String id_postulante;
+	private Integer codPostulante;
+	private String idPostulante;
 	private String nombre;
 	private String apellido;
 	private String cedula;
-	private String correo_personal;
+	private String correoPersonal;
 	
 }

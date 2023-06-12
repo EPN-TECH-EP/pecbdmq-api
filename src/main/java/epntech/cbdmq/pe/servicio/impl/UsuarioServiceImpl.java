@@ -11,6 +11,7 @@ import static epntech.cbdmq.pe.constante.ArchivoConst.NO_ES_ARCHIVO_IMAGEN;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_DEFECTO_IMAGEN_USUARIO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_IMAGEN_USUARIO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PUNTO;
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_ENCUENTRA;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_ENCONTRADO;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NO_EXISTE_USUARIO;
@@ -31,8 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
+import epntech.cbdmq.pe.excepcion.dominio.*;
+import epntech.cbdmq.pe.servicio.*;
+import epntech.cbdmq.pe.servicio.EstudianteService;
+import epntech.cbdmq.pe.servicio.InstructorService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -41,9 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -58,16 +63,7 @@ import epntech.cbdmq.pe.dominio.UserPrincipal;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.enumeracion.Role;
-import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.EmailNoEncontradoExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.NombreUsuarioExisteExcepcion;
-import epntech.cbdmq.pe.excepcion.dominio.UsuarioNoEncontradoExcepcion;
 import epntech.cbdmq.pe.repositorio.UsuarioRepository;
-import epntech.cbdmq.pe.servicio.EmailService;
-import epntech.cbdmq.pe.servicio.IntentoLoginService;
-import epntech.cbdmq.pe.servicio.UsuarioService;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -79,6 +75,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	private BCryptPasswordEncoder passwordEncoder;
 	private IntentoLoginService loginAttemptService;
 	private EmailService emailService;
+	private InstructorService instructorService;
+	private EstudianteService estudianteService;
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -88,11 +86,13 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	public UsuarioServiceImpl(UsuarioRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-			IntentoLoginService loginAttemptService, EmailService emailService) {
+			IntentoLoginService loginAttemptService, EmailService emailService,EstudianteService estudianteService, InstructorService instructorService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.loginAttemptService = loginAttemptService;
 		this.emailService = emailService;
+		this.estudianteService=estudianteService;
+		this.instructorService=instructorService;
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public Usuario registrar(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
 			EmailExisteExcepcion, MessagingException {
 		validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(),
-				usuario.getCodDatosPersonales().getCorreo_personal());
+				usuario.getCodDatosPersonales().getCorreoPersonal());
 
 		// datos de usuario
 		Usuario user = new Usuario();
@@ -140,7 +140,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		DatoPersonal datos = new DatoPersonal();
 		datos.setNombre(usuario.getCodDatosPersonales().getNombre());
 		datos.setApellido(usuario.getCodDatosPersonales().getApellido());
-		datos.setCorreo_personal(usuario.getCodDatosPersonales().getCorreo_personal());
+		datos.setCorreoPersonal(usuario.getCodDatosPersonales().getCorreoPersonal());
 
 		// asocia datos personales con usuario
 		user.setCodDatosPersonales(datos);
@@ -150,7 +150,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		userRepository.flush();
 
 		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
-				usuario.getCodDatosPersonales().getCorreo_personal());
+				usuario.getCodDatosPersonales().getCorreoPersonal());
 		return user;
 	}
 
@@ -168,12 +168,12 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 			EmailExisteExcepcion, IOException, UsuarioNoEncontradoExcepcion, MessagingException {
 		
 		validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(),
-				usuario.getCodDatosPersonales().getCorreo_personal());
+				usuario.getCodDatosPersonales().getCorreoPersonal());
 
 		String password = generatePassword();
 		
 		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
-				usuario.getCodDatosPersonales().getCorreo_personal());
+				usuario.getCodDatosPersonales().getCorreoPersonal());
 		
 		// datos de usuario
 		Usuario user = new Usuario();
@@ -188,50 +188,50 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		DatoPersonal datosRecibidos = usuario.getCodDatosPersonales();
 		DatoPersonal datos = new DatoPersonal();
 
-		datos.setCod_datos_personales(datosRecibidos.getCod_datos_personales());
+		datos.setCodDatosPersonales(datosRecibidos.getCodDatosPersonales());
 		datos.setApellido(datosRecibidos.getApellido());
 		datos.setCedula(datosRecibidos.getCedula());
-		datos.setCod_estacion(datosRecibidos.getCod_estacion());
-		datos.setCorreo_personal(datosRecibidos.getCorreo_personal());
+		datos.setCodEstacion(datosRecibidos.getCodEstacion());
+		datos.setCorreoPersonal(datosRecibidos.getCorreoPersonal());
 		datos.setEstado(datosRecibidos.getEstado());
-		datos.setFecha_nacimiento(datosRecibidos.getFecha_nacimiento());
+		datos.setFechaNacimiento(datosRecibidos.getFechaNacimiento());
 		datos.setNombre(datosRecibidos.getNombre());
-		datos.setNum_telef_convencional(datosRecibidos.getNum_telef_convencional());
-		datos.setTipo_sangre(datosRecibidos.getTipo_sangre());
-		datos.setValidacion_correo(datosRecibidos.getValidacion_correo());
-		datos.setCod_provincia_nacimiento(datosRecibidos.getCod_provincia_nacimiento());
-		datos.setCod_unidad_gestion(datosRecibidos.getCod_unidad_gestion());
+		datos.setNumTelefConvencional(datosRecibidos.getNumTelefConvencional());
+		datos.setTipoSangre(datosRecibidos.getTipoSangre());
+		datos.setValidacionCorreo(datosRecibidos.getValidacionCorreo());
+		datos.setCodProvinciaNacimiento(datosRecibidos.getCodProvinciaNacimiento());
+		datos.setCodUnidadGestion(datosRecibidos.getCodUnidadGestion());
 		datos.setSexo(datosRecibidos.getSexo());
-		datos.setNum_telef_celular(datosRecibidos.getNum_telef_celular());
-		datos.setReside_pais(datosRecibidos.getReside_pais());
-		datos.setCod_provincia_residencia(datosRecibidos.getCod_provincia_residencia());
-		datos.setCalle_principal_residencia(datosRecibidos.getCalle_principal_residencia());
-		datos.setCalle_secundaria_residencia(datosRecibidos.getCalle_secundaria_residencia());
-		datos.setNumero_casa(datosRecibidos.getNumero_casa());
+		datos.setNumTelefCelular(datosRecibidos.getNumTelefCelular());
+		datos.setResidePais(datosRecibidos.getResidePais());
+		datos.setCodProvinciaResidencia(datosRecibidos.getCodProvinciaResidencia());
+		datos.setCallePrincipalResidencia(datosRecibidos.getCallePrincipalResidencia());
+		datos.setCalleSecundariaResidencia(datosRecibidos.getCalleSecundariaResidencia());
+		datos.setNumeroCasa(datosRecibidos.getNumeroCasa());
 		datos.setColegio(datosRecibidos.getColegio());
-		datos.setTipo_nacionalidad(datosRecibidos.getTipo_nacionalidad());
-		datos.setTiene_merito_deportivo(datosRecibidos.getTiene_merito_deportivo());
-		datos.setTiene_merito_academico(datosRecibidos.getTiene_merito_academico());
-		datos.setNombre_titulo_segundonivel(datosRecibidos.getNombre_titulo_segundonivel());
-		datos.setPais_titulo_segundonivel(datosRecibidos.getPais_titulo_segundonivel());
-		datos.setCiudad_titulo_segundonivel(datosRecibidos.getCiudad_titulo_segundonivel());
-		datos.setMerito_deportivo_descripcion(datosRecibidos.getMerito_deportivo_descripcion());
-		datos.setMerito_academico_descripcion(datosRecibidos.getMerito_academico_descripcion());
-		datos.setPin_validacion_correo(datosRecibidos.getPin_validacion_correo());
-		datos.setCorreo_institucional(datosRecibidos.getCorreo_institucional());
-		datos.setCod_cargo(datosRecibidos.getCod_cargo());
-		datos.setCod_rango(datosRecibidos.getCod_rango());
-		datos.setCod_grado(datosRecibidos.getCod_grado());
-		datos.setCod_documento_imagen(datosRecibidos.getCod_documento_imagen());
-		datos.setCod_canton_nacimiento(datosRecibidos.getCod_canton_nacimiento());
-		datos.setCod_canton_residencia(datosRecibidos.getCod_canton_residencia());		
-		datos.setFecha_salida_institucion(datosRecibidos.getFecha_salida_institucion());
-		datos.setNivel_instruccion(datosRecibidos.getNivel_instruccion());
-		datos.setNombre_titulo_tercernivel(datosRecibidos.getNombre_titulo_tercernivel());
-		datos.setNombre_titulo_cuartonivel(datosRecibidos.getNombre_titulo_cuartonivel());
-		datos.setEs_vulnerable(datosRecibidos.getEs_vulnerable());
-		datos.setPais_titulo_cuartonivel(datosRecibidos.getPais_titulo_cuartonivel());
-		datos.setPais_titulo_tercernivel(datosRecibidos.getPais_titulo_tercernivel());
+		datos.setTipoNacionalidad(datosRecibidos.getTipoNacionalidad());
+		datos.setTieneMeritoDeportivo(datosRecibidos.getTieneMeritoDeportivo());
+		datos.setTieneMeritoAcademico(datosRecibidos.getTieneMeritoAcademico());
+		datos.setNombreTituloSegundoNivel(datosRecibidos.getNombreTituloSegundoNivel());
+		datos.setPaisTituloSegundoNivel(datosRecibidos.getPaisTituloSegundoNivel());
+		datos.setCiudadTituloSegundoNivel(datosRecibidos.getCiudadTituloSegundoNivel());
+		datos.setMeritoDeportivoDescripcion(datosRecibidos.getMeritoDeportivoDescripcion());
+		datos.setMeritoAcademicoDescripcion(datosRecibidos.getMeritoAcademicoDescripcion());
+		datos.setPinValidacionCorreo(datosRecibidos.getPinValidacionCorreo());
+		datos.setCorreoInstitucional(datosRecibidos.getCorreoInstitucional());
+		datos.setCodCargo(datosRecibidos.getCodCargo());
+		datos.setCodRango(datosRecibidos.getCodRango());
+		datos.setCodGrado(datosRecibidos.getCodGrado());
+		datos.setCodDocumentoImagen(datosRecibidos.getCodDocumentoImagen());
+		datos.setCodCantonNacimiento(datosRecibidos.getCodCantonNacimiento());
+		datos.setCodCantonResidencia(datosRecibidos.getCodCantonResidencia());
+		datos.setFechaSalidaInstitucion(datosRecibidos.getFechaSalidaInstitucion());
+		datos.setNivelInstruccion(datosRecibidos.getNivelInstruccion());
+		datos.setNombreTituloTercerNivel(datosRecibidos.getNombreTituloTercerNivel());
+		datos.setNombreTituloCuartoNivel(datosRecibidos.getNombreTituloCuartoNivel());
+		datos.setEsVulnerable(datosRecibidos.getEsVulnerable());
+		datos.setPaisTituloCuartoNivel(datosRecibidos.getPaisTituloCuartoNivel());
+		datos.setPaisTituloTercerNivel(datosRecibidos.getPaisTituloTercerNivel());
 		
 
 		// asocia datos personales con usuario
@@ -248,7 +248,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public Usuario actualizarUsuario(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
 			EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion {
 		Usuario currentUser = validateNewUsernameAndEmail(usuario.getNombreUsuario(), usuario.getNombreUsuario(),
-				usuario.getCodDatosPersonales().getCorreo_personal());
+				usuario.getCodDatosPersonales().getCorreoPersonal());
 
 		currentUser.setActive(usuario.isActive());
 		currentUser.setNotLocked(usuario.isNotLocked());
@@ -305,7 +305,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		userRepository.flush();
 
 		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
-				usuario.getCodDatosPersonales().getCorreo_personal());
+				usuario.getCodDatosPersonales().getCorreoPersonal());
 
 	}
 
@@ -486,6 +486,26 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	@Override
 	public List<Usuario> findUsuariosByCorreo(String correo) {
 		return this.userRepository.findUsuariosByCorreo(correo);
+	}
+
+	@Override
+	public UsuarioInfoDto getUsuarioInfo(String codUser) throws DataException {
+		Instructor instructor = instructorService.getInstructorByUser(codUser);
+		Estudiante estudianteDto = estudianteService.getEstudianteByUsuario(codUser);
+
+		if (instructor == null && estudianteDto == null) {
+			throw new DataException(NO_ENCUENTRA);
+		}
+		UsuarioInfoDto usuarioInfo = new UsuarioInfoDto();
+		if(instructor!=null) {
+			usuarioInfo.setCodInstructor(instructor.getCodInstructor());
+		}
+		if(estudianteDto!=null) {
+			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getIdEstudiante());
+		}
+
+		return usuarioInfo;
+
 	}
 
 }

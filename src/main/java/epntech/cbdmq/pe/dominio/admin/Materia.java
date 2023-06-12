@@ -1,9 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -53,8 +51,8 @@ public class Materia {
 	//@ManyToMany(mappedBy = "materias", cascade = CascadeType.ALL)
 	//public Set<Aula> aulas;
 	
-	@OneToMany(mappedBy="cod_materia")
-    private List<MateriaPeriodo> MateriaPeriodo;
+	@OneToMany(mappedBy="codMateria")
+    private List<MateriaPeriodo> materiaPeriodo;
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_materia_paralelo",

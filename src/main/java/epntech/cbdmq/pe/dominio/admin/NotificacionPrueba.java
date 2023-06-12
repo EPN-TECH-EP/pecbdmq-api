@@ -26,15 +26,15 @@ public class NotificacionPrueba {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_notifica")
-	private Integer cod_notifica;
+	private Integer codNotifica;
 	@Column(name = "cod_prueba_seleccion")
-	private Integer cod_prueba_seleccion;
+	private Integer codPruebaSeleccion;
 	@Column(name = "cod_datos_personales")
-	private Integer cod_datos_personales;
+	private Integer codDatosPersonales;
 	@Column(name = "cod_documento")
-	private Integer cod_documento;
+	private Integer codDocumento;
 	@Column(name = "cod_prueba")
-	private Integer cod_prueba;
+	private Integer codPrueba;
 	@Column(name = "mensaje")
 	private String mensaje;
 	@Column(name = "instrucciones")
@@ -43,7 +43,7 @@ public class NotificacionPrueba {
 	private String estado;
 	@Column(name = "fecha_notificacion")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime fecha_prueba;
+	private LocalDateTime fechaPrueba;
 	@Column(name = "hora")
 	@DateTimeFormat(pattern = "HH:mm:ss")
 	private LocalTime  hora;

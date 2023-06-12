@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;

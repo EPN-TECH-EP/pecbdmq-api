@@ -22,7 +22,7 @@ public class TipoInstructor {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_tipo_instructor")
-	private Integer cod_tipo_instructor;
+	private Integer codTipoInstructor;
 	
 	@Column(name = "nombre_tipo_instructor")	
 	private String nombretipoinstructor;

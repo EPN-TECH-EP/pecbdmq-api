@@ -29,11 +29,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	public List<Usuario> findUsuariosByNombreApellido(@Param("nombre") String nombre, @Param("apellido") String apellido) ;
 	@Query(value = "select u from Usuario u where lower(u.codDatosPersonales.apellido) like lower(concat('%', :apellido, '%'))")
 	public List<Usuario> findUsuariosByApellido(@Param("apellido") String apellido) ;
+	
 	@Query(value = "select u from Usuario u where lower(u.codDatosPersonales.nombre) like lower(concat('%', :nombre, '%'))")
-	public List<Usuario> findUsuariosByNombre(@Param("nombre") String nombre) ;
+	public List<Usuario> findUsuariosByNombre(@Param("nombre") String nombre);
 
-	@Query(value = "SELECT u FROM Usuario u WHERE u.codDatosPersonales.correo_personal like %:correo%")
-	public List<Usuario> findUsuariosByCorreo(@Param("correo") String correo) ;
+	@Query(value = "SELECT u FROM Usuario u WHERE u.codDatosPersonales.correoPersonal like %:correo%")
+	public List<Usuario> findUsuariosByCorreo(@Param("correo") String correo);
 
 	@Query(value = "SELECT u FROM Usuario u")
 	List<Usuario> findAllPageable(Pageable pageable);
