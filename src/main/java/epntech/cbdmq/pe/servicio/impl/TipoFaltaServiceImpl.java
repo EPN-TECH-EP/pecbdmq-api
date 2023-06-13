@@ -12,28 +12,28 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
+import epntech.cbdmq.pe.dominio.admin.TipoFalta;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.admin.TipoSancionRepository;
-import epntech.cbdmq.pe.servicio.TipoSancionService;
+import epntech.cbdmq.pe.repositorio.admin.TipoFaltaRepository;
+import epntech.cbdmq.pe.servicio.TipoFaltaService;
 
 /**
  * @author EPN TECH
  * @version $Revision: $
  */
 @Service
-public class TipoSancionServiceImpl implements TipoSancionService {
+public class TipoFaltaServiceImpl implements TipoFaltaService {
     @Autowired
-    TipoSancionRepository repo;
+    TipoFaltaRepository repo;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public TipoSancion save(TipoSancion obj) throws DataException {
-    	if(obj.getSancion().trim().isEmpty())
+    public TipoFalta save(TipoFalta obj) throws DataException {
+    	if(obj.getNombreFalta().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<TipoSancion> objGuardado = repo.findBySancionIgnoreCase(obj.getSancion());
+		Optional<TipoFalta> objGuardado = repo.findByNombreFaltaIgnoreCase(obj.getNombreFalta());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -44,7 +44,7 @@ public class TipoSancionServiceImpl implements TipoSancionService {
      * {@inheritDoc}
      */
     @Override
-    public List<TipoSancion> getAll() {
+    public List<TipoFalta> getAll() {
         // TODO Auto-generated method stub
         return repo.findAll();
     }
@@ -53,7 +53,7 @@ public class TipoSancionServiceImpl implements TipoSancionService {
      * {@inheritDoc}
      */
     @Override
-    public Optional<TipoSancion> getById(Integer codigo) {
+    public Optional<TipoFalta> getById(Integer codigo) {
         // TODO Auto-generated method stub
         return repo.findById(codigo);
     }
@@ -62,9 +62,9 @@ public class TipoSancionServiceImpl implements TipoSancionService {
      * {@inheritDoc}
      */
     @Override
-    public TipoSancion update(TipoSancion objActualizado) throws DataException {
-    	Optional<TipoSancion> objGuardado = repo.findBySancionIgnoreCase(objActualizado.getSancion());
-    	if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoSancion().equals(objActualizado.getCodTipoSancion())) {
+    public TipoFalta update(TipoFalta objActualizado) throws DataException {
+    	Optional<TipoFalta> objGuardado = repo.findByNombreFaltaIgnoreCase(objActualizado.getNombreFalta());
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoFalta().equals(objActualizado.getCodTipoFalta())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

@@ -33,16 +33,16 @@ public class Ponderacion {
 	private Integer codPeriodoAcademico;
 	@Column(name = "cod_componente_nota")
 	private Integer codComponenteNota;
-	@Column(name = "cod_tipo_nota")
-	private Integer codTipoNota;
+	//@Column(name = "cod_tipo_nota")
+	//private Integer codTipoNota;
 	@Column(name = "porcentaje_final_ponderacion")
 	private BigDecimal porcentajeFinalPonderacion;
-	@Column(name = "porcentaje_nota_materia")
-	private BigDecimal porcentajeNotaMateria;
-	@Column(name = "fecha_inicio_vigencia")
-	private LocalDateTime fechaInicioVigencia;
-	@Column(name = "fecha_fin_vigencia")
-	private LocalDateTime fechaFinVigencia;
+	//@Column(name = "porcentaje_nota_materia")
+	//private BigDecimal porcentajeNotaMateria;
+	//@Column(name = "fecha_inicio_vigencia")
+	//private LocalDateTime fechaInicioVigencia;
+	///@Column(name = "fecha_fin_vigencia")
+	//private LocalDateTime fechaFinVigencia;
 	@Column(name = "estado")
 	private String estado;
 	

@@ -37,8 +37,8 @@ public class Materia {
 	private String nombre;
 	//@Column(name = "num_horas")
 	//private Integer numHoras;
-	@Column(name = "tipo_materia")
-	private String tipoMateria;
+	@Column(name = "cod_eje_materia")
+	private Integer codEjeMateria;
 	//@Column(name = "observacion_materia")
 	//private String observacionMateria;
 	//@Column(name = "peso_materia")

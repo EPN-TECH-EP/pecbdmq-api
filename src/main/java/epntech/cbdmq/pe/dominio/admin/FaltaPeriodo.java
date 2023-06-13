@@ -39,6 +39,6 @@ public class FaltaPeriodo {
             joinColumns = @JoinColumn(name = "cod_falta_periodo"),
             inverseJoinColumns = @JoinColumn(name = "cod_falta")
     )
-	private List<Falta> falta = new ArrayList<>();
+	private List<TipoFalta> falta = new ArrayList<>();
 	
 }

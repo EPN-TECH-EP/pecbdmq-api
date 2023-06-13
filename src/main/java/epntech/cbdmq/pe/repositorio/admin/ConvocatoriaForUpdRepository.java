@@ -151,38 +151,23 @@ public class ConvocatoriaForUpdRepository {
 		if (!(docsConvocatoria == null)) {
 			List<DatosFile> archivosConvocatoria = new ArrayList<>();
 			try {
-				// elimina documento convocatoria de tablas y FS
-				objServiceDoc.eliminarArchivoConvocatoria(documentosFor.getCodDocumento());
-
-				archivosConvocatoria = guardarArchivo(docsConvocatoria, PATH_PROCESO_CONVOCATORIA,
-						convocatoria.getCodConvocatoria().toString());
+				// elimina documento convocatoria de tablas y FS				
+				if (documentosFor != null && documentosFor.getCodDocumento() != null) {
+					objServiceDoc.eliminarArchivoConvocatoria(documentosFor.getCodDocumento());
+				}
+				
+				// guarda archivos en FS
+				//archivosConvocatoria = guardarArchivo(docsConvocatoria, PATH_PROCESO_CONVOCATORIA, convocatoria.getCodConvocatoria().toString());
+				
+				// guarda archivos en FS y tablas
+				this.objServiceDoc.guardarArchivoConvocatoria(docsConvocatoria);
+				
+				
 			} catch (Exception e) {
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("errorHeader", e.getMessage());
-			}
-
-			/*
-			 * Set<DocumentoFor> dConvocatoria = new HashSet<>();
-			 * 
-			 * for (DatosFile datosFile : archivosConvocatoria) {
-			 * 
-			 * DocumentoFor dd = new DocumentoFor(); dd.setEstado("ACTIVO");
-			 * dd.setNombre(datosFile.getNombre()); dd.setRuta(datosFile.getRuta());
-			 * 
-			 * dConvocatoria.add(dd); }
-			 * 
-			 * DocumentoFor entidadDocumento = entityManager.find(DocumentoFor.class,
-			 * documentosFor.getCodigoDocumento());
-			 * 
-			 * Set<DocumentoFor> documentos = new HashSet<>(); for (DocumentoFor documento :
-			 * dConvocatoria) { DocumentoFor documentoFor = new DocumentoFor();
-			 * 
-			 * entidadDocumento.setNombre(documento.getNombre());
-			 * entidadDocumento.setRuta(documento.getRuta());
-			 * entityManager.merge(entidadDocumento);
-			 * 
-			 * documentoFor = documento; documentos.add(documentoFor); }
-			 */
+			}			  
+			 
 		}
 
 		// REQUISITOS

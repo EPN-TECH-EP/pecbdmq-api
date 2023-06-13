@@ -7,12 +7,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import epntech.cbdmq.pe.dominio.admin.TipoSancion;
+import epntech.cbdmq.pe.dominio.admin.TipoFalta;
 
 /**
  * @author EPN TECH
  * @version $Revision: $
  */
-public interface TipoSancionRepository extends JpaRepository<TipoSancion, Integer> {
-    Optional<TipoSancion> findBySancionIgnoreCase(String sancion);
+public interface TipoFaltaRepository extends JpaRepository<TipoFalta, Integer> {
+    Optional<TipoFalta> findByNombreFaltaIgnoreCase(String sancion);
 }

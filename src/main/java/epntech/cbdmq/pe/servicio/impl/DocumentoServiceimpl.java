@@ -211,22 +211,19 @@ public class DocumentoServiceimpl implements DocumentoService {
 			throw new IOException(CONVOCATORIA_NO_EXISTE);
 
 		// busca documento y elimina de tablas
-		documentoOpt = repo.findById(codDocumento);
-		documento = documentoOpt.get();
 		
-		List<ConvocatoriaDocumentoForDoc> listaConvDoc = convocatoriaDocumentoRepository.findAllByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);
-		
-		if (listaConvDoc != null && !listaConvDoc.isEmpty()) {
-			convocatoriaDocumentoRepository.deleteAllByCodConvocatoria(convocatoria);
+		try {
+			documentoOpt = repo.findById(codDocumento);
+			documento = documentoOpt.get();
+			List<ConvocatoriaDocumentoForDoc> listaConvDoc = convocatoriaDocumentoRepository
+					.findAllByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);
+			if (listaConvDoc != null && !listaConvDoc.isEmpty()) {
+				convocatoriaDocumentoRepository.deleteAllByCodConvocatoria(convocatoria);
+			}
+			repo.deleteById(codDocumento);
+		} catch (Exception e) {
+			LOGGER.error("No se puede eliminar le documento de las tablas: " + e.getMessage());
 		}
-		
-		//convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);**
-		//convocatoriaDocumentoRepository.flush();
-		
-		
-		repo.deleteById(codDocumento);
-		
-
 		// elimina de FS
 		Path ruta = null;
 
