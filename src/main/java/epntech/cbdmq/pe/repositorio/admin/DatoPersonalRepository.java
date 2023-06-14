@@ -16,6 +16,8 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
 	
 	Optional<DatoPersonal> findOneByCedula(String Cedula);
 	
+	List<DatoPersonal> findAllByCorreoPersonal(String correoPersonal);
+	
 	Page<DatoPersonal> findByNombreContainingOrApellidoContaining(String nombre, String apellido, Pageable pageable);
 	
 	@Query(value = "SELECT d FROM gen_dato_personal d WHERE d.nombre LIKE %:filtro% OR d.apellido LIKE %:filtro%")

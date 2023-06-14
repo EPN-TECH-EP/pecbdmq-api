@@ -67,6 +67,11 @@ public class PeriodoAcademicoResource {
 	public List<PeriodoAcademico> listar() {
 		return objService.getAll();
 	}
+	
+	@GetMapping("/listarActivos")
+	public List<PeriodoAcademico> listarActivos() {
+		return objService.getAllActive();
+	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<PeriodoAcademico> obtenerPorId(@PathVariable("id") int codigo) {

@@ -31,7 +31,7 @@ public interface UsuarioService {
 
 	Usuario findUserByUsername(String username);
 
-	// Usuario findUserByEmail(String email);
+	Usuario findUserByEmail(String email);
 
 	Usuario crear(Usuario usuario)
 			throws NombreUsuarioExisteExcepcion,

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.dominio.admin.PADocumento;
@@ -77,9 +78,14 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public List<PeriodoAcademico> getAll() {
-		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+	
+	
+	public List<PeriodoAcademico> getAllActive() {
+		return repo.findAllByEstado(EstadosConst.ACTIVO);
+	}
+	
 
 	@Override
 	public Optional<PeriodoAcademico> getById(int id) {
