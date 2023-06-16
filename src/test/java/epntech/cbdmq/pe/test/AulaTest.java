@@ -33,23 +33,23 @@ public class AulaTest {
 	@Order(1)
 	void testGuardar() {
 		Aula aula = new Aula();
-		aula.setNombre("Test");
+		aula.setNombreAula("Test");
 		aula.setCapacidad(5);
-		aula.setImpresoras(3);
-		aula.setInstructor("test");
-		aula.setInternet("wifi");
-		aula.setPcs(3);
-		aula.setProyectores(1);
+		aula.setNumeroImpresoras(3);
+		aula.setPcInstructor("test");
+		aula.setTipoInternet("wifi");
+		aula.setNumeroPcs(3);
+		aula.setNumeroProyectores(1);
 		aula.setSalaOcupada(true);
-		aula.setTipo("teatro");
+		aula.setTipoAula("teatro");
 		aula.setEstado("activo");
 
 		Aula datos = repo.save(aula);
 		assertNotNull(datos);
 
-		assertEquals("Test", datos.getNombre());
+		assertEquals("Test", datos.getNombreAula());
 		assertEquals(5, datos.getCapacidad());
-		assertEquals(1, datos.getProyectores());
+		assertEquals(1, datos.getNumeroProyectores());
 		assertEquals("activo", datos.getEstado());
 	}
 
@@ -59,14 +59,14 @@ public class AulaTest {
 		String nombre = "Test";
 
 		Aula aula = new Aula();
-		aula.setNombre(nombre);
+		aula.setNombreAula(nombre);
 		aula.setEstado("activo");
 
 		Aula datos = repo.save(aula);
 
-		Optional<Aula> aula1 = repo.findByNombreIgnoreCase(nombre);
+		Optional<Aula> aula1 = repo.findByNombreAulaIgnoreCase(nombre);
 
-		assertThat(aula1.get().getNombre()).isEqualTo(nombre);
+		assertThat(aula1.get().getNombreAula()).isEqualTo(nombre);
 	}
 
 	@Test
@@ -75,20 +75,20 @@ public class AulaTest {
 		String nombre = "Test";
 
 		Aula aula = new Aula();
-		aula.setNombre(nombre);
+		aula.setNombreAula(nombre);
 		aula.setEstado("activo");
 
 		Aula datos = repo.save(aula);
 
-		Optional<Aula> aula1 = repo.findByNombreIgnoreCase("Test");
+		Optional<Aula> aula1 = repo.findByNombreAulaIgnoreCase("Test");
 
 		String nombreNuevo = "NombreNuevo";
 		// Aula aula = new Aula();
-		aula.setNombre(nombreNuevo);
-		aula.setCodigo(aula1.get().getCodigo());
+		aula.setNombreAula(nombreNuevo);
+		aula.setCodAula(aula1.get().getCodAula());
 
-		Optional<Aula> aulaModificada = repo.findByNombreIgnoreCase(nombreNuevo);
-		assertThat(aulaModificada.get().getNombre()).isEqualTo(nombreNuevo);
+		Optional<Aula> aulaModificada = repo.findByNombreAulaIgnoreCase(nombreNuevo);
+		assertThat(aulaModificada.get().getNombreAula()).isEqualTo(nombreNuevo);
 	}
 
 	@Test
@@ -104,11 +104,11 @@ public class AulaTest {
 		String nombre = "Test";
 
 		Aula aula = new Aula();
-		aula.setNombre(nombre);
+		aula.setNombreAula(nombre);
 		aula.setEstado("activo");
 
 		Aula datos = repo.save(aula);
-		int id = repo.findByNombreIgnoreCase("Test").get().getCodigo();
+		int id = repo.findByNombreAulaIgnoreCase("Test").get().getCodAula();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

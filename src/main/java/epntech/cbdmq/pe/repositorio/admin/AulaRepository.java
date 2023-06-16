@@ -9,5 +9,5 @@ import epntech.cbdmq.pe.dominio.admin.Aula;
 
 public interface AulaRepository extends JpaRepository<Aula, Integer> {
 
-	Optional<Aula> findByNombreIgnoreCase(String Nombre);
+	Optional<Aula> findByNombreAulaIgnoreCase(String Nombre);
 }
