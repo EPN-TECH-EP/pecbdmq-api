@@ -18,10 +18,10 @@ public class MensajesConst {
 	public static final String REGISTRO_ELIMINADO_EXITO = "Registro eliminado con éxito";
 	public static final String FECHAS_YA_EXISTE = "Ya se encuentran registradas esas fechas";
 	public static final String DATOS_RELACIONADOS = "No se puede eliminar, existen datos relacionados";
-	public static final String CURSO_APROBADO="El curso se aprobo correctamente";
-	public static final String CURSO_REPROBADO="El curso ha sido reprobado";
-	public static final String APELACION_CURSO="Esta apelacion esta en curso";
-	public static final String APELACION_NO_EXISTE="Esta apelacion no exte";
+    public static final String CURSO_APROBADO = "El curso se aprobo correctamente";
+    public static final String CURSO_REPROBADO = "El curso ha sido reprobado";
+    public static final String APELACION_CURSO = "Esta apelacion esta en curso";
+    public static final String APELACION_NO_EXISTE = "Esta apelacion no exte";
 	public static final String REGISTRO_ACTUALIZADO = "Registro actualizado con éxito";
 	public static final String REGISTRO_ELIMINADO = "Registro eliminado con éxito";
 	public static final String ESTADO_INCORRECTO = "Estado incorrecto";
@@ -36,13 +36,15 @@ public class MensajesConst {
 	public static final String DATOS_REGISTRADOS = "Datos registrados exitosamente";
 	public static final String PROCESO_EXITO = "Proceso ejecutado con éxito!";
 	public static final String NO_PERIODO_ACTIVO = "No existe Período Academico activo";
+	public static final String CONVOCATORIA_NO_EXISTE = "No existe convocatoria ";
 
 	public static final String FECHA_INSCRIPCION_INVALIDA = "La fecha de inscripción fuera del rango permitido ";
 	public static final String HORA_INSCRIPCION_INVALIDA = "La hora de inscripción fuera del rango permitido ";
 	public static final String PA_INACTIVO = "Período Académico Inactivo";
-
-	public static final String ZIP_EXITO="Carpeta comprimida con éxito!";
-	public static final String FOLDER_MAX_SIZE="La carptea supera el límite máximo permitido ";
+	
+    public static final String ZIP_EXITO = "Carpeta comprimida con éxito!";
+    public static final String FOLDER_MAX_SIZE = "La carptea supera el límite máximo permitido ";
+    public static final String NO_ENCUENTRA = "No encuentra objetos relacionados";
 	
 	
 }

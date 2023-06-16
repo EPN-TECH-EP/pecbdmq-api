@@ -117,12 +117,23 @@ public class DocumentoResource {
 		return lista;
 	}
 
-	@DeleteMapping(value = "/eliminardocumentoconvocatoria")
-	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Integer convocatoria, @RequestParam Integer codDocumento)
-			throws IOException {
+	@DeleteMapping(value = "/eliminardocumentoconvocatoria/{id}")
+	public ResponseEntity<HttpResponse> eliminarArchivo( @PathVariable("id") Integer codDocumento)
+			throws IOException, DataException {
 
+        
+		/*try {
 		objService.eliminarArchivo(convocatoria,codDocumento);
+			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);*/
+
+
+		try {
+		objService.eliminarArchivoConvocatoria(codDocumento);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+		}catch(IOException e){
+			return response(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+		
 	}
 
 	/*

@@ -4,9 +4,6 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
 
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +54,9 @@ public class ParametrizaPruebaResumenResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<ParametrizaPruebaResumen> actualizarDatos(@PathVariable("id") int codigo, @RequestBody ParametrizaPruebaResumen obj) throws DataException{
 		return (ResponseEntity<ParametrizaPruebaResumen>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setFecha_creacion(obj.getFecha_creacion());
-			datosGuardados.setFecha_inicio(obj.getFecha_inicio());
-			datosGuardados.setFecha_fin(obj.getFecha_fin());
+			datosGuardados.setFechaCreacion(obj.getFechaCreacion());
+			datosGuardados.setFechaInicio(obj.getFechaInicio());
+			datosGuardados.setFechaFin(obj.getFechaFin());
 			datosGuardados.setDescripcion(obj.getDescripcion());
 			datosGuardados.setEstado(obj.getEstado());
 			/*datosGuardados.setPuntaje_minimo(obj.getPuntaje_minimo());

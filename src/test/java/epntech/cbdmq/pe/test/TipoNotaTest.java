@@ -37,7 +37,7 @@ public class TipoNotaTest {
 	void testGuardar() {
 	 
 		TipoNota obj = new TipoNota();
-		obj.setCod_tipo_nota(1);		
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 
@@ -55,7 +55,7 @@ public class TipoNotaTest {
 		
 		
 		TipoNota obj = new TipoNota();
-		obj.setCod_tipo_nota(1);		
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 
@@ -74,7 +74,7 @@ public class TipoNotaTest {
 		String nombre = "Test";
 
 		TipoNota obj = new TipoNota();
-		obj.setCod_tipo_nota(1);		
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 
@@ -86,7 +86,7 @@ public class TipoNotaTest {
 		String datoNuevo = "texto";
 
 		obj.setNota(datoNuevo);
-		obj.setCod_tipo_nota(obj1.get().getCod_tipo_nota());
+		obj.setCodTipoNota(obj1.get().getCodTipoNota());
 
 		Optional<TipoNota> objModificado = repo.findByNotaIgnoreCase("texto");
 		assertThat(objModificado.get().getNota()).isEqualTo(datoNuevo);
@@ -103,13 +103,13 @@ public class TipoNotaTest {
 		String nombre = "Test";
 
 		TipoNota obj = new TipoNota();
-		obj.setCod_tipo_nota(1);		
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		int id = repo.findByNotaIgnoreCase("texto").get().getCod_tipo_nota();
+		int id = repo.findByNotaIgnoreCase("texto").get().getCodTipoNota();
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

@@ -23,7 +23,7 @@ import lombok.Data;
 public class TipoFecha {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cod_tipo_fecha;
+    private Integer codTipoFecha;
     @Column(name = "tipo_fecha")
     private String fecha;
     @Column(name = "estado")

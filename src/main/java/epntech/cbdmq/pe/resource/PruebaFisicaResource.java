@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.PruebaFisica;
-import epntech.cbdmq.pe.dominio.admin.PruebaFisica;
-import epntech.cbdmq.pe.dominio.admin.PruebaFisica;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.PruebaFisicaServiceImpl;
 
@@ -52,14 +50,14 @@ public class PruebaFisicaResource {
 	    @PutMapping("/{id}")
 	    public ResponseEntity<PruebaFisica> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody PruebaFisica obj) {
 	        return objServices.getById(codigo).map(datosGuardados -> {
-	        	datosGuardados.setCod_parametriza_fisica(obj.getCod_parametriza_fisica());
-	            datosGuardados.setEdadinicio(obj.getEdadinicio());
-	            datosGuardados.setEdadfin(obj.getEdadfin());
+	        	datosGuardados.setCodParametrizaFisica(obj.getCodParametrizaFisica());
+	            datosGuardados.setEdadInicio(obj.getEdadInicio());
+	            datosGuardados.setEdadFin(obj.getEdadFin());
 	            datosGuardados.setSexo(obj.getSexo());
 	            datosGuardados.setCalificacion(obj.getCalificacion());
-	            datosGuardados.setPesoprueba(obj.getPesoprueba());
+	            datosGuardados.setPesoPrueba(obj.getPesoPrueba());
 	            datosGuardados.setValor(obj.getValor());
-	            datosGuardados.setNominflexion(obj.getNominflexion());	             
+	            datosGuardados.setNoMinFlexion(obj.getNoMinFlexion());
 	            datosGuardados.setEstado(obj.getEstado());
 	            PruebaFisica datosActualizados = objServices.update(datosGuardados);
 	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);

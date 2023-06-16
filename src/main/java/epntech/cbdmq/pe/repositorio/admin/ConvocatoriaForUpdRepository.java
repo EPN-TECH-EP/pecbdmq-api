@@ -1,8 +1,8 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_CONVOCATORIA;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
-import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoFor;
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumento;
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoForDoc;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisito;
-import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.dominio.util.DatosFile;
 import epntech.cbdmq.pe.dominio.util.PeriodoAcademicoFor;
@@ -43,11 +39,8 @@ import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.impl.DocumentoServiceimpl;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.persistence.StoredProcedureQuery;
-import jakarta.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -55,7 +48,7 @@ public class ConvocatoriaForUpdRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -64,15 +57,18 @@ public class ConvocatoriaForUpdRepository {
 
 	@Value("${spring.servlet.multipart.max-file-size}")
 	public DataSize TAMAÑO_MÁXIMO;
-	
+
 	@Value("${server.port}")
 	public String SERVER_PORT;
 
 	@Value("${eureka.instance.hostname}")
 	public String HOSTNAME;
-	
+
 	@Autowired
 	private DocumentoServiceimpl objServiceDoc;
+
+	@Autowired
+	private ConvocatoriaDocumentoRepository convocatoriaDocumentoService;
 
 	public List<DatosFile> guardarArchivo(List<MultipartFile> archivo, String proceso, String id)
 			throws IOException, ArchivoMuyGrandeExcepcion {
@@ -112,17 +108,17 @@ public class ConvocatoriaForUpdRepository {
 		resultado = ARCHIVOS_RUTA + proceso + id + "/";
 		return resultado;
 	}
-	
+
 	public PeriodoAcademicoFor actualizarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
 			Set<RequisitoFor> requisitos, List<MultipartFile> docsConvocatoria, DocumentoFor documentosFor)
 			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException {
-		
+
 		String sqlConvocatoriaRequisito = "INSERT INTO cbdmq.gen_convocatoria_requisito (cod_convocatoria, cod_requisito) "
 				+ "VALUES (:cod_convocatoria, :cod_requisito)";
 
-		//en este sentencia utiliza el nombre de la clase, entidad ConvocatoriaRequisito
-		String sqlConvocatoriaRequisitoDel = "delete from ConvocatoriaRequisito e where e.cod_convocatoria = :cod_convocatoria ";
-
+		// en este sentencia utiliza el nombre de la clase, entidad
+		// ConvocatoriaRequisito
+		String sqlConvocatoriaRequisitoDel = "delete from ConvocatoriaRequisito e where e.codConvocatoria = :cod_convocatoria ";
 
 		// CONVOCATORIA
 
@@ -131,9 +127,8 @@ public class ConvocatoriaForUpdRepository {
 		Date fechaIni = new Date();
 		fechaIni = convocatoria.getFechaInicioConvocatoria();
 		SimpleDateFormat formateador = new SimpleDateFormat("yyyy-MM-dd");
-		String fechaFormateada = formateador.format(fechaIni); 
-		
-		
+		String fechaFormateada = formateador.format(fechaIni);
+
 		// Modificar la entidad
 		entidad.setCorreo(convocatoria.getCorreo());
 		entidad.setCupoHombres(convocatoria.getCupoHombres());
@@ -149,79 +144,62 @@ public class ConvocatoriaForUpdRepository {
 		entityManager.merge(entidad);
 
 		Integer codConvocatoria = convocatoria.getCodConvocatoria();
-		
+
 		// ARCHIVOS CONVOCATORIA
 		// guardamos archivos de la convocatoria en el servidor
 
-		if (!(docsConvocatoria == null))
-		{
+		if (!(docsConvocatoria == null)) {
 			List<DatosFile> archivosConvocatoria = new ArrayList<>();
 			try {
-				objServiceDoc.eliminarArchivo(documentosFor.getCodigoDocumento());
-				archivosConvocatoria = guardarArchivo(docsConvocatoria, PATH_PROCESO_CONVOCATORIA, convocatoria.getCodConvocatoria().toString());
+				// elimina documento convocatoria de tablas y FS				
+				if (documentosFor != null && documentosFor.getCodDocumento() != null) {
+					objServiceDoc.eliminarArchivoConvocatoria(documentosFor.getCodDocumento());
+				}
+				
+				// guarda archivos en FS
+				//archivosConvocatoria = guardarArchivo(docsConvocatoria, PATH_PROCESO_CONVOCATORIA, convocatoria.getCodConvocatoria().toString());
+				
+				// guarda archivos en FS y tablas
+				this.objServiceDoc.guardarArchivoConvocatoria(docsConvocatoria);
+				
+				
 			} catch (Exception e) {
 				HttpHeaders headers = new HttpHeaders();
 				headers.add("errorHeader", e.getMessage());
-			}
-			Set<DocumentoFor> dConvocatoria = new HashSet<>();
-			
-			for (DatosFile datosFile : archivosConvocatoria) {
-				
-				DocumentoFor dd = new DocumentoFor();
-				dd.setEstado("ACTIVO");
-				dd.setNombre(datosFile.getNombre());
-				dd.setRuta(datosFile.getRuta());
-	
-				dConvocatoria.add(dd);
-			}
-			
-			DocumentoFor entidadDocumento = entityManager.find(DocumentoFor.class, documentosFor.getCodigoDocumento());		
-			
-			Set<DocumentoFor> documentos = new HashSet<>();
-			for (DocumentoFor documento : dConvocatoria) {
-				DocumentoFor documentoFor = new DocumentoFor();
-				
-				entidadDocumento.setNombre(documento.getNombre());
-				entidadDocumento.setRuta(documento.getRuta());
-				entityManager.merge(entidadDocumento);
-				
-				documentoFor = documento;
-				documentos.add(documentoFor);
-			}
+			}			  
+			 
 		}
 
-		
 		// REQUISITOS
-		
-		if(requisitos.size() >= 1)
-		{
-		
-	    	Query sqlQuery = entityManager.createQuery(sqlConvocatoriaRequisitoDel);
-	    	sqlQuery.setParameter("cod_convocatoria", convocatoria.getCodConvocatoria());
+
+		if (requisitos.size() >= 1) {
+
+			Query sqlQuery = entityManager.createQuery(sqlConvocatoriaRequisitoDel);
+			sqlQuery.setParameter("cod_convocatoria", convocatoria.getCodConvocatoria());
 			sqlQuery.executeUpdate();
 
 			for (RequisitoFor elemento : requisitos) {
 				ConvocatoriaRequisito cr = new ConvocatoriaRequisito();
-				cr.setCod_convocatoria(convocatoria.getCodConvocatoria());
+				cr.setCodConvocatoria(convocatoria.getCodConvocatoria());
 				cr.setCod_requisito(elemento.getCodigoRequisito());
-				
+
 				entityManager.createNativeQuery(sqlConvocatoriaRequisito)
 						.setParameter("cod_convocatoria", convocatoria.getCodConvocatoria())
 						.setParameter("cod_requisito", elemento.getCodigoRequisito());
 				entityManager.persist(cr);
 			}
 		}
-		
-		//ENVIO DE EMAIL CON DOCUMENTO CONVOCATORIA
-		if (docsConvocatoria != null)
-		{
-			String link = HOSTNAME + ":" + SERVER_PORT + "/link/" + documentosFor.getCodigoDocumento();
-			
-			String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
-			
+
+		// ENVIO DE EMAIL CON DOCUMENTO CONVOCATORIA
+		if (docsConvocatoria != null) {
+			String link = HOSTNAME + ":" + SERVER_PORT + "/link/" + documentosFor.getCodDocumento();
+
+			String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link
+					+ " \n \n Plataforma educativa - CBDMQ";
+
 			emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
 		}
-		
+
 		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
 
 		pa.setConvocatoria(codConvocatoria);

@@ -194,7 +194,7 @@ public class ConvocatoriaForResource {
 		DocumentoFor doc = new DocumentoFor();
 		for (DocumentoFor d : documentos) {
 			DocumentoFor documento = new DocumentoFor();
-			documento.setCodigoDocumento(d.getCodigoDocumento());
+			documento.setCodDocumento(d.getCodDocumento());
 			docs.add(documento);
 			doc = documento;
 		}

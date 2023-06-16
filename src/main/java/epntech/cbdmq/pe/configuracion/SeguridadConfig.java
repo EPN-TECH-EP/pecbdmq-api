@@ -74,27 +74,6 @@ public class SeguridadConfig {
         .and()
         .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 		
-		
-		
-		/*http.csrf()
-	      .disable()
-	      .authorizeRequests()
-	      .antMatchers(HttpMethod.DELETE)
-	      .hasRole("ADMIN")
-	      .antMatchers("/admin/**")
-	      .hasAnyRole("ADMIN")
-	      .antMatchers("/user/**")
-	      .hasAnyRole("USER", "ADMIN")
-	      .antMatchers("/login/**")
-	      .anonymous()
-	      .anyRequest()
-	      .authenticated()
-	      .and()
-	      .httpBasic()
-	      .and()
-	      .sessionManagement()
-	      .sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
-
 	    return http.build();
 	}
 

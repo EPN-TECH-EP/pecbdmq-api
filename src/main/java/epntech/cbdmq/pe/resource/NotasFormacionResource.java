@@ -1,4 +1,3 @@
-
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
@@ -122,3 +121,4 @@ public class NotasFormacionResource {
 				httpStatus);
 	}
 }
+

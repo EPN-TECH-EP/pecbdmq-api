@@ -15,10 +15,10 @@ public class InstructorPeriodo {
 	
 	@Id
 	@Column(name = "cod_instructor")
-	private Integer cod_instructor;
+	private Integer codInstructor;
 	
 	
 	@Column(name = "cod_periodo_academico")
-	private Integer cod_periodo_academico;
+	private Integer codPeriodoAcademico;
 	
 }

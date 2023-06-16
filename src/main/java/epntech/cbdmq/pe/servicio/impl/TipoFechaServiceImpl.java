@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.TipoFecha;
-import epntech.cbdmq.pe.dominio.admin.TipoNota;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.TipoFechaRepository;
 import epntech.cbdmq.pe.servicio.TipoFechaService;
@@ -65,7 +64,7 @@ public class TipoFechaServiceImpl implements TipoFechaService {
     @Override
     public TipoFecha update(TipoFecha objActualizado) throws DataException {
     	Optional<TipoFecha> objGuardado = repo.findByFechaIgnoreCase(objActualizado.getFecha());
-    	if (objGuardado.isPresent()&& !objGuardado.get().getCod_tipo_fecha().equals(objActualizado.getCod_tipo_fecha())) {
+    	if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoFecha().equals(objActualizado.getCodTipoFecha())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
         return repo.save(objActualizado);

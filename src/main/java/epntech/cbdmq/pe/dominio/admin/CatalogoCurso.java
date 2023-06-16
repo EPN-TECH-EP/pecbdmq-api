@@ -17,15 +17,15 @@ public class CatalogoCurso {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_catalogo_cursos")
-	private Integer cod_catalogo_cursos;
+	private Integer codCatalogoCursos;
 	@Column(name = "nombre_catalogo_curso")
 	private String nombre;
 	@Column(name = "descripcion_catalogo_curso")
 	private String descripcion;
 	@Column(name = "numero_horas")
-	private Long numero_horas;
+	private Long numeroHoras;
 	@Column(name = "nota_minima")
-	private Double nota_minima;
+	private Double notaMinima;
 	@Column(name = "estado")
 	private String estado;
 	

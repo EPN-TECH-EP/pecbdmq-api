@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -26,7 +25,7 @@ public class Parametrizacion {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_parametriza")
-	private Integer codparametriza;
+	private Integer codParametriza;
 	/*@Column(name = "cod_tipo_prueba")
 	private Integer codtipoprueba;
 	@Column(name = "cod_periodo_academico")
@@ -40,15 +39,15 @@ public class Parametrizacion {
 	@Column(name = "cod_tipo_fecha")
 	private Integer codtipofecha;*/
 	@Column(name = "fecha_inicio_param")
-	private LocalDateTime fechainicioparam;
+	private LocalDateTime fechaInicioParam;
 	@Column(name = "fecha_fin_param")
-	private LocalDateTime fechafinparam;
+	private LocalDateTime fechaFinParam;
 	@Column(name = "hora_inicio_param")
-	private LocalTime horainicioparam;
+	private LocalTime horaInicioParam;
 	@Column(name = "hora_fin_param")
-	private LocalTime horafinparam;
+	private LocalTime horaFinParam;
 	@Column(name = "observacion_parametriza")
-	private String observacionparametriza;
+	private String observacionParametriza;
 	@Column(name = "estado")
 	private String estado;
 		

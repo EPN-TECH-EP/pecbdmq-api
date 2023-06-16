@@ -6,8 +6,6 @@ import org.hibernate.annotations.Where;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -20,12 +18,12 @@ import lombok.Data;
 public class SubTipoPrueba {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	//@EqualsAndHashCode.Include()
 	
 
 	@Column(name = "cod_subtipo_prueba")
-	private Integer cod_subtipo_prueba;
+	private Integer codSubtipoPrueba;
 	
 	/*@Column(name = "cod_tipo_prueba")
 	private Integer cod_tipo_prueba;*/
@@ -36,8 +34,8 @@ public class SubTipoPrueba {
 	@Column(name = "estado")
 	private String estado;
 	
-	  @ManyToOne
+	/* @ManyToOne
 	    @JoinColumn(name ="cod_tipo_prueba")
-	 	private TipoPrueba tipo;
+	 	private TipoPrueba tipo;*/
 }
 

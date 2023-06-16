@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.dominio.admin.Ponderacion;
 import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -53,10 +52,10 @@ public class PonderacionResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Ponderacion> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Ponderacion obj) throws DataException{
 		return (ResponseEntity<Ponderacion>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCod_modulo(obj.getCod_modulo());
-			datosGuardados.setCod_periodo_academico(obj.getCod_periodo_academico());
-			datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
-			datosGuardados.setPorcentaje_final_ponderacion(obj.getPorcentaje_final_ponderacion());
+			datosGuardados.setCodModulo(obj.getCodModulo());
+			datosGuardados.setCodPeriodoAcademico(obj.getCodPeriodoAcademico());
+			datosGuardados.setCodComponenteNota(obj.getCodComponenteNota());
+			datosGuardados.setPorcentajeFinalPonderacion(obj.getPorcentajeFinalPonderacion());
 			//datosGuardados.setCod_tipo_nota(obj.getCod_tipo_nota());
 			
 			

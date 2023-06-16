@@ -38,3 +38,4 @@ public interface NotasFormacionFinalRepository extends JpaRepository<NotasFormac
 	void actualizarEstadorealizoEncuesta(Long codEstudiante);
 }
 
+

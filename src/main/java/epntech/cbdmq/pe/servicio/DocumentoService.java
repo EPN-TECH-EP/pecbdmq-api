@@ -17,8 +17,6 @@ public interface DocumentoService {
 	
 	List<Documento> listAll();
 	
-	
-	
 	Optional<Documento> getById(int id);
 	
 	Documento update(Documento objActualizado, MultipartFile archivo) throws ArchivoMuyGrandeExcepcion,IOException;
@@ -27,10 +25,15 @@ public interface DocumentoService {
 	
 	List<DocumentoRuta> guardarArchivo(String proceso, String id, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 	
-	void eliminarArchivo(int id) throws IOException, ArchivoMuyGrandeExcepcion;
+	void eliminarArchivo(int id) throws IOException;
 	
-	void eliminarArchivo(Integer convocatoria, Integer codDocumento) throws IOException;
+	//void eliminarArchivo(Integer convocatoria, Integer codDocumento) throws IOException;
 
 	Documento updateDoc(Long codDocumento, MultipartFile archivo) throws ArchivoMuyGrandeExcepcion,IOException, DataException;
-}
 
+	void eliminarArchivoConvocatoria(Integer codDocumento) throws IOException, DataException;
+	
+	public void guardarArchivoConvocatoria(List<MultipartFile> docsConvocatoria)
+			throws IOException, DataException, ArchivoMuyGrandeExcepcion;
+
+}

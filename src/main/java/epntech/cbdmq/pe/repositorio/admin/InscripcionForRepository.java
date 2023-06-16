@@ -10,12 +10,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
-import epntech.cbdmq.pe.dominio.admin.DatoPersonalDocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.DocumentoDatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.DocumentoPostulante;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.PostulanteDocumentoFor;
@@ -157,47 +154,47 @@ public class InscripcionForRepository{
 		entityManager.createNativeQuery(sqlDatoPersonal)
 		.setParameter("apellido", inscripcion.getApellido())
 		.setParameter("cedula", inscripcion.getCedula())
-		.setParameter("cod_estacion", inscripcion.getCod_estacion())
+		.setParameter("cod_estacion", inscripcion.getCodEstacion())
 		.setParameter("correo_personal", inscripcion.getCorreoPersonal())
 		.setParameter("estado", inscripcion.getEstado())
-		.setParameter("fecha_nacimiento", inscripcion.getFecha_nacimiento())
+		.setParameter("fecha_nacimiento", inscripcion.getFechaNacimiento())
 		.setParameter("nombre", inscripcion.getNombre())
-		.setParameter("num_telef_convencional", inscripcion.getNum_telef_convencional())
-		.setParameter("tipo_sangre", inscripcion.getTipo_sangre())
-		.setParameter("validacion_correo", inscripcion.getValidacion_correo())
-		.setParameter("cod_provincia_nacimiento", inscripcion.getCod_provincia_nacimiento())
-		.setParameter("cod_unidad_gestion", inscripcion.getCod_unidad_gestion())
+		.setParameter("num_telef_convencional", inscripcion.getNumTelefConvencional())
+		.setParameter("tipo_sangre", inscripcion.getTipoSangre())
+		.setParameter("validacion_correo", inscripcion.getValidacionCorreo())
+		.setParameter("cod_provincia_nacimiento", inscripcion.getCodProvinciaNacimiento())
+		.setParameter("cod_unidad_gestion", inscripcion.getCodUnidadGestion())
 		.setParameter("sexo", inscripcion.getSexo())
-		.setParameter("num_telef_celular", inscripcion.getNum_telef_celular())
-		.setParameter("reside_pais", inscripcion.getReside_pais())
-		.setParameter("cod_provincia_residencia", inscripcion.getCod_provincia_residencia())
-		.setParameter("calle_principal_residencia", inscripcion.getCalle_principal_residencia())
-		.setParameter("calle_secundaria_residencia", inscripcion.getCalle_secundaria_residencia())
-		.setParameter("numero_casa", inscripcion.getNumero_casa())
+		.setParameter("num_telef_celular", inscripcion.getNumTelefCelular())
+		.setParameter("reside_pais", inscripcion.getResidePais())
+		.setParameter("cod_provincia_residencia", inscripcion.getCodProvinciaResidencia())
+		.setParameter("calle_principal_residencia", inscripcion.getCallePrincipalResidencia())
+		.setParameter("calle_secundaria_residencia", inscripcion.getCalleSecundariaResidencia())
+		.setParameter("numero_casa", inscripcion.getNumeroCasa())
 		.setParameter("colegio", inscripcion.getColegio())
-		.setParameter("tipo_nacionalidad", inscripcion.getTipo_nacionalidad())
-		.setParameter("tiene_merito_deportivo", inscripcion.getTiene_merito_deportivo())
-		.setParameter("tiene_merito_academico", inscripcion.getTiene_merito_academico())
-		.setParameter("nombre_titulo_segundonivel", inscripcion.getNombre_titulo_segundonivel())
-		.setParameter("pais_titulo_segundonivel", inscripcion.getPais_titulo_segundonivel())
-		.setParameter("ciudad_titulo_segundonivel", inscripcion.getCiudad_titulo_segundonivel())
-		.setParameter("merito_deportivo_descripcion", inscripcion.getMerito_deportivo_descripcion())
-		.setParameter("merito_academico_descripcion", inscripcion.getMerito_academico_descripcion())
-		.setParameter("pin_validacion_correo", inscripcion.getPin_validacion_correo())
-		.setParameter("correo_institucional", inscripcion.getCorreo_institucional())
-		.setParameter("cod_cargo", inscripcion.getCod_cargo())
-		.setParameter("cod_rango", inscripcion.getCod_rango())
-		.setParameter("cod_grado", inscripcion.getCod_grado())
-		.setParameter("cod_documento_imagen", inscripcion.getCod_documento_imagen())
-		.setParameter("cod_canton_nacimiento", inscripcion.getCod_canton_nacimiento())
-		.setParameter("cod_canton_residencia", inscripcion.getCod_canton_residencia())
-		.setParameter("fecha_salida_institucion", inscripcion.getFecha_salida_institucion())
-		.setParameter("nivel_instruccion", inscripcion.getNivel_instruccion())
-		.setParameter("nombre_titulo_tercernivel", inscripcion.getNombre_titulo_tercernivel())
-		.setParameter("nombre_titulo_cuartonivel", inscripcion.getNombre_titulo_cuartonivel())
-		.setParameter("es_vulnerable", inscripcion.getEs_vulnerable())
-		.setParameter("pais_titulo_cuartonivel", inscripcion.getPais_titulo_cuartonivel())
-		.setParameter("pais_titulo_tercernivel", inscripcion.getPais_titulo_tercernivel())
+		.setParameter("tipo_nacionalidad", inscripcion.getTipoNacionalidad())
+		.setParameter("tiene_merito_deportivo", inscripcion.getTieneMeritoDeportivo())
+		.setParameter("tiene_merito_academico", inscripcion.getTieneMeritoAcademico())
+		.setParameter("nombre_titulo_segundonivel", inscripcion.getNombreTituloSegundonivel())
+		.setParameter("pais_titulo_segundonivel", inscripcion.getPaisTituloSegundoNivel())
+		.setParameter("ciudad_titulo_segundonivel", inscripcion.getCiudadTituloSegundoNivel())
+		.setParameter("merito_deportivo_descripcion", inscripcion.getMeritoDeportivoDescripcion())
+		.setParameter("merito_academico_descripcion", inscripcion.getMeritoAcademicoDescripcion())
+		.setParameter("pin_validacion_correo", inscripcion.getPinValidacionCorreo())
+		.setParameter("correo_institucional", inscripcion.getCorreoInstitucional())
+		.setParameter("cod_cargo", inscripcion.getCodCargo())
+		.setParameter("cod_rango", inscripcion.getCodRango())
+		.setParameter("cod_grado", inscripcion.getCodGrado())
+		.setParameter("cod_documento_imagen", inscripcion.getCodDocumentoImagen())
+		.setParameter("cod_canton_nacimiento", inscripcion.getCodCantonNacimiento())
+		.setParameter("cod_canton_residencia", inscripcion.getCodCantonResidencia())
+		.setParameter("fecha_salida_institucion", inscripcion.getFechaSalidaInstitucion())
+		.setParameter("nivel_instruccion", inscripcion.getNivelInstruccion())
+		.setParameter("nombre_titulo_tercernivel", inscripcion.getNombreTituloTercernivel())
+		.setParameter("nombre_titulo_cuartonivel", inscripcion.getNombreTituloCuartoNivel())
+		.setParameter("es_vulnerable", inscripcion.getEsVulnerable())
+		.setParameter("pais_titulo_cuartonivel", inscripcion.getPaisTituloCuartoNivel())
+		.setParameter("pais_titulo_tercernivel", inscripcion.getPaisTituloTercerNivel())
 				;
 
 		entityManager.persist(inscripcion);
@@ -206,8 +203,8 @@ public class InscripcionForRepository{
 		//System.out.println("inscripcion.getFecha_nacimiento(): " + inscripcion.getFecha_nacimiento());
 		
 		StoredProcedureQuery query = entityManager.createStoredProcedureQuery("cbdmq.get_edad");
-		query.registerStoredProcedureParameter("fecha", Date.class, ParameterMode.IN);
-		query.setParameter("fecha", inscripcion.getFecha_nacimiento());
+		query.registerStoredProcedureParameter("fecha", LocalDateTime.class, ParameterMode.IN);
+		query.setParameter("fecha", inscripcion.getFechaNacimiento());
 		query.execute();
 		Object edad = query.getSingleResult();
 		
@@ -219,7 +216,7 @@ public class InscripcionForRepository{
 
 		PostulanteFor postulante = new PostulanteFor();
 		postulante.setCodDatoPersonal(inscripcion.getCodDatoPersonal());
-		postulante.setEstado(inscripcion.getEstado());
+		postulante.setEstado("ACTIVO");
 		postulante.setFechaPostulacion(fechaPostulacion);
 		//postulante.setEdadPostulacion(Integer.parseInt(edad.toString()));
 		postulante.setEdadPostulacion((int) edad);
@@ -247,7 +244,7 @@ public class InscripcionForRepository{
 		for (DatosFile datosFile : archivos) {
 			DocumentoPostulante dd = new DocumentoPostulante();
 			dd.setEstado("ACTIVO");
-			dd.setNombre(datosFile.getNombre());
+			dd.setNombreDocumento(datosFile.getNombre());
 			dd.setRuta(datosFile.getRuta());
 
 			dPostulante.add(dd);
@@ -259,11 +256,11 @@ public class InscripcionForRepository{
 			DocumentoPostulante documentoDP = new DocumentoPostulante();
 			entityManager.createNativeQuery(sqlDocumento)
 					.setParameter("autorizacion", documento.getAutorizacion())
-					.setParameter("tipo", documento.getTipo())
+					.setParameter("tipo", documento.getCodTipoDocumento())
 					.setParameter("descripcion", documento.getDescripcion())
 					.setParameter("estadoValidacion", documento.getEstadoValidacion())
-					.setParameter("codigoUnico", documento.getCodigoUnico())
-					.setParameter("nombre", documento.getNombre())
+					//.setParameter("codigoUnico", documento.getCodigoUnico())
+					.setParameter("nombre", documento.getNombreDocumento())
 					.setParameter("observaciones", documento.getObservaciones())
 					.setParameter("ruta", documento.getRuta())
 					.setParameter("estado", documento.getEstado());
@@ -280,10 +277,10 @@ public class InscripcionForRepository{
 			//System.out.println("elemento.getCodigoDocumento(): " + elemento.getCodigoDocumento());
 			entityManager.createNativeQuery(sqlPostulanteDocumento)
 					.setParameter("cod_postulante", codPostulante)
-					.setParameter("cod_documento", elemento.getCodigoDocumento());
+					.setParameter("cod_documento", elemento.getCodDocumento());
 			
-			postulanteDocumentoFor.setCod_postulante(codPostulante);
-			postulanteDocumentoFor.setCod_documento(elemento.getCodigoDocumento());
+			postulanteDocumentoFor.setCodPostulante(codPostulante);
+			postulanteDocumentoFor.setCodDocumento(elemento.getCodDocumento());
 			entityManager.persist(postulanteDocumentoFor);
 		}		
 				
@@ -296,8 +293,8 @@ public class InscripcionForRepository{
 		
 		
 		InscripcionResult result = new InscripcionResult();
-		result.setCod_datos_personales(postulante.getCodDatoPersonal());
-		result.setCod_postulante(codPostulante);
+		result.setCodDatosPersonales(postulante.getCodDatoPersonal());
+		result.setCodPostulante(codPostulante);
 		
 		return result;
 	}

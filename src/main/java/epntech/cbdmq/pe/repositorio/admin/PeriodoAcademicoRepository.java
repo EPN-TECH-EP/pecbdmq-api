@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.repositorio.admin;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -65,4 +66,6 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
 	
 	@Procedure(value = "cbdmq.get_pa_activo")
 	Integer getPAActive();
+	
+	List<PeriodoAcademico> findAllByEstado(String estado);
 }

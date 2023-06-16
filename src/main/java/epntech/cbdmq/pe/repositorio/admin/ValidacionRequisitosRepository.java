@@ -10,7 +10,7 @@ import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosLista;
 public interface ValidacionRequisitosRepository extends JpaRepository<ValidacionRequisitosLista, Integer> {
 	
 	
-	@Query(value = "select vr.cod_validacion_requisitos, vr.cod_requisitos, r.nombre_requisito, vr.estado, vr.observaciones "
+	@Query(value = "select vr.cod_validacion_requisitos as cod_validacion, vr.cod_requisitos, r.nombre_requisito, vr.estado, vr.observaciones, vr.cod_postulante, vr.estado_muestra, vr.observacion_muestra  "
 			+ "from cbdmq.gen_convocatoria c, cbdmq.gen_convocatoria_requisito cr, cbdmq.gen_requisito r, "
 			+ "cbdmq.gen_periodo_academico pa, cbdmq.gen_validacion_requisitos vr "
 			+ "where c.cod_convocatoria = cr.cod_convocatoria "

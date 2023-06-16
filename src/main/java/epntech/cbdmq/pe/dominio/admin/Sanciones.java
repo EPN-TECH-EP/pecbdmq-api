@@ -49,3 +49,4 @@ public class Sanciones {
 	private Integer codFaltaCurso;
 	
 }
+

@@ -215,7 +215,7 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 		
 		DocumentoPrueba doc = new DocumentoPrueba(); 
 		doc.setCodPruebaDetalle(prueba);
-		doc.setCodDocumento(documento.getCodigo());
+		doc.setCodDocumento(documento.getCodDocumento());
 		//System.out.println("documento.getCodigo(): " + documento.getCodigo());
 		
 		saveDocumentoPrueba(doc);

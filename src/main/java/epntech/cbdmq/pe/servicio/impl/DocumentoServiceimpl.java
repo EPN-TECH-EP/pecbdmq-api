@@ -1,8 +1,12 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+
 import static epntech.cbdmq.pe.constante.ArchivoConst.FORWARD_SLASH;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+
+import static epntech.cbdmq.pe.constante.MensajesConst.CONVOCATORIA_NO_EXISTE;
+
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,11 +26,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.constante.ArchivoConst;
+import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoForDoc;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaDocumentoRepository;
+import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.servicio.DocumentoService;
 
@@ -40,6 +47,9 @@ public class DocumentoServiceimpl implements DocumentoService {
 
 	@Autowired
 	private ConvocatoriaDocumentoRepository convocatoriaDocumentoRepository;
+
+	@Autowired
+	private ConvocatoriaRepository convocatoriaRepository;
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -72,8 +82,10 @@ public class DocumentoServiceimpl implements DocumentoService {
 		// TODO Auto-generated method stub
 		
 		if (!archivo.isEmpty()) {
+
 			//System.out.println("ruta: " +  Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()));
 			Path ruta = Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()).toAbsolutePath()
+
 					.normalize();
 			// ruta =Path.of( );
 			
@@ -88,10 +100,12 @@ public class DocumentoServiceimpl implements DocumentoService {
 			}
 
 			// Cargar documento
+			System.out.println("ruta" + ruta);
 
 			System.out.println("parent " + ruta.getParent().toString());
 
 			if (!Files.exists(ruta.getParent())) {
+				System.out.println("ruta" + ruta);
 				Files.createDirectories(ruta.getParent());
 			}
 
@@ -139,6 +153,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 
 		resultado = ruta(proceso, id);
 		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
+		System.out.println("ruta" + ruta);
 
 		if (!Files.exists(ruta)) {
 			Files.createDirectories(ruta);
@@ -160,6 +175,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 					StandardCopyOption.REPLACE_EXISTING);
 			LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
 			documentos.setRuta(resultado + multipartFile.getOriginalFilename());
+			documentos.setNombre(multipartFile.getOriginalFilename());
 			lista.add(documentos);
 
 		}
@@ -168,56 +184,112 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	@Override
-	public void eliminarArchivo(int id) throws IOException, ArchivoMuyGrandeExcepcion {
-		// TODO Auto-generated method stub
-		String resultado = null;
-		Documento documentos = new Documento();
-		Optional<Documento> documento;
+	public void eliminarArchivo(int codDocumento) throws IOException {
 
-		System.out.println("id: " + id);
-		documento = repo.findById(id);
-		documentos = documento.get();
-		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
+		Documento documento = new Documento();
+		Optional<Documento> documentoOpt;
 
-		System.out.println("ruta: " + ruta);
-		if (Files.exists(ruta)) {
-			try {
-				System.out.println("ruta" + ruta);
-				Files.delete(ruta);
-			} catch (Exception e) {
+		// busca documento y elimina de tablas
+		documentoOpt = repo.findById(codDocumento);
+		documento = documentoOpt.get();
+		repo.deleteById(codDocumento);
 
-				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
-				// e.printStackTrace();
-			}
+		// elimina de FS
+		Path ruta = null;
+
+		try {
+			ruta = Paths.get(documento.getRuta()).toAbsolutePath().normalize();
+			Files.delete(ruta);
+		} catch (Exception e) {
+			throw new IOException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void eliminarArchivo(Integer convocatoria, Integer codDocumento)
-			throws IOException {
-		String resultado = null;
-		Documento documentos = new Documento();
-		Optional<Documento> documento;
+	public void eliminarArchivoConvocatoria(Integer codDocumento)
+			throws IOException, DataException {
 
-		// System.out.println("id: " + codDocumento);
-		documento = repo.findById(codDocumento);
-		documentos = documento.get();
-		Path ruta = Paths.get(documentos.getRuta()).toAbsolutePath().normalize();
+		Documento documento = new Documento();
+		Optional<Documento> documentoOpt;
 
-		// System.out.println("ruta: " + ruta);
-		if (Files.exists(ruta)) {
-			try {
-				System.out.println("ruta" + ruta);
-				Files.delete(ruta);
-				repo.deleteById(codDocumento);
-				convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);
-			} catch (Exception e) {
+		// obtiene convocatoria
+		Integer convocatoria = convocatoriaRepository.getConvocatoriaActivaFormacion();
 
-				throw new IOException(e.getMessage());
-				// e.printStackTrace();
+		if (convocatoriaRepository.findById(convocatoria).isEmpty())
+			throw new IOException(CONVOCATORIA_NO_EXISTE);
+
+		// busca documento y elimina de tablas
+		
+		try {
+			documentoOpt = repo.findById(codDocumento);
+			documento = documentoOpt.get();
+			List<ConvocatoriaDocumentoForDoc> listaConvDoc = convocatoriaDocumentoRepository
+					.findAllByCodConvocatoriaAndCodDocumento(convocatoria, codDocumento);
+			if (listaConvDoc != null && !listaConvDoc.isEmpty()) {
+				convocatoriaDocumentoRepository.deleteAllByCodConvocatoria(convocatoria);
 			}
-
+			repo.deleteById(codDocumento);
+		} catch (Exception e) {
+			LOGGER.error("No se puede eliminar le documento de las tablas: " + e.getMessage());
 		}
+		// elimina de FS
+		Path ruta = null;
+
+		try {
+			ruta = Paths.get(documento.getRuta()).toAbsolutePath().normalize();
+			Files.delete(ruta);
+		} catch (Exception e) {
+			//throw new IOException(e.getMessage());
+			LOGGER.error("No se puede eliminar le documento en la ruta: " + ruta);
+		}
+
+	}
+	
+	@Override
+	public void guardarArchivoConvocatoria(List<MultipartFile> docsConvocatoria)
+			throws IOException, DataException, ArchivoMuyGrandeExcepcion {
+
+		Documento documento = null;
+		Optional<Documento> documentoOpt;
+
+		// obtiene convocatoria
+		Integer convocatoria = convocatoriaRepository.getConvocatoriaActivaFormacion();
+
+		if (convocatoriaRepository.findById(convocatoria).isEmpty())
+			throw new IOException(CONVOCATORIA_NO_EXISTE);
+
+	
+		// guarda los archivos en FS 
+		List<DocumentoRuta> listaDocRuta = this.guardarArchivo(ArchivoConst.PATH_PROCESO_CONVOCATORIA, convocatoria.toString(), docsConvocatoria);
+		
+		
+		// registra archivos en gen_documento
+		
+		List<Integer> listaIdsDocs = new ArrayList<Integer>();
+		
+		for (DocumentoRuta documentoRuta : listaDocRuta) {
+			documento = new Documento();
+			
+			documento.setEstado("ACTIVO");
+			documento.setRuta(documentoRuta.getRuta());
+			documento.setNombre(documentoRuta.getNombre());
+			
+			Documento newDocumento = this.repo.save(documento);
+			
+			listaIdsDocs.add(newDocumento.getCodigo());			
+		}
+		
+		// registra documentos en tabla intermedia
+		ConvocatoriaDocumentoForDoc convocatoriaDocumento = null;
+		
+		for (Integer codDocumento : listaIdsDocs) {
+			convocatoriaDocumento = new ConvocatoriaDocumentoForDoc();
+			convocatoriaDocumento.setCodConvocatoria(convocatoria);
+			convocatoriaDocumento.setCodDocumento(codDocumento);
+			
+			this.convocatoriaDocumentoRepository.save(convocatoriaDocumento);
+		}
+		
 	}
 
 	@Override

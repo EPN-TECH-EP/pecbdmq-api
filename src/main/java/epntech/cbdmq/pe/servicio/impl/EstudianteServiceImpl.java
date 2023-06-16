@@ -1,23 +1,15 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Estudiante;
-import epntech.cbdmq.pe.dominio.admin.EstudianteFor;
-import epntech.cbdmq.pe.dominio.util.AspirantesDatos;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.repositorio.admin.AspirantesRepository;
 import epntech.cbdmq.pe.repositorio.admin.EstudianteForRepository;
-import epntech.cbdmq.pe.repositorio.admin.EstudianteRepository;
+import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.servicio.EstudianteService;
 
 @Service
@@ -80,10 +72,15 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}*/
 
 	@Override
-	public void saveEstudiantes(Integer modulo) {
+	public void saveEstudiantes() {
 		// TODO Auto-generated method stub
-		estudianteForRepository.insertEstudiantes(modulo);
+		estudianteForRepository.insertEstudiantes();
 	}
 
+	@Override
+	public Estudiante getEstudianteByUsuario(String codUsuario){
+
+		return this.repo.getEstudianteByUsuario(codUsuario);
+	}
 	
 }

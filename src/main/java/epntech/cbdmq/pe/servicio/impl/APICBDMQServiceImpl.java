@@ -89,7 +89,7 @@ public class APICBDMQServiceImpl implements ApiCBDMQService {
 		Boolean isValid = util.validadorDeCedula(cedula);
 		// System.out.println("isValid: " + isValid);
 		if (isValid) {
-			String url = apiEducacionMedia + cedula;
+			String url = apiEducacionSuperior + cedula;
 			ApiBase base = restTemplate.getForObject(url, ApiBase.class);
 
 			if (base.getStatus().equals("error"))

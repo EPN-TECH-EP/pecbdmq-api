@@ -21,8 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "gen_documento")
-@SQLDelete(sql = "UPDATE {h-schema}gen_documento SET estado = 'ELIMINADO' WHERE cod_documento = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado <> 'ELIMINADO'")
+
 public class Documento {
 
 	@Id
@@ -48,4 +47,9 @@ public class Documento {
 	@Column(name = "estado")
 	private String estado;
 
+	@Column(name = "autorizacion")
+	private String autorizacion;
+	
+	@Column(name = "estado_validacion")
+	private String estadoValidacion;
 }

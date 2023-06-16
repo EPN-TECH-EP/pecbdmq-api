@@ -30,21 +30,21 @@ public class Prueba {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_prueba")
-	private Integer cod_prueba;
+	private Integer codPrueba;
 	
 	@Column(name = "cod_subtipo_prueba")
-	private Integer cod_subtipo_prueba;
+	private Integer codSubtipoPrueba;
 	
 	@Column(name = "descripcion_prueba")
-	private String descripcion_prueba;
+	private String descripcionPrueba;
 	
 	@Column(name = "fecha_inicio")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date fecha_inicio;
+	private Date fechaInicio;
 	
 	@Column(name = "fecha_fin")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date fecha_fin;
+	private Date fechaFin;
 	
 	@Column(name = "hora")
 	@JsonFormat(pattern = "HH:mm")
@@ -54,10 +54,10 @@ public class Prueba {
 	private String estado;
 	
 	@Column(name = "cod_periodo_academico")
-	private Integer cod_periodo_academico;
+	private Integer codPeriodoAcademico;
 	
 	@Column(name = "cod_curso_especializacion")
-	private Integer cod_curso_especializacion;
+	private Integer codCursoEspecializacion;
 	
 }
 

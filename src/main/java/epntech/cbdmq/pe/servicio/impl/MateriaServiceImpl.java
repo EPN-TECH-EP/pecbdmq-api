@@ -1,12 +1,17 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import java.util.List;
+import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
-
 
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
@@ -16,8 +21,6 @@ import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoRepository;
 import epntech.cbdmq.pe.repositorio.admin.MateriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.MateriaService;
-
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 @Service
 public class MateriaServiceImpl implements MateriaService {
@@ -33,23 +36,31 @@ public class MateriaServiceImpl implements MateriaService {
 	private PeriodoAcademicoRepository repo3;
 
 	@Override
-	public Materia save(Materia obj) throws DataException {
-		Materia materia= repo.save(obj);//Guarada el objeto en la materia		
-		PeriodoAcademico peracademico = new PeriodoAcademico();//Traemos la clase PerAcademico
-		peracademico =repo3.getPeriodoAcademicoActivo();//Obtenermos el periodoAcademico Activo
-		MateriaPeriodo matperiodo= new MateriaPeriodo();//Traemos la clase Materia Periodo
-		matperiodo.setCod_periodo_academico(peracademico.getCodigo());//Obtenemos los valores y returnamos valores en la tabla
-		matperiodo.setCod_materia(materia.getCodMateria());		
-		repo2.save(matperiodo);
+	public Materia save(Materia obj) throws DataException {	
 		
 		if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Materia> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
-		if (objGuardado.isPresent()) {
+		
+		// verifica si ya existe una materia con ese nombre
+		try {
+			Optional<Materia> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
+			if (objGuardado.isPresent()) {
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
+		} catch (IncorrectResultSizeDataAccessException e) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		obj.setNombre(obj.getNombre().toUpperCase());
-		return repo.save(obj);
+		
+		Materia materia= repo.save(obj);//Guarada el objeto en la materia		
+		/*PeriodoAcademico peracademico = new PeriodoAcademico();//Traemos la clase PerAcademico
+		peracademico =repo3.getPeriodoAcademicoActivo();//Obtenermos el periodoAcademico Activo
+		MateriaPeriodo matperiodo= new MateriaPeriodo();//Traemos la clase Materia Periodo
+		matperiodo.setCodPeriodoAcademico(peracademico.getCodigo());//Obtenemos los valores y returnamos valores en la tabla
+		matperiodo.setCodMateria(materia.getCodMateria());
+		repo2.save(matperiodo);*/
+		
+		return materia;
 	}
 
 	@Override
@@ -66,11 +77,11 @@ public class MateriaServiceImpl implements MateriaService {
 
 	@Override
 	public Materia update(Materia objActualizado) throws DataException {
-		Optional<Materia> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+		/*Optional<Materia> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
 		if (objGuardado.isPresent()&& !objGuardado.get().getCodMateria().equals(objActualizado.getCodMateria())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-			return repo.save(objActualizado);
+		}*/
+			return this.save(objActualizado);
 	}
 
 	@Override

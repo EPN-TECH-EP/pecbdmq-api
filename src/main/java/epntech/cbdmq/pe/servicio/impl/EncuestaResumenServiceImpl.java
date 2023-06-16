@@ -46,4 +46,14 @@ public class EncuestaResumenServiceImpl implements EncuestaResumenService {
 		encuestaresumenrepository.deleteById(id);
 	}
 
+	@Override
+	public Boolean existeEncuesta() {
+		// TODO Auto-generated method stub
+		Integer encuesta=encuestaresumenrepository.existeEncuesta();
+		if(encuesta==null)
+			return false;
+		else return true; 
+		 
+	}
+
 }

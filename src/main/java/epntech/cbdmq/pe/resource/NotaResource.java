@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Notas;
-import epntech.cbdmq.pe.dominio.admin.Parametrizacion;
 
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.NotasServiceImpl;
@@ -53,19 +52,19 @@ public class NotaResource {
 	public ResponseEntity<Notas> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Notas obj) throws DataException{
 		return (ResponseEntity<Notas>) objService.getById(codigo).map(datosGuardados -> {
 			
-			datosGuardados.setCod_instructor(obj.getCod_instructor());
-			datosGuardados.setCod_curso_especializacion(obj.getCod_curso_especializacion());
-			datosGuardados.setCod_ponderacion(obj.getCod_ponderacion());
-			datosGuardados.setCod_estudiante(obj.getCod_estudiante());
-			datosGuardados.setCod_materia(obj.getCod_materia());
-			datosGuardados.setAporteexamen(obj.getAporteexamen());
-			datosGuardados.setAporteacademico(obj.getAporteacademico());
-			datosGuardados.setNotafinalformacion(obj.getNotafinalformacion());
-			datosGuardados.setFechacreanota(obj.getFechacreanota());
-			datosGuardados.setHoracreanota(obj.getHoracreanota());			
-			datosGuardados.setUsuariomodnota(obj.getUsuariomodnota());
-			datosGuardados.setFechamodnota(obj.getFechamodnota());
-			datosGuardados.setHoramodnota(obj.getHoramodnota());
+			datosGuardados.setCodInstructor(obj.getCodInstructor());
+			datosGuardados.setCodCursoEspecializacion(obj.getCodCursoEspecializacion());
+			datosGuardados.setCodPonderacion(obj.getCodPonderacion());
+			datosGuardados.setCodEstudiante(obj.getCodEstudiante());
+			datosGuardados.setCodMateria(obj.getCodMateria());
+			datosGuardados.setAporteExamen(obj.getAporteExamen());
+			datosGuardados.setAporteAcademico(obj.getAporteAcademico());
+			datosGuardados.setNotaFinalFormacion(obj.getNotaFinalFormacion());
+			datosGuardados.setFechaCreaNota(obj.getFechaCreaNota());
+			datosGuardados.setHoraCreaNota(obj.getHoraCreaNota());
+			datosGuardados.setUsuarioModNota(obj.getUsuarioModNota());
+			datosGuardados.setFechaModNota(obj.getFechaModNota());
+			datosGuardados.setHoraModNota(obj.getHoraModNota());
 			datosGuardados.setEstado(obj.getEstado());
 			
 			Notas datosActualizados = null;

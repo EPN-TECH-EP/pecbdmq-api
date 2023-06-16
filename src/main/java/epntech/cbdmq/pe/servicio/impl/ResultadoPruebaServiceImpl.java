@@ -2,8 +2,6 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
-import static epntech.cbdmq.pe.constante.MensajesConst.CURSO_APROBADO;
-import static epntech.cbdmq.pe.constante.MensajesConst.CURSO_REPROBADO;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +9,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Parametrizacion;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebaRepository;
@@ -26,9 +23,9 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService{
 	
 	@Override
 	public ResultadoPrueba save(ResultadoPrueba obj) throws DataException {
-		if(obj.getCumpleprueba().trim().isEmpty())
+		if(obj.getCumplePrueba().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<ResultadoPrueba> objGuardado = repo.findBycumpleprueba(obj.getCumpleprueba());
+		Optional<ResultadoPrueba> objGuardado = repo.findByCumplePrueba(obj.getCumplePrueba());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}

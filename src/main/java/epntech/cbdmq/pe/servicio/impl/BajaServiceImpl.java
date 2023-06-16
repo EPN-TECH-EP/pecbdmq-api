@@ -25,7 +25,7 @@ import epntech.cbdmq.pe.dominio.admin.Baja;
 import epntech.cbdmq.pe.dominio.admin.BajaDocumento;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.Estudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.admin.UsuarioDatoPersonal;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -34,7 +34,7 @@ import epntech.cbdmq.pe.repositorio.admin.BajaDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.BajaRepository;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
-import epntech.cbdmq.pe.repositorio.admin.EstudianteRepository;
+import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.UsuarioDatoPersonalRepository;
 import epntech.cbdmq.pe.servicio.BajaService;
@@ -181,3 +181,4 @@ public class BajaServiceImpl implements BajaService {
 		return estudianteRepository.save(obj);
 	}
 }
+

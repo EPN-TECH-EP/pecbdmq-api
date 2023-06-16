@@ -3,7 +3,6 @@ package epntech.cbdmq.pe.servicio.impl;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Parametrizacion;
-import epntech.cbdmq.pe.dominio.admin.TipoNota;
-import epntech.cbdmq.pe.dominio.admin.UnidadGestion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ParametrizacionRepository;
 import epntech.cbdmq.pe.servicio.ParametrizaService;
@@ -25,9 +22,9 @@ public class ParametrizacionServiceImpl implements ParametrizaService {
 	
 	@Override
 	public Parametrizacion save(Parametrizacion obj) throws DataException {
-		if(obj.getObservacionparametriza().trim().isEmpty())
+		if(obj.getObservacionParametriza().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Parametrizacion> objGuardado = repo.findByObservacionparametriza(obj.getObservacionparametriza());
+		Optional<Parametrizacion> objGuardado = repo.findByObservacionParametriza(obj.getObservacionParametriza());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}

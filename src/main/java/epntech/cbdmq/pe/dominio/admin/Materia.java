@@ -1,9 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -39,8 +37,8 @@ public class Materia {
 	private String nombre;
 	//@Column(name = "num_horas")
 	//private Integer numHoras;
-	@Column(name = "tipo_materia")
-	private String tipoMateria;
+	@Column(name = "cod_eje_materia")
+	private Integer codEjeMateria;
 	//@Column(name = "observacion_materia")
 	//private String observacionMateria;
 	//@Column(name = "peso_materia")
@@ -53,8 +51,8 @@ public class Materia {
 	//@ManyToMany(mappedBy = "materias", cascade = CascadeType.ALL)
 	//public Set<Aula> aulas;
 	
-	@OneToMany(mappedBy="cod_materia")
-    private List<MateriaPeriodo> MateriaPeriodo;
+	@OneToMany(mappedBy="codMateria")
+    private List<MateriaPeriodo> materiaPeriodo;
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_materia_paralelo",

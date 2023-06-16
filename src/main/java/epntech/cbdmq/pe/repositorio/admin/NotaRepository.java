@@ -9,7 +9,7 @@ import epntech.cbdmq.pe.dominio.admin.Notas;
 
 public interface NotaRepository extends JpaRepository<Notas, Integer>{
 
-	Optional<Notas> findByusuariocreanota(String descripcion);
+	Optional<Notas> findByUsuarioCreaNota(String descripcion);
 	
 	
 	

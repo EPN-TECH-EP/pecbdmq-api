@@ -16,9 +16,9 @@ public interface PostulanteService {
 	
 	List<Postulante> getAll();
 	
-	Optional<Postulante> getById(int id);
+	Optional<Postulante> getById(Long id);
 	
-	void delete(int id) throws DataException;
+	void delete(Long id) throws DataException;
 	
 	Postulante update(Postulante objActualizado) throws DataException; //PARA ASIGNAR UN POSTULANTE
 	
@@ -26,13 +26,13 @@ public interface PostulanteService {
 	
 	List<Postulante> getPostulantes(Integer usuario);
 	
-	List<Postulante> getPostulantesPaginado(Integer usuario, Pageable pageable);
+	List<PostulanteUtil> getPostulantesPaginado(Integer usuario, Pageable pageable);
 	
 	List<Postulante> getPostulantesAsignadosPaginado(Integer usuario, Pageable pageable);
 	
 	void updateState(Integer codpostulante);
 	
-	List<Postulante> getPostulantesAllPaginado(Pageable pageable);
+	List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable);
 	
 	List<Postulante> getMuestra();
 	

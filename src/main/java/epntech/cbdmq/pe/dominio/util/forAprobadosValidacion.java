@@ -1,11 +1,7 @@
 package epntech.cbdmq.pe.dominio.util;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -15,10 +11,11 @@ public class forAprobadosValidacion {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer cod_aprobados_validacion;
-	
-	private Integer cod_periodo_academico;
-	
-	private Integer cod_documento;
+	@Column(name = "cod_aprobados_validacion")
+	private Integer codAprobadosValidacion;
+	@Column(name = "cod_periodo_academico")
+	private Integer codPeriodoAcademico;
+	@Column(name = "cod_documento")
+	private Integer codDocumento;
 	
 }

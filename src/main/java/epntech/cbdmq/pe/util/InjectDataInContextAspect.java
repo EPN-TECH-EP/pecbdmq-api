@@ -72,7 +72,9 @@ public class InjectDataInContextAspect {
     @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
         LOGGER.error("Exception in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
-            joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL");
+            joinPoint.getSignature().getName(), (e.getCause() != null ? e.getCause().toString() : "Cause=NULL").concat(" - MESSAGE = ").concat(e.getMessage()) );
+        
+        this.printExceptionCause(e);
     }
 
     /**
@@ -99,6 +101,13 @@ public class InjectDataInContextAspect {
             LOGGER.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
                 joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
             throw e;
+        }
+    }
+    
+    private void printExceptionCause(Throwable exception) {
+        if (exception != null) {
+        	LOGGER.error(exception.getClass().getName() + ": " + exception.getMessage());
+            printExceptionCause(exception.getCause());
         }
     }
 

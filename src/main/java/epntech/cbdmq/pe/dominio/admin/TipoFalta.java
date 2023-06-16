@@ -20,16 +20,16 @@ import lombok.Data;
  * @version $Revision: $
  */
 @Data
-@Entity(name = "gen_tipo_sancion")
-@Table(name = "gen_tipo_sancion")
-@SQLDelete(sql = "UPDATE {h-schema}gen_tipo_sancion SET estado = 'ELIMINADO' WHERE cod_tipo_sancion = ?", check = ResultCheckStyle.COUNT)
+@Entity(name = "gen_tipo_falsta")
+@Table(name = "gen_tipo_falta")
+@SQLDelete(sql = "UPDATE {h-schema}gen_tipo_falta SET estado = 'ELIMINADO' WHERE cod_tipo_falta = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-public class TipoSancion {
+public class TipoFalta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer cod_tipo_sancion;
-    @Column(name = "tipo_sancion")
-    private String sancion;
+    private Integer codTipoFalta;
+    @Column(name = "nombre_falta")
+    private String nombreFalta;
     @Column(name = "estado")
 	private String estado;
 }

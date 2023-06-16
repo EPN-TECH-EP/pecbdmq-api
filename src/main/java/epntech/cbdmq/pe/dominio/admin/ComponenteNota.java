@@ -28,7 +28,7 @@ public class ComponenteNota {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_componente_nota")
-    private Integer cod_componente_nota;
+    private Integer codComponenteNota;
     @Column(name = "tipo_componente_nota")
     private String nombre;
     @Column(name = "estado")
