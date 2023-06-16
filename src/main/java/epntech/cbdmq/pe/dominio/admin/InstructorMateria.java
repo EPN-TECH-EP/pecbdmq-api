@@ -26,15 +26,14 @@ public class InstructorMateria {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "cod_instructor_materia")
+	private Integer codInstructorMateria;
 
 	@Column(name = "cod_instructor")
 	private Integer codInstructor;
 	
 	@Column(name = "cod_materia")
 	private Integer codMateria;
-	
-	@Column(name = "cod_instructor_materia")
-	private Integer codInstructorMateria;
 	
 	@Column(name = "es_coordinador")
 	private Boolean esCoordinador;

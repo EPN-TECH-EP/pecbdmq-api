@@ -16,6 +16,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InstructorServiceImpl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.NO_ENCUENTRA;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 @RestController
 @RequestMapping("/instructor")
@@ -44,7 +45,7 @@ public class InstructorResource {
 	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Instructor obj)
 			throws DataException {
 		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodInstructor(obj.getCodInstructor());
+			datosGuardados.setCodDatosPersonales(obj.getCodDatosPersonales());
 			datosGuardados.setCodTipoProcedencia(obj.getCodTipoProcedencia());
 			/*datosGuardados.setCod_tipo_instructor(obj.getCod_tipo_instructor());
 			datosGuardados.setCod_periodo_academico(obj.getCod_tipo_instructor());
@@ -56,9 +57,9 @@ public class InstructorResource {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
 		objService.delete(codigo);
-		return new ResponseEntity<String>("Registro eliminado exitosamente", HttpStatus.OK);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	//TODO la clase instructor no esta acorde a la ultima BD
 	@PostMapping("/ByUser")
