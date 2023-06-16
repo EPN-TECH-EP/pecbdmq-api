@@ -241,7 +241,7 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 				.findById(usuario.get().getCodDatosPersonales().getCodDatosPersonales());
 		DatoPersonal dato = new DatoPersonal();
 		dato = datopersonal.get();
-		dato.setCodDocumentoImagen(documento.getCodDocumento());
+		dato.setCodDocumentoImagen(documento.getCodigo());
 		repo.save(dato);
 
 		return documento;

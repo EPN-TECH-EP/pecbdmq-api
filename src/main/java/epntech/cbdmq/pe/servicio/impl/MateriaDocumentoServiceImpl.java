@@ -113,11 +113,11 @@ public class MateriaDocumentoServiceImpl implements MateriaDocumentoService {
 			documento.setNombre(multipartFile.getOriginalFilename());
 			documento.setRuta(resultado + multipartFile.getOriginalFilename());
 			documento = documentoRepository.save(documento);
-			System.out.println("documento.getCodigo() " + documento.getCodDocumento());
+			System.out.println("documento.getCodigo() " + documento.getCodigo());
 			System.out.println("materia " + materia);
 			
 			MateriaDocumento matdoc = new MateriaDocumento(); 
-			matdoc.setCodDocumento(documento.getCodDocumento());
+			matdoc.setCodDocumento(documento.getCodigo());
 			matdoc.setCodMateria(materia);
 			repo.save(matdoc);
 

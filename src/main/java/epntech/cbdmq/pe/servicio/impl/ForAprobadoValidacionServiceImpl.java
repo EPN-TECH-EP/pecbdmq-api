@@ -131,7 +131,7 @@ private void generaDocumento(String ruta, String nombre, Integer periodo) {
 	
 	forAprobadosValidacion doc = new forAprobadosValidacion(); 
 	doc.setCodPeriodoAcademico(periodo);
-	doc.setCodDocumento(documento.getCodDocumento());
+	doc.setCodDocumento(documento.getCodigo());
 	//System.out.println("documento.getCodigo(): " + documento.getCodigo());
 	
 	AprobadosRepository.save(doc);

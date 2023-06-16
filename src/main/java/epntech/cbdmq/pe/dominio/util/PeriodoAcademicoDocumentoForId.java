@@ -9,6 +9,6 @@ public class PeriodoAcademicoDocumentoForId implements Serializable {
 	 */
 	private static final long serialVersionUID = 8365809360176019328L;
 
-	private Integer cod_periodo_academico;
-	private Integer cod_documento;
+	private Integer codPeriodoAcademico;
+	private Integer codDocumento;
 }

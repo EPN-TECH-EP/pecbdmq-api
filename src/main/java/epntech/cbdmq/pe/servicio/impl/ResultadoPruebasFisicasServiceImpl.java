@@ -216,7 +216,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 		
 		DocumentoPrueba doc = new DocumentoPrueba(); 
 		doc.setCodPruebaDetalle(prueba);
-		doc.setCodDocumento(documento.getCodDocumento());
+		doc.setCodDocumento(documento.getCodigo());
 		//System.out.println("documento.getCodigo(): " + documento.getCodigo());
 		
 		saveDocumentoPrueba(doc);
