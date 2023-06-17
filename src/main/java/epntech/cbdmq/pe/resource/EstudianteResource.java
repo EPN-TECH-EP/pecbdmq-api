@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.MateriaEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.EstudianteServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.MateriaEstudianteServiceImpl;
 
 @RestController
 @RequestMapping("/estudiante")
@@ -29,6 +31,9 @@ public class EstudianteResource {
 
 	@Autowired
 	private EstudianteServiceImpl objService;
+	
+	@Autowired
+	private MateriaEstudianteServiceImpl materiaEstudianteServiceImpl;
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -101,4 +106,22 @@ public class EstudianteResource {
         Estudiante estudiante = objService.getEstudianteByUsuario(codUsuario);
         return estudiante;
     }
+    
+    @PostMapping("/asignarMateriaEstudiante")
+	@ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardarMateriaEstudiante(@RequestBody MateriaEstudiante obj) throws DataException {
+		return new ResponseEntity<>(materiaEstudianteServiceImpl.save(obj), HttpStatus.OK);
+	}
+    
+    @DeleteMapping("/eliminarMateriaEstudiante/{id}")
+	public ResponseEntity<HttpResponse> eliminarMateriaEstudiante(@PathVariable("id") Long codigo) throws DataException {
+    	materiaEstudianteServiceImpl.delete(codigo);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
+    
+	@GetMapping("/materiaEstudiante/{id}")
+	public List<MateriaEstudiante> obtenerPorIdMateriaEstudiante(@PathVariable("id") Long codigo) {
+		return materiaEstudianteServiceImpl.getByCodEstudiante(codigo);
+	}
+    
 }
