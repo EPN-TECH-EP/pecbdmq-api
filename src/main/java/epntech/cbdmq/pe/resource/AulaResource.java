@@ -45,14 +45,14 @@ public class AulaResource {
 		
 	
 		return (ResponseEntity<Aula>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre().toUpperCase());
+			datosGuardados.setNombreAula(obj.getNombreAula());
 			datosGuardados.setCapacidad(obj.getCapacidad());
-			datosGuardados.setTipo(obj.getTipo());
-			datosGuardados.setPcs(obj.getPcs());
-			datosGuardados.setImpresoras(obj.getImpresoras());
-			datosGuardados.setInternet(obj.getInternet());
-			datosGuardados.setProyectores(obj.getProyectores());
-			datosGuardados.setInstructor(obj.getInstructor());
+			datosGuardados.setTipoAula(obj.getTipoAula());
+			datosGuardados.setNumeroPcs(obj.getNumeroPcs());
+			datosGuardados.setNumeroImpresoras(obj.getNumeroImpresoras());
+			datosGuardados.setTipoInternet(obj.getTipoInternet());
+			datosGuardados.setNumeroProyectores(obj.getNumeroProyectores());
+			datosGuardados.setPcInstructor(obj.getPcInstructor());
 			datosGuardados.setSalaOcupada(obj.getSalaOcupada());
 			datosGuardados.setEstado(obj.getEstado());
 

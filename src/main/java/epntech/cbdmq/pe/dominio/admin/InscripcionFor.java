@@ -73,7 +73,7 @@ public class InscripcionFor {
 	@Column(name = "tiene_merito_academico")
 	private Boolean tieneMeritoAcademico;
 	@Column(name = "nombre_titulo_segundo_nivel")
-	private String nombreTituloSegundonivel;
+	private String nombreTituloSegundoNivel;
 	@Column(name = "pais_titulo_segundo_nivel")
 	private String paisTituloSegundoNivel;
 	@Column(name = "ciudad_titulo_segundo_nivel")

@@ -35,9 +35,6 @@ public class ResultadoPruebasFisicas {
 	@Column(name = "cod_postulante")
 	private Integer codPostulante;
 	
-	@Column(name = "cod_periodo_academico")
-	private Integer codPeriodoAcademico;
-	
 	@Column(name = "cod_personal_ope")
 	private Integer codPersonalOpe;
 	

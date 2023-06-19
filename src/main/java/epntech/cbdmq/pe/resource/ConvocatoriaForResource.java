@@ -59,7 +59,7 @@ public class ConvocatoriaForResource {
 		objectMapper.registerModule(new JavaTimeModule());
 		
 		JsonNode jsonNode = objectMapper.readTree(datosConvocatoria);
-		System.out.println("jsonNode: " + jsonNode);
+		//System.out.println("jsonNode: " + jsonNode);
 		
 		ConvocatoriaFor convocatoria = objectMapper.readValue(datosConvocatoria, ConvocatoriaFor.class);
 		

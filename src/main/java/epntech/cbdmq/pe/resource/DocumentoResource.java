@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.DOCUMENTO_ACTUALIZADO;
 
 import java.io.File;
 import java.io.IOException;
@@ -146,4 +147,10 @@ public class DocumentoResource {
 	 * this.LOGGER.error(e.getMessage()); return -1; } }
 	 */
 
+	@PostMapping("/updateDoc")
+	public ResponseEntity<?> updateDoc(@RequestParam Long codDocumento, @RequestParam MultipartFile archivo)
+			throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+		
+		return new ResponseEntity<>(objService.updateDoc(codDocumento, archivo), HttpStatus.OK);
+	}
 }

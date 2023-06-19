@@ -1,6 +1,10 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+
+import static epntech.cbdmq.pe.constante.ArchivoConst.FORWARD_SLASH;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+
 import static epntech.cbdmq.pe.constante.MensajesConst.CONVOCATORIA_NO_EXISTE;
 
 import java.io.IOException;
@@ -176,7 +180,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	@Override
-	public void eliminarArchivo(int codDocumento) throws IOException, DataException {
+	public void eliminarArchivo(int codDocumento) throws IOException {
 
 		Documento documento = new Documento();
 		Optional<Documento> documentoOpt;
@@ -282,5 +286,44 @@ public class DocumentoServiceimpl implements DocumentoService {
 			this.convocatoriaDocumentoRepository.save(convocatoriaDocumento);
 		}
 		
+	}
+
+	@Override
+	public Documento updateDoc(Long codDocumento, MultipartFile archivo) throws ArchivoMuyGrandeExcepcion, IOException, DataException {
+		
+		Optional<Documento> doc = repo.findById(codDocumento.intValue());
+		if(doc.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+				
+		if (archivo.getSize() >= 1) {
+			Path ruta = Paths.get(repo.findById(codDocumento.intValue()).get().getRuta());
+
+			if (Files.exists(ruta)) {
+				try {
+					Files.delete(ruta);
+				} catch (Exception e) {
+
+					throw new DataException(e.getMessage());
+					// e.printStackTrace();
+				}
+			}
+
+			if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
+				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+			}
+
+			ruta = ruta.getParent();
+			Files.copy(archivo.getInputStream(), ruta.resolve(archivo.getOriginalFilename()),
+					StandardCopyOption.REPLACE_EXISTING);
+
+			// System.out.println("ruta: " + ruta);
+			Documento documento = new Documento();
+			documento = repo.findById(codDocumento.intValue()).get();
+			documento.setNombre(archivo.getOriginalFilename());
+			documento.setRuta(ruta + "/" + archivo.getOriginalFilename());
+			
+			documento = repo.save(documento);
+		}
+		return repo.findById(codDocumento.intValue()).get();
 	}
 }

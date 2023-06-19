@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import com.lowagie.text.DocumentException;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesDatos;
+import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.impl.AntiguedadesServiceImpl;
@@ -47,7 +49,8 @@ public class AntiguedadesResource {
 		return objService.getAntiguedadesMasculino();
 	}
 
-	@GetMapping("/generarArchivos")
+	/*genera los archivos con el resultado de antiguedades femenino y masculino del proceso de aspirantes aprobados*/
+	@PostMapping("/generarArchivos")
 	public ResponseEntity<?> generarArchivos(HttpServletResponse response, @RequestParam("nombre") String nombre, @RequestParam("tipoDocumento") Integer tipoDocumento) throws DataException, DocumentException {
 		try {
 
@@ -61,6 +64,31 @@ public class AntiguedadesResource {
 			objService.generarExcel(rutaM + ".xlsx", nombreMasculino + ".xlsx", 0, tipoDocumento);
 			objService.generarPDF(response, rutaF + ".pdf", nombreFemenino + ".pdf", 1, tipoDocumento);
 			objService.generarPDF(response, rutaM + ".pdf", nombreMasculino + ".pdf", 0, tipoDocumento);
+			
+			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("error: " + e.getMessage());
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+	}
+	
+	/*obtiene la lista de antiguedades del proceso de formación académica*/
+	@GetMapping("/listarAntiguedadesFormacion")
+	public Set<AntiguedadesFormacion> listarAntiguedadesFormacion() {
+		return objService.getAntiguedadesFormacion();
+	}
+	
+	/*genera los archivos con el resultado de antiguedades femenino y masculino del proceso de aspirantes aprobados*/
+	@PostMapping("/generaArchivosAntiguedadesFormacion")
+	public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response, @RequestParam("nombre") String nombre, @RequestParam("tipoDocumento") Integer tipoDocumento) throws DataException, DocumentException {
+		try {
+
+			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_ANTIGUEDADES + periodoAcademicoRepository.getPAActive().toString() + "/" + nombre;
+
+			objService.generarExcel(ruta + ".xlsx", nombre + ".xlsx", tipoDocumento);
+			objService.generarPDF(response, ruta + ".pdf", nombre + ".pdf", tipoDocumento);
 			
 			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 

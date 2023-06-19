@@ -361,7 +361,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public void eliminarUsuario(String username) throws IOException, DataException {
+	public void eliminarUsuario(String username) throws Exception {
 		Usuario user = userRepository.findUsuarioByNombreUsuario(username);
 		/*
 		 * try { Path userFolder = Paths.get(CARPETA_USUARIO +

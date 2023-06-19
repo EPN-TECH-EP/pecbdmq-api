@@ -175,7 +175,7 @@ public class InscripcionForRepository{
 		.setParameter("tipo_nacionalidad", inscripcion.getTipoNacionalidad())
 		.setParameter("tiene_merito_deportivo", inscripcion.getTieneMeritoDeportivo())
 		.setParameter("tiene_merito_academico", inscripcion.getTieneMeritoAcademico())
-		.setParameter("nombre_titulo_segundonivel", inscripcion.getNombreTituloSegundonivel())
+		.setParameter("nombre_titulo_segundonivel", inscripcion.getNombreTituloSegundoNivel())
 		.setParameter("pais_titulo_segundonivel", inscripcion.getPaisTituloSegundoNivel())
 		.setParameter("ciudad_titulo_segundonivel", inscripcion.getCiudadTituloSegundoNivel())
 		.setParameter("merito_deportivo_descripcion", inscripcion.getMeritoDeportivoDescripcion())

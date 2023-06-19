@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,15 +44,13 @@ public class BajaTest {
         LocalDateTime date = LocalDateTime.parse("2029-01-01 00:00:00", formatter);
         
 		Baja obj = new Baja();
-	
-		obj.setDescripcionBaja("texto");
+		obj.setCodTipoBaja(1);
 		obj.setEstado("activo");
 
 		Baja datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getDescripcionBaja());
-	
+		assertEquals(date, datos.getFechaBajaActual());
 		assertEquals("activo", datos.getEstado());
 	}
 
@@ -60,19 +58,16 @@ public class BajaTest {
 	@Order(2)
 	public void testBuscar() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime date = LocalDateTime.parse("2029-01-01 00:00:00", formatter);
 
         
     	Baja obj = new Baja();
-		
-		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
+		Optional<Baja> obj1 = repo.findById(1);
 
-
-		
+		assertThat(obj1.get().getDescripcionBaja()).isEqualTo("texto");
 	}
 
 	@Test
@@ -88,14 +83,13 @@ public class BajaTest {
 
 		repo.save(obj);
 
+		Optional<Baja> obj1 = repo.findById(1);
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setDescripcionBaja(datoNuevo);
 
-
-		
-		
+		Optional<Baja> objModificado = repo.findById(1);
 	}
 
 	@Test
@@ -116,9 +110,11 @@ public class BajaTest {
 		obj.setEstado("activo");
 		repo.save(obj);
 
+		int id = 1;
+		repo.deleteById(id);
 
+		boolean noExiste = repo.findById(id).isPresent();
 
-
-		
+		assertFalse(noExiste);
 	}
 }

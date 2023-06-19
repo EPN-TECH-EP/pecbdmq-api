@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.servicio.AulaService;
-import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
@@ -21,24 +20,15 @@ public class AulaServiceImpl implements AulaService {
 
 	@Override
 	public Aula save(Aula obj) throws DataException {
-		if (obj.getNombre().trim().isEmpty())
+		// TODO Auto-generated method stub
+		if (obj.getNombreAula().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Aula> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
+		Optional<Aula> objGuardado = repo.findByNombreAulaIgnoreCase(obj.getNombreAula());
 		if (objGuardado.isPresent()) {
-			Aula aula = objGuardado.get();
-			
-			// si requiere crear un registro que ya está presente con borrado lógico, lo reactiva
-			if (aula.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
-				aula.setEstado(EstadosConst.ACTIVO);
-				return repo.save(aula);
-			} else {
-				// si ya existe y no está eliminado
 				throw new DataException(REGISTRO_YA_EXISTE);
 			}
 			
-		}
-
-		obj.setNombre(obj.getNombre().toUpperCase());
+		obj.setNombreAula(obj.getNombreAula().toUpperCase());
 		return repo.save(obj);
 	}
 
@@ -56,9 +46,9 @@ public class AulaServiceImpl implements AulaService {
 
 	@Override
 	public Aula update(Aula objActualizado) throws DataException {
-	if(objActualizado.getNombre() !=null) {
-		Optional<Aula> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
+	if(objActualizado.getNombreAula() !=null) {
+		Optional<Aula> objGuardado = repo.findByNombreAulaIgnoreCase(objActualizado.getNombreAula());
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodAula().equals(objActualizado.getCodAula())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 	}

@@ -20,15 +20,16 @@ public class Compress {
 
     private Properties properties;
 	
-	public void zip(String path) throws IOException {
+	public void zip(String path) throws Exception {
 		properties = new Properties();
         try (InputStream stream = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
             properties.load(stream);
         }
         
-		Long size = Long.valueOf(properties.getProperty("pecb.folder-size"));
+		String folderSizeString = properties.getProperty("pecb.folder-size");
+		Long size = Long.valueOf(folderSizeString);		
 		
-		if (getFolderSize(path) <= size){
+		if (getFolderSize(path) <= size) {
 			String sourceFile = path;
 			FileOutputStream fos = new FileOutputStream(path + ".zip");
 			ZipOutputStream zipOut = new ZipOutputStream(fos);
@@ -37,8 +38,7 @@ public class Compress {
 			zipFile(fileToZip, fileToZip.getName(), zipOut);
 			zipOut.close();
 			fos.close();
-		}
-		else {
+		} else {
 			throw new IOException(FOLDER_MAX_SIZE + size + " MB");
 		}
 	}

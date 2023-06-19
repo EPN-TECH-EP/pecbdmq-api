@@ -107,24 +107,21 @@ public class SancionesServiceImpl implements SancionesService {
 	@Override
 	public Sanciones update(Sanciones objActualizado, MultipartFile archivo)
 			throws DataException, ArchivoMuyGrandeExcepcion, IOException {
-		Path ruta = null;
-
 		if (!archivo.isEmpty()) {
-
-			if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
-				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
-			}
-
-			try {
-				ruta = Paths.get(documentoRepository.findById(objActualizado.getCodDocumento()).get().getRuta())
-						.toAbsolutePath()
+			Path ruta = Paths.get(documentoRepository.findById(objActualizado.getCodDocumento()).get().getRuta()).toAbsolutePath()
 						.normalize();
 
 				if (Files.exists(ruta)) {
+				try {
 					Files.delete(ruta);
-				}
 			} catch (Exception e) {
 				throw new DataException(e.getMessage());
+					// e.printStackTrace();
+				}
+			}
+			
+			if (archivo.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
+				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
 			}
 
 			ruta = ruta.getParent();

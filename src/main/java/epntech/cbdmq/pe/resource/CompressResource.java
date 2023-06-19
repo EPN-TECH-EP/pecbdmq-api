@@ -25,7 +25,7 @@ public class CompressResource {
 	private Compress compress;
 	
 	@PostMapping("/zip")
-	public ResponseEntity<HttpResponse> zipFolder(@RequestParam("ruta") String ruta) throws DataException, IOException{
+	public ResponseEntity<HttpResponse> zipFolder(@RequestParam("ruta") String ruta) throws Exception{
 		try {
 			compress.zip(ruta);
 			return response(HttpStatus.OK, ZIP_EXITO);

@@ -28,4 +28,5 @@ public interface MateriaDocumentoService {
     
     List<DocumentoRuta> guardarArchivo(String proceso,Integer materia, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 	
+    void deleteDocumento(Integer materia, Long codDocumento) throws DataException;
 }
