@@ -6,6 +6,8 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionInstructor;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionInstructor;
 import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionInstructor;
+import epntech.cbdmq.pe.dominio.util.InstructorDatos;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -33,5 +35,6 @@ public interface InstructorRepository extends JpaRepository<Instructor, Integer>
 
 	@Query(nativeQuery = true, name = "ProfesionalizacionInstructor.findHistorico")
 	List<ProfesionalizacionInstructor> getProfHistoricos(@Param("codInstructor") Integer codUnico, Pageable pageable);
+	
 	
 }

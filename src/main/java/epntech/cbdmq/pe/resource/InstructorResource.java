@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
+import epntech.cbdmq.pe.dominio.util.InstructorDatos;
 import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.InstructorServiceImpl;
@@ -32,7 +33,7 @@ public class InstructorResource {
 	}
 	
 	@GetMapping("/listar")
-	public List<Instructor> listar() {
+	public List<InstructorDatos> listar() {
 		return objService.getAll();
 	}
 
