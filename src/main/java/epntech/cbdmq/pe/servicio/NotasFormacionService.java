@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.postgresql.util.PSQLException;
 
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
+import epntech.cbdmq.pe.dominio.util.NotasDatosFormacion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import jakarta.mail.MessagingException;
 
@@ -18,6 +19,10 @@ public interface NotasFormacionService {
 	NotasFormacion update(NotasFormacion objActualizado) throws DataException;
 	
 	Optional<NotasFormacion> getById(int id);
+	
+	List<NotasDatosFormacion> getNotasEstudiante(long codEstudiante);
+	
+	List<NotasDatosFormacion> getNotasMateria(long codMateria);
 	
 }
 

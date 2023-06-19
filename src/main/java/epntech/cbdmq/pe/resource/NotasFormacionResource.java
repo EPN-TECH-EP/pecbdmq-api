@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacionFinal;
+import epntech.cbdmq.pe.dominio.util.NotasDatosFormacion;
 import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.NotasFormacionFinalServiceImpl;
@@ -113,6 +114,16 @@ public class NotasFormacionResource {
 	public ResponseEntity<?> realizoEncuenta(@PathVariable("id") Long codigo) {
 		return response(HttpStatus.OK, Boolean.toString(notasFormacionFinalServiceImpl.realizoEncuesta(codigo)));
 		
+	}
+	
+	@GetMapping("/notasEstudiante/{id}")
+	public List<NotasDatosFormacion> getNotasEstudiante(@PathVariable("id") long codigo) {
+		return notasFormacionServiceImpl.getNotasEstudiante(codigo);
+	}
+	
+	@GetMapping("/notasMateria/{id}")
+	public List<NotasDatosFormacion> getNotasMateria(@PathVariable("id") long codigo) {
+		return notasFormacionServiceImpl.getNotasMateria(codigo);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

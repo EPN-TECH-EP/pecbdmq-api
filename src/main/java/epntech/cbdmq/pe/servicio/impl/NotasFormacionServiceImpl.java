@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.util.NotasDatosFormacion;
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodoData;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
@@ -24,6 +25,7 @@ import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoDataRepository;
 import epntech.cbdmq.pe.repositorio.admin.MateriaRepository;
+import epntech.cbdmq.pe.repositorio.admin.NotasDatosFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
@@ -47,6 +49,8 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	private EstudianteRepository estudianteRepository;
 	@Autowired
 	private MateriaRepository materiaRepository;
+	@Autowired
+	private NotasDatosFormacionRepository notasDatosFormacionRepository;
 
 	@Override
 	@Async
@@ -130,5 +134,17 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 			emailService.enviarEmail(datoPersonal.get().getCorreoPersonal(), EMAIL_SUBJECT_REG_NOTA,
 					"Se ha registrado una nota en la materia: " + materia.get().getNombre());
 		}
+	}
+
+	@Override
+	public List<NotasDatosFormacion> getNotasEstudiante(long codEstudiante) {
+		// TODO Auto-generated method stub
+		return notasDatosFormacionRepository.getNotasEstudiante(codEstudiante);
+	}
+
+	@Override
+	public List<NotasDatosFormacion> getNotasMateria(long codMateria) {
+		// TODO Auto-generated method stub
+		return notasDatosFormacionRepository.getNotasMateria(codMateria);
 	}
 }
