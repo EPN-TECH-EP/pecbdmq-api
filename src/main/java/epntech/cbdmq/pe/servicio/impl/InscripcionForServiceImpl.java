@@ -1,8 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
-import static epntech.cbdmq.pe.constante.MensajesConst.CEDULA_YA_EXISTE;
-import static epntech.cbdmq.pe.constante.MensajesConst.CORREO_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.EDAD_NO_CUMPLE;
 import static epntech.cbdmq.pe.constante.MensajesConst.ERROR_REGISTRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.FECHA_INSCRIPCION_INVALIDA;
@@ -13,7 +11,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.PIN_INCORRECTO;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
@@ -96,7 +93,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		if(this.findByCorreoPersonal(inscripcion.getCorreoPersonal()))
 			throw new DataException(CORREO_YA_EXISTE);*/
 		
-		if (repo1.validaEdad(inscripcion.getFechaNacimiento()).equals(false))
+		if (repo1.validaEdad(inscripcion.getFechaNacimiento().toLocalDate()).equals(false))
 			throw new DataException(EDAD_NO_CUMPLE);
 		else {
 			String code = getRandomCode();
@@ -186,7 +183,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 	}
 
 	@Override
-	public Boolean validaEdad(LocalDateTime fecha) {
+	public Boolean validaEdad(LocalDate fecha) {
 		// TODO Auto-generated method stub
 		return repo1.validaEdad(fecha);
 	}

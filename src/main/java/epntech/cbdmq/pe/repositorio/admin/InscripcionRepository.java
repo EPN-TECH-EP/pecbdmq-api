@@ -1,6 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +24,5 @@ public interface InscripcionRepository extends JpaRepository<InscripcionFor, Int
 	String getIdPostulante(String proceso);
 	
 	@Procedure(value = "cbdmq.validar_edad")
-	Boolean validaEdad(LocalDateTime fecha);
+	Boolean validaEdad(LocalDate fecha);
 }

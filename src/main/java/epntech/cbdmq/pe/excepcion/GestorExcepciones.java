@@ -9,6 +9,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -35,6 +36,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
 import epntech.cbdmq.pe.constante.ArchivoConst;
+import epntech.cbdmq.pe.constante.MensajesConst;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
@@ -126,6 +128,13 @@ public class GestorExcepciones implements ErrorController {
 		LOGGER.error(exception.getMessage());
 		return createHttpResponse(BAD_REQUEST, exception.getMessage());
 	}
+	
+	//DateTimeParseException
+	@ExceptionHandler(DateTimeParseException.class)
+	public ResponseEntity<HttpResponse> dateTimeParseException(DateTimeParseException exception) {
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, exception.getMessage());
+	}
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public ResponseEntity<HttpResponse> archivoMuyGrandeException(MaxUploadSizeExceededException exception) {
@@ -190,6 +199,10 @@ public class GestorExcepciones implements ErrorController {
 			if (constraintName.contains("_un")) {
 				return createHttpResponse(BAD_REQUEST, REGISTRO_YA_EXISTE);
 			}
+			
+			if (constraintName.contains("_fk")) {
+				return createHttpResponse(BAD_REQUEST, MensajesConst.DATOS_RELACIONADOS);
+			}
 		} 
 			LOGGER.error(exception.getMessage());
 			exception.printStackTrace();
@@ -213,6 +226,25 @@ public class GestorExcepciones implements ErrorController {
 		LOGGER.error(exception.getMessage());
 		return createHttpResponse(BAD_REQUEST, "Dato inválido - Revise el formato");
 	}
+	
+	/*
+	 * catch (DataIntegrityViolationException cve) {
+	 * 
+	 * LOGGER.warn("No se puede eliminar el usuario: " + username +
+	 * " - Usuario tiene dependencias en módulos."); cve.printStackTrace();
+	 * 
+	 * throw new DataException(UsuarioImplConst.USUARIO_TIENE_DEPENDENCIAS);
+	 * 
+	 * }
+	 */
+	
+	/*
+	 * @ExceptionHandler(DataIntegrityViolationException.class) public
+	 * ResponseEntity<HttpResponse>
+	 * dataIntegrityViolationException(DataIntegrityViolationException exception){
+	 * LOGGER.error(exception.getMessage()); return createHttpResponse(BAD_REQUEST,
+	 * "No se puede modificar/eliminar: existen dependencias en los módulos"); }
+	 */
 	
 }
 

@@ -49,7 +49,7 @@ public interface UsuarioService {
 			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException,
 			NoEsArchivoImagenExcepcion;
 
-	void eliminarUsuario(String username) throws IOException;
+	void eliminarUsuario(String username) throws IOException, DataException;
 
 	void resetPassword(String email)
 			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion;

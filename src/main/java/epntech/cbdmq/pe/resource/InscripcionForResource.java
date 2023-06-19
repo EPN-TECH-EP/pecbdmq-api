@@ -5,8 +5,10 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -280,6 +282,15 @@ public class InscripcionForResource {
 	public Boolean getFecha() throws DataException, ParseException {
 		return objService.validaFechas();
 	}
+	
+	@PostMapping("/validaEdad")
+	public Boolean validaEdad(@RequestBody String fecha) throws DataException, ParseException {
+		
+		LocalDate fechaNacimiento = LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd/MM/uuuu"));
+		
+		return objService.validaEdad(fechaNacimiento);
+	}
+	
 	
 	@GetMapping("/inscripcionPorCedula/{cedula}")
 	public Boolean findByCedula(@PathVariable("cedula") String cedula) throws DataException, ParseException {
