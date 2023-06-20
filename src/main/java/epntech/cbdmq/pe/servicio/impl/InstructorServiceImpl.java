@@ -1,5 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,30 +29,41 @@ import epntech.cbdmq.pe.servicio.InstructorService;
 
 @Service
 public class InstructorServiceImpl implements InstructorService {
-	
+
 	@Autowired
 	private InstructorRepository repo;
 	@Autowired
-	private InstructorMateriaRepository instructorMateriaRepository; 
+	private InstructorMateriaRepository instructorMateriaRepository;
 
 	@Autowired
 	private InstructorPeriodoRepository repo2;
-	
+
 	@Autowired
 	private PeriodoAcademicoRepository repo3;
 	@Autowired
 	private InstructorDatosRepository instructorDatosRepository;
-	
+
 	@Override
 	public Instructor save(Instructor obj) throws DataException {
-		Instructor instructor = repo.save(obj);
-		PeriodoAcademico peracademico = new PeriodoAcademico();
-		peracademico =repo3.getPeriodoAcademicoActivo();
-		InstructorPeriodo insperiodo= new InstructorPeriodo(); 
-		insperiodo.setCodInstructor(instructor.getCodInstructor());
-		insperiodo.setCodPeriodoAcademico(peracademico.getCodigo());
-				repo2.save(insperiodo);
+		Instructor instructor = new Instructor();
 		
+		try {
+			instructor = repo.save(obj);
+			PeriodoAcademico peracademico = new PeriodoAcademico();
+			peracademico = repo3.getPeriodoAcademicoActivo();
+			InstructorPeriodo insperiodo = new InstructorPeriodo();
+			insperiodo.setCodInstructor(instructor.getCodInstructor());
+			insperiodo.setCodPeriodoAcademico(peracademico.getCodigo());
+
+			repo2.save(insperiodo);
+
+		} catch (Exception e) {
+			//System.out.println("e.getMessage(): " + e.getMessage());
+			if (e.getMessage().contains("constraint")) {
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
+		}
+
 		return instructor;
 	}
 
@@ -83,6 +96,7 @@ public class InstructorServiceImpl implements InstructorService {
 		// TODO Auto-generated method stub
 		instructorMateriaRepository.saveAll(obj);
 	}
+
 	@Override
 	public Instructor getInstructorByUser(String coduser) {
 		return repo.getInstructorByUsuario(coduser);

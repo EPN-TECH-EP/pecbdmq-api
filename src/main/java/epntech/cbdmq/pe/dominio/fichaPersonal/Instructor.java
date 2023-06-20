@@ -133,12 +133,12 @@ public class Instructor {
 	private Integer codDatosPersonales;
 	@Column(name = "cod_tipo_procedencia")
 	private Integer codTipoProcedencia;
-	/*@Column(name = "cod_tipo_instructor")
-	private Integer cod_tipo_instructor;
-	@Column(name = "cod_periodo_academico")
-	private Integer cod_periodo_academico;
-	@Column(name = "cod_periodo_evaluacion")
-	private Integer cod_periodo_evaluacion;*/
+	@Column(name = "cod_estacion")
+	private Integer codEstacion;
+	@Column(name = "cod_unidad_gestion")
+	private Integer codUnidadGestion;
+	@Column(name = "cod_tipo_contrato")
+	private Integer codTipoContrato;
 	
 	
 	
