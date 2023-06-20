@@ -1,6 +1,13 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +21,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @Table(name = "gen_parametriza_prueba_resumen")
-
+@SQLDelete(sql = "UPDATE {h-schema}gen_parametriza_prueba_resumen SET estado = 'ELIMINADO' WHERE cod_parametriza_prueba_resumen = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class ParametrizaPruebaResumen {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +31,16 @@ public class ParametrizaPruebaResumen {
 	private Integer codParametrizaPruebaResumen;
 	
 	@Column(name = "fecha_creacion")
-	private LocalDateTime fechaCreacion;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate fechaCreacion;
 	
 	@Column(name = "fecha_inicio")
-	private LocalDateTime fechaInicio;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate fechaInicio;
 	
 	@Column(name = "fecha_fin")
-	private LocalDateTime fechaFin;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate fechaFin;
 	
 	@Column(name = "descripcion")
 	private String descripcion;

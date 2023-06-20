@@ -1,7 +1,9 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -44,10 +46,10 @@ public class ParametrizaPruebaDetalle {
 	private String estado;
 	@Column(name = "cod_parametriza_prueba_resumen")
 	private Integer codParametrizaPruebaResumen;
-	/*@Column(name = "numero _repeticiones")
-	private BigDecimal numero_repeticiones;*/
+	@Column(name = "numero_repeticiones")
+	private BigInteger numeroRepeticiones;
 	@Column(name = "minutos_segundos")
-	private LocalDateTime minutosSegundos;
+	private LocalTime minutosSegundos;
 	@Column(name = "cod_subtipo_prueba")
 	private Integer codSubtipoPrueba;
 	

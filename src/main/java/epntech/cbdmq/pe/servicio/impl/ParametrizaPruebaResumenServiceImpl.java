@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.servicio.impl;
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,10 @@ public class ParametrizaPruebaResumenServiceImpl implements ParametrizaPruebaRes
 	
 	@Override
 	public ParametrizaPruebaResumen save(ParametrizaPruebaResumen obj) throws DataException {
-		// TODO Auto-generated method stub
+		LocalDate fechaActual = LocalDate.now();
+		obj.setFechaCreacion(fechaActual);
+		obj.setEstado("ACTIVO");
+		
 		return repo.save(obj);
 	}
 
