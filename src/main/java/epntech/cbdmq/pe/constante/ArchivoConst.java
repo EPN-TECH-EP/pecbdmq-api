@@ -29,7 +29,7 @@ public class ArchivoConst {
 	public static final String PATH_BAJAS = "Bajas/";
 	public static final String PATH_PROCESO_ESPECIALIZACION = "Especializacion/";
 	public static final String PATH_PROCESO_FORMACION = "Formacion/";
-
+	public static final String PATH_PROCESO_ESPECIALIZACION_INSCRIPCION = "Especializacion/Inscripcion/";
 
 
 	public static final String FALLA_PROCESAR_EXCEL = "Falla al procesar el archivo excel";

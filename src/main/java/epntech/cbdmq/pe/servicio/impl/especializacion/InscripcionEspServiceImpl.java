@@ -1,20 +1,41 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION_INSCRIPCION;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
+import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
+import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
+import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
 
@@ -27,6 +48,15 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	private EstudianteRepository estudianteRepository;
 	@Autowired
 	private CursoRepository cursoRepository;
+	@Autowired
+	private DocumentoRepository documentoRepository;
+	@Autowired
+	private InscripcionDocumentoRepository inscripcionDocumentoRepository;
+	
+	@Value("${pecb.archivos.ruta}")
+	private String ARCHIVOS_RUTA;
+	@Value("${spring.servlet.multipart.max-file-size}")
+	public DataSize TAMAÑO_MAXIMO;
 
 	@Override
 	public InscripcionEsp save(InscripcionEsp inscripcionEsp) throws DataException {
@@ -36,26 +66,31 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		if(estudianteOptional.isEmpty() || cursoOptional.isEmpty())
 			throw new DataException(REGISTRO_NO_EXISTE);
 		
-
+		//LocalDate fechaActual = LocalDate.now();
+		//inscripcionEsp.setFechaInscripcion(fechaActual);
+		
 		return inscripcionEspRepository.save(inscripcionEsp);
 	}
 
 	@Override
 	public InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) throws DataException {
-		// TODO Auto-generated method stub
+		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(inscripcionEspActualizada.getCodEstudiante(), inscripcionEspActualizada.getCodCursoEspecializacion());
+		if(inscripcionEspOptional.isPresent())
+			throw new DataException(REGISTRO_YA_EXISTE);
+		
 		return inscripcionEspRepository.save(inscripcionEspActualizada);
 	}
 
 	@Override
-	public Optional<InscripcionEsp> getById(Long codInscripcion) throws DataException {
+	public Optional<InscripcionDatosEspecializacion> getById(Long codInscripcion) throws DataException {
 		// TODO Auto-generated method stub
-		return inscripcionEspRepository.findById(codInscripcion);
+		return inscripcionEspRepository.getInscripcion(codInscripcion);
 	}
 
 	@Override
-	public List<InscripcionEsp> getAll() {
+	public List<InscripcionDatosEspecializacion> getAll() {
 		// TODO Auto-generated method stub
-		return inscripcionEspRepository.findAll();
+		return inscripcionEspRepository.getAllInscripciones();
 	}
 
 	@Override
@@ -65,9 +100,86 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	}
 
 	@Override
-	public InscripcionEsp uploadFiles(Long codInscripcion, List<MultipartFile> archivos) throws DataException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Documento> uploadFiles(Long codInscripcion, Long tipoDocumento, List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion {
+		
+		return guardarDocumentos(archivos, codInscripcion, tipoDocumento);
+	}
+	
+	public List<Documento> guardarDocumentos(List<MultipartFile> archivos, Long codInscripcion, Long tipoDocumento)
+			throws IOException, ArchivoMuyGrandeExcepcion {
+		String resultado;
+		List<Documento> documentos = new ArrayList<>();
+
+		resultado = ruta(codInscripcion);
+		Path ruta = Paths.get(resultado);
+
+		if (!Files.exists(ruta)) {
+			Files.createDirectories(ruta);
+		}
+
+		for (Iterator iterator = archivos.iterator(); iterator.hasNext();) {
+			
+			MultipartFile multipartFile = (MultipartFile) iterator.next();
+			if (multipartFile.getSize() > TAMAÑO_MAXIMO.toBytes()) {
+				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+			}
+
+			Files.copy(multipartFile.getInputStream(), ruta.resolve(multipartFile.getOriginalFilename()),
+					StandardCopyOption.REPLACE_EXISTING);
+			// LOGGER.info("Archivo guardado: " + resultado +
+			
+			Documento documento = new Documento();
+			documento.setEstado("ACTIVO");
+			documento.setTipo(tipoDocumento.intValue());
+			documento.setNombre(multipartFile.getOriginalFilename());
+			documento.setRuta(resultado + multipartFile.getOriginalFilename());
+			documento = documentoRepository.save(documento);
+			documentos.add(documento);
+			
+			InscripcionDocumento cursoDocumento = new InscripcionDocumento();
+			cursoDocumento.setCodInscripcion(codInscripcion);
+			cursoDocumento.setCodDocumento((long) documento.getCodigo());
+			inscripcionDocumentoRepository.save(cursoDocumento);
+			
+		}
+		return documentos;
+
+	}
+	
+	private String ruta(Long codigo) {
+
+		String resultado = null;
+		resultado = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION_INSCRIPCION + codigo + "/";
+		return resultado;
+	}
+
+	@Override
+	public void deleteDocumento(Long codInscripcion, Long codDocumento) throws DataException {
+		Optional<Documento> documentoOptional;
+		Documento documento = new Documento();
+
+		// System.out.println("id: " + codDocumento);
+		documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		documento = documentoOptional.get();
+
+		Path ruta = Paths.get(documento.getRuta());
+
+		// System.out.println("ruta: " + ruta);
+		if (Files.exists(ruta)) {
+			try {
+				// System.out.println("ruta" + ruta);
+				Files.delete(ruta);
+				inscripcionDocumentoRepository.deleteByCodInscripcionAndCodDocumento(codInscripcion, codDocumento);
+				documentoRepository.deleteById(codDocumento.intValue());
+				
+			} catch (Exception e) {
+
+				throw new DataException(e.getMessage());
+				// e.printStackTrace();
+			}
+
+		}
+		
 	}
 
 }

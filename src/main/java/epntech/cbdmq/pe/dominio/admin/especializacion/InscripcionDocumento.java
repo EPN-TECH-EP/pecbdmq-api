@@ -26,7 +26,4 @@ public class InscripcionDocumento {
 	@Column(name = "cod_documento")
 	private Long codDocumento;
 	
-	@Column(name = "fecha_inscripcion")
-	private LocalDate fechaInscripcion;
-	
 }

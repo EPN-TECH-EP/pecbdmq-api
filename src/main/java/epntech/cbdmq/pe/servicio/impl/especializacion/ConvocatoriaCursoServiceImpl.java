@@ -134,9 +134,10 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 			try {
 				// System.out.println("ruta" + ruta);
 				Files.delete(ruta);
-				documentoRepository.deleteById(codDocumento.intValue());
+				
 				convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(codConvocatoria.intValue(),
 						codDocumento.intValue());
+				documentoRepository.deleteById(codDocumento.intValue());
 			} catch (Exception e) {
 
 				throw new DataException(e.getMessage());
