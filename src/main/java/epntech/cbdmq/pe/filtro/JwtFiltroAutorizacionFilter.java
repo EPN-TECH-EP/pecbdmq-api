@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,9 +31,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtFiltroAutorizacionFilter extends OncePerRequestFilter {
 	private JWTTokenProvider jwtTokenProvider;
-	
-	/*@Value("${pecb.app-key}")
-	private String APP_KEY;*/
+
+	@Value("${pecb.app.key}")
+	private String APP_KEY;
 
 	public JwtFiltroAutorizacionFilter(JWTTokenProvider jwtTokenProvider) {
 		this.jwtTokenProvider = jwtTokenProvider;
@@ -41,20 +42,27 @@ public class JwtFiltroAutorizacionFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+
 		try {
 			if (request.getMethod().equalsIgnoreCase(METOD_HTTP_OPTIONS)) {
 				response.setStatus(OK.value());
 			} else {
 				String authorizationHeader = request.getHeader(AUTHORIZATION);
 				if (authorizationHeader == null || !authorizationHeader.startsWith(PREFIJO_TOKEN)) {
-					
-					//request.getRequestURI()
+
+					// request.getRequestURI()
 					RequestMatcher matcher = new RequestHeaderRequestMatcher(HEADER_APP,
-			                APP_KEY);
-					
-					matcher.matches(request);
-					
+							APP_KEY);
+
+					if (!matcher.matches(request)) {
+						response.addHeader("errorHeader", "ACCESO NO AUTORIZADO");
+						SecurityContextHolder.clearContext();
+						response.setStatus(HttpStatus.FORBIDDEN.value());
+						response.flushBuffer();
+						return;
+					}
 					filterChain.doFilter(request, response);
+
 					return;
 				}
 				String token = authorizationHeader.substring(PREFIJO_TOKEN.length());

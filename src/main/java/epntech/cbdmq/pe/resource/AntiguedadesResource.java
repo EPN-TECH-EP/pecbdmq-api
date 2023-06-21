@@ -39,13 +39,11 @@ public class AntiguedadesResource {
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
 
-	/*obtiene el listado de antiguedades femenino del resultado de aspirantes aprobados*/
 	@GetMapping("/listarFemenino")
 	public Set<AntiguedadesDatos> listarFemenino() {
 		return objService.getAntiguedadesFemenino();
 	}
 
-	/*obtiene el listado de antiguedades masculino del resultado de aspirantes aprobados*/
 	@GetMapping("/listarMasculino")
 	public Set<AntiguedadesDatos> listarMasculino() {
 		return objService.getAntiguedadesMasculino();
@@ -76,7 +74,7 @@ public class AntiguedadesResource {
 		}
 	}
 	
-	/*obtiene la lista de antiguedades del proceso de formaciÃ³n acadÃ©mica*/
+	/*obtiene la lista de antiguedades del proceso de formación académica*/
 	@GetMapping("/listarAntiguedadesFormacion")
 	public Set<AntiguedadesFormacion> listarAntiguedadesFormacion() {
 		return objService.getAntiguedadesFormacion();

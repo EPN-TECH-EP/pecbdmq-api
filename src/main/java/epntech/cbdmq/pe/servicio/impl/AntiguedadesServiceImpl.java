@@ -102,7 +102,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		
 		return entityToArrayList(datos);
 	}
-	
+
 	public ArrayList<ArrayList<String>> obtenerDatos() {
 		Set<AntiguedadesFormacion> datos = new HashSet<>();
 		
@@ -125,7 +125,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		}
 		return arrayMulti;
 	}
-	
+
 	public static String[] entityToStringArrayFormacion(AntiguedadesFormacion entity) {
 		return new String[] { entity.getCodigoUnicoEstudiante(), entity.getCedula(),
 				entity.getNombre(), entity.getApellido(), entity.getCorreoPersonal(), 
@@ -151,9 +151,8 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		documento = documentoRepo.save(documento);
 
 		PeriodoAcademicoDocumentoFor doc = new PeriodoAcademicoDocumentoFor();
-
 		doc.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());;
-		doc.setCodDocumento(documento.getCodigo());		
+		doc.setCodDocumento(documento.getCodDocumento());		
 		periodoAcademicoDocForRepository.save(doc);
 
 		// System.out.println("documento.getCodigo(): " + documento.getCodigo());

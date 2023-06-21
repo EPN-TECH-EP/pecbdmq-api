@@ -103,7 +103,7 @@ public class ResultadoPruebasHelper {
 					switch (cellIdx) {
 					case 0:
 
-						// dato.setCodModulo(Integer.parseInt(currentCell.getStringCellValue()));
+						//dato.setCodModulo(Integer.parseInt(currentCell.getStringCellValue()));
 						break;
 					case 1:
 						String codPruebaDetalleStr = currentCell.getStringCellValue();
@@ -204,8 +204,7 @@ public class ResultadoPruebasHelper {
 						}
 						break;
 					case 3:
-						// System.out.println("currentCell.getStringCellValue(): " +
-						// currentCell.getStringCellValue());
+						//System.out.println("currentCell.getStringCellValue(): " + currentCell.getStringCellValue());
 						dato.setResultadoTiempo(Time.valueOf(currentCell.getStringCellValue()));
 						break;
 					case 4:
@@ -234,22 +233,22 @@ public class ResultadoPruebasHelper {
 			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
 		}
 	}
-
+	
 	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("Datos");
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Datos");
 
-		// Header
+        // Header
 		Row headerRow = sheet.createRow(0);
 
 		for (int col = 0; col < HEADERs.length; col++) {
 			Cell cell = headerRow.createCell(col);
 			cell.setCellValue(HEADERs[col]);
 		}
-
-		int rowIndex = 1;
-
-		for (ResultadosPruebasDatos dato : datos) {
+		
+        int rowIndex = 1;
+        
+        for (ResultadosPruebasDatos dato : datos) {
 			Row row = sheet.createRow(rowIndex++);
 
 			row.createCell(0).setCellValue(dato.getCodPostulante());
@@ -257,44 +256,44 @@ public class ResultadoPruebasHelper {
 			row.createCell(2).setCellValue(dato.getCedula());
 			row.createCell(3).setCellValue(dato.getNombre());
 			row.createCell(4).setCellValue(dato.getApellido());
+			
+		}    
 
-		}
-
-		File file = new File(filePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream outputStream = new FileOutputStream(file);
-		workbook.write(outputStream);
-		workbook.close();
-	}
-
+        File file = new File(filePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        workbook.write(outputStream);
+        workbook.close();
+    }
+	
 	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath) throws IOException {
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("Datos");
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Datos");
 
-		// Header
+        // Header
 		Row headerRow = sheet.createRow(0);
 
 		for (int col = 0; col < HEADERs.length; col++) {
 			Cell cell = headerRow.createCell(col);
 			cell.setCellValue(HEADERs[col]);
 		}
-
-		int rowIndex = 1;
-		for (int i = 0; i < lista.size(); i++) {
-			// System.out.println("valor " + lista.get(i).get(i));
+		
+        int rowIndex = 1;        
+        for (int i = 0; i < lista.size(); i++) {
+			//System.out.println("valor " + lista.get(i).get(i));
 			Row row = sheet.createRow(rowIndex++);
 
 			for (int j = 0; j < lista.get(i).size(); j++) {
 				row.createCell(j).setCellValue(String.valueOf(lista.get(i).get(j)));
-				// System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
+				//System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
 			}
 
 		}
 
-		File file = new File(filePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream outputStream = new FileOutputStream(file);
-		workbook.write(outputStream);
-		workbook.close();
-	}
+        File file = new File(filePath);
+        file.getParentFile().mkdirs();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        workbook.write(outputStream);
+        workbook.close();
+    }
 }

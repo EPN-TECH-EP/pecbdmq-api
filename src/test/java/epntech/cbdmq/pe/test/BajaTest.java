@@ -58,7 +58,7 @@ public class BajaTest {
 	@Order(2)
 	public void testBuscar() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-       
+
         
     	Baja obj = new Baja();
 		obj.setEstado("activo");
@@ -76,6 +76,7 @@ public class BajaTest {
 		String nombre = "Test";
 
 		Baja obj = new Baja();
+		
 		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
@@ -104,6 +105,7 @@ public class BajaTest {
 		String nombre = "Test";
 
 		Baja obj = new Baja();
+		
 		obj.setDescripcionBaja(nombre);
 		obj.setEstado("activo");
 		repo.save(obj);

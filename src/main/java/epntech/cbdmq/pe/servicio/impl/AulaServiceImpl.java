@@ -25,9 +25,9 @@ public class AulaServiceImpl implements AulaService {
 			throw new DataException(REGISTRO_VACIO);
 		Optional<Aula> objGuardado = repo.findByNombreAulaIgnoreCase(obj.getNombreAula());
 		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
+			
 		obj.setNombreAula(obj.getNombreAula().toUpperCase());
 		return repo.save(obj);
 	}

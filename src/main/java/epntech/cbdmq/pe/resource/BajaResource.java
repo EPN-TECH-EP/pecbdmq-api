@@ -34,14 +34,13 @@ import epntech.cbdmq.pe.servicio.impl.EstudianteServiceImpl;
 @RestController
 @RequestMapping("/baja")
 public class BajaResource {
-	@Autowired
-	private BajaServiceImpl objServices;
+	 @Autowired
+	    private BajaServiceImpl objServices;
 	@Autowired
 	private EstudianteServiceImpl estudianteServiceImpl;
 
-	@PostMapping("/crear")
-
-	@ResponseStatus(HttpStatus.CREATED)
+	 @PostMapping("/crear")
+	    @ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestParam Integer codTipoBaja, @RequestParam String descripcionBaja,
 			@RequestParam Integer codEstudiante, @RequestParam(required = false) Integer codSancion,
 			@RequestParam List<MultipartFile> archivos)
@@ -65,51 +64,51 @@ public class BajaResource {
 			return response(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
 
-	}
-
-	@GetMapping("/listar")
-	public List<Baja> listar() {
-		return objServices.getAll();
-	}
-
-	@GetMapping("/{id}")
-	public ResponseEntity<Baja> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
-		return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	}
-
-	@PutMapping("/{id}")
+	    }
+	
+	 @GetMapping("/listar")
+	    public List<Baja> listar() {
+	        return objServices.getAll();
+	    }
+	 
+	 @GetMapping("/{id}")
+	    public ResponseEntity<Baja> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
+	        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+	    }
+	 
+	 @PutMapping("/{id}")
 	public ResponseEntity<Baja> actualizarDatos(@PathVariable("id") Integer codigo, @RequestParam Integer codTipoBaja,
 			@RequestParam String descripcionBaja, @RequestParam Integer codEstudiante,
 			@RequestParam(required = false) Integer codSancion, @RequestParam String estado,
 			@RequestParam List<MultipartFile> archivos) {
-		return (ResponseEntity<Baja>) objServices.getById(codigo).map(datosGuardados -> {
-
+	        return (ResponseEntity<Baja>) objServices.getById(codigo).map(datosGuardados -> {
+	            
 			datosGuardados.setDescripcionBaja(descripcionBaja);
 			datosGuardados.setCodTipoBaja(codTipoBaja);
 			datosGuardados.setCodEstudiante(codEstudiante);
 			datosGuardados.setCodSancion(codSancion);
 			datosGuardados.setEstado(estado);
 			Baja datosActualizados = null;
-			try {
+				try {
 				datosActualizados = objServices.update(datosGuardados, archivos);
-			} catch (DataException e) {
+				} catch (DataException e) {
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			} catch (IOException e) {
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			} catch (ArchivoMuyGrandeExcepcion e) {
-				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-			}
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
-	}
-
-	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
-		objServices.delete(codigo);
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-	}
-	
-	/*El m√©todo darDeBaja cambiar√° el estado al estudiante, dej√°ndolo en BAJA y no debe
+					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+				}
+	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+	        }).orElseGet(() -> ResponseEntity.notFound().build());
+	    }
+	 
+	 @DeleteMapping("/{id}")
+		public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
+			objServices.delete(codigo);
+			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+		}
+	    
+	/*El mÈtodo darDeBaja cambiar· el estado al estudiante, dej·ndolo en BAJA y no debe
 	ser tomado en cuenta para los procesos*/
 	@PostMapping("/darDeBaja/{codEstudiante}")
 	public ResponseEntity<?> darDeBaja(@PathVariable("codEstudiante") Integer codEstudiante) throws DataException{
@@ -125,10 +124,10 @@ public class BajaResource {
 		}
 	}
 
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+	    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
-	}
-
+	    }
+	
 }

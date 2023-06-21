@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,3 +25,4 @@ public class MateriaEstudiante {
     @JoinColumn(name="cod_semestre")
     private Long codSemestre;
 }
+

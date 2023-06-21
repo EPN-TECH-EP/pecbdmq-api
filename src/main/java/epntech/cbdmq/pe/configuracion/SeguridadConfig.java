@@ -27,7 +27,9 @@ import epntech.cbdmq.pe.servicio.UsuarioService;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SeguridadConfig {
 	
+	@Autowired
 	private JwtFiltroAutorizacionFilter jwtAuthorizationFilter;
+	
 	private JwtAccesoDenegadoHandler jwtAccessDeniedHandler;
 	private JwtAutenticacionEntryPoint jwtAuthenticationEntryPoint;
 	private UserDetailsService userDetailsService;

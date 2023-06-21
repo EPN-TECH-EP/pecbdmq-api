@@ -12,9 +12,9 @@ import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_DEFECTO_IMAGEN_USUARI
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_IMAGEN_USUARIO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PUNTO;
 import static epntech.cbdmq.pe.constante.MensajesConst.NO_ENCUENTRA;
+import static epntech.cbdmq.pe.constante.UsuarioImplConst.EMAIL_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_ENCONTRADO;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_YA_EXISTE;
-import static epntech.cbdmq.pe.constante.UsuarioImplConst.EMAIL_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NO_EXISTE_USUARIO;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -22,7 +22,6 @@ import static org.springframework.http.MediaType.IMAGE_GIF_VALUE;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,22 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
-import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
-import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
-import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
-import epntech.cbdmq.pe.excepcion.dominio.*;
-import epntech.cbdmq.pe.servicio.*;
-import epntech.cbdmq.pe.servicio.EstudianteService;
-import epntech.cbdmq.pe.servicio.InstructorService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -60,11 +51,27 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import epntech.cbdmq.pe.constante.UsuarioImplConst;
 import epntech.cbdmq.pe.dominio.UserPrincipal;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
 import epntech.cbdmq.pe.enumeracion.Role;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.NombreUsuarioExisteExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.UsuarioNoEncontradoExcepcion;
 import epntech.cbdmq.pe.repositorio.UsuarioRepository;
+import epntech.cbdmq.pe.servicio.EmailService;
+import epntech.cbdmq.pe.servicio.EstudianteService;
+import epntech.cbdmq.pe.servicio.InstructorService;
+import epntech.cbdmq.pe.servicio.IntentoLoginService;
+import epntech.cbdmq.pe.servicio.UsuarioService;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -354,11 +361,19 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public void eliminarUsuario(String username) throws IOException {
+	public void eliminarUsuario(String username) throws Exception {
 		Usuario user = userRepository.findUsuarioByNombreUsuario(username);
-		Path userFolder = Paths.get(CARPETA_USUARIO + user.getNombreUsuario()).toAbsolutePath().normalize();
-		FileUtils.deleteDirectory(new File(userFolder.toString()));
+		/*
+		 * try { Path userFolder = Paths.get(CARPETA_USUARIO +
+		 * user.getNombreUsuario()).toAbsolutePath().normalize();
+		 * FileUtils.deleteDirectory(new File(userFolder.toString())); } catch
+		 * (IOException e1) { LOGGER.
+		 * error("Se ha producido un error al eliminar los archivos del usuario: " +
+		 * user.getNombreUsuario()); e1.printStackTrace(); }
+		 */
+
 		userRepository.deleteById(user.getCodUsuario());
+
 	}
 
 	private void saveProfileImage(Usuario user, MultipartFile profileImage)

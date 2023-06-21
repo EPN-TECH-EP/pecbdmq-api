@@ -42,7 +42,7 @@ import epntech.cbdmq.pe.servicio.BajaService;
 @Service
 public class BajaServiceImpl implements BajaService {
 
-	@Autowired
+	 @Autowired
 	private BajaRepository repo;
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
@@ -61,10 +61,10 @@ public class BajaServiceImpl implements BajaService {
 	
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
-
+	
 	@Value("${spring.servlet.multipart.max-file-size}")
 	public DataSize TAMAÑO_MÁXIMO;
-
+	
 	@Override
 	public Baja save(Baja obj, @RequestParam List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion {
 		obj.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
@@ -100,8 +100,8 @@ public class BajaServiceImpl implements BajaService {
 			}
 		}
 		
-		return repo.save(objActualizado);
-	}
+			return repo.save(objActualizado);
+		}
 
 	@Override
 	public void delete(Integer codigo) {
@@ -181,4 +181,3 @@ public class BajaServiceImpl implements BajaService {
 		return estudianteRepository.save(obj);
 	}
 }
-

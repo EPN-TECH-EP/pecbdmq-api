@@ -36,5 +36,4 @@ public interface InstructorRepository extends JpaRepository<Instructor, Integer>
 	@Query(nativeQuery = true, name = "ProfesionalizacionInstructor.findHistorico")
 	List<ProfesionalizacionInstructor> getProfHistoricos(@Param("codInstructor") Integer codUnico, Pageable pageable);
 	
-	
 }
