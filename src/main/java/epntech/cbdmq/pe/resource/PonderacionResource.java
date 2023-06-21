@@ -56,7 +56,7 @@ public class PonderacionResource {
 			datosGuardados.setCodPeriodoAcademico(obj.getCodPeriodoAcademico());
 			datosGuardados.setCodComponenteNota(obj.getCodComponenteNota());
 			datosGuardados.setPorcentajeFinalPonderacion(obj.getPorcentajeFinalPonderacion());
-			//datosGuardados.setCod_tipo_nota(obj.getCod_tipo_nota());
+			datosGuardados.setCodMateria(obj.getCodMateria());
 			
 			
 			datosGuardados.setEstado(obj.getEstado());

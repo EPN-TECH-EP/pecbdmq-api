@@ -29,6 +29,7 @@ public class ModuloEspecializacionServiceImpl implements ModuloEspecializacionSe
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 
+		moduloEspecializacion.setEstado("ACTIVO");
 		return moduloEspecializacionRepository.save(moduloEspecializacion);
 	}
 

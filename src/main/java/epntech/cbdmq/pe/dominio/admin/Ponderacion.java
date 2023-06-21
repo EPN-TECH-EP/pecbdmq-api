@@ -46,4 +46,6 @@ public class Ponderacion {
 	@Column(name = "estado")
 	private String estado;
 	
+	@Column(name = "cod_materia")
+	private Long codMateria;
 }
