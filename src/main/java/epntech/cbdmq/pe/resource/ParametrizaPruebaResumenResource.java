@@ -54,7 +54,7 @@ public class ParametrizaPruebaResumenResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<ParametrizaPruebaResumen> actualizarDatos(@PathVariable("id") int codigo, @RequestBody ParametrizaPruebaResumen obj) throws DataException{
 		return (ResponseEntity<ParametrizaPruebaResumen>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setFechaCreacion(obj.getFechaCreacion());
+			
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
 			datosGuardados.setFechaFin(obj.getFechaFin());
 			datosGuardados.setDescripcion(obj.getDescripcion());

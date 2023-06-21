@@ -24,6 +24,7 @@ import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
 import epntech.cbdmq.pe.dominio.admin.Prueba;
+import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPruebasFisicas;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasFisicasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -32,6 +33,7 @@ import epntech.cbdmq.pe.helper.ResultadoPruebasHelper;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoPruebaRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
+import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaRepository;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebasFisicasDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebasFisicasRepository;
@@ -53,6 +55,8 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	private DocumentoRepository documentoRepo;
 	@Autowired
 	private DocumentoPruebaRepository docPruebaRepo;
+	@Autowired
+	private PruebaDetalleRepository pruebaDetalleRepository;
 	
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -112,7 +116,10 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 	@Override
 	public void generarExcel(String filePath, String nombre, Integer prueba) throws IOException, DataException {
-		Optional<Prueba> pp = pruebaRepository.findById(prueba);
+		//Optional<Prueba> pp = pruebaRepository.findById(prueba);
+		
+		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba, periodoAcademicoRepository.getPAActive());
+		
 		if(pp.get().getEstado().equalsIgnoreCase("CIERRE"))
 		{
 			throw new DataException(ESTADO_INVALIDO);
@@ -122,13 +129,13 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 			try {
 				ExcelHelper.generarExcel(obtenerDatos(prueba), filePath, HEADERs);
 				
-				generaDocumento(filePath, nombre, prueba);
+				generaDocumento(filePath, nombre, pp.get().getCodPruebaDetalle());
 				
-				Prueba p = new Prueba();
+				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
 				p.setEstado("CIERRE");
 				
-				pruebaRepository.save(p);
+				pruebaDetalleRepository.save(p);
 				
 			}catch(IOException ex) {
 				System.out.println("error: " + ex.getMessage());
@@ -146,7 +153,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	@Override
 	public void generarPDF(HttpServletResponse response, String nombre, Integer prueba, String[] columnas) throws DocumentException, IOException, DataException {
 		try {
-			Optional<Prueba> pp = pruebaRepository.findById(prueba);
+			Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba, periodoAcademicoRepository.getPAActive());
 			if(pp.get().getEstado().equalsIgnoreCase("CIERRE"))
 			{
 				throw new DataException(ESTADO_INVALIDO);
@@ -171,13 +178,13 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 				exporter.exportar(response, columnas, obtenerDatos(prueba), widths, ruta);
 				
-				generaDocumento(ruta, nombre, prueba);
+				generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
 				
-				Prueba p = new Prueba();
+				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
 				p.setEstado("CIERRE");
 				
-				pruebaRepository.save(p);
+				pruebaDetalleRepository.save(p);
 			}
 			
 		}catch(IOException ex) {

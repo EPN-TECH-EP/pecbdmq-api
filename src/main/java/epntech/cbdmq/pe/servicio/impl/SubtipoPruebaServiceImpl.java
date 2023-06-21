@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
+import epntech.cbdmq.pe.dominio.util.SubTipoPruebaDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.SubTipoPruebaRepository;
 
@@ -59,6 +60,11 @@ public class SubtipoPruebaServiceImpl implements SubtipoPruebaService{
 			}
 		}
 		
+	}
+	
+	@Override
+	public List<SubTipoPruebaDatos> listarTodosConDatosTipoPrueba(){
+		return this.repo.listarTodosConDatosTipoPrueba();
 	}
 
 }

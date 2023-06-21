@@ -153,9 +153,9 @@ public class ResultadoPruebasNoFisicasResource {
 				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file);
 	}
 
-	@GetMapping("/generarArchivos")
+	@PostMapping("/generarArchivos")
 	public ResponseEntity<?> generarArchivos(HttpServletResponse response, @RequestParam("nombre") String nombre,
-			Integer subTipoPrueba) throws DataException, DocumentException {
+			@RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DataException, DocumentException {
 		try {
 			Optional<PruebaDetalle> pp = pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba, periodoAcademicoRepository.getPAActive());
 
@@ -183,8 +183,8 @@ public class ResultadoPruebasNoFisicasResource {
 		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 	}
 
-	@GetMapping("/generarExcel")
-	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, Integer subTipoPrueba)
+	@PostMapping("/generarExcel")
+	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba)
 			throws DataException {
 		try {
 			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
@@ -199,9 +199,9 @@ public class ResultadoPruebasNoFisicasResource {
 		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 	}
 
-	@GetMapping("/generarPDF")
+	@PostMapping("/generarPDF")
 	public ResponseEntity<?> generarPDF(HttpServletResponse response, @RequestParam("nombre") String nombre,
-			Integer subTipoPrueba) throws DocumentException, IOException, DataException {
+			@RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DocumentException, IOException, DataException {
 
 		try {
 			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
