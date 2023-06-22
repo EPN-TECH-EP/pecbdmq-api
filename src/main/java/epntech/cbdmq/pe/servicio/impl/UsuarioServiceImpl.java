@@ -127,7 +127,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	// String email) throws UsuarioNoEncontradoExcepcion,
 	// NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException {
 	public Usuario registrar(Usuario usuario) throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion,
-			EmailExisteExcepcion, MessagingException {
+			EmailExisteExcepcion, MessagingException, IOException {
 		validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(),
 				usuario.getCodDatosPersonales().getCorreoPersonal());
 
@@ -291,7 +291,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	}
 
 	@Override
-	public void resetPassword(String nombreUsuario) throws MessagingException, UsuarioNoEncontradoExcepcion {
+	public void resetPassword(String nombreUsuario) throws MessagingException, UsuarioNoEncontradoExcepcion, IOException {
 
 		Usuario usuario = userRepository.findUsuarioByNombreUsuario(nombreUsuario);
 		if (usuario == null) {

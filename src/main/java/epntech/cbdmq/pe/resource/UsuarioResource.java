@@ -84,7 +84,7 @@ public class UsuarioResource extends GestorExcepciones {
 
 	@PostMapping("/registro")
 	public ResponseEntity<Usuario> register(@RequestBody Usuario user) throws UsuarioNoEncontradoExcepcion,
-			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException {
+			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException, IOException {
 		// Usuario newUser =
 		// usuarioService.registrar(user.getCodDatosPersonales().getNombre(),
 		// user.getCodDatosPersonales().getApellido(), user.getNombreUsuario(),
@@ -238,7 +238,7 @@ public class UsuarioResource extends GestorExcepciones {
 
 	@PostMapping("/resetPassword/{nombreUsuario}")
 	public ResponseEntity<HttpResponse> resetPassword(@PathVariable("nombreUsuario") String nombreUsuario)
-			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion {
+			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion, IOException {
 		usuarioService.resetPassword(nombreUsuario);
 		return response(OK, EMAIL_ENVIADO + " la dirección de email registrada para el usuario " + nombreUsuario);
 	}
