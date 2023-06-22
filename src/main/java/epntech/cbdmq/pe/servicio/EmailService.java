@@ -12,6 +12,11 @@ import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_PORT;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_ENABLE;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_REQUIRED;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +45,7 @@ public class EmailService {
 	
 	private String FROM_EMAIL = USERNAME;
 
-	public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException {
+    public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException, IOException {
 		/*
 		 * Message message = createEmail(firstName, password, email); SMTPTransport
 		 * smtpTransport = (SMTPTransport)
@@ -51,7 +56,7 @@ public class EmailService {
 		 */
 
 		JavaMailSender emailSender = this.getJavaMailSender();
-		SimpleMailMessage message = this.createEmail(firstName, password, email);
+        MimeMessage message = this.createEmailHtml(firstName, password, email);
 
 		emailSender.send(message);
 
@@ -80,6 +85,98 @@ public class EmailService {
 		return message;
 	}
 
+    private MimeMessage /* Message */ createEmailHtml(String firstName, String password, String email)
+            throws MessagingException, IOException {
+        MimeMessage message = this.getJavaMailSender().createMimeMessage();
+        InternetAddress fromAddress = new InternetAddress(USERNAME);
+        message.setFrom(fromAddress);
+        message.setRecipients(MimeMessage.RecipientType.TO, email);
+        message.setSubject(EMAIL_SUBJECT);
+                /*-----------CON HTML DIRECTO----------
+        String htmlContent = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "    <title>Nuevas Credenciales</title>\n" +
+                "    <style>\n" +
+                "        body {\n" +
+                "            font-family: Arial, sans-serif;\n" +
+                "            background-color: #f4f4f4;\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "        }\n" +
+                "        .container {\n" +
+                "            max-width: 600px;\n" +
+                "            margin: 0 auto;\n" +
+                "            padding: 20px;\n" +
+                "        }\n" +
+                "        .logo {\n" +
+                "            text-align: center;\n" +
+                "            margin-bottom: 20px;\n" +
+                "        }\n" +
+                "        .logo img {\n" +
+                "            max-width: 200px;\n" +
+                "        }\n" +
+                "        .message {\n" +
+                "            background-color: #ffffff;\n" +
+                "            padding: 20px;\n" +
+                "            border-radius: 5px;\n" +
+                "            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);\n" +
+                "        }\n" +
+                "        .message h2 {\n" +
+                "            margin-top: 0;\n" +
+                "        }\n" +
+                "        .message p {\n" +
+                "            margin-bottom: 20px;\n" +
+                "        }\n" +
+                "        .cta-button {\n" +
+                "            display: inline-block;\n" +
+                "            background-color: #007bff;\n" +
+                "            color: #ffffff;\n" +
+                "            padding: 10px 20px;\n" +
+                "            text-decoration: none;\n" +
+                "            border-radius: 3px;\n" +
+                "        }\n" +
+                "        .footer {\n" +
+                "            text-align: center;\n" +
+                "            margin-top: 20px;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <div class=\"container\">\n" +
+                "        <div class=\"logo\">\n" +
+                "            <img src=\"https://cem.epn.edu.ec/imagenes/logos_institucionales/big_jpg/EPN_logo_big.jpg\" alt=\"Logo\">\n" +
+                "        </div>\n" +
+                "        <div class=\"message\">\n" +
+                "            <h2>Recuperación de contraseña</h2>\n" +
+                "            <p>Estimado(a) " + firstName + "</p>\n" +
+                "            <p>Hemos recibido una solicitud para generar la contraseña de tu cuenta </p>\n" +
+                "            <p>Tu nueva contraseña es: " + password + "</p>\n" +
+                "            <p>Si no has solicitado restablecer la contraseña, puedes ignorar este correo electrónico.</p>\n" +
+                "        </div>\n" +
+                "        <div class=\"footer\">\n" +
+                "            <p>Este correo electrónico fue enviado automáticamente. Por favor, no respondas a este correo.</p>\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "</body>\n" +
+                "</html>\n";
+                
+                message.setContent(htmlContent, "text/html; charset=utf-8");
+
+         */
+        String Path="src\\main\\resources\\templateCorreo.html";
+        String htmlTemplate = readFile(Path);
+        htmlTemplate = htmlTemplate.replace("${usuario}", firstName);
+        htmlTemplate = htmlTemplate.replace("${password}", password);
+        message.setContent(htmlTemplate, "text/html; charset=utf-8");
+        return message;
+
+    }
+    private String readFile(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        byte[] bytes = Files.readAllBytes(path);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
 	private Session getEmailSession() {
 		Properties properties = System.getProperties();
 		properties.put(PROP_SMTP_HOST, EMAIL_SMTP_SERVER);
@@ -183,7 +280,7 @@ public class EmailService {
         for (String destinatario : destinatarios) {
             recipientList.add(new InternetAddress(destinatario));
         }
-        message. setRecipients(MimeMessage.RecipientType.TO, recipientList.toArray(new InternetAddress[0]));
+        message.setRecipients(MimeMessage.RecipientType.TO, recipientList.toArray(new InternetAddress[0]));
 
 
 		return message;

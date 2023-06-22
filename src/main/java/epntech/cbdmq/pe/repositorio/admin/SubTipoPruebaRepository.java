@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.repositorio.admin;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,6 +10,8 @@ import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
 import epntech.cbdmq.pe.dominio.util.SubTipoPruebaDatos;
 
 public interface SubTipoPruebaRepository extends JpaRepository<SubTipoPrueba, Integer> {
+	
+	public static Sort defaultSort = Sort.by(Sort.Order.asc("nombre"));
 	//Optional<SubTipoPrueba> findByCodTipoPrueba(Integer id);
 	
 	@Query(value = "select\r\n"

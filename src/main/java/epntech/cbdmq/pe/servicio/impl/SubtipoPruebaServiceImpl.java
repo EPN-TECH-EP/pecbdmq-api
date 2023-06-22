@@ -31,7 +31,7 @@ public class SubtipoPruebaServiceImpl implements SubtipoPruebaService{
 	@Override
 	public List<SubTipoPrueba> getAll() {
 		// TODO Auto-generated method stub
-		return repo.findAll();
+		return repo.findAll(SubTipoPruebaRepository.defaultSort);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class SeguridadConst {
 			"/usuario/login", "/usuario/registro", "/usuario/imagen/**", "/usuario/guardarArchivo",
 			"/usuario/maxArchivo",
 			"/apis/test/informes/**", "/link/**", "/usuario/resetPassword/**", "/provincia/**", "/canton/**",
-			"/inscripcionfor/**", "/apicbdmq/**", "/swagger-ui/**","/api-docs/**" };
+			"/inscripcionfor/**", "/apicbdmq/**", "/swagger-ui/**","/api-docs/**", "/periodoacademico/validaestado" };
 	
 	@Value("${pecb.app-key}")
 	public static String APP_KEY;
