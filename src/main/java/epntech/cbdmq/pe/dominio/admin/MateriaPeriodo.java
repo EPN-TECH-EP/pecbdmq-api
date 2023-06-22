@@ -12,7 +12,7 @@ import lombok.Data;
 
 
 @Data
-@Entity 
+@Entity(name="MateriaPeriodo")
 @Table(name = "gen_materia_periodo")
 public class MateriaPeriodo {
 
