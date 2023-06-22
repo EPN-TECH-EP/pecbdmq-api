@@ -1,10 +1,9 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION_INSCRIPCION;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_INSCRIPCION;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,19 +24,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
+import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
+import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
+import jakarta.mail.MessagingException;
 
 @Service
 public class InscripcionEspServiceImpl implements InscripcionEspService {
@@ -52,6 +55,11 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	private DocumentoRepository documentoRepository;
 	@Autowired
 	private InscripcionDocumentoRepository inscripcionDocumentoRepository;
+	@Autowired
+	private EmailService emailService;
+	@Autowired
+	private ParametroRepository parametroRepository;
+	
 	
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -66,8 +74,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		if(estudianteOptional.isEmpty() || cursoOptional.isEmpty())
 			throw new DataException(REGISTRO_NO_EXISTE);
 		
-		//LocalDate fechaActual = LocalDate.now();
-		//inscripcionEsp.setFechaInscripcion(fechaActual);
+		LocalDate fechaActual = LocalDate.now();
+		inscripcionEsp.setFechaInscripcion(fechaActual);
 		
 		return inscripcionEspRepository.save(inscripcionEsp);
 	}
@@ -180,6 +188,44 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 		}
 		
+	}
+
+	@Override
+	public void notificarInscripcion(Long codInscripcion) throws MessagingException, DataException {
+		Optional<InscripcionEstudianteDatosEspecializacion> inscripcionOptional = inscripcionEspRepository.getInscripcionEstudiante(codInscripcion);
+		InscripcionEstudianteDatosEspecializacion inscripcion = new InscripcionEstudianteDatosEspecializacion();
+		inscripcion = inscripcionOptional.get();
+		
+		Optional<Parametro> parametro = parametroRepository.findByNombreParametro("especializacion.inscripcion.notificacion.body"); 
+		if(parametro.isEmpty())
+			throw new DataException(NO_PARAMETRO);
+		
+		String nombres = inscripcion.getNombre() + " " + inscripcion.getApellido();
+		String cuerpoHtml = String.format(parametro.get().getValor(), nombres, inscripcion.getNombreCatalogoCurso(), inscripcion.getFechaInscripcion(), inscripcion.getFechaInicioCurso(), inscripcion.getFechaFinCurso());
+		
+		/*cuerpoHtml = "<html>" +
+				            "<body>" +
+				                "<h1>Confirmacion de Inscripcion al Curso de Especializacion</h1>" +
+				                "<p><h2>" + inscripcion.getNombre() + " " + inscripcion.getApellido() + "</h2></p>" +
+				                "<h2>Curso: " + inscripcion.getNombreCatalogoCurso() + "</h2>" +
+				                "<tr>"
+				                + "<td>Fecha de Inscripcion:</td>"
+				                + "<td>" + inscripcion.getFechaInscripcion() + "</td>"
+				                + "</tr>"
+				                + "<tr>"
+				                + "<td>Fecha Inicio:</td>"
+				                + "<td>" + inscripcion.getFechaInicioCurso() + "</td>"
+				                + "</tr>"
+				                + "<tr>"
+				                + "<td>Fecha Fin:</td>"
+				                + "<td>" + inscripcion.getFechaFinCurso() + "</td>"
+				                + "</tr>"+
+				            "</body>" +
+				        "</html>";*/
+		
+		String[] destinatarios = {inscripcion.getCorreoPersonal()};
+		
+		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
 	}
 
 }

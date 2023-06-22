@@ -11,6 +11,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import jakarta.mail.MessagingException;
 
 public interface InscripcionEspService {
 
@@ -27,4 +28,6 @@ public interface InscripcionEspService {
 	List<Documento> uploadFiles(Long codInscripcion, Long tipoDocumento, List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion;
 	
 	void deleteDocumento(Long codInscripcion, Long codDocumento) throws DataException;
+	
+	void notificarInscripcion(Long codInscripcion) throws MessagingException, DataException ;
 }

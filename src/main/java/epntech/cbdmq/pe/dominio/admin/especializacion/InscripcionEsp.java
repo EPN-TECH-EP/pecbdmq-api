@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.hibernate.annotations.NamedNativeQuery;
 
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;
@@ -59,6 +60,30 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		@ColumnResult(name = "apellido"), 
 		@ColumnResult(name = "nombreCatalogoCurso"), }))
 
+@NamedNativeQuery(name = "InscripcionEsp.findInscripcionDatos", 
+query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, dp.correo_personal as correoPersonal, cc.nombre_catalogo_curso as nombreCatalogoCurso, "
+		+ "c.fecha_inicio_curso as fechaInicioCurso, c.fecha_fin_curso as fechaFinCurso, i.fecha_inscripcion as fechaInscripcion "
+		+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
+		+ "where i.cod_estudiante = e.cod_estudiante " 
+		+ "and e.cod_datos_personales = dp.cod_datos_personales "
+		+ "and i.cod_curso_especializacion = c.cod_curso_especializacion "
+		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
+		+ "and upper(e.estado) = 'ACTIVO' "
+		+ "and upper(dp.estado) = 'ACTIVO' " 
+		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(cc.estado) = 'ACTIVO' "
+		+ "and i.cod_inscripcion = :codInscripcion", 
+		resultSetMapping = "findInscripcionDatos")
+@SqlResultSetMapping(name = "findInscripcionDatos", classes = @ConstructorResult(targetClass = InscripcionEstudianteDatosEspecializacion.class, columns = {
+		@ColumnResult(name = "codInscripcion"), 
+		@ColumnResult(name = "cedula"), 
+		@ColumnResult(name = "nombre"),
+		@ColumnResult(name = "apellido"),
+		@ColumnResult(name = "correoPersonal"),
+		@ColumnResult(name = "nombreCatalogoCurso"), 
+		@ColumnResult(name = "fechaInicioCurso", type = LocalDate.class),
+		@ColumnResult(name = "fechaFinCurso", type = LocalDate.class),
+		@ColumnResult(name = "fechaInscripcion", type = LocalDate.class),}))
 public class InscripcionEsp {
 
 	@Id
@@ -72,7 +97,7 @@ public class InscripcionEsp {
 	@Column(name = "cod_curso_especializacion")
 	private Long codCursoEspecializacion;
 	
-	//@Column(name = "fecha_inscripcion")
-	//private LocalDate fechaInscripcion;
+	@Column(name = "fecha_inscripcion")
+	private LocalDate fechaInscripcion;
 
 }

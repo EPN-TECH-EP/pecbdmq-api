@@ -1,11 +1,13 @@
 package epntech.cbdmq.pe.resource.especializacion;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.NO_ADJUNTO;
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.io.IOException;
 import java.util.List;
 
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.especializacion.InscripcionEspServiceImpl;
+import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping("/inscripcionEsp")
@@ -83,6 +85,16 @@ public class InscripcionEspResource {
 		inscripcionEspServiceImpl.deleteDocumento(codInscripcion, codDocumento);
 		
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
+	
+	@PostMapping("/notificar")
+	public ResponseEntity<?> notificar(@RequestParam("codInscripcion") Long codInscripcion)
+			throws MessagingException, DataException, PSQLException {
+
+		
+		inscripcionEspServiceImpl.notificarInscripcion(codInscripcion);
+
+		return response(HttpStatus.OK, EMAIL_SEND);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
@@ -192,6 +193,30 @@ public class EmailService {
 	public void enviarEmail(String[] destinatarios, String subject, String texto) throws MessagingException {
 		JavaMailSender emailSender = this.getJavaMailSender();
 		MimeMessage message = this.sendEmail(destinatarios, subject, texto, emailSender);
+
+		emailSender.send(message);
+
+	}
+	
+	private MimeMessage sendEmailHtml(String[] destinatarios, String subject, String texto, JavaMailSender emailSender)
+			throws MessagingException {
+
+		MimeMessage message = emailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+		helper.setFrom(USERNAME);
+	    helper.setSubject(subject);
+	    helper.setText(texto, true);
+		
+	    for (String destinatario : destinatarios) {
+	        helper.addTo(destinatario);
+	    }
+
+		return message;
+	}
+	
+	public void enviarEmailHtml(String[] destinatarios, String subject, String texto) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		MimeMessage message = this.sendEmailHtml(destinatarios, subject, texto, emailSender);
 
 		emailSender.send(message);
 

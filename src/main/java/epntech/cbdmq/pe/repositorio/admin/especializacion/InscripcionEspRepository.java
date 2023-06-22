@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
 
 public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, Long> {
 
@@ -19,4 +20,7 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcion")
 	Optional<InscripcionDatosEspecializacion> getInscripcion(@Param("codInscripcion") Long codInscripcion);
+	
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionDatos")
+	Optional<InscripcionEstudianteDatosEspecializacion> getInscripcionEstudiante(@Param("codInscripcion") Long codInscripcion);
 }
