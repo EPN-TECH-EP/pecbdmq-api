@@ -37,7 +37,7 @@ public class TipoNotaTest {
 	void testGuardar() {
 	 
 		TipoNota obj = new TipoNota();
-		obj.setCodTipoNota(1);
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 
@@ -55,7 +55,7 @@ public class TipoNotaTest {
 		
 		
 		TipoNota obj = new TipoNota();
-		obj.setCodTipoNota(1);
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 
@@ -74,7 +74,7 @@ public class TipoNotaTest {
 		String nombre = "Test";
 
 		TipoNota obj = new TipoNota();
-		obj.setCodTipoNota(1);
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 
@@ -103,7 +103,7 @@ public class TipoNotaTest {
 		String nombre = "Test";
 
 		TipoNota obj = new TipoNota();
-		obj.setCodTipoNota(1);
+		obj.setCodTipoNota(1);		
 		obj.setNota("texto");
 		obj.setEstado("activo");
 

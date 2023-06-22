@@ -38,7 +38,7 @@ public class ModuloTest {
 	void testGuardar() {
 	 
 		Modulo obj = new Modulo();
-		obj.setCodModulo(1);
+		obj.setCodModulo(1);		
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");
 
@@ -56,7 +56,7 @@ public class ModuloTest {
 		
 		
 		Modulo obj = new Modulo();
-		obj.setCodModulo(1);
+		obj.setCodModulo(1);	
 		obj.setEtiqueta("texto");
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");
@@ -74,7 +74,7 @@ public class ModuloTest {
 	public void testActualizar() {
 
 		Modulo obj = new Modulo();
-		obj.setCodModulo(1);
+		obj.setCodModulo(1);	
 		obj.setEtiqueta("texto");
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");
@@ -106,7 +106,7 @@ public class ModuloTest {
 	public void testEliminar() {
 
 		Modulo obj = new Modulo();
-		obj.setCodModulo(1);
+		obj.setCodModulo(1);	
 		obj.setEtiqueta("texto");
 		obj.setDescripcion("texto");
 		obj.setEstado("activo");

@@ -21,14 +21,14 @@ public class AulaServiceImpl implements AulaService {
 	@Override
 	public Aula save(Aula obj) throws DataException {
 		// TODO Auto-generated method stub
-		if (obj.getNombre().trim().isEmpty())
+		if (obj.getNombreAula().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<Aula> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
+		Optional<Aula> objGuardado = repo.findByNombreAulaIgnoreCase(obj.getNombreAula());
 		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-
-		obj.setNombre(obj.getNombre().toUpperCase());
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
+			
+		obj.setNombreAula(obj.getNombreAula().toUpperCase());
 		return repo.save(obj);
 	}
 
@@ -46,9 +46,9 @@ public class AulaServiceImpl implements AulaService {
 
 	@Override
 	public Aula update(Aula objActualizado) throws DataException {
-	if(objActualizado.getNombre() !=null) {
-		Optional<Aula> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-		if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
+	if(objActualizado.getNombreAula() !=null) {
+		Optional<Aula> objGuardado = repo.findByNombreAulaIgnoreCase(objActualizado.getNombreAula());
+		if (objGuardado.isPresent()&& !objGuardado.get().getCodAula().equals(objActualizado.getCodAula())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 	}

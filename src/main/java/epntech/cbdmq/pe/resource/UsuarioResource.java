@@ -245,7 +245,7 @@ public class UsuarioResource extends GestorExcepciones {
 
 	@DeleteMapping("/eliminar/{username}")
 	// @PreAuthorize("hasAnyAuthority('user:delete')")
-	public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
+	public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws Exception {
 		usuarioService.eliminarUsuario(username);
 		return response(OK, USUARIO_ELIMINADO_EXITO);
 	}

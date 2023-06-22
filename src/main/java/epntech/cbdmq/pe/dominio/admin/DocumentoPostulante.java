@@ -31,25 +31,22 @@ public class DocumentoPostulante {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_documento")
-	private Integer codigoDocumento;
+	private Integer codDocumento;
 	
 	@Column(name = "autorizacion")
 	private String autorizacion;
 	
 	@Column(name = "cod_tipo_documento")
-	private Integer tipo;
+	private Integer codTipoDocumento;
 	
 	@Column(name = "descripcion")
 	private String descripcion;
 	
 	@Column(name = "estado_validacion")
-	private String estadoValidacion;
-	
-	@Column(name = "codigo_unico_documento")
-	private String codigoUnico;
+	private String estadoValidacion;	
 	
 	@Column(name = "nombre_documento")
-	private String nombre;
+	private String nombreDocumento;
 	
 	@Column(name = "observaciones")
 	private String observaciones;

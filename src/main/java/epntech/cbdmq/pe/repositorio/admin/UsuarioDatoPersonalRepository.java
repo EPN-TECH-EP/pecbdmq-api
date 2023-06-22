@@ -28,4 +28,13 @@ public interface UsuarioDatoPersonalRepository extends JpaRepository<UsuarioDato
 			+ "and dp.cedula =:cedula", nativeQuery=true)
 	UsuarioDatoPersonal getByCedula(String cedula);
 	
+	@Query(value = "select u.cod_usuario, u.nombre_usuario, dp.cod_datos_personales, dp.apellido, dp.nombre, dp.cedula, dp.correo_personal "
+			+ "from cbdmq.gen_dato_personal dp, cbdmq.gen_usuario u "
+			+ "where dp.cod_datos_personales = u.cod_datos_personales "
+			+ "and UPPER(dp.estado) = 'ACTIVO' "
+			+ "and u.is_active = true "
+			+ "and u.is_not_locked = true "
+			+ "and dp.cod_datos_personales = :codDatoPersonal", nativeQuery=true)
+	UsuarioDatoPersonal getByCodDatoPersonal(Long codDatoPersonal);
+	
 }

@@ -36,4 +36,8 @@ public class PostulanteUtil {
 	private String apellido;
 	
 	private String cedula;
+	
+	private String nombreUsuario;
+	
+	private String correoUsuario;
 }

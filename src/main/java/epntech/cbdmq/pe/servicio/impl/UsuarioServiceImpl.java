@@ -12,6 +12,7 @@ import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_DEFECTO_IMAGEN_USUARI
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_IMAGEN_USUARIO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PUNTO;
 import static epntech.cbdmq.pe.constante.MensajesConst.NO_ENCUENTRA;
+import static epntech.cbdmq.pe.constante.UsuarioImplConst.EMAIL_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_ENCONTRADO;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NOMBRE_USUARIO_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.UsuarioImplConst.NO_EXISTE_USUARIO;
@@ -21,7 +22,6 @@ import static org.springframework.http.MediaType.IMAGE_GIF_VALUE;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,22 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
-import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
-import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
-import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
-import epntech.cbdmq.pe.excepcion.dominio.*;
-import epntech.cbdmq.pe.servicio.*;
-import epntech.cbdmq.pe.servicio.EstudianteService;
-import epntech.cbdmq.pe.servicio.InstructorService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -59,11 +51,27 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import epntech.cbdmq.pe.constante.UsuarioImplConst;
 import epntech.cbdmq.pe.dominio.UserPrincipal;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
+import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
+import epntech.cbdmq.pe.dominio.util.UsuarioInfoDto;
 import epntech.cbdmq.pe.enumeracion.Role;
+import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.excepcion.dominio.EmailExisteExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.NoEsArchivoImagenExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.NombreUsuarioExisteExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.UsuarioNoEncontradoExcepcion;
 import epntech.cbdmq.pe.repositorio.UsuarioRepository;
+import epntech.cbdmq.pe.servicio.EmailService;
+import epntech.cbdmq.pe.servicio.EstudianteService;
+import epntech.cbdmq.pe.servicio.InstructorService;
+import epntech.cbdmq.pe.servicio.IntentoLoginService;
+import epntech.cbdmq.pe.servicio.UsuarioService;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -86,13 +94,14 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 	@Autowired
 	public UsuarioServiceImpl(UsuarioRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-			IntentoLoginService loginAttemptService, EmailService emailService,EstudianteService estudianteService, InstructorService instructorService) {
+			IntentoLoginService loginAttemptService, EmailService emailService, EstudianteService estudianteService,
+			InstructorService instructorService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.loginAttemptService = loginAttemptService;
 		this.emailService = emailService;
-		this.estudianteService=estudianteService;
-		this.instructorService=instructorService;
+		this.estudianteService = estudianteService;
+		this.instructorService = instructorService;
 	}
 
 	@Override
@@ -166,18 +175,18 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	public Usuario crear(Usuario usuario)
 			throws NombreUsuarioExisteExcepcion,
 			EmailExisteExcepcion, IOException, UsuarioNoEncontradoExcepcion, MessagingException {
-		
+
 		validateNewUsernameAndEmail(EMPTY, usuario.getNombreUsuario(),
 				usuario.getCodDatosPersonales().getCorreoPersonal());
 
 		String password = generatePassword();
-		
+
 		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
 				usuario.getCodDatosPersonales().getCorreoPersonal());
-		
+
 		// datos de usuario
 		Usuario user = new Usuario();
-		
+
 		user.setNombreUsuario(usuario.getNombreUsuario());
 		user.setFechaRegistro(new Date());
 		user.setClave(encodePassword(password));
@@ -232,7 +241,6 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		datos.setEsVulnerable(datosRecibidos.getEsVulnerable());
 		datos.setPaisTituloCuartoNivel(datosRecibidos.getPaisTituloCuartoNivel());
 		datos.setPaisTituloTercerNivel(datosRecibidos.getPaisTituloTercerNivel());
-		
 
 		// asocia datos personales con usuario
 		user.setCodDatosPersonales(datos);
@@ -240,7 +248,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		userRepository.save(user);
 
 		userRepository.flush();
-		
+
 		return user;
 	}
 
@@ -340,17 +348,32 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		return userRepository.findUsuarioByNombreUsuario(username);
 	}
 
-	/*
-	 * @Override public Usuario findUserByEmail(String email) { return
-	 * userRepository.findUsuarioByEmail(email); }
-	 */
+	@Override
+	public Usuario findUserByEmail(String email) {
+
+		List<Usuario> lista = userRepository.findUsuariosByCorreo(email);
+
+		if (lista != null && !lista.isEmpty()) {
+			return lista.get(0);
+		} else {
+			return null;
+		}
+	}
 
 	@Override
-	public void eliminarUsuario(String username) throws IOException {
+	public void eliminarUsuario(String username) throws Exception {
 		Usuario user = userRepository.findUsuarioByNombreUsuario(username);
-		Path userFolder = Paths.get(CARPETA_USUARIO + user.getNombreUsuario()).toAbsolutePath().normalize();
-		FileUtils.deleteDirectory(new File(userFolder.toString()));
+		/*
+		 * try { Path userFolder = Paths.get(CARPETA_USUARIO +
+		 * user.getNombreUsuario()).toAbsolutePath().normalize();
+		 * FileUtils.deleteDirectory(new File(userFolder.toString())); } catch
+		 * (IOException e1) { LOGGER.
+		 * error("Se ha producido un error al eliminar los archivos del usuario: " +
+		 * user.getNombreUsuario()); e1.printStackTrace(); }
+		 */
+
 		userRepository.deleteById(user.getCodUsuario());
+
 	}
 
 	private void saveProfileImage(Usuario user, MultipartFile profileImage)
@@ -422,29 +445,43 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 	private Usuario validateNewUsernameAndEmail(String currentUsername, String newUsername, String newEmail)
 			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion {
 		Usuario userByNewUsername = findUserByUsername(newUsername);
-		// Usuario userByNewEmail = findUserByEmail(newEmail);
+		Usuario userByNewEmail = findUserByEmail(newEmail);
+
+		// si valida un usuario registrado
 		if (StringUtils.isNotBlank(currentUsername)) {
 			Usuario currentUser = findUserByUsername(currentUsername);
+
+			// si no encuentra datos para el usuario registrado
 			if (currentUser == null) {
 				throw new UsuarioNoEncontradoExcepcion(NO_EXISTE_USUARIO + currentUsername);
 			}
+
+			// sale si ya existe ese nombre de usuario para otro usuario registrado
 			if (userByNewUsername != null && !currentUser.getCodUsuario().equals(userByNewUsername.getCodUsuario())) {
 				throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
 			}
-			/*
-			 * if(userByNewEmail != null &&
-			 * !currentUser.getCodUsuario().equals(userByNewEmail.getCodUsuario())) { throw
-			 * new EmailExisteExcepcion(EMAIL_YA_EXISTE); }
-			 */
+
+			// sale si ya existe ese email para un usuario registrado
+			if (currentUser.getCodDatosPersonales().getCorreoPersonal().compareToIgnoreCase(newEmail) != 0) {
+				if (userByNewEmail != null /* && !currentUser.getCodUsuario().equals(userByNewEmail.getCodUsuario()) */) {
+					throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
+				}
+			}
+
 			return currentUser;
-		} else {
+		}
+		// cuando no es un usuario registrado
+		else {
+			// sale si ya existe ese nombre de usuario
 			if (userByNewUsername != null) {
 				throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
 			}
-			/*
-			 * if(userByNewEmail != null) { throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
-			 * }
-			 */
+
+			// sale si ya existe ese email para un usuario
+			if (userByNewEmail != null) {
+				throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
+			}
+
 			return null;
 		}
 	}
@@ -497,10 +534,10 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 			throw new DataException(NO_ENCUENTRA);
 		}
 		UsuarioInfoDto usuarioInfo = new UsuarioInfoDto();
-		if(instructor!=null) {
+		if (instructor != null) {
 			usuarioInfo.setCodInstructor(instructor.getCodInstructor());
 		}
-		if(estudianteDto!=null) {
+		if (estudianteDto != null) {
 			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getIdEstudiante());
 		}
 

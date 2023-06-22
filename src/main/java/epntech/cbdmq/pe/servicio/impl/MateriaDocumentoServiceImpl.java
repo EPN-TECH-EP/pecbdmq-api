@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_FORMACION;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +76,7 @@ public class MateriaDocumentoServiceImpl implements MateriaDocumentoService {
 		String resultado = null;
 		PeriodoAcademico periodo=periodoAcademicoRepository.getPeriodoAcademicoActivo();
 
-		resultado = ARCHIVOS_RUTA + proceso + "/Materia/" +periodo.getCodigo() +"/" + codigo + "/";
+		resultado = ARCHIVOS_RUTA + PATH_PROCESO_FORMACION + periodo.getCodigo() + "/Materia/" + codigo + "/";
 
 		return resultado;
 	}
@@ -113,11 +115,11 @@ public class MateriaDocumentoServiceImpl implements MateriaDocumentoService {
 			documento.setNombre(multipartFile.getOriginalFilename());
 			documento.setRuta(resultado + multipartFile.getOriginalFilename());
 			documento = documentoRepository.save(documento);
-			System.out.println("documento.getCodigo() " + documento.getCodigo());
+			System.out.println("documento.getCodigo() " + documento.getCodDocumento());
 			System.out.println("materia " + materia);
 			
 			MateriaDocumento matdoc = new MateriaDocumento(); 
-			matdoc.setCodDocumento(documento.getCodigo());
+			matdoc.setCodDocumento(documento.getCodDocumento());
 			matdoc.setCodMateria(materia);
 			repo.save(matdoc);
 
@@ -129,6 +131,35 @@ public class MateriaDocumentoServiceImpl implements MateriaDocumentoService {
 		 * 
 		 */
 		return lista;
+	}
+
+	@Override
+	public void deleteDocumento(Integer materia, Long codDocumento) throws DataException {
+		Optional<Documento> documentoOptional;
+		Documento documento = new Documento();
+
+		// System.out.println("id: " + codDocumento);
+		documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		documento = documentoOptional.get();
+
+		Path ruta = Paths.get(documento.getRuta());
+
+		// System.out.println("ruta: " + ruta);
+		if (Files.exists(ruta)) {
+			try {
+				// System.out.println("ruta" + ruta);
+				Files.delete(ruta);
+				repo.deleteByCodMateriaAndCodDocumento(materia, codDocumento.intValue());
+				documentoRepository.deleteById(codDocumento.intValue());
+				
+			} catch (Exception e) {
+
+				throw new DataException(e.getMessage());
+				// e.printStackTrace();
+			}
+
+		}
+		
 	}
 
 }

@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.InstructorPeriodoRepository;
 
 import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
+import epntech.cbdmq.pe.repositorio.admin.InstructorDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.InstructorMateriaRepository;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.InstructorRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
@@ -36,6 +38,8 @@ public class InstructorServiceImpl implements InstructorService {
 	
 	@Autowired
 	private PeriodoAcademicoRepository repo3;
+	@Autowired
+	private InstructorDatosRepository instructorDatosRepository;
 	
 	@Override
 	public Instructor save(Instructor obj) throws DataException {
@@ -51,9 +55,9 @@ public class InstructorServiceImpl implements InstructorService {
 	}
 
 	@Override
-	public List<Instructor> getAll() {
+	public List<InstructorDatos> getAll() {
 		// TODO Auto-generated method stub
-		return repo.findAll();
+		return instructorDatosRepository.getAllInstructorDatos();
 	}
 
 	@Override
@@ -79,10 +83,11 @@ public class InstructorServiceImpl implements InstructorService {
 		// TODO Auto-generated method stub
 		instructorMateriaRepository.saveAll(obj);
 	}
-
 	@Override
 	public Instructor getInstructorByUser(String coduser) {
 		return repo.getInstructorByUsuario(coduser);
 	}
+
+
 
 }

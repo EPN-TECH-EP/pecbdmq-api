@@ -13,7 +13,9 @@ import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_ENABLE;
 import static epntech.cbdmq.pe.constante.EmailConst.PROP_SMTP_STARTTLS_REQUIRED;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailService {
@@ -162,6 +166,32 @@ public class EmailService {
 	public void enviarEmail(String email, String subject, String texto) throws MessagingException {
 		JavaMailSender emailSender = this.getJavaMailSender();
 		SimpleMailMessage message = this.sendEmail(email, subject, texto);
+
+		emailSender.send(message);
+
+	}
+	
+	private MimeMessage sendEmail(String[] destinatarios, String subject, String texto, JavaMailSender emailSender)
+			throws MessagingException {
+
+		MimeMessage message = emailSender.createMimeMessage();
+		message.setFrom(USERNAME);
+		message.setSubject(subject);
+		message.setText(texto);
+		
+		List<InternetAddress> recipientList = new ArrayList<>();
+        for (String destinatario : destinatarios) {
+            recipientList.add(new InternetAddress(destinatario));
+        }
+        message. setRecipients(MimeMessage.RecipientType.TO, recipientList.toArray(new InternetAddress[0]));
+
+
+		return message;
+	}
+	
+	public void enviarEmail(String[] destinatarios, String subject, String texto) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		MimeMessage message = this.sendEmail(destinatarios, subject, texto, emailSender);
 
 		emailSender.send(message);
 

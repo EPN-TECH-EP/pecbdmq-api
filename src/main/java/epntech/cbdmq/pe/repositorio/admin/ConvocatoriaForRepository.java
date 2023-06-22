@@ -173,12 +173,12 @@ public class ConvocatoriaForRepository {
 			ConvocatoriaDocumentoFor convocatoriaDocumentoFor = new ConvocatoriaDocumentoFor();
 			
 			entityManager.createNativeQuery(sqlConvocatoriaDocumento).setParameter("cod_convocatoria", codConvocatoria)
-					.setParameter("cod_documento", elemento.getCodigoDocumento());
+					.setParameter("cod_documento", elemento.getCodDocumento());
 			
 			convocatoriaDocumentoFor.setCodConvocatoria(codConvocatoria);
-			convocatoriaDocumentoFor.setCodDocumento(elemento.getCodigoDocumento());
+			convocatoriaDocumentoFor.setCodDocumento(elemento.getCodDocumento());
 			entityManager.persist(convocatoriaDocumentoFor);
-			codigoDocumento = elemento.getCodigoDocumento();
+			codigoDocumento = elemento.getCodDocumento();
 		}		
 		
 
@@ -228,10 +228,10 @@ public class ConvocatoriaForRepository {
 			
 			entityManager.createNativeQuery(sqlPeriodoAcademicoDocumento)
 					.setParameter("cod_periodo_academico", periodo.getCodigo())
-					.setParameter("cod_documento", elemento.getCodigoDocumento());
+					.setParameter("cod_documento", elemento.getCodDocumento());
 			
-			periodoAcademicoDocumentoFor.setCod_periodo_academico(periodo.getCodigo());
-			periodoAcademicoDocumentoFor.setCod_documento(elemento.getCodigoDocumento());
+			periodoAcademicoDocumentoFor.setCodPeriodoAcademico(periodo.getCodigo());
+			periodoAcademicoDocumentoFor.setCodDocumento(elemento.getCodDocumento());
 			entityManager.persist(periodoAcademicoDocumentoFor);
 		}
 		

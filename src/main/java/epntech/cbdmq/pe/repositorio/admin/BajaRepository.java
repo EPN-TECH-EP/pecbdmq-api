@@ -9,7 +9,5 @@ import epntech.cbdmq.pe.dominio.admin.Baja;
 
 
 public interface BajaRepository extends JpaRepository<Baja, Integer>{
-
-	Optional<Baja> findByNombreIgnoreCase(String Nombre);
-	
+	Optional<Baja> findByCodEstudianteAndCodPeriodoAcademicoAndEstado(Integer codEstudiante, Integer codPeriodo, String estado);
 }

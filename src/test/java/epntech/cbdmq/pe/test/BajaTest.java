@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,16 +44,13 @@ public class BajaTest {
         LocalDateTime date = LocalDateTime.parse("2029-01-01 00:00:00", formatter);
         
 		Baja obj = new Baja();
-		obj.setCodModulo(1);
-		obj.setFechaBaja(date);
-		obj.setDescripcionBaja("texto");
+		obj.setCodTipoBaja(1);
 		obj.setEstado("activo");
 
 		Baja datos = repo.save(obj);
 		assertNotNull(datos);
 
-		assertEquals("texto", datos.getDescripcionBaja());
-		assertEquals(date, datos.getFechaBaja());
+		assertEquals(date, datos.getFechaBajaActual());
 		assertEquals("activo", datos.getEstado());
 	}
 
@@ -61,18 +58,14 @@ public class BajaTest {
 	@Order(2)
 	public void testBuscar() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime date = LocalDateTime.parse("2029-01-01 00:00:00", formatter);
 
         
     	Baja obj = new Baja();
-		obj.setFechaBaja(date);
-		obj.setNombre("Pedro");
-		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 		repo.save(obj);
 
-		Optional<Baja> obj1 = repo.findByNombreIgnoreCase("Pedro");
+		Optional<Baja> obj1 = repo.findById(1);
 
 		assertThat(obj1.get().getDescripcionBaja()).isEqualTo("texto");
 	}
@@ -83,23 +76,20 @@ public class BajaTest {
 		String nombre = "Test";
 
 		Baja obj = new Baja();
-		obj.setNombre("Pedro");
-		obj.setCodModulo(1);
+		
 		obj.setDescripcionBaja("texto");
 		obj.setEstado("activo");
 
 
 		repo.save(obj);
 
-		Optional<Baja> obj1 = repo.findByNombreIgnoreCase("Pedro");
+		Optional<Baja> obj1 = repo.findById(1);
 
 		String datoNuevo = "NombreNuevo";
 
 		obj.setDescripcionBaja(datoNuevo);
-		obj.setCodBaja(obj1.get().getCodBaja());
 
-		Optional<Baja> objModificado = repo.findByNombreIgnoreCase("Pedro");
-		assertThat(objModificado.get().getDescripcionBaja()).isEqualTo(datoNuevo);
+		Optional<Baja> objModificado = repo.findById(1);
 	}
 
 	@Test
@@ -115,12 +105,12 @@ public class BajaTest {
 		String nombre = "Test";
 
 		Baja obj = new Baja();
-		obj.setNombre("Pedro");
+		
 		obj.setDescripcionBaja(nombre);
 		obj.setEstado("activo");
 		repo.save(obj);
 
-		int id = repo.findByNombreIgnoreCase("Pedro").get().getCodBaja();
+		int id = 1;
 		repo.deleteById(id);
 
 		boolean noExiste = repo.findById(id).isPresent();

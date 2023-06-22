@@ -26,13 +26,18 @@ public class ArchivoConst {
 	public static final String NO_ADJUNTO = "No existe un documento adjunto";
 	public static final String PATH_SANCIONES = "Sanciones/";
 
+	public static final String PATH_BAJAS = "Bajas/";
+	public static final String PATH_PROCESO_ESPECIALIZACION = "Especializacion/";
+	public static final String PATH_PROCESO_FORMACION = "Formacion/";
+
+
 
 	public static final String FALLA_PROCESAR_EXCEL = "Falla al procesar el archivo excel";
 	public static final String PATH_RESULTADO_PRUEBAS = "Resultado Pruebas/";
 	public static final String PATH_RESULTADO_ANTIGUEDADES = "Antiguedades/";
 	public static final String PATH_PROCESO_INSCRIPCION_VAL = "Inscritos Validos/";
 	
-	
+	public static final String DOCUMENTO_ACTUALIZADO = "El documento ha sido actualizado";
 	
 
 }

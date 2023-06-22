@@ -7,7 +7,6 @@ import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEst
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
@@ -86,11 +85,5 @@ public class EstudianteServiceImpl implements EstudianteService {
 
 		return this.repo.getEstudianteByUsuario(codUsuario);
 	}
-/*
-	@Override
-	public List<?> findPeriodosAcademicos(Integer id, Pageable pageable) {
-		return this.repo.findPeriodos(id, pageable);
-	}*/
-
-
+	
 }

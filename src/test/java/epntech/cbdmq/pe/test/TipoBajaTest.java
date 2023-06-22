@@ -40,7 +40,7 @@ public class TipoBajaTest {
 	void testGuardar() {
 	 
 		TipoBaja obj = new TipoBaja();
-		obj.setCodTipoBaja(1);
+		obj.setCodTipoBaja(1);		
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 
@@ -59,7 +59,7 @@ public class TipoBajaTest {
 		
 		
 		TipoBaja obj = new TipoBaja();
-		obj.setCodTipoBaja(1);
+		obj.setCodTipoBaja(1);		
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 
@@ -77,7 +77,7 @@ public class TipoBajaTest {
 		String nombre = "Test";
 
 		TipoBaja obj = new TipoBaja();
-		obj.setCodTipoBaja(1);
+		obj.setCodTipoBaja(1);		
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 
@@ -107,7 +107,7 @@ public class TipoBajaTest {
 		String nombre = "Test";
 
 		TipoBaja obj = new TipoBaja();
-		obj.setCodTipoBaja(1);
+		obj.setCodTipoBaja(1);		
 		obj.setBaja("texto");
 		obj.setEstado("activo");
 

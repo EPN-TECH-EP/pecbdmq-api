@@ -79,5 +79,11 @@ public class EncuestaResumenResource {
 	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 	                message), httpStatus);
 	    }
+	    
+	    @GetMapping("/existeencuestas")
+	    public Boolean existeEncuesta() {
+	    	return objServices.existeEncuesta();
+	    }
+	    
 
 }

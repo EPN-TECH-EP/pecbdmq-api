@@ -53,7 +53,7 @@ public class MateriaResource {
 		return (ResponseEntity<Materia>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
 			//datosGuardados.setNumHoras(obj.getNumHoras());
-			datosGuardados.setTipoMateria(obj.getTipoMateria());
+			datosGuardados.setCodEjeMateria(obj.getCodEjeMateria());
 			//datosGuardados.setObservacionMateria(obj.getObservacionMateria());
 			//datosGuardados.setPesoMateria(obj.getPesoMateria());
 			//datosGuardados.setNotaMinima(obj.getNotaMinima());

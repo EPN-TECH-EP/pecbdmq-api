@@ -59,7 +59,7 @@ public class ConvocatoriaForResource {
 		objectMapper.registerModule(new JavaTimeModule());
 		
 		JsonNode jsonNode = objectMapper.readTree(datosConvocatoria);
-		System.out.println("jsonNode: " + jsonNode);
+		//System.out.println("jsonNode: " + jsonNode);
 		
 		ConvocatoriaFor convocatoria = objectMapper.readValue(datosConvocatoria, ConvocatoriaFor.class);
 		
@@ -194,7 +194,7 @@ public class ConvocatoriaForResource {
 		DocumentoFor doc = new DocumentoFor();
 		for (DocumentoFor d : documentos) {
 			DocumentoFor documento = new DocumentoFor();
-			documento.setCodigoDocumento(d.getCodigoDocumento());
+			documento.setCodDocumento(d.getCodDocumento());
 			docs.add(documento);
 			doc = documento;
 		}

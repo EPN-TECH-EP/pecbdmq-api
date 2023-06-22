@@ -72,11 +72,11 @@ public class InscripcionFor {
 	private Boolean tieneMeritoDeportivo;
 	@Column(name = "tiene_merito_academico")
 	private Boolean tieneMeritoAcademico;
-	@Column(name = "nombre_titulo_segundonivel")
-	private String nombreTituloSegundonivel;
-	@Column(name = "pais_titulo_segundonivel")
+	@Column(name = "nombre_titulo_segundo_nivel")
+	private String nombreTituloSegundoNivel;
+	@Column(name = "pais_titulo_segundo_nivel")
 	private String paisTituloSegundoNivel;
-	@Column(name = "ciudad_titulo_segundonivel")
+	@Column(name = "ciudad_titulo_segundo_nivel")
 	private String ciudadTituloSegundoNivel;
 	@Column(name = "merito_deportivo_descripcion")
 	private String meritoDeportivoDescripcion;
@@ -102,9 +102,9 @@ public class InscripcionFor {
 	private LocalDateTime fechaSalidaInstitucion;
 	@Column(name = "nivel_instruccion")
 	private String nivelInstruccion;
-	@Column(name = "nombre_titulo_tercernivel")
+	@Column(name = "nombre_titulo_tercer_nivel")
 	private String nombreTituloTercernivel;
-	@Column(name = "nombre_titulo_cuartonivel")
+	@Column(name = "nombre_titulo_cuarto_nivel")
 	private String nombreTituloCuartoNivel;
 	@Column(name = "es_vulnerable")
 	private Boolean esVulnerable;

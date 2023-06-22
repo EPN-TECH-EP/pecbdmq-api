@@ -23,31 +23,31 @@ public class Aula {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include()
 	@Column(name = "cod_aula")
-	private Integer codigo;
+	private Integer codAula;
 	
 	@Column(name = "nombre_aula")
-	private String nombre;
+	private String nombreAula;
 	
 	@Column(name = "capacidad")
 	private Integer capacidad;
 	
 	@Column(name = "tipo_aula")
-	private String tipo;
+	private String tipoAula;
 	
 	@Column(name = "numero_pcs")
-	private Integer pcs;
+	private Integer numeroPcs;
 	
 	@Column(name = "numero_impresoras")
-	private Integer impresoras;
+	private Integer numeroImpresoras;
 	
 	@Column(name = "tipo_internet")
-	private String internet;	
+	private String tipoInternet;	
 	
 	@Column(name = "numero_proyectores")
-	private Integer proyectores;
+	private Integer numeroProyectores;
 		
 	@Column(name = "pc_instructor")
-	private String instructor;
+	private String pcInstructor;
 	
 	@Column(name = "sala_ocupada")
 	private Boolean salaOcupada;

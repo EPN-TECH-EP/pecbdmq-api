@@ -27,7 +27,9 @@ import epntech.cbdmq.pe.servicio.UsuarioService;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SeguridadConfig {
 	
+	@Autowired
 	private JwtFiltroAutorizacionFilter jwtAuthorizationFilter;
+	
 	private JwtAccesoDenegadoHandler jwtAccessDeniedHandler;
 	private JwtAutenticacionEntryPoint jwtAuthenticationEntryPoint;
 	private UserDetailsService userDetailsService;
@@ -74,27 +76,6 @@ public class SeguridadConfig {
         .and()
         .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 		
-		
-		
-		/*http.csrf()
-	      .disable()
-	      .authorizeRequests()
-	      .antMatchers(HttpMethod.DELETE)
-	      .hasRole("ADMIN")
-	      .antMatchers("/admin/**")
-	      .hasAnyRole("ADMIN")
-	      .antMatchers("/user/**")
-	      .hasAnyRole("USER", "ADMIN")
-	      .antMatchers("/login/**")
-	      .anonymous()
-	      .anyRequest()
-	      .authenticated()
-	      .and()
-	      .httpBasic()
-	      .and()
-	      .sessionManagement()
-	      .sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
-
 	    return http.build();
 	}
 

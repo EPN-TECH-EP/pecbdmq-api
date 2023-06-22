@@ -21,31 +21,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "gen_documento")
-@SQLDelete(sql = "UPDATE {h-schema}gen_documento SET estado = 'ELIMINADO' WHERE cod_documento = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado <> 'ELIMINADO'")
+
 public class Documento {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_documento")
-	private Integer codigo;
-	
-	@Column(name = "autorizacion")
-
-	private String autorizacion;
-	
-
+	private Integer codDocumento;
 	
 	@Column(name = "cod_tipo_documento")
 	private Integer tipo;
 	
 	@Column(name = "descripcion")
 	private String descripcion;
-	
-	@Column(name = "estado_validacion")
-	private String estadoValidacion;
-	
-    @Column(name = "nombre_documento")
+	@Column(name = "nombre_documento")
 	private String nombre;
 	
 	@Column(name = "observaciones")
@@ -57,4 +46,9 @@ public class Documento {
 	@Column(name = "estado")
 	private String estado;
 
+	@Column(name = "autorizacion")
+	private String autorizacion;
+	
+	@Column(name = "estado_validacion")
+	private String estadoValidacion;
 }

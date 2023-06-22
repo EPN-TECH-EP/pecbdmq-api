@@ -175,7 +175,7 @@ public class InscripcionForRepository{
 		.setParameter("tipo_nacionalidad", inscripcion.getTipoNacionalidad())
 		.setParameter("tiene_merito_deportivo", inscripcion.getTieneMeritoDeportivo())
 		.setParameter("tiene_merito_academico", inscripcion.getTieneMeritoAcademico())
-		.setParameter("nombre_titulo_segundonivel", inscripcion.getNombreTituloSegundonivel())
+		.setParameter("nombre_titulo_segundonivel", inscripcion.getNombreTituloSegundoNivel())
 		.setParameter("pais_titulo_segundonivel", inscripcion.getPaisTituloSegundoNivel())
 		.setParameter("ciudad_titulo_segundonivel", inscripcion.getCiudadTituloSegundoNivel())
 		.setParameter("merito_deportivo_descripcion", inscripcion.getMeritoDeportivoDescripcion())
@@ -243,7 +243,7 @@ public class InscripcionForRepository{
 		for (DatosFile datosFile : archivos) {
 			DocumentoPostulante dd = new DocumentoPostulante();
 			dd.setEstado("ACTIVO");
-			dd.setNombre(datosFile.getNombre());
+			dd.setNombreDocumento(datosFile.getNombre());
 			dd.setRuta(datosFile.getRuta());
 
 			dPostulante.add(dd);
@@ -255,11 +255,11 @@ public class InscripcionForRepository{
 			DocumentoPostulante documentoDP = new DocumentoPostulante();
 			entityManager.createNativeQuery(sqlDocumento)
 					.setParameter("autorizacion", documento.getAutorizacion())
-					.setParameter("tipo", documento.getTipo())
+					.setParameter("tipo", documento.getCodTipoDocumento())
 					.setParameter("descripcion", documento.getDescripcion())
 					.setParameter("estadoValidacion", documento.getEstadoValidacion())
-					.setParameter("codigoUnico", documento.getCodigoUnico())
-					.setParameter("nombre", documento.getNombre())
+					//.setParameter("codigoUnico", documento.getCodigoUnico())
+					.setParameter("nombre", documento.getNombreDocumento())
 					.setParameter("observaciones", documento.getObservaciones())
 					.setParameter("ruta", documento.getRuta())
 					.setParameter("estado", documento.getEstado());
@@ -276,10 +276,10 @@ public class InscripcionForRepository{
 			//System.out.println("elemento.getCodigoDocumento(): " + elemento.getCodigoDocumento());
 			entityManager.createNativeQuery(sqlPostulanteDocumento)
 					.setParameter("cod_postulante", codPostulante)
-					.setParameter("cod_documento", elemento.getCodigoDocumento());
+					.setParameter("cod_documento", elemento.getCodDocumento());
 			
 			postulanteDocumentoFor.setCodPostulante(codPostulante);
-			postulanteDocumentoFor.setCodDocumento(elemento.getCodigoDocumento());
+			postulanteDocumentoFor.setCodDocumento(elemento.getCodDocumento());
 			entityManager.persist(postulanteDocumentoFor);
 		}		
 				

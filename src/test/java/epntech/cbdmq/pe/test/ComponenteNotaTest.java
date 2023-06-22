@@ -39,7 +39,7 @@ public class ComponenteNotaTest {
 	void testGuardar() {
 	 
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCodComponenteNota(2);
+		obj.setCodComponenteNota(2);		
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 
@@ -58,7 +58,7 @@ public class ComponenteNotaTest {
 		
 		
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCodComponenteNota(2);
+		obj.setCodComponenteNota(2);		
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 
@@ -76,7 +76,7 @@ public class ComponenteNotaTest {
 		String nombre = "Test";
 
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCodComponenteNota(2);
+		obj.setCodComponenteNota(2);		
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 
@@ -107,7 +107,7 @@ public class ComponenteNotaTest {
 		String nombre = "Test";
 
 		ComponenteNota obj = new ComponenteNota();
-		obj.setCodComponenteNota(2);
+		obj.setCodComponenteNota(2);		
 		obj.setNombre("texto");
 		obj.setEstado("activo");
 

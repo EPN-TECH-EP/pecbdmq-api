@@ -31,7 +31,7 @@ public interface UsuarioService {
 
 	Usuario findUserByUsername(String username);
 
-	// Usuario findUserByEmail(String email);
+	Usuario findUserByEmail(String email);
 
 	Usuario crear(Usuario usuario)
 			throws NombreUsuarioExisteExcepcion,
@@ -49,7 +49,7 @@ public interface UsuarioService {
 			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException,
 			NoEsArchivoImagenExcepcion;
 
-	void eliminarUsuario(String username) throws IOException;
+	void eliminarUsuario(String username) throws Exception;
 
 	void resetPassword(String email)
 			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion;

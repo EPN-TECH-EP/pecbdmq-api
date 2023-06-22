@@ -18,6 +18,7 @@ import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 
 import jakarta.persistence.Table;
 import lombok.Data;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 
 @Data
 @Entity
@@ -26,6 +27,8 @@ public class InstructorMateria {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "cod_instructor_materia")
+	private Integer codInstructorMateria;
 
 	@Column(name = "cod_instructor")
 	private Integer codInstructor;
@@ -33,8 +36,6 @@ public class InstructorMateria {
 	@Column(name = "cod_materia")
 	private Integer codMateria;
 	
-	@Column(name = "cod_instructor_materia")
-	private Integer codInstructorMateria;
 	
 	@Column(name = "es_coordinador")
 	private Boolean esCoordinador;

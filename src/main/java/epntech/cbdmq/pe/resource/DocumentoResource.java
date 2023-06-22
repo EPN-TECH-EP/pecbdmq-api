@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.DOCUMENTO_ACTUALIZADO;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,12 +121,18 @@ public class DocumentoResource {
 		return lista;
 	}
 
-	@DeleteMapping(value = "/eliminardocumentoconvocatoria")
-	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Integer convocatoria, @RequestParam Integer codDocumento)
+	@DeleteMapping(value = "/eliminardocumentoconvocatoria/{id}")
+	public ResponseEntity<HttpResponse> eliminarArchivo( @PathVariable("id") Integer codDocumento)
 			throws IOException, DataException {
 
-		try {
+        
+		/*try {
 		objService.eliminarArchivo(convocatoria,codDocumento);
+			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);*/
+
+
+		try {
+		objService.eliminarArchivoConvocatoria(codDocumento);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 		}catch(IOException e){
 			return response(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -140,4 +147,10 @@ public class DocumentoResource {
 	 * this.LOGGER.error(e.getMessage()); return -1; } }
 	 */
 
+	@PostMapping("/updateDoc")
+	public ResponseEntity<?> updateDoc(@RequestParam Long codDocumento, @RequestParam MultipartFile archivo)
+			throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+		
+		return new ResponseEntity<>(objService.updateDoc(codDocumento, archivo), HttpStatus.OK);
+	}
 }

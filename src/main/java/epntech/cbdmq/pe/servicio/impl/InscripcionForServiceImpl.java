@@ -1,8 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
-import static epntech.cbdmq.pe.constante.MensajesConst.CEDULA_YA_EXISTE;
-import static epntech.cbdmq.pe.constante.MensajesConst.CORREO_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.EDAD_NO_CUMPLE;
 import static epntech.cbdmq.pe.constante.MensajesConst.ERROR_REGISTRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.FECHA_INSCRIPCION_INVALIDA;
@@ -13,7 +11,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.PIN_INCORRECTO;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -86,12 +84,16 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 			throw new DataException(FECHA_INSCRIPCION_INVALIDA);
 		else if (!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().getHoraInicioConvocatoria())
 				&& horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().getHoraFinConvocatoria())))
-			throw new DataException(HORA_INSCRIPCION_INVALIDA);
-		if (!repo1.findAllByCorreoPersonalIgnoreCase(inscripcion.getCorreoPersonal()).isEmpty())
-			throw new DataException(CORREO_YA_EXISTE);
-		if (repo1.findOneByCedula(inscripcion.getCedula()).isPresent())
+			throw new DataException(HORA_INSCRIPCION_INVALIDA);		
+		
+		// TODO: habilitar para producción
+		/*if(this.findByCedula(inscripcion.getCedula()))
 			throw new DataException(CEDULA_YA_EXISTE);
-		if (repo1.validaEdad(inscripcion.getFechaNacimiento()).equals(false))
+		
+		if(this.findByCorreoPersonal(inscripcion.getCorreoPersonal()))
+			throw new DataException(CORREO_YA_EXISTE);*/
+		
+		if (repo1.validaEdad(inscripcion.getFechaNacimiento().toLocalDate()).equals(false))
 			throw new DataException(EDAD_NO_CUMPLE);
 		else {
 			String code = getRandomCode();
@@ -181,7 +183,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 	}
 
 	@Override
-	public Boolean validaEdad(LocalDateTime fecha) {
+	public Boolean validaEdad(LocalDate fecha) {
 		// TODO Auto-generated method stub
 		return repo1.validaEdad(fecha);
 	}
@@ -221,5 +223,37 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 				&& horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().getHoraFinConvocatoria())))
 			return false;
 		return true;
+	}
+
+	public Boolean findByCedula(String cedula) {
+
+		Optional<InscripcionFor> inscripcion = null;
+
+		inscripcion = this.repo1.findOneByCedula(cedula);
+
+		if (inscripcion.isPresent()) {
+			Optional<Postulante> postulante = this.repoPostulante
+					.findByCodDatoPersonal(inscripcion.get().getCodDatoPersonal());
+
+			return postulante.isPresent();
+		} else {
+			return false;
+		}
+	}
+	
+	public Boolean findByCorreoPersonal(String correo) {
+
+		List<InscripcionFor> inscripcion = null;
+
+		inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
+
+		if (!inscripcion.isEmpty()) {
+			Optional<Postulante> postulante = this.repoPostulante
+					.findByCodDatoPersonal(inscripcion.get(0).getCodDatoPersonal());
+
+			return postulante.isPresent();
+		} else {
+			return false;
+		}
 	}
 }

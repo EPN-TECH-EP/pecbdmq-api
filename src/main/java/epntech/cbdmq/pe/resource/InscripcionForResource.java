@@ -5,8 +5,10 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -50,6 +52,7 @@ import epntech.cbdmq.pe.servicio.impl.PostulanteServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.UsuarioDatoPersonalServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.ValidacionRequisitosForServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.ValidacionRequisitosServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.mail.MessagingException;
 
 @RestController
@@ -127,7 +130,7 @@ public class InscripcionForResource {
 			return objService.getInscripcionById(codigo).map(ResponseEntity::ok)
 					.orElseGet(() -> ResponseEntity.notFound().build());
 		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, "Error. Por favor intente más tarde.");
+			return response(HttpStatus.NOT_FOUND, "Error: No existen datos de inscripción.");
 		}
 	}
 	
@@ -232,12 +235,13 @@ public class InscripcionForResource {
 		return postulanteService.getPostulantesAsignadosPaginado(usuario, pageable);
 	}
 	
+	@Operation(summary = "Lista de las inscripciones asignadas. FE: ReasignaciónInscripcion")
 	@GetMapping("/postulantesAllPaginado")
 	public List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable) {
 		return postulanteService.getPostulantesAllPaginadoTodo(pageable);
 	}
 	
-	@PutMapping("/postulante")
+	@PutMapping("/postulanteAsignar")
 	public Postulante asignarPostulante(@RequestBody Postulante postulante) throws DataException {
 		return postulanteService.update(postulante);
 	}
@@ -278,4 +282,18 @@ public class InscripcionForResource {
 	public Boolean getFecha() throws DataException, ParseException {
 		return objService.validaFechas();
 	}
+	
+	@PostMapping("/validaEdad")
+	public Boolean validaEdad(@RequestBody String fecha) throws DataException, ParseException {
+		
+		LocalDate fechaNacimiento = LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd/MM/uuuu"));
+		
+		return objService.validaEdad(fechaNacimiento);
+	}
+	
+	
+	@GetMapping("/inscripcionPorCedula/{cedula}")
+	public Boolean findByCedula(@PathVariable("cedula") String cedula) throws DataException, ParseException {
+		return objService.findByCedula(cedula);
+	} 
 }

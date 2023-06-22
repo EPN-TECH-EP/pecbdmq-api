@@ -25,13 +25,13 @@ public class PostulanteServiceImpl implements PostulanteService {
 
 	@Autowired
 	private PostulanteRepository repo;
-	
+
 	@Autowired
 	private PostulanteDPRepository repo1;
-	
+
 	@Autowired
 	private PostulanteUtilRepository postulanteUtilRepository;
-	
+
 	@Override
 	public Postulante save(Postulante obj, String proceso) {
 		// TODO Auto-generated method stub
@@ -66,7 +66,7 @@ public class PostulanteServiceImpl implements PostulanteService {
 		// TODO Auto-generated method stub
 		return repo.getPostulantes(usuario);
 	}
-	
+
 	@Override
 	public List<PostulanteUtil> getPostulantesPaginado(Integer usuario, Pageable pageable) {
 		// TODO Auto-generated method stub
@@ -77,29 +77,31 @@ public class PostulanteServiceImpl implements PostulanteService {
 	public Postulante update(Postulante objActualizado) throws DataException {
 		Optional<Postulante> postulante;
 		Boolean bandera = false;
-		
+
 		postulante = repo.findById(objActualizado.getCodPostulante());
 		if(postulante.isPresent()) {
-			
+
 			if(postulante.get().getEstado().equalsIgnoreCase("PENDIENTE") &&  objActualizado.getEstado().equalsIgnoreCase("ASIGNADO"))
 				bandera = true;
 			else
 				bandera = false;
+
+			// if(bandera) {
+			Postulante p = postulante.get();
+
+			//p.setCodDatoPersonal(objActualizado.getCodDatoPersonal());
+			//p.setIdPostulante(objActualizado.getIdPostulante());
+			//p.setCodPeriodoAcademico(objActualizado.getCodPeriodoAcademico());
 			
-			if(bandera) {
-				Postulante p = postulante.get();
-				if(p.getCodUsuario() == null) {
-					objActualizado.setCodDatoPersonal(p.getCodDatoPersonal());
-					objActualizado.setIdPostulante(p.getIdPostulante());
-					objActualizado.setCodPeriodoAcademico(p.getCodPeriodoAcademico());
-					return repo.save(objActualizado);
-				}
-				else
-					throw new DataException(POSTULANTE_ASIGNADO);
-			}
-			else
-				throw new DataException(ESTADO_INVALIDO + " Estado actual: " + postulante.get().getEstado() + ", Estado ingresado: " + objActualizado.getEstado());
+			p.setEstado(objActualizado.getEstado());
+			p.setCodUsuario(objActualizado.getCodUsuario());
+			return repo.save(p);
 		}
+		// else
+		// throw new DataException(ESTADO_INVALIDO + " Estado actual: " +
+		// postulante.get().getEstado() + ", Estado ingresado: " +
+		// objActualizado.getEstado());
+//		}
 		else
 			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
 	}
@@ -107,13 +109,13 @@ public class PostulanteServiceImpl implements PostulanteService {
 	@Override
 	public void updateState(Integer codpostulante) {
 		repo.updateState(codpostulante);
-		
+
 	}
 
 	@Override
 	public List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return postulanteUtilRepository.getPostulantesAllPaginadoTodo(pageable);
+		return postulanteUtilRepository.getPostulantesAllPaginadoTodoAsignado(pageable);
 	}
 
 	@Override
@@ -126,27 +128,27 @@ public class PostulanteServiceImpl implements PostulanteService {
 	public Postulante updateEstadoMuestra(Postulante objActualizado) throws DataException {
 		Optional<Postulante> postulante;
 		Boolean bandera = false;
-		
+
 		postulante = repo.findById(objActualizado.getCodPostulante());
-		if(postulante.isPresent()) {
-			if(postulante.get().getEstado().equalsIgnoreCase("VALIDO") &&  objActualizado.getEstado().equalsIgnoreCase("ASIGNADO MUESTRA"))
+		if (postulante.isPresent()) {
+			if (postulante.get().getEstado().equalsIgnoreCase("VALIDO")
+					&& objActualizado.getEstado().equalsIgnoreCase("ASIGNADO MUESTRA"))
 				bandera = true;
-			
+
 			else
 				bandera = false;
-			
-			if(bandera) {
+
+			if (bandera) {
 				Postulante p = postulante.get();
-				
+
 				objActualizado.setCodDatoPersonal(p.getCodDatoPersonal());
 				objActualizado.setIdPostulante(p.getIdPostulante());
 				objActualizado.setCodPeriodoAcademico(p.getCodPeriodoAcademico());
 				return repo.save(objActualizado);
-			}
-			else
-				throw new DataException(ESTADO_INVALIDO + " Estado actual: " + postulante.get().getEstado() + ", Estado ingresado: " + objActualizado.getEstado());
-		}
-		else
+			} else
+				throw new DataException(ESTADO_INVALIDO + " Estado actual: " + postulante.get().getEstado()
+						+ ", Estado ingresado: " + objActualizado.getEstado());
+		} else
 			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
 	}
 
@@ -159,7 +161,7 @@ public class PostulanteServiceImpl implements PostulanteService {
 	@Override
 	public List<PostulanteUtil> getPostulantesAllPaginadoTodo(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return postulanteUtilRepository.getPostulantesAllPaginadoTodo(pageable);
+		return postulanteUtilRepository.getPostulantesAllPaginadoTodoAsignado(pageable);
 	}
 
 }

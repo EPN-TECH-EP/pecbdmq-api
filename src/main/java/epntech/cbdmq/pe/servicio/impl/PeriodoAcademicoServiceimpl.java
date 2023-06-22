@@ -1,7 +1,13 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
-import static epntech.cbdmq.pe.constante.ArchivoConst.*;
+import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_PERIODO_ACADEMICO;
+import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
+import static epntech.cbdmq.pe.constante.MensajesConst.FECHAS_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_PERIODO_ACTIVO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,11 +26,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.dominio.admin.PADocumento;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoDocumentoFor;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.dominio.util.DocsUtil;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
@@ -72,9 +78,14 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public List<PeriodoAcademico> getAll() {
-		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
+	
+	
+	public List<PeriodoAcademico> getAllActive() {
+		return repo.findAllByEstado(EstadosConst.ACTIVO);
+	}
+	
 
 	@Override
 	public Optional<PeriodoAcademico> getById(int id) {
@@ -155,9 +166,6 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		if(periodo == null)
 			throw new DataException(NO_PERIODO_ACTIVO);
 
-		if(periodo == null)
-			throw new DataException(NO_PERIODO_ACTIVO);
-
 		resultado = ruta();
 		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
 
@@ -195,7 +203,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			//System.out.println("documento.getCodigo(): " + documento.getCodigo());
 			//System.out.println("periodo: " + periodo);
 			PADocumento docsPA = new PADocumento(); 
-			docsPA.setCodDocumento(documento.getCodigo());
+			docsPA.setCodDocumento(documento.getCodDocumento());
 			docsPA.setCodPeriodoAcademico(periodo); 
 			pADocumentoRepository.save(docsPA);
 

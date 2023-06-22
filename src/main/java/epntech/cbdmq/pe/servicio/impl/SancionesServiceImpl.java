@@ -33,7 +33,6 @@ public class SancionesServiceImpl implements SancionesService {
 	@Autowired
 	private DocumentoRepository documentoRepository;
 
-
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
 	@Value("${spring.servlet.multipart.max-file-size}")
@@ -94,15 +93,15 @@ public class SancionesServiceImpl implements SancionesService {
 				StandardCopyOption.REPLACE_EXISTING);
 		// LOGGER.info("Archivo guardado: " + resultado +
 		// multipartFile.getOriginalFilename());
-		//System.out.println("ruta: " + ruta);
-		
+		// System.out.println("ruta: " + ruta);
+
 		Documento documento = new Documento();
 		documento.setEstado("ACTIVO");
 		documento.setNombre(multipartFile.getOriginalFilename());
 		documento.setRuta(ruta + "\\" + multipartFile.getOriginalFilename());
 		documento = documentoRepository.save(documento);
 
-		return documento.getCodigo();
+		return documento.getCodDocumento();
 	}
 
 	@Override
@@ -110,14 +109,13 @@ public class SancionesServiceImpl implements SancionesService {
 			throws DataException, ArchivoMuyGrandeExcepcion, IOException {
 		if (!archivo.isEmpty()) {
 			Path ruta = Paths.get(documentoRepository.findById(objActualizado.getCodDocumento()).get().getRuta()).toAbsolutePath()
-					.normalize();
+						.normalize();
 
-			if (Files.exists(ruta)) {
+				if (Files.exists(ruta)) {
 				try {
 					Files.delete(ruta);
-				} catch (Exception e) {
-
-					throw new DataException(e.getMessage());
+			} catch (Exception e) {
+				throw new DataException(e.getMessage());
 					// e.printStackTrace();
 				}
 			}
@@ -130,7 +128,6 @@ public class SancionesServiceImpl implements SancionesService {
 			Files.copy(archivo.getInputStream(), ruta.resolve(archivo.getOriginalFilename()),
 					StandardCopyOption.REPLACE_EXISTING);
 
-			//System.out.println("ruta: " + ruta);
 			Documento documento = new Documento();
 			documento = documentoRepository.findById(objActualizado.getCodDocumento()).get();
 			documento.setNombre(archivo.getOriginalFilename());
