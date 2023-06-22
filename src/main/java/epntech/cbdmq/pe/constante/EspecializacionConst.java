@@ -4,4 +4,5 @@ public class EspecializacionConst {
 
 	public static final String CURSO_NO_APROBADO = "El Curso no se encuentra aprobado";
 	public static final String CONVOCATORIA_CURSO_EXISTE = "Ya existe una convocatoria para el curso.";
+	public static final String CURSO_NO_MODULO = "El curso no está habilitado para registrar módulos";
 }

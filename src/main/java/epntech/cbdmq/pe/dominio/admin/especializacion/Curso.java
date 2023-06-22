@@ -78,6 +78,9 @@ public class Curso {
 	@Column(name = "email_notificacion")
 	private String emailNotificacion;
 	
+	@Column(name = "tiene_modulos")
+	private Boolean tieneModulos;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "esp_curso_documento", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))
 	private Set<DocumentoCurso> documentos = new HashSet<>();

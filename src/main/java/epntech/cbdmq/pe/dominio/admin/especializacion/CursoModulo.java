@@ -14,6 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.Data;
 
 @Data
@@ -52,6 +54,8 @@ public class CursoModulo {
 	@Column(name = "cod_esp_modulo")
 	private Long codEspModulo;
 	
+	@DecimalMin(value = "1.0", inclusive = true)
+    @DecimalMax(value = "100.0", inclusive = true)
 	@Column(name = "porcentaje")
 	private BigDecimal porcentaje;
 	
