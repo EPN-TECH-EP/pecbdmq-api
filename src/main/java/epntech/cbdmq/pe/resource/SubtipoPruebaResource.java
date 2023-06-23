@@ -18,14 +18,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.ParametrizaPruebaDetalle;
 import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
-
+import epntech.cbdmq.pe.dominio.util.SubTipoPruebaDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.SubtipoPruebaServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/subtipoprueba")
+@Tag(name = "SubTipo Prueba", description = "API para gestión de subtipos de pruebas. Formación y Especialización.")
 public class SubtipoPruebaResource {
 
 	@Autowired
@@ -74,6 +76,12 @@ public class SubtipoPruebaResource {
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
+	}
+	
+	@Operation(summary = "Lista de subtipos de pruebas con datos de tipo prueba")
+	@GetMapping("/listarConDatos")
+	private List<SubTipoPruebaDatos> listarTodosConDatosTipoPrueba(){
+		return this.objService.listarTodosConDatosTipoPrueba();
 	}
 
 }

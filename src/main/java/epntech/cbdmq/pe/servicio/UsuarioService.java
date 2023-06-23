@@ -19,7 +19,7 @@ public interface UsuarioService {
 	// Usuario registrar(String firstName, String lastName, String username, String
 	// email)
 	Usuario registrar(Usuario usuario)
-            throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException, IOException;
+			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException, IOException;
 
 	public Optional<Usuario> getById(Long codigo);
 

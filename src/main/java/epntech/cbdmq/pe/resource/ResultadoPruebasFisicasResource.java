@@ -112,13 +112,13 @@ public class ResultadoPruebasFisicasResource {
 				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file);
 	}
 
-	@GetMapping("/generarExcel")
-	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, Integer prueba) throws DataException {
+	@PostMapping("/generarExcel")
+	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DataException {
 		try {
 			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
 					+ "/" + nombre;
 
-			resultadoPruebasServiceImpl.generarExcel(ruta, nombre, prueba);
+			resultadoPruebasServiceImpl.generarExcel(ruta, nombre, subTipoPrueba);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("error: " + e.getMessage());
@@ -127,13 +127,13 @@ public class ResultadoPruebasFisicasResource {
 		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 	}
 
-	@GetMapping("/generarPDF")
-	public ResponseEntity<?> generarPDF(HttpServletResponse response, @RequestParam("nombre") String nombre, Integer prueba)
+	@PostMapping("/generarPDF")
+	public ResponseEntity<?> generarPDF(HttpServletResponse response ,@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba)
 			throws DocumentException, IOException, DataException {
 
 		try {
 			String[] columnas = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo", "Nota Promedio" };
-			resultadoPruebasServiceImpl.generarPDF(response, nombre, prueba, columnas);
+			resultadoPruebasServiceImpl.generarPDF(response, nombre, subTipoPrueba, columnas);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
