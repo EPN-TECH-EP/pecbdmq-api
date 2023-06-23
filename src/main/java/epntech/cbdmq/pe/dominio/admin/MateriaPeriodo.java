@@ -3,11 +3,8 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.math.BigDecimal;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 
@@ -16,9 +13,10 @@ import lombok.Data;
 @Table(name = "gen_materia_periodo")
 public class MateriaPeriodo {
 
-	
-	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "cod_materia_periodo")
+	private Integer codMateriaPeriodo;
 	@Column(name = "cod_periodo_academico")
 	private Integer codPeriodoAcademico;
 	@Column(name = "cod_materia")
