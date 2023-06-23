@@ -33,15 +33,8 @@ public class MateriaPeriodo {
 	private BigDecimal notaMinimaSupletorioInicio;
 	@Column(name = "nota_minima_supletorio_fin")
 	private BigDecimal notaMinimaSupletorioFin;
-	
-	/*@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_materia_periodo",
-            joinColumns = @JoinColumn(name = "cod_materia"),
-            inverseJoinColumns = @JoinColumn(name = "cod_periodo_academico")
-    )
-	private List<Paralelo> MateriPeriodo = new ArrayList<>();*/
-	
-	
-	
-	
+	@Column(name="cod_aula")
+	private Integer cod_aula;
+	@Column(name="estado")
+	private String estado;
 }

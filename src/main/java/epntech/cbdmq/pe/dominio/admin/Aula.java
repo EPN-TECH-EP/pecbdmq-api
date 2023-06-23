@@ -54,14 +54,9 @@ public class Aula {
 	
 	@Column(name = "estado")
 	private String estado;
-	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_materia_aula",
-            joinColumns = @JoinColumn(name = "cod_aula"),
-            inverseJoinColumns = @JoinColumn(name = "cod_materia")
-    )
-	private List<Materia> materias = new ArrayList<>();
 
-    
-		
+	@Column(name="cod_tipo_aula")
+	private Long codTipoaula;
+	@Column(name="cod_campus")
+	private Long codCampus;
 }
