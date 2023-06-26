@@ -32,7 +32,7 @@ public class MateriaPeriodo {
 	@Column(name = "nota_minima_supletorio_fin")
 	private BigDecimal notaMinimaSupletorioFin;
 	@Column(name="cod_aula")
-	private Integer cod_aula;
+	private Integer codAula;
 	@Column(name="estado")
 	private String estado;
 }
