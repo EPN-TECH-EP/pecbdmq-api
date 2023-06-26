@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface MateriaPeriodoRepository extends JpaRepository<MateriaPeriodo, Integer>{
 
     @Query("select mp from MateriaPeriodo mp\n" +
@@ -18,5 +20,5 @@ public interface MateriaPeriodoRepository extends JpaRepository<MateriaPeriodo, 
     Page<MateriaPeriodo> getMateriaByNombrePeriodo(@Param("nombreMateria") String nombreMateria, @Param("periodo") String periodo, Pageable pageable);
 
 
-
+    Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico);
 }

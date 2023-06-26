@@ -2,7 +2,9 @@ package epntech.cbdmq.pe.servicio.impl.formacion;
 
 import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
+import epntech.cbdmq.pe.dominio.admin.Modulo;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.InstructorMateriaParaleloRepository;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaParaleloService {
@@ -42,7 +46,13 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         objMPe.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
         objMPe.setCodMateria(codMateria);
         objMPe.setCodAula(codAula);
-        MateriaPeriodo objMPeII = repoMPe.save(objMPe);
+        Optional<MateriaPeriodo> objGuardado = repoMPe.findByCodMateriaAndCodPeriodoAcademico(objMPe.getCodMateria(), objMPe.getCodPeriodoAcademico());
+        MateriaPeriodo objMPeII=new MateriaPeriodo();
+        if (objGuardado.isPresent()&& !objGuardado.get().getCodMateriaPeriodo().equals(objMPe.getCodMateriaPeriodo())) {
+            objMPeII=objGuardado.get();
+        }else {
+            objMPeII = repoMPe.save(objMPe);
+        }
 
         MateriaParalelo objMpa = new MateriaParalelo();
         objMpa.setCodMateriaPeriodo(objMPeII.getCodMateriaPeriodo());
