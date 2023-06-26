@@ -17,6 +17,7 @@ public interface InstructorService {
 	Instructor save(Instructor obj) throws DataException;
 
 	List<InstructorDatos> getAll();
+	List<Instructor> getAllInstructor();
 
 	Optional<Instructor> getById(Integer codigo);
 

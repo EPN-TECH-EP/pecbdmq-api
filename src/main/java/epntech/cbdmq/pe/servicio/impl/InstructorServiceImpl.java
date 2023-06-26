@@ -73,6 +73,11 @@ public class InstructorServiceImpl implements InstructorService {
 	}
 
 	@Override
+	public List<Instructor> getAllInstructor() {
+		return repo.findAll();
+	}
+
+	@Override
 	public Optional<Instructor> getById(Integer codigo) {
 		// TODO Auto-generated method stub
 		return repo.findById(codigo);

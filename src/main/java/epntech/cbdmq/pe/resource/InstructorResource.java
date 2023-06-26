@@ -36,6 +36,10 @@ public class InstructorResource {
 	public List<InstructorDatos> listar() {
 		return objService.getAll();
 	}
+	@GetMapping("/listarIns")
+	public List<Instructor> listarInstructor() {
+		return objService.getAllInstructor();
+	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Instructor> obtenerPorId(@PathVariable("id") Integer codigo) {
