@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
+import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.especializacion.CursoInstructorServiceImpl;
 
@@ -69,6 +70,16 @@ public class CursoInstructorResource {
 
 		cursoInstructorServiceImpl.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
+	
+	@GetMapping("/listarInstructoresCurso/{id}")
+	public List<InstructoresCurso> listarInstructoresCurso(@PathVariable("id") long codigo) {
+		return cursoInstructorServiceImpl.listInstructoresCurso(codigo);
+	}
+	
+	@GetMapping("/listarCursosInstructor/{id}")
+	public List<InstructoresCurso> listarCursosInstructor(@PathVariable("id") long codigo) {
+		return cursoInstructorServiceImpl.listCursosInstructor(codigo);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

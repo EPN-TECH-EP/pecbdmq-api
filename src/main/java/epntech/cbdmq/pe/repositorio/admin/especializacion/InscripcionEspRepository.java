@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
@@ -23,4 +24,10 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionDatos")
 	Optional<InscripcionEstudianteDatosEspecializacion> getInscripcionEstudiante(@Param("codInscripcion") Long codInscripcion);
+	
+	@Procedure(value = "cbdmq.cumple_porcentaje_min_inscritos_curso_esp")
+	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
+	
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionPorCurso")
+	Optional<InscripcionDatosEspecializacion> getInscripcionByCurso(@Param("codCurso") Long codCurso);
 }

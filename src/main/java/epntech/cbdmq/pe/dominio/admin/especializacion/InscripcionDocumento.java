@@ -1,7 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin.especializacion;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,5 +23,6 @@ public class InscripcionDocumento {
 	
 	@Column(name = "cod_documento")
 	private Long codDocumento;
+	
 	
 }

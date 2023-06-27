@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
+import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
 
 public interface CursoInstructorService {
 
@@ -16,5 +17,9 @@ public interface CursoInstructorService {
 	Optional<CursoInstructor> getById(Long codInstructorCurso);
 	
 	void delete(Long codInstructorCurso);
+	
+	List<InstructoresCurso> listInstructoresCurso(Long codCurso);
+	
+	List<InstructoresCurso> listCursosInstructor(Long codInstructor);
 	
 }

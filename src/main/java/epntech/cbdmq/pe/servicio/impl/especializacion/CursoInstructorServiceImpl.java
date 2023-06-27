@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
+import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoInstructorRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.InstructoresCursoRepository;
 import epntech.cbdmq.pe.servicio.especializacion.CursoInstructorService;
 
 @Service
@@ -16,6 +18,8 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	
 	@Autowired
 	private CursoInstructorRepository cursoInstructorRepository;
+	@Autowired
+	private InstructoresCursoRepository instructoresCursoRepository;
 
 	@Override
 	public CursoInstructor save(CursoInstructor cursoInstructor) {
@@ -46,6 +50,18 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	public void delete(Long codInstructorCurso) {
 		cursoInstructorRepository.deleteById(codInstructorCurso);
 		
+	}
+
+	@Override
+	public List<InstructoresCurso> listInstructoresCurso(Long codCurso) {
+		// TODO Auto-generated method stub
+		return instructoresCursoRepository.findInstructoresCurso(codCurso);
+	}
+
+	@Override
+	public List<InstructoresCurso> listCursosInstructor(Long codInstructor) {
+		// TODO Auto-generated method stub
+		return instructoresCursoRepository.findCursosInstructor(codInstructor);
 	}
 
 }

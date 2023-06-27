@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
@@ -19,7 +20,7 @@ public interface InscripcionEspService {
 	
 	InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) throws DataException;
 	
-	Optional<InscripcionDatosEspecializacion> getById(Long codInscripcion) throws DataException;
+	Optional<InscripcionDatosEsp> getById(Long codInscripcion) throws DataException;
 	
 	List<InscripcionDatosEspecializacion> getAll();
 	
@@ -29,5 +30,9 @@ public interface InscripcionEspService {
 	
 	void deleteDocumento(Long codInscripcion, Long codDocumento) throws DataException;
 	
-	void notificarInscripcion(Long codInscripcion) throws MessagingException, DataException ;
+	void notificarInscripcion(Long codInscripcion) throws MessagingException, DataException;
+	
+	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
+	
+	Optional<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
 }

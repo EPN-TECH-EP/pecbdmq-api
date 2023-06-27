@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
@@ -58,7 +59,7 @@ public class InscripcionEspResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<InscripcionDatosEspecializacion> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
+	public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
 		return inscripcionEspServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -95,6 +96,17 @@ public class InscripcionEspResource {
 		inscripcionEspServiceImpl.notificarInscripcion(codInscripcion);
 
 		return response(HttpStatus.OK, EMAIL_SEND);
+	}
+
+	@GetMapping("/cumpleMinimoInscritosCurso/{id}")
+	public ResponseEntity<?> cumpleMinimoInscritos(@PathVariable("id") long codigo) {
+		return response(HttpStatus.OK, inscripcionEspServiceImpl.cumplePorcentajeMinimoInscritosCurso(codigo).toString());
+	}
+
+	@GetMapping("/porCurso/{id}")
+	public ResponseEntity<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
+		return inscripcionEspServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

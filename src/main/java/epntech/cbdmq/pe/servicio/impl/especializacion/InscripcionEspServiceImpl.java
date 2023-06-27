@@ -28,6 +28,7 @@ import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
+import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
@@ -36,6 +37,7 @@ import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
@@ -59,6 +61,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	private EmailService emailService;
 	@Autowired
 	private ParametroRepository parametroRepository;
+	@Autowired
+	private InscripcionDatosRepository inscripcionDatosRepository;
 	
 	
 	@Value("${pecb.archivos.ruta}")
@@ -90,9 +94,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	}
 
 	@Override
-	public Optional<InscripcionDatosEspecializacion> getById(Long codInscripcion) throws DataException {
+	public Optional<InscripcionDatosEsp> getById(Long codInscripcion) throws DataException {
 		// TODO Auto-generated method stub
-		return inscripcionEspRepository.getInscripcion(codInscripcion);
+		//return inscripcionEspRepository.getInscripcion(codInscripcion);
+		return inscripcionDatosRepository.findByInscripcion(codInscripcion);
 	}
 
 	@Override
@@ -145,7 +150,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 			documentos.add(documento);
 			
 			InscripcionDocumento cursoDocumento = new InscripcionDocumento();
-			cursoDocumento.setCodInscripcion(codInscripcion);
+			
+			//cursoDocumento.setCodInscripcion(codInscripcion);
 			cursoDocumento.setCodDocumento((long) documento.getCodigo());
 			inscripcionDocumentoRepository.save(cursoDocumento);
 			
@@ -226,6 +232,18 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		String[] destinatarios = {inscripcion.getCorreoPersonal()};
 		
 		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+	}
+
+	@Override
+	public Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso) {
+		// TODO Auto-generated method stub
+		return inscripcionEspRepository.cumplePorcentajeMinimoInscritosCurso(codCurso);
+	}
+
+	@Override
+	public Optional<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException {
+		// TODO Auto-generated method stub
+		return inscripcionEspRepository.getInscripcionByCurso(codCurso);
 	}
 
 }
