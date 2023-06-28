@@ -14,6 +14,7 @@ import epntech.cbdmq.pe.servicio.AulaService;
 import epntech.cbdmq.pe.servicio.MateriaPeriodoService;
 import epntech.cbdmq.pe.servicio.MateriaService;
 import epntech.cbdmq.pe.servicio.ParaleloService;
+import epntech.cbdmq.pe.servicio.EjeMateriaService;
 import epntech.cbdmq.pe.servicio.formacion.InstructorMateriaParaleloService;
 import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     private MateriaService serviceMateria;
     @Autowired
     private ParaleloService serviceParalelo;
+    @Autowired
+    private EjeMateriaService serviceEje;
 
     @Override
     public List<InstructorMateriaParalelo> getInstructoresMateriaParalelo() {
@@ -135,12 +138,13 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
             Aula objAula = serviceAula.getById(objPe.getCodAula()).get();
             Paralelo objParalelo = serviceParalelo.getById(objMP.getCodParalelo()).get();
             Materia objMateria = serviceMateria.getById(objPe.getCodMateria()).get();
+            EjeMateria objEjeMateria = serviceEje.getByIdEje(objMateria.getCodEjeMateria().longValue()).get();
             List<InstructorDatos> instructores = this.getInstructores(objMP.getCodMateriaParalelo());
             List<InstructorDatos> asistentes = this.getInstructoresAsistentes(objMP.getCodMateriaParalelo());
             InstructorDatos coordinador = this.getCoordinador(objMP.getCodMateriaParalelo());
             InstructorMateriaReadDto newObj = new InstructorMateriaReadDto();
             newObj.setNombreMateria(objMateria.getNombre());
-            newObj.setNombreEjeMateria(objMateria.getCodEjeMateria().toString());
+            newObj.setNombreEjeMateria(objEjeMateria.getNombreEjeMateria());
             newObj.setNombreParalelo(objParalelo.getNombreParalelo());
             newObj.setAula(objAula);
             newObj.setCoordinador(coordinador);
