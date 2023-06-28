@@ -1,21 +1,28 @@
 package epntech.cbdmq.pe.servicio.impl.formacion;
 
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
 import epntech.cbdmq.pe.dominio.admin.Modulo;
+import epntech.cbdmq.pe.dominio.admin.formacion.InformacionMateriaDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
+import epntech.cbdmq.pe.dominio.util.InstructorDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.InstructorMateriaParaleloRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.MateriaParaleloRepository;
+import epntech.cbdmq.pe.servicio.AulaService;
 import epntech.cbdmq.pe.servicio.formacion.InstructorMateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,6 +35,8 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     private MateriaPeriodoRepository repoMPe;
     @Autowired
     private MateriaParaleloRepository repoMPa;
+    @Autowired
+    private AulaService serviceAula;
 
     @Override
     public List<InstructorMateriaParalelo> getInstructoresMateriaParalelo() {
@@ -83,5 +92,54 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
 
         return true;
     }
+
+    @Override
+    public List<InstructorDatos> getInstructoresAsistentes(Long codMateriaParalelo) {
+        return repoIMP.getInstructoresMateriaParaleloByTipo(codMateriaParalelo,"ASISTENTE");
+
+    }
+
+    @Override
+    public List<InstructorDatos> getInstructores(Long codMateriaParalelo) {
+        return repoIMP.getInstructoresMateriaParaleloByTipo(codMateriaParalelo,"INSTRUCTOR");
+    }
+
+    @Override
+    public InstructorDatos getCoordinador(Long codMateriaParalelo) {
+        return repoIMP.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "COORDINADOR").stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public List<InstructorMateriaReadDto> getMateriaInfoDto() {
+        List<InformacionMateriaDto> listaInfo = this.getInformacionMateriaDto();
+        List<InstructorMateriaReadDto> lista = new ArrayList<>();
+        System.out.println("listaaaaa vale"+listaInfo);
+        for(InformacionMateriaDto materiaDto :listaInfo){
+            Aula objAula = serviceAula.getById(materiaDto.getCodAula().intValue()).get();
+            System.out.println("aulaaaaaaaa" + objAula);
+            List<InstructorDatos> instructores= this.getInstructores(materiaDto.getCodMateriaParalelo());
+            List<InstructorDatos> asistentes= this.getInstructoresAsistentes(materiaDto.getCodMateriaParalelo());
+            InstructorDatos coordinador= this.getCoordinador(materiaDto.getCodMateriaParalelo());
+            InstructorMateriaReadDto newObj= new InstructorMateriaReadDto();
+            newObj.setNombreMateria(materiaDto.getNombreMateria());
+            newObj.setNombreEjeMateria(materiaDto.getNombreEjeMateria());
+            newObj.setNombreParalelo(materiaDto.getNombreParalelo());
+            newObj.setAula(objAula);
+            newObj.setCoordinador(coordinador);
+            newObj.setAsistentes(asistentes);
+            newObj.setInstructores(instructores);
+            lista.add(newObj);
+        }
+        return lista;
+    }
+
+    @Override
+    public List<InformacionMateriaDto> getInformacionMateriaDto() {
+        System.out.println("getInformacionMateriaDtoasasasasa");
+        return repoIMP.getInformacionMateria();
+    }
+
 
 }

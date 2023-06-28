@@ -1,8 +1,10 @@
 package epntech.cbdmq.pe.resource.formacion;
 
-import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
-import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.InformacionMateriaDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaCreateDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
+import epntech.cbdmq.pe.dominio.util.InstructorDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.formacion.InstructorMateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,17 @@ public class InstructorMateriaParaleloResource {
 
     @PostMapping("/asignar")
     @ResponseStatus(HttpStatus.CREATED)
-    public Boolean asignar(@RequestBody InstructorMateriaDto objInstructorMateria) throws DataException {
-        return objService.asignarInstructorMateriaParalelo(objInstructorMateria.getCodMateria(),objInstructorMateria.getCodCoordinador(),objInstructorMateria.getCodAula(),objInstructorMateria.getCodAsistente(),objInstructorMateria.getCodInstructor(), objInstructorMateria.getCodParalelo());
+    public Boolean asignar(@RequestBody InstructorMateriaCreateDto objInstructorMateria) throws DataException {
+        return objService.asignarInstructorMateriaParalelo(objInstructorMateria.getCodMateria(),objInstructorMateria.getCodCoordinador(),objInstructorMateria.getCodAula(),objInstructorMateria.getCodAsistentes(),objInstructorMateria.getCodInstructores(), objInstructorMateria.getCodParalelo());
+    }
+    @GetMapping("/listarRead")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<InstructorMateriaReadDto> leerMateriaDto() throws DataException {
+        return objService.getMateriaInfoDto();
+    }
+    @GetMapping("/listarUnico")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<InformacionMateriaDto> leerMateriaDtoa() throws DataException {
+        return objService.getInformacionMateriaDto();
     }
 }
