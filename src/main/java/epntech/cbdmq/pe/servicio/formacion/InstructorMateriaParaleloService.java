@@ -14,11 +14,11 @@ public interface InstructorMateriaParaleloService {
 
     public Boolean asignarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo);
 
-    List<InstructorDatos> getInstructoresAsistentes(Long codMateriaParalelo);
+    List<InstructorDatos> getInstructoresAsistentes(Integer codMateriaParalelo);
 
-    List<InstructorDatos> getInstructores(Long codMateriaParalelo);
+    List<InstructorDatos> getInstructores(Integer codMateriaParalelo);
 
-    InstructorDatos getCoordinador(Long codMateriaParalelo);
+    InstructorDatos getCoordinador(Integer codMateriaParalelo);
     public List<InstructorMateriaReadDto> getMateriaInfoDto();
     public List<InformacionMateriaDto> getInformacionMateriaDto();
 

@@ -8,6 +8,7 @@ import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MateriaParaleloServiceImpl implements MateriaParaleloService {
@@ -17,6 +18,12 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     public List<MateriaParalelo> getMateriasParalelo() throws DataException {
         return repo.findAll();
     }
+
+    @Override
+    public Optional<MateriaParalelo> getById(Integer codigo) {
+        return repo.findById(codigo);
+    }
+
     @Override
     public MateriaParalelo saveMateriaInParalelo(MateriaParalelo obj) throws DataException {
         return repo.save(obj);
