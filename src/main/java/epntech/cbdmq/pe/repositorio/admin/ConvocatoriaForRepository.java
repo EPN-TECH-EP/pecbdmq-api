@@ -68,8 +68,8 @@ public class ConvocatoriaForRepository {
 			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, DataException {
 		String sqlConvocatoria = "INSERT INTO cbdmq.gen_convocatoria (cod_periodo_academico, nombre_convocatoria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres, correo) "
 				+ "VALUES (:periodo, :nombre, :estado, :fechaInicio, :fechaFin, :horaInicio, :horaFin, :codigoUnico, :cupoHombres, :cupoMujeres, :correo)";
-		String sqlDocumento = "INSERT INTO cbdmq.gen_documento (autorizacion, cod_tipo_documento, descripcion, estado_validacion, codigo_unico_documento, nombre_documento, observaciones, ruta, estado) "
-				+ "VALUES (:autorizacion, :tipo, :descripcion, :estadoValidacion, :codigoUnico, :nombre, :observaciones, :ruta, :estado)";
+		String sqlDocumento = "INSERT INTO cbdmq.gen_documento (autorizacion, cod_tipo_documento, descripcion, estado_validacion, nombre_documento, observaciones, ruta, estado) "
+				+ "VALUES (:autorizacion, :tipo, :descripcion, :estadoValidacion, :nombre, :observaciones, :ruta, :estado)";
 		String sqlConvocatoriaDocumento = "INSERT INTO cbdmq.gen_convocatoria_documento (cod_convocatoria, cod_documento) "
 				+ "VALUES (:cod_convocatoria, :cod_documento)";
 		String sqlPeriodoAcademicoDocumento = "INSERT INTO cbdmq.gen_periodo_academico_documento (cod_periodo_academico, cod_documento) "
@@ -157,7 +157,7 @@ public class ConvocatoriaForRepository {
 			entityManager.createNativeQuery(sqlDocumento).setParameter("autorizacion", documento.getAutorizacion())
 					.setParameter("tipo", documento.getTipo()).setParameter("descripcion", documento.getDescripcion())
 					.setParameter("estadoValidacion", documento.getEstadoValidacion())
-					.setParameter("codigoUnico", documento.getCodigoUnico())
+					//.setParameter("codigoUnico", documento.getCodigoUnico())
 					.setParameter("nombre", documento.getNombre())
 					.setParameter("observaciones", documento.getObservaciones())
 					.setParameter("ruta", documento.getRuta()).setParameter("estado", documento.getEstado());
@@ -212,7 +212,7 @@ public class ConvocatoriaForRepository {
 			entityManager.createNativeQuery(sqlDocumento).setParameter("autorizacion", documento.getAutorizacion())
 					.setParameter("tipo", documento.getTipo()).setParameter("descripcion", documento.getDescripcion())
 					.setParameter("estadoValidacion", documento.getEstadoValidacion())
-					.setParameter("codigoUnico", documento.getCodigoUnico())
+					//.setParameter("codigoUnico", documento.getCodigoUnico())
 					.setParameter("nombre", documento.getNombre())
 					.setParameter("observaciones", documento.getObservaciones())
 					.setParameter("ruta", documento.getRuta()).setParameter("estado", documento.getEstado());

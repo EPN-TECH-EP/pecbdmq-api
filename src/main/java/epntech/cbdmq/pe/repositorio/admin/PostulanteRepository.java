@@ -80,5 +80,5 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Long> {
 			+ "order by cod_usuario ", nativeQuery=true)
 	List<Postulante> getPostulantesAllPaginadoTodo(Pageable pageable);
 
-	Optional<Postulante> findByCodDatoPersonal(Integer codDatoPersonal);
+	Optional<Postulante> findByCodDatoPersonalAndCodPeriodoAcademico(Integer codDatoPersonal, Integer codPeriodoAcademico);
 }
