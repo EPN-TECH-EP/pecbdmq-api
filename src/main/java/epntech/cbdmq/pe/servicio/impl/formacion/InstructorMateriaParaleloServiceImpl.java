@@ -5,6 +5,7 @@ import epntech.cbdmq.pe.dominio.admin.formacion.InformacionMateriaDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import epntech.cbdmq.pe.dominio.util.InstructorDatos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.InstructorDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
@@ -24,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 
 @Service
@@ -164,6 +167,50 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         return null;
 
 
+    }
+
+    @Override
+    public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
+        MateriaPeriodo objMPe = new MateriaPeriodo();
+        objMPe.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
+        objMPe.setCodMateria(codMateria);
+        objMPe.setCodAula(codAula);
+        Optional<MateriaPeriodo> objGuardado = repoMPe.findByCodMateriaAndCodPeriodoAcademico(objMPe.getCodMateria(), objMPe.getCodPeriodoAcademico());
+        MateriaPeriodo objMPeII = new MateriaPeriodo();
+        if (objGuardado.isPresent() && !objGuardado.get().getCodMateriaPeriodo().equals(objMPe.getCodMateriaPeriodo())) {
+            objMPeII = objGuardado.get();
+        } else {
+            objMPeII = repoMPe.save(objMPe);
+        }
+
+        MateriaParalelo objMpa = new MateriaParalelo();
+        objMpa.setCodMateriaPeriodo(objMPeII.getCodMateriaPeriodo());
+        objMpa.setCodParalelo(codParalelo);
+        MateriaParalelo objMPaII = repoMPa.save(objMpa);
+
+        InstructorMateriaParalelo objCoordinador = new InstructorMateriaParalelo();
+        objCoordinador.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
+        objCoordinador.setCodInstructor(codCoordinador);
+        objCoordinador.setCodTipoInstructor(3);
+        repoIMP.save(objCoordinador);
+
+        for (Integer codAsistente : codAsistentes) {
+            InstructorMateriaParalelo objAsistente = new InstructorMateriaParalelo();
+            objAsistente.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
+            objAsistente.setCodInstructor(codAsistente);
+            objAsistente.setCodTipoInstructor(1);
+            repoIMP.save(objAsistente);
+        }
+
+        for (Integer codInstructor : codInstructores) {
+            InstructorMateriaParalelo objInstructor = new InstructorMateriaParalelo();
+            objInstructor.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
+            objInstructor.setCodInstructor(codInstructor);
+            objInstructor.setCodTipoInstructor(2);
+            repoIMP.save(objInstructor);
+        }
+
+        return true;
     }
 
 

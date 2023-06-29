@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.formacion;
 
+import epntech.cbdmq.pe.dominio.admin.InstructorMateria;
 import epntech.cbdmq.pe.dominio.admin.formacion.InformacionMateriaDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
@@ -21,5 +22,6 @@ public interface InstructorMateriaParaleloService {
     InstructorDatos getCoordinador(Integer codMateriaParalelo);
     public List<InstructorMateriaReadDto> getMateriaInfoDto();
     public List<InformacionMateriaDto> getInformacionMateriaDto();
+    public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo);
 
 }
