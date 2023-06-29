@@ -166,8 +166,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
 
     }
 
-<<<<<<< Updated upstream
-=======
+
     @Override
     public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
         MateriaPeriodo objMPe = new MateriaPeriodo();
@@ -213,6 +212,6 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         return true;
     }
 
->>>>>>> Stashed changes
+
 
 }

@@ -21,5 +21,6 @@ public interface InstructorMateriaParaleloService {
     InstructorDatos getCoordinador(Integer codMateriaParalelo);
     public List<InstructorMateriaReadDto> getMateriaInfoDto();
     public List<InformacionMateriaDto> getInformacionMateriaDto();
+    public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo);
 
 }
