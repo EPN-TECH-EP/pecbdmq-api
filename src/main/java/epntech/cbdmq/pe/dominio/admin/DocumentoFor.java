@@ -47,8 +47,8 @@ public class DocumentoFor {
 	@Column(name = "estado_validacion")
 	private String estadoValidacion;
 	
-	@Column(name = "codigo_unico_documento")
-	private String codigoUnico;
+	/*@Column(name = "codigo_unico_documento")
+	private String codigoUnico;*/
 	
 	@Column(name = "nombre_documento")
 	private String nombre;

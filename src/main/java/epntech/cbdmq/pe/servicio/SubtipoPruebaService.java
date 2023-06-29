@@ -1,4 +1,4 @@
-package epntech.cbdmq.pe.servicio.impl;
+package epntech.cbdmq.pe.servicio;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,5 +21,7 @@ public interface SubtipoPruebaService {
 	void delete(int id) throws DataException;
 	
 	List<SubTipoPruebaDatos> listarTodosConDatosTipoPrueba();
+	
+	List<SubTipoPrueba>getAllByCodTipoPrueba(Long codTipoPrueba);
 	
 }

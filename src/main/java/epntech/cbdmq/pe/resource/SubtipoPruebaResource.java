@@ -48,14 +48,22 @@ public class SubtipoPruebaResource {
 	public List<SubTipoPrueba> listar() {
 		return objService.getAll();
 	}
+	
+	@GetMapping("/listarPorTipoPrueba/{codTipoPrueba}")
+	public List<SubTipoPrueba>getAllByCodTipoPrueba(@PathVariable("codTipoPrueba") Long codTipoPrueba){
+		return this.objService.getAllByCodTipoPrueba(codTipoPrueba);
+	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<SubTipoPrueba> actualizarDatos(@PathVariable("id") int codigo, @RequestBody SubTipoPrueba obj)
 			throws DataException {
 		return (ResponseEntity<SubTipoPrueba>) objService.getById(codigo).map(datosGuardados -> {
+			
 			datosGuardados.setNombre(obj.getNombre());
 			datosGuardados.setEstado(obj.getEstado());
+			
 			SubTipoPrueba datosActualizados = null;
+			
 			try {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
