@@ -20,37 +20,18 @@ import lombok.Data;
 @Data
 
 @Entity
-@Table(name ="gen_materia")
+@Table(name ="gen_materia_paralelo")
 public class MateriaParalelo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cod_materia")
-	private Integer codMateria;
+	@Column(name = "cod_materia_paralelo")
+	private Integer codMateriaParalelo;
+	@Column(name = "cod_materia_periodo")
+	private Integer codMateriaPeriodo;
+	@Column(name = "cod_paralelo")
+	private Integer codParalelo;
+	@Column(name = "estado")
+	private String estado;
 	
-	@Column(name = "nombre_materia")
-	private String nombreMateria;
-	
-	@Column(name = "num_horas")
-	private Integer numHoras;
-	
-	@Column(name = "tipo_materia")
-	private String tipoMateria;
-	
-	@Column(name = "observacion_materia")
-	private String observacionMateria;
-	
-	@Column(name = "peso_materia")
-	private BigDecimal pesoMateria;
-	
-	@Column(name = "nota_minima")
-	private BigDecimal notaMinima;
-	
-	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_materia_paralelo",
-            joinColumns = @JoinColumn(name = "cod_materia"),
-            inverseJoinColumns = @JoinColumn(name = "cod_paralelo")
-    )
-	private List<Paralelo> paralelos = new ArrayList<>();
 }

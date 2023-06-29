@@ -3,22 +3,22 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.math.BigDecimal;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 
 @Data
-@Entity 
+@Entity(name="MateriaPeriodo")
 @Table(name = "gen_materia_periodo")
 public class MateriaPeriodo {
 
 	
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "cod_materia_periodo")
+	private Integer codMateriaPeriodo;
 	@Column(name = "cod_periodo_academico")
 	private Integer codPeriodoAcademico;
 	@Column(name = "cod_materia")
@@ -33,15 +33,8 @@ public class MateriaPeriodo {
 	private BigDecimal notaMinimaSupletorioInicio;
 	@Column(name = "nota_minima_supletorio_fin")
 	private BigDecimal notaMinimaSupletorioFin;
-	
-	/*@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_materia_periodo",
-            joinColumns = @JoinColumn(name = "cod_materia"),
-            inverseJoinColumns = @JoinColumn(name = "cod_periodo_academico")
-    )
-	private List<Paralelo> MateriPeriodo = new ArrayList<>();*/
-	
-	
-	
-	
+	@Column(name="cod_aula")
+	private Integer codAula;
+	@Column(name="estado")
+	private String estado;
 }

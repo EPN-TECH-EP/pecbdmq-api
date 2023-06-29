@@ -214,7 +214,10 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		String code = "";
 
 		code = getRandomCode();
-		System.out.println("code: " + code);
+		
+		if (this.findByCorreoPersonal(obj.getCorreoPersonal()))
+			throw new DataException(MensajesConst.CORREO_YA_EXISTE);
+		
 		obj.setCorreoPersonal(obj.getCorreoPersonal());
 		obj.setPinValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
 		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
@@ -302,6 +305,25 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
 
 		if (!inscripcion.isEmpty()) {
+			Optional<Postulante> postulante = this.repoPostulante
+					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get(0).getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
+
+			return postulante.isPresent();
+		} else {
+			return false;
+		}
+	}
+	
+	public Boolean findByCorreoPersonal(String correo) {
+
+		List<InscripcionFor> inscripcion = null;
+
+		inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
+
+		if (!inscripcion.isEmpty()) {
+			
+			Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+			
 			Optional<Postulante> postulante = this.repoPostulante
 					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get(0).getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
 

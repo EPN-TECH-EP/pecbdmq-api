@@ -51,13 +51,4 @@ public class Materia {
 	//@ManyToMany(mappedBy = "materias", cascade = CascadeType.ALL)
 	//public Set<Aula> aulas;
 	
-	@OneToMany(mappedBy="codMateria")
-    private List<MateriaPeriodo> materiaPeriodo;
-	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_materia_paralelo",
-            joinColumns = @JoinColumn(name = "cod_materia"),
-            inverseJoinColumns = @JoinColumn(name = "cod_paralelo")
-    )
-	private List<Paralelo> paralelos = new ArrayList<>();
 }

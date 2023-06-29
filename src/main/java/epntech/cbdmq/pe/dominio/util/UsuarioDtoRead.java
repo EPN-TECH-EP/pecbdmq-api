@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.dominio.util;
 
 import java.util.Date;
 
-import epntech.cbdmq.pe.dominio.Usuario;
 import lombok.Data;
 
 @Data

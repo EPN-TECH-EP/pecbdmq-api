@@ -3,8 +3,6 @@ package epntech.cbdmq.pe.resource;
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_REGISTRADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +23,8 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.EstudianteServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.MateriaEstudianteServiceImpl;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/estudiante")
 public class EstudianteResource {
@@ -35,16 +35,17 @@ public class EstudianteResource {
 	@Autowired
 	private MateriaEstudianteServiceImpl materiaEstudianteServiceImpl;
 	
+	@GetMapping("/listar")
+	public List<Estudiante> listar() {
+		return objService.getAll();
+	}
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody Estudiante obj) throws DataException {
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
-	@GetMapping("/listar")
-	public List<Estudiante> listar() {
-		return objService.getAll();
-	}
+
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Estudiante> obtenerPorId(@PathVariable("id") int codigo) {
