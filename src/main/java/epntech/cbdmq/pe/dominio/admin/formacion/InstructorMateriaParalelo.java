@@ -1,13 +1,12 @@
 package epntech.cbdmq.pe.dominio.admin.formacion;
 
-import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
-import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name ="gen_instructor_materia_paralelo")
+//no vale
 @NamedNativeQuery(name = "InformacionMateriaDto.find",
         query = "select gmp.cod_materia_paralelo , gm.nombre_materia,em.nombre_eje_materia,p.nombre_paralelo,a.cod_aula from cbdmq.gen_instructor_materia_paralelo gimp\n" +
                 "left join cbdmq.gen_materia_paralelo gmp on gmp.cod_materia_paralelo = gimp.cod_materia_paralelo \n" +

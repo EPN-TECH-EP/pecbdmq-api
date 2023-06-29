@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Aula;
@@ -38,7 +39,13 @@ public class RequisitoServiceImpl implements RequisitoService {
 	@Override
 	public List<Requisito> getAll() {
 		// TODO Auto-generated method stub
-		return repo.findAll();
+		Sort sort = Sort.by(Sort.Direction.ASC, "nombre");
+		return repo.findAll(sort);
+	}
+
+	@Override
+	public List<Requisito> getAllOrder() {
+		return null;
 	}
 
 	@Override
