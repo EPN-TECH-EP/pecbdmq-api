@@ -56,10 +56,9 @@ public class DelegadoServiceImpl implements DelegadoService {
 
 	@Override
 	public void delete(int codDelegado) throws DataException {
-		
-		PeriodoAcademico periodoAcademico = new PeriodoAcademico();
-		periodoAcademico = repoPA.getPeriodoAcademicoActivo();		
-		
+
+
+		PeriodoAcademico periodoAcademico = repoPA.getPeriodoAcademicoActivo();
 		repoDAO.delete(codDelegado, periodoAcademico.getCodigo());
 	}
 
