@@ -72,6 +72,16 @@ public class DelegadoServiceImpl implements DelegadoService {
 	}
 
 	@Override
+	public Boolean isUsuarioDelegado(int codUsuario) throws DataException {
+		Optional<Delegado> delegado=repo.delegadoByUser(codUsuario);
+		if (delegado.isPresent()) {
+			return true;
+		}
+		return false;
+
+	}
+
+	@Override
 	public List<DelegadoUtil> delegado() {
 		// TODO Auto-generated method stub
 		return delegadoUtilRepository.getDelegados();

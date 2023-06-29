@@ -19,6 +19,7 @@ public interface DelegadoService {
 	void delete(int codDelegado) throws DataException;
 	
 	Optional<Delegado> getByIdUsuario(int codUsuario) throws DataException;
-	
+	Boolean isUsuarioDelegado(int codUsuario) throws DataException;
+
 	List<DelegadoUtil> delegado();
 }

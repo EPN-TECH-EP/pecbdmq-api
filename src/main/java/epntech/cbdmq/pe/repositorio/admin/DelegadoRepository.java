@@ -10,11 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 import epntech.cbdmq.pe.dominio.admin.Apelacion;
 import epntech.cbdmq.pe.dominio.admin.Delegado;
 import epntech.cbdmq.pe.dominio.util.DelegadoPK;
+import org.springframework.data.repository.query.Param;
 
 public interface DelegadoRepository extends JpaRepository<Delegado, DelegadoPK> {
 
 	Optional<Delegado> findBycodUsuario(Integer codUsuario);
 		
 	Optional<Delegado> findByCodUsuarioAndCodPeriodoAcademico(Integer codUsuario, Integer codPeriodoAcademico);
-	
+	@Query(value="select gd.* from cbdmq.gen_delegado gd \n" +
+			"left join cbdmq.gen_usuario gu on gd.cod_usuario = gu.cod_usuario \n" +
+			"where gu.cod_usuario = :codUsuario \n", nativeQuery = true)
+	Optional<Delegado> delegadoByUser(@Param("codUsuario") Integer codUsuario);
 }
