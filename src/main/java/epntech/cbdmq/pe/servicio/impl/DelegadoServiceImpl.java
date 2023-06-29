@@ -37,12 +37,13 @@ public class DelegadoServiceImpl implements DelegadoService {
 	public Delegado save(Delegado obj) throws DataException {
 		PeriodoAcademico periodoAcademico = new PeriodoAcademico();
 		periodoAcademico = repoPA.getPeriodoAcademicoActivo();
+		obj.setCodPeriodoAcademico(periodoAcademico.getCodigo());
 		
 		Optional<Delegado> delegado=repo.findByCodUsuarioAndCodPeriodoAcademico(obj.getCodUsuario(), obj.getCodPeriodoAcademico());
 		if(delegado.isPresent())
 			throw new DataException(REGISTRO_YA_EXISTE);
 		
-		obj.setCodPeriodoAcademico(periodoAcademico.getCodigo());
+
 
 		
 		return repo.save(obj);
