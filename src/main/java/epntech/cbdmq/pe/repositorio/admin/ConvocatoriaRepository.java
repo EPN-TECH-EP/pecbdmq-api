@@ -39,4 +39,8 @@ public interface ConvocatoriaRepository extends JpaRepository<Convocatoria, Inte
 	
 	@Procedure(value = "cbdmq.get_convocatoria_activa_formacion")
 	Integer getConvocatoriaActivaFormacion();
+
+@Procedure(value = "cbdmq.get_id_next")
+			String findNextLastCodigo();
+
 }

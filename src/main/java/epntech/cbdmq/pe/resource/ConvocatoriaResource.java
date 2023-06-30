@@ -104,5 +104,10 @@ public class ConvocatoriaResource {
 		return objService.getConvocatorialistar();
 
 	}
+	@GetMapping("/codigoUnicoCreacion")
+
+	public String getCodLastConvocatoria() throws DataException {
+		return objService.getCodConvocatoriaCreacion();
+	}
 	
 }

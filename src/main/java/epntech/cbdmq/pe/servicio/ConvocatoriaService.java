@@ -28,4 +28,6 @@ public interface ConvocatoriaService {
 	
 	Set<Convocatoria> getConvocatoriaActiva() throws DataException;
 
+	String getCodConvocatoriaCreacion() throws DataException;
+
 }
