@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.ValidaRequisitos;
@@ -15,4 +16,7 @@ public interface ValidaRequisitosRepository extends JpaRepository<ValidaRequisit
 	
 	@Query(nativeQuery = true, name = "Requisito.findRequisitosPorEstudiante")
 	List<ValidacionRequisitosDatos> findRequisitosPorEstudiante(@Param("codEstudiante") Long codEstudiante, @Param("codCursoEspecializacion") Long codCursoEspecializacion);
+	
+	@Procedure(value = "cbdmq.cumple_requisitos_curso_esp")
+	Boolean cumpleRequisitosCurso(Long codCurso, Long codEstudiante);
 }

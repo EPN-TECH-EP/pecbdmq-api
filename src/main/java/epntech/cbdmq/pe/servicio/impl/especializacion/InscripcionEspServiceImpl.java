@@ -253,8 +253,14 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
-		// TODO Auto-generated method stub
-		return validaRequisitosRepository.saveAll(validaRequisitos);
+		List<ValidaRequisitos> listValidaRequisitos = new ArrayList<>();
+		listValidaRequisitos = validaRequisitosRepository.saveAll(validaRequisitos);
+		
+		for (ValidaRequisitos validaRequisito : listValidaRequisitos) {
+			validaRequisitosRepository.cumpleRequisitosCurso(validaRequisito.getCodCursoEspecializacion(), validaRequisito.getCodEstudiante());
+		}
+		
+		return listValidaRequisitos;
 	}
 
 	@Override
@@ -265,8 +271,13 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
-		// TODO Auto-generated method stub
-		return validaRequisitosRepository.saveAll(validaRequisitos);
+		List<ValidaRequisitos> listValidaRequisitos = new ArrayList<>();
+		listValidaRequisitos = validaRequisitosRepository.saveAll(validaRequisitos);
+		
+		for (ValidaRequisitos validaRequisito : listValidaRequisitos) {
+			validaRequisitosRepository.cumpleRequisitosCurso(validaRequisito.getCodCursoEspecializacion(), validaRequisito.getCodEstudiante());
+		}
+		return listValidaRequisitos;
 	}
 
 }
