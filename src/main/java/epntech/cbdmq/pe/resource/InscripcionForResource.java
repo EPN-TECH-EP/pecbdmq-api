@@ -267,8 +267,8 @@ public class InscripcionForResource {
 		return postulanteService.getMuestra();
 	}
 	@GetMapping("/getMuestra")
-	public List<Postulante> getMuestra() throws DataException {
-		return postulanteService.getPostulantesMuestraPA();
+	public List<PostulanteUtil> getMuestra(Pageable pageable) throws DataException {
+		return postulanteService.getPostulantesMuestraPA(pageable);
 	}
 	
 	@PutMapping("/asignarMuestra")
