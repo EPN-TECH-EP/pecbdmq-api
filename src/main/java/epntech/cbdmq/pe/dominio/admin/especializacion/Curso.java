@@ -72,9 +72,6 @@ public class Curso {
 	@Column(name = "cod_tipo_curso")
 	private Integer codTipoCurso;
 	
-	@Column(name = "cod_curso_estado")
-	private Long codCursoEstado;
-	
 	@Column(name = "email_notificacion")
 	private String emailNotificacion;
 	

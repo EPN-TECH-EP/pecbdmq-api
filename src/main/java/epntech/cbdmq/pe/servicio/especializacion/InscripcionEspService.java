@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
+import epntech.cbdmq.pe.dominio.admin.especializacion.ValidaRequisitos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import jakarta.mail.MessagingException;
@@ -35,4 +37,10 @@ public interface InscripcionEspService {
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
 	
 	Optional<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
+	
+	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
+	
+	List<ValidacionRequisitosDatos> getValidacionRequisito(Long codEstudiante, Long codCursoEspecializacion);
+	
+	List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
 }

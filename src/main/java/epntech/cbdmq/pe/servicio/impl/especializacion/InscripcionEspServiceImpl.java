@@ -25,12 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
+import epntech.cbdmq.pe.dominio.admin.especializacion.ValidaRequisitos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
@@ -40,6 +42,7 @@ import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.ValidaRequisitosRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
 import jakarta.mail.MessagingException;
@@ -63,6 +66,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	private ParametroRepository parametroRepository;
 	@Autowired
 	private InscripcionDatosRepository inscripcionDatosRepository;
+	@Autowired
+	private ValidaRequisitosRepository validaRequisitosRepository;
 	
 	
 	@Value("${pecb.archivos.ruta}")
@@ -152,7 +157,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 			InscripcionDocumento cursoDocumento = new InscripcionDocumento();
 			
 			//cursoDocumento.setCodInscripcion(codInscripcion);
-			cursoDocumento.setCodDocumento((long) documento.getCodigo());
+			//cursoDocumento.setCodDocumento((long) documento.getCodigo());
 			inscripcionDocumentoRepository.save(cursoDocumento);
 			
 		}
@@ -244,6 +249,24 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	public Optional<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException {
 		// TODO Auto-generated method stub
 		return inscripcionEspRepository.getInscripcionByCurso(codCurso);
+	}
+
+	@Override
+	public List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
+		// TODO Auto-generated method stub
+		return validaRequisitosRepository.saveAll(validaRequisitos);
+	}
+
+	@Override
+	public List<ValidacionRequisitosDatos> getValidacionRequisito(Long codEstudiante, Long codCursoEspecializacion) {
+		// TODO Auto-generated method stub
+		return validaRequisitosRepository.findRequisitosPorEstudiante(codEstudiante, codCursoEspecializacion);
+	}
+
+	@Override
+	public List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
+		// TODO Auto-generated method stub
+		return validaRequisitosRepository.saveAll(validaRequisitos);
 	}
 
 }

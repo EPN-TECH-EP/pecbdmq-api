@@ -21,5 +21,5 @@ public class InscripcionDatosEsp {
 	
 	@OneToMany
 	@JoinColumn(name = "cod_inscripcion")
-	private Set<InscripcionDocumento> documentos;
+	private Set<InscripcionDocumentoDatos> documentos;
 }

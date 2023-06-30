@@ -27,7 +27,9 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
+import epntech.cbdmq.pe.dominio.admin.especializacion.ValidaRequisitos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.especializacion.InscripcionEspServiceImpl;
@@ -107,6 +109,24 @@ public class InscripcionEspResource {
 	public ResponseEntity<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
 		return inscripcionEspServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+	
+	@PostMapping("/validacionRequisitos")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException {
+
+		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
+	}
+	
+	@GetMapping("/getRequisitosEstudiante")
+	public List<ValidacionRequisitosDatos> getRequisitosEstudiante(@RequestParam("codEstudiante") Long codEstudiante, @RequestParam("codCursoEspecializacion") Long codCursoEspecializacion) throws DataException {
+		return inscripcionEspServiceImpl.getValidacionRequisito(codEstudiante, codCursoEspecializacion);
+	}
+	
+	@PutMapping("/validacionRequisitos")
+	public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException {
+
+		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
