@@ -7,6 +7,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class PostulanteServiceImpl implements PostulanteService {
 
 	@Autowired
 	private PostulanteUtilRepository postulanteUtilRepository;
+	@Autowired
+	PeriodoAcademicoRepository periodoAcademicoRepository;
 
 	@Override
 	public Postulante save(Postulante obj, String proceso) {
@@ -162,6 +165,18 @@ public class PostulanteServiceImpl implements PostulanteService {
 	public List<PostulanteUtil> getPostulantesAllPaginadoTodo(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return postulanteUtilRepository.getPostulantesAllPaginadoTodoAsignado(pageable);
+	}
+
+	@Override
+	public List<Postulante> getPostulantesEstadoPA(String estado) {
+
+
+		return repo.getPostulantesByEstadoAndCodPeriodoAcademico(estado,periodoAcademicoRepository.getPAActive());
+	}
+
+	@Override
+	public List<Postulante> getPostulantesMuestraPA() {
+		return repo.getPostulantesByEstadoAndCodPeriodoAcademico("MUESTRA",periodoAcademicoRepository.getPAActive());
 	}
 
 }

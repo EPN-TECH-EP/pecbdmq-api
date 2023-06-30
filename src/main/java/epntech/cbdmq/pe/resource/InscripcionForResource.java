@@ -262,9 +262,13 @@ public class InscripcionForResource {
 		return validacionRequisitosForService.update(requisitos);
 	}
 	
-	@GetMapping("/muestra")
-	public List<Postulante> getMuestra() throws DataException {
+	@GetMapping("/generarMuestra")
+	public List<Postulante> generarMuestra() throws DataException {
 		return postulanteService.getMuestra();
+	}
+	@GetMapping("/getMuestra")
+	public List<Postulante> getMuestra() throws DataException {
+		return postulanteService.getPostulantesMuestraPA();
 	}
 	
 	@PutMapping("/asignarMuestra")

@@ -79,6 +79,7 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Long> {
 			+ "AND UPPER(gdp.estado) = 'ACTIVO' \r\n"
 			+ "order by cod_usuario ", nativeQuery=true)
 	List<Postulante> getPostulantesAllPaginadoTodo(Pageable pageable);
+	List<Postulante> getPostulantesByEstadoAndCodPeriodoAcademico(String Estado, Integer codPeriodoAcademico);
 
 	Optional<Postulante> findByCodDatoPersonalAndCodPeriodoAcademico(Integer codDatoPersonal, Integer codPeriodoAcademico);
 }
