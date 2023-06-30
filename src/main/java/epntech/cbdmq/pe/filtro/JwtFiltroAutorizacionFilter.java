@@ -44,7 +44,13 @@ public class JwtFiltroAutorizacionFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		try {
-			if (request.getMethod().equalsIgnoreCase(METOD_HTTP_OPTIONS)) {
+			String requestURI = request.getRequestURI();
+			String excludedUrlPattern = "/link/\\d+";
+			if (requestURI.matches(excludedUrlPattern)) {
+				filterChain.doFilter(request, response);
+				return;
+			}
+			else if (request.getMethod().equalsIgnoreCase(METOD_HTTP_OPTIONS)) {
 				response.setStatus(OK.value());
 			} else {
 				String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -82,4 +88,5 @@ public class JwtFiltroAutorizacionFilter extends OncePerRequestFilter {
 		}
 		filterChain.doFilter(request, response);
 	}
+
 }

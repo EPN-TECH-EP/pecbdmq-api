@@ -55,12 +55,14 @@ public class ConvocatoriaForRepository {
 
 	@Value("${spring.servlet.multipart.max-file-size}")
 	public DataSize TAMAÑO_MÁXIMO;
-	
+	//cambiar
 	@Value("${server.port}")
 	public String SERVER_PORT;
 
 	@Value("${eureka.instance.hostname}")
 	public String HOSTNAME;
+	@Value("${url.descarga.archivos}")
+	public String URLDESCARGA;
 
 
 	public PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
@@ -275,10 +277,11 @@ public class ConvocatoriaForRepository {
 		 * .setParameter("codDocumento", elemento.getDocumentosRequisito()); }
 		 */
 		
-		String link = HOSTNAME + ":" + SERVER_PORT + "/link/" + codigoDocumento;
+		String link = URLDESCARGA+ "/link/" + codigoDocumento;
 		
+		//String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
 		String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
-		
+
 		emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
 		
 		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
