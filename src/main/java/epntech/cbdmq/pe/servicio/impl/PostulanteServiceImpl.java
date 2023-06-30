@@ -168,15 +168,16 @@ public class PostulanteServiceImpl implements PostulanteService {
 	}
 
 	@Override
-	public List<Postulante> getPostulantesEstadoPA(String estado) {
+	public List<PostulanteUtil> getPostulantesEstadoPA(String estado,Pageable pageable) {
 
 
-		return repo.getPostulantesByEstadoAndCodPeriodoAcademico(estado,periodoAcademicoRepository.getPAActive());
+		return postulanteUtilRepository.getPostulantesEstadoPAPaginado(estado,periodoAcademicoRepository.getPAActive(),pageable);
 	}
 
 	@Override
-	public List<Postulante> getPostulantesMuestraPA() {
-		return repo.getPostulantesByEstadoAndCodPeriodoAcademico("MUESTRA",periodoAcademicoRepository.getPAActive());
+	public List<PostulanteUtil> getPostulantesMuestraPA(Pageable pageable) {
+
+		return this.getPostulantesEstadoPA("MUESTRA", pageable);
 	}
 
 }

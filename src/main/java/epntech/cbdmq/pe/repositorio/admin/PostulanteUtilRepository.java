@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.query.Jpa21Utils;
 
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.util.PostulanteUtil;
+import org.springframework.data.repository.query.Param;
 
 public interface PostulanteUtilRepository extends JpaRepository<PostulanteUtil, Integer>{
 
@@ -72,4 +73,9 @@ public interface PostulanteUtilRepository extends JpaRepository<PostulanteUtil, 
 			+ "and p.cod_periodo_academico = cbdmq.get_pa_activo() "
 			+ "order by cod_usuario ", nativeQuery=true)
 	List<PostulanteUtil> getPostulantesPaginado(Integer usuario, Pageable pageable);
+	@Query(value="select p.cod_postulante, gdp.cod_datos_personales, p.id_postulante, p.estado , p.cod_usuario, p.cod_periodo_academico, gdp.nombre, gdp.apellido, gdp.cedula, null as nombre_usuario, null as correo_usuario\n" +
+			"from cbdmq.gen_postulante p,cbdmq.gen_dato_personal gdp \n" +
+			"where p.estado=:estado \n" +
+			"and p.cod_periodo_academico=:codPA ", nativeQuery=true)
+	List<PostulanteUtil> getPostulantesEstadoPAPaginado(@Param("estado") String estado, @Param("codPA") Integer usuario, Pageable pageable);
 }

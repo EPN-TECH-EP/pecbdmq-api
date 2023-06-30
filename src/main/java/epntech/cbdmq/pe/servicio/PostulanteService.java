@@ -37,7 +37,7 @@ public interface PostulanteService {
 	List<Postulante> getMuestra();
 	
 	List<PostulanteUtil> getPostulantesAllPaginadoTodo(Pageable pageable);
-	List<Postulante> getPostulantesEstadoPA(String estado);
-	List<Postulante> getPostulantesMuestraPA();
+	List<PostulanteUtil> getPostulantesEstadoPA(String estado,Pageable pageable);
+	List<PostulanteUtil> getPostulantesMuestraPA(Pageable pageable);
 
 }
