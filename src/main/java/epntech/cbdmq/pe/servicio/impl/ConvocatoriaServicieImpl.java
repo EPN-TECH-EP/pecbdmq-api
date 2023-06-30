@@ -106,7 +106,7 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 	}
 
 	@Override
-	public String getCodConvocatoriaCreacion() throws DataException {
+	public String getCodConvocatoriaCreacion() {
 		return repo.findNextLastCodigo();
 	}
 

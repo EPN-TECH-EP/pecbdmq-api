@@ -34,7 +34,7 @@ public class DescargarDocumentoResourse {
 	@Autowired
 	DocumentoRepository Repository;
 
-	
+
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> descargarArchivo(@PathVariable Integer id, HttpServletRequest request) throws FileNotFoundException {

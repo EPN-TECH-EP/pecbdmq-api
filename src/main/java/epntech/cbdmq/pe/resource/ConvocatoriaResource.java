@@ -66,6 +66,7 @@ public class ConvocatoriaResource {
 			datosGuardados.setEstado(obj.getEstado());
 			datosGuardados.setFechaInicioConvocatoria(obj.getFechaInicioConvocatoria());
 			datosGuardados.setFechaFinConvocatoria(obj.getFechaFinConvocatoria());
+			datosGuardados.setFechaActual(obj.getFechaActual());
 			datosGuardados.setHoraInicioConvocatoria(obj.getHoraInicioConvocatoria());
 			datosGuardados.setHoraFinConvocatoria(obj.getHoraFinConvocatoria());
 			
@@ -106,8 +107,9 @@ public class ConvocatoriaResource {
 	}
 	@GetMapping("/codigoUnicoCreacion")
 
-	public String getCodLastConvocatoria() throws DataException {
+	public String getCodLastConvocatoria()  {
 		return objService.getCodConvocatoriaCreacion();
+
 	}
 	
 }
