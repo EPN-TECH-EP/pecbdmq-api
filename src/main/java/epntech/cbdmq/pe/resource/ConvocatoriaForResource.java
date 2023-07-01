@@ -78,6 +78,10 @@ public class ConvocatoriaForResource {
                 Date fecha = dateFormat.parse(value.asText());
             	convocatoria.setFechaFinConvocatoria(fecha);
             }
+			if(key.equals("fechaActual")) {
+                Date fecha = dateFormat.parse(value.asText());
+            	convocatoria.setFechaActual(fecha);
+            }
         }
 
 		
@@ -185,6 +189,10 @@ public class ConvocatoriaForResource {
                 Date fecha = dateFormat.parse(value.asText());
             	convocatoria.setFechaFinConvocatoria(fecha);
             }
+			if(key.equals("fechaActual")) {
+				Date fecha = dateFormat.parse(value.asText());
+				convocatoria.setFechaActual(fecha);
+			}
         }
 
 		Set<DocumentoFor> documentos = convocatoria.getDocumentos();
