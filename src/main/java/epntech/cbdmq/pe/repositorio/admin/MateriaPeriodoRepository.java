@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
-
 public interface MateriaPeriodoRepository extends JpaRepository<MateriaPeriodo, Integer>{
 
     @Query("select mp from MateriaPeriodo mp\n" +
