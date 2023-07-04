@@ -114,7 +114,7 @@ public class InscripcionEspResource {
 	
 	@PostMapping("/validacionRequisitos")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException {
+	public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException, MessagingException {
 
 		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
 	}
@@ -125,7 +125,7 @@ public class InscripcionEspResource {
 	}
 	
 	@PutMapping("/validacionRequisitos")
-	public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException {
+	public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException, MessagingException {
 
 		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
 	}

@@ -39,11 +39,11 @@ public interface InscripcionEspService {
 	
 	Optional<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
 	
-	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
+	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos)  throws MessagingException, DataException;
 	
 	List<ValidacionRequisitosDatos> getValidacionRequisito(Long codEstudiante, Long codCursoEspecializacion);
 	
-	List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
+	List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos)  throws MessagingException, DataException;
 	
 	List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion);
 	
