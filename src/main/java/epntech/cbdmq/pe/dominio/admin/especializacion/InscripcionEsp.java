@@ -8,6 +8,7 @@ import org.hibernate.annotations.NamedNativeQuery;
 
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
@@ -109,6 +110,28 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		@ColumnResult(name = "apellido"), 
 		@ColumnResult(name = "nombreCatalogoCurso"), }))
 
+@NamedNativeQuery(name = "InscripcionEsp.findInscripcionValidaPorCurso", 
+query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, dp.correo_personal as correoPersonal "
+		+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
+		+ "where i.cod_estudiante = e.cod_estudiante " 
+		+ "and e.cod_datos_personales = dp.cod_datos_personales "
+		+ "and i.cod_curso_especializacion = c.cod_curso_especializacion "
+		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
+		+ "and upper(e.estado) = 'ACTIVO' "
+		+ "and upper(dp.estado) = 'ACTIVO' " 
+		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(cc.estado) = 'ACTIVO' "
+		+ "and upper(i.estado) = 'VALIDO' "
+		+ "and i.cod_curso_especializacion = :codCurso", 
+		resultSetMapping = "findInscripcionValidaPorCurso")
+@SqlResultSetMapping(name = "findInscripcionValidaPorCurso", classes = @ConstructorResult(targetClass = InscritosEspecializacion.class, columns = {
+		@ColumnResult(name = "codInscripcion"), 
+		@ColumnResult(name = "cedula"), 
+		@ColumnResult(name = "nombre"),
+		@ColumnResult(name = "apellido"), 
+		@ColumnResult(name = "nombreCatalogoCurso"), 
+		@ColumnResult(name = "correoPersonal"),}))
+
 public class InscripcionEsp {
 
 	@Id
@@ -124,6 +147,9 @@ public class InscripcionEsp {
 	
 	@Column(name = "fecha_inscripcion")
 	private LocalDate fechaInscripcion;
+	
+	@Column(name = "estado")
+	private String estado;
 	
 	@OneToMany(mappedBy = "codInscripcion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InscripcionDocumento> documentos = new ArrayList<>();

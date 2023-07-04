@@ -3,7 +3,9 @@ package epntech.cbdmq.pe.servicio.impl.especializacion;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION_INSCRIPCION;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_INSCRIPCION;
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.CURSO_NO_PRUEBAS;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,16 +20,20 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDocumento;
@@ -38,6 +44,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
+import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDocumentoRepository;
@@ -68,6 +75,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	private InscripcionDatosRepository inscripcionDatosRepository;
 	@Autowired
 	private ValidaRequisitosRepository validaRequisitosRepository;
+	@Autowired
+	private PruebaDetalleRepository pruebaDetalleRepository;
 	
 	
 	@Value("${pecb.archivos.ruta}")
@@ -85,6 +94,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		
 		LocalDate fechaActual = LocalDate.now();
 		inscripcionEsp.setFechaInscripcion(fechaActual);
+		inscripcionEsp.setEstado("INSCRITO");
 		
 		return inscripcionEspRepository.save(inscripcionEsp);
 	}
@@ -278,6 +288,46 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 			validaRequisitosRepository.cumpleRequisitosCurso(validaRequisito.getCodCursoEspecializacion(), validaRequisito.getCodEstudiante());
 		}
 		return listValidaRequisitos;
+	}
+
+	@Override
+	public List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion) {
+		// TODO Auto-generated method stub
+		return inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
+	}
+
+	@Override
+	@Async
+	public void notificarPrueba(Long codCursoEspecializacion) throws MessagingException, DataException {
+		Optional<Curso> cursoEspOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoEspOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
+		Optional<PruebaDetalle> pruebaDetalleOptional = pruebaDetalleRepository.findByCodCursoEspecializacion(codCursoEspecializacion);
+		
+		if(pruebaDetalleOptional.isEmpty())
+			throw new DataException(CURSO_NO_PRUEBAS);
+		
+		PruebaDetalle  pruebaDetalle = new PruebaDetalle();
+		pruebaDetalle = pruebaDetalleOptional.get();
+		
+		List<InscritosEspecializacion> listaInscritos = new ArrayList<>();
+		listaInscritos = inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
+		
+		for (InscritosEspecializacion inscritosEspecializacion : listaInscritos) {
+			
+			Optional<Parametro> parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.pruebas"); 
+			if(parametro.isEmpty())
+				throw new DataException(NO_PARAMETRO);
+			
+			String nombres = inscritosEspecializacion.getNombre() + " " + inscritosEspecializacion.getApellido();
+			String cuerpoHtml = String.format(parametro.get().getValor(), nombres, inscritosEspecializacion.getNombreCatalogoCurso(), pruebaDetalle.getFechaInicio(), pruebaDetalle.getFechaFin());
+			
+			String[] destinatarios = {inscritosEspecializacion.getCorreoPersonal()};
+			
+			emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+		}
+		
 	}
 
 }

@@ -29,6 +29,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.ValidaRequisitos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -127,6 +128,20 @@ public class InscripcionEspResource {
 	public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException {
 
 		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
+	}
+	
+	@GetMapping("/inscripcionesValidas/{id}")
+	public List<InscritosEspecializacion> listarInscripcionesValidas(@PathVariable("id") long codigo) {
+		return inscripcionEspServiceImpl.getInscritosValidosCurso(codigo);
+	}
+	
+	@PostMapping("/notificarPrueba")
+	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion)
+			throws MessagingException, DataException, PSQLException {
+		
+		inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion);
+
+		return response(HttpStatus.OK, EMAIL_SEND);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

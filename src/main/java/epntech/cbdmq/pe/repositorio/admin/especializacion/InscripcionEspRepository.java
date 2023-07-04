@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 
 public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, Long> {
 
@@ -30,4 +31,7 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionPorCurso")
 	Optional<InscripcionDatosEspecializacion> getInscripcionByCurso(@Param("codCurso") Long codCurso);
+	
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionValidaPorCurso")
+	List<InscritosEspecializacion> getInscripcionesValidasByCurso(@Param("codCurso") Long codCurso);
 }

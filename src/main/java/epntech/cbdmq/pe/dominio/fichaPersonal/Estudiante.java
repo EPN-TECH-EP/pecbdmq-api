@@ -230,6 +230,41 @@ import lombok.Data;
 		@ColumnResult(name = "unidad_gestion"),
 		@ColumnResult(name = "estado")
 }))
+
+@NamedNativeQuery(name = "EstudianteDatos.findEstudiante",
+query = "select e.cod_estudiante, e.grado, e.resultado_estudiante, e.id_estudiante, "
+		+ "d.nombre, d.apellido, d.cedula, d.ciudad, d.correo_personal, d.fecha_nacimiento, d.num_telef, d.tipo_sangre, "
+		+ "(select s.nombre_zona from {h-schema}gen_estacion_trabajo s where d.cod_estacion = s.cod_estacion and UPPER(s.estado) != 'ELIMINADO') as estacion, "
+		+ "(select p.nombre from {h-schema}gen_provincia p where d.cod_provincia = p.cod_provincia and UPPER(p.estado) != 'ELIMINADO') as provincia, "
+		+ "(select u.unidad_gestion from {h-schema}gen_unidad_gestion u where d.cod_unidad_gestion = u.cod_unidad_gestion and UPPER(u.estado) != 'ELIMINADO') as unidad_gestion, "
+		+ "e.estado "
+		+ "from {h-schema}gen_estudiante e, {h-schema}gen_dato_personal d "
+		+ "where e.cod_datos_personales = d.cod_datos_personales "
+		+ "and UPPER(e.estado) != 'ELIMINADO' "
+		+ "and UPPER(d.estado) != 'ELIMINADO' "
+		+ "and e.cod_estudiante  = :codEstudiante ",
+resultSetMapping = "findEstudiante"
+)
+
+@SqlResultSetMapping(name = "findEstudiante", classes = @ConstructorResult(targetClass = EstudianteDatos.class, columns = {
+@ColumnResult(name = "cod_estudiante"),
+@ColumnResult(name = "grado"),
+@ColumnResult(name = "resultado_estudiante"),
+@ColumnResult(name = "id_estudiante"),
+@ColumnResult(name = "nombre"),
+@ColumnResult(name = "apellido"),
+@ColumnResult(name = "cedula"),
+@ColumnResult(name = "ciudad"),
+@ColumnResult(name = "correo_personal"),
+@ColumnResult(name = "fecha_nacimiento"),
+@ColumnResult(name = "num_telef"),
+@ColumnResult(name = "tipo_sangre"),
+@ColumnResult(name = "estacion"),
+@ColumnResult(name = "provincia"),
+@ColumnResult(name = "unidad_gestion"),
+@ColumnResult(name = "estado")
+}))
+
 public class Estudiante{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

@@ -11,6 +11,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.ValidaRequisitos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -43,4 +44,8 @@ public interface InscripcionEspService {
 	List<ValidacionRequisitosDatos> getValidacionRequisito(Long codEstudiante, Long codCursoEspecializacion);
 	
 	List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
+	
+	List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion);
+	
+	void notificarPrueba(Long codCursoEspecializacion) throws MessagingException, DataException;
 }
