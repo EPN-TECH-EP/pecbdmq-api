@@ -101,7 +101,6 @@ public class PostulanteServiceImpl implements PostulanteService {
                 } else if (estadoPostulante.equalsIgnoreCase("MUESTRA")) {
                     p.setEstado("ASIGNADO MUESTRA");
                 }
-                p.setEstado(objActualizado.getEstado());
                 p.setCodUsuario(objActualizado.getCodUsuario());
                 return repo.save(p);
             } else
