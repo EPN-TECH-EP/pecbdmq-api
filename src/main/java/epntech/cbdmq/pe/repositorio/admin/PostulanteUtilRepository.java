@@ -74,8 +74,9 @@ public interface PostulanteUtilRepository extends JpaRepository<PostulanteUtil, 
 			+ "order by cod_usuario ", nativeQuery=true)
 	List<PostulanteUtil> getPostulantesPaginado(Integer usuario, Pageable pageable);
 	@Query(value="select p.cod_postulante, gdp.cod_datos_personales, p.id_postulante, p.estado , p.cod_usuario, p.cod_periodo_academico, gdp.nombre, gdp.apellido, gdp.cedula, null as nombre_usuario, null as correo_usuario\n" +
-			"from cbdmq.gen_postulante p,cbdmq.gen_dato_personal gdp \n" +
+			"from cbdmq.gen_postulante p\n" +
+			"left join cbdmq.gen_dato_personal gdp on p.cod_datos_personales = gdp.cod_datos_personales\n" +
 			"where p.estado=:estado \n" +
-			"and p.cod_periodo_academico=:codPA ", nativeQuery=true)
+			"and p.cod_periodo_academico=:codPA", nativeQuery=true)
 	List<PostulanteUtil> getPostulantesEstadoPAPaginado(@Param("estado") String estado, @Param("codPA") Integer usuario, Pageable pageable);
 }
