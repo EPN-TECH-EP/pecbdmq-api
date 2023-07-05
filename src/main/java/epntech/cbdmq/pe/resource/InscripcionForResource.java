@@ -270,7 +270,7 @@ public class InscripcionForResource {
 	public List<PostulanteUtil> getMuestra(Pageable pageable) throws DataException {
 		return postulanteService.getPostulantesMuestraPA(pageable);
 	}
-	
+	//Sirve para asignar manualmente la muestra
 	@PutMapping("/asignarMuestra")
 	public Postulante asignarMuestra(@RequestBody Postulante postulante) throws DataException {
 		return postulanteService.updateEstadoMuestra(postulante);
