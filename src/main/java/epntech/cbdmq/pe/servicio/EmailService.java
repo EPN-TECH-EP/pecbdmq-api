@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -29,6 +28,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.InternetAddress;
@@ -40,10 +40,13 @@ public class EmailService {
     @Value("${pecb.email.username}")
     private String USERNAME;
 
-    @Value("${pecb.email.password}")
-    private String PASSWORD;
-
-    private String FROM_EMAIL = USERNAME;
+	@Value("${pecb.email.password}")
+	private String PASSWORD;
+	
+	@Value("${pecb.email.ruta-plantillas}")
+	private String RUTA_PLANTILLAS;
+	
+	private String FROM_EMAIL = USERNAME;
 
     public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException, IOException {
         /*
@@ -164,7 +167,7 @@ public class EmailService {
                 message.setContent(htmlContent, "text/html; charset=utf-8");
 
          */
-        String Path="src\\main\\resources\\templateCorreo.html";
+        String Path= RUTA_PLANTILLAS + "templateCorreo.html"; //"src\\main\\resources\\templateCorreo.html";
         String htmlTemplate = readFile(Path);
         htmlTemplate = htmlTemplate.replace("${usuario}", firstName);
         htmlTemplate = htmlTemplate.replace("${password}", password);

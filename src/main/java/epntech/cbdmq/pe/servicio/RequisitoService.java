@@ -12,7 +12,7 @@ public interface RequisitoService {
 	
 	List<Requisito> getAll();
 	List<Requisito> getAllOrder();
-
+	
 	Optional<Requisito> getById(int id);
 	
 	Requisito update(Requisito objActualizado) throws DataException;

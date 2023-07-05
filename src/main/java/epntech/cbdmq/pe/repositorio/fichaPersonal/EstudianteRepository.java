@@ -6,6 +6,8 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
+import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,4 +40,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
+	
+	@Query(nativeQuery = true, name = "EstudianteDatos.findEstudiante")
+	Optional<EstudianteDatos> getEstudiante(@Param("codEstudiante") Long codEstudiante);
 }

@@ -4,7 +4,6 @@ import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
 import static epntech.cbdmq.pe.constante.MensajesConst.EDAD_NO_CUMPLE;
 import static epntech.cbdmq.pe.constante.MensajesConst.ERROR_REGISTRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.FECHA_INSCRIPCION_INVALIDA;
-import static epntech.cbdmq.pe.constante.MensajesConst.HORA_INSCRIPCION_INVALIDA;
 import static epntech.cbdmq.pe.constante.MensajesConst.PA_INACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.PIN_INCORRECTO;
 
@@ -29,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.constante.MensajesConst;
 import epntech.cbdmq.pe.dominio.admin.Convocatoria;
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.util.InscripcionResult;
@@ -45,7 +45,7 @@ import jakarta.mail.MessagingException;
 
 @Service
 public class InscripcionForServiceImpl implements InscripcionForService {
-	
+
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -214,10 +214,10 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		String code = "";
 
 		code = getRandomCode();
-		
-		if (this.findByCorreoPersonal(obj.getCorreoPersonal()))
+
+		if (this.findByCorreoPersonal(obj))
 			throw new DataException(MensajesConst.CORREO_YA_EXISTE);
-		
+
 		obj.setCorreoPersonal(obj.getCorreoPersonal());
 		obj.setPinValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
 		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
@@ -272,14 +272,15 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 
 		if (inscripcion.isPresent()) {
 			Optional<Postulante> postulante = this.repoPostulante
-					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get().getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
+					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get().getCodDatoPersonal(),
+							convocatoria.getCodPeriodoAcademico());
 
 			return postulante.isPresent();
 		} else {
 			return false;
 		}
 	}
-	
+
 	public Boolean findByCedula(String cedula) {
 
 		Optional<InscripcionFor> inscripcion = null;
@@ -287,11 +288,12 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		inscripcion = this.repo1.findOneByCedula(cedula);
 
 		if (inscripcion.isPresent()) {
-			
+
 			Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
-			
+
 			Optional<Postulante> postulante = this.repoPostulante
-					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get().getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
+					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get().getCodDatoPersonal(),
+							convocatoria.getCodPeriodoAcademico());
 
 			return postulante.isPresent();
 		} else {
@@ -301,37 +303,104 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 
 	public Boolean findByCorreoPersonal(String correo, Convocatoria convocatoria) {
 
-		List<InscripcionFor> inscripcion = null;
+		List<InscripcionFor> listaInscripcion = null;
 
-		inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
+		listaInscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
 
-		if (!inscripcion.isEmpty()) {
-			Optional<Postulante> postulante = this.repoPostulante
-					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get(0).getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
+		if (!listaInscripcion.isEmpty()) {
 
-			return postulante.isPresent();
+			for (InscripcionFor inscripcionFor : listaInscripcion) {
+
+				Optional<Postulante> postulante = this.repoPostulante
+						.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcionFor.getCodDatoPersonal(),
+								convocatoria.getCodPeriodoAcademico());
+
+				if (postulante.isPresent()) {
+					return true;
+				}
+			}
+
+			return false;
+
 		} else {
 			return false;
 		}
 	}
-	
+
 	public Boolean findByCorreoPersonal(String correo) {
+		
+		Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+		
+		return this.findByCorreoPersonal(correo, convocatoria);
 
-		List<InscripcionFor> inscripcion = null;
+		/*
+		 * List<InscripcionFor> inscripcion = null;
+		 * 
+		 * inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
+		 * 
+		 * if (!inscripcion.isEmpty()) {
+		 * 
+		 * 
+		 * 
+		 * Optional<Postulante> postulante = this.repoPostulante
+		 * .findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get(0).
+		 * getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
+		 * 
+		 * return postulante.isPresent(); } else { return false; }
+		 */
+	}
 
-		inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
+	public Boolean findByCorreoPersonal(InscripcionFor inscripcion) {
 
-		if (!inscripcion.isEmpty()) {
-			
-			Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
-			
-			Optional<Postulante> postulante = this.repoPostulante
-					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get(0).getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
+		Boolean retval = false;
 
-			return postulante.isPresent();
-		} else {
-			return false;
+		List<InscripcionFor> listaInscripcion = null;
+
+		Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+
+		// busca el correo ingresado y verifica si es distinto
+		Optional<Postulante> postulanteOpt = this.repoPostulante
+				.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.getCodDatoPersonal(),
+						convocatoria.getCodPeriodoAcademico());
+
+		if (postulanteOpt.isPresent()) {
+
+			// obtiene dato personal existente
+			Optional<InscripcionFor> inscripcionExistenteOpt = this.repo1
+					.findById(postulanteOpt.get().getCodDatoPersonal());
+
+			if (inscripcionExistenteOpt.isPresent()) {
+				// compara el correo registrado antes con el enviado para el reintento. Si es
+				// igual, sale
+				if (inscripcionExistenteOpt.get().getCorreoPersonal()
+						.compareToIgnoreCase(inscripcion.getCorreoPersonal()) == 0) {
+					retval = false;
+				} else {
+
+					listaInscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(inscripcion.getCorreoPersonal());
+
+					if (!listaInscripcion.isEmpty()) {
+
+						for (InscripcionFor inscripcionFor : listaInscripcion) {
+
+							Optional<Postulante> postulante = this.repoPostulante
+									.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcionFor.getCodDatoPersonal(),
+											convocatoria.getCodPeriodoAcademico());
+
+							if (postulante.isPresent()) {
+								retval = true;
+							}
+						}
+
+					} else {
+						retval = false;
+					}
+				}
+			}
 		}
+
+		return retval;
+
 	}
 
 	private Boolean validarFechasInscripcion(Date fechaInicio, Date fechaFin, Convocatoria convocatoria) {
@@ -353,7 +422,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 
 		// fechaActual
 		LocalDateTime fechaActual = LocalDateTime.now(ZoneId.of("-5"));
-		
+
 		LOGGER.info("fechaActual = " + fechaActual);
 		LOGGER.info("fechaHoraInicio = " + fechaHoraInicio);
 		LOGGER.info("fechaHoraFin = " + fechaHoraFin);

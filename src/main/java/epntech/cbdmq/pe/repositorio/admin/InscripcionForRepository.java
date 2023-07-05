@@ -194,6 +194,7 @@ public class InscripcionForRepository {
 			datoPersonal.setMeritoAcademicoDescripcion(inscripcion.getMeritoAcademicoDescripcion());
 			datoPersonal.setCodCantonNacimiento(inscripcion.getCodCantonNacimiento());
 			datoPersonal.setCodCantonResidencia(inscripcion.getCodCantonResidencia());
+			datoPersonal.setPinValidacionCorreo(inscripcion.getPinValidacionCorreo());
 			
 			dpRepository.save(datoPersonal);
 			

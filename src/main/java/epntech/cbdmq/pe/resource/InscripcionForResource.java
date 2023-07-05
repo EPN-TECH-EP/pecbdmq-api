@@ -193,7 +193,18 @@ public class InscripcionForResource {
 			return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 		}
 		
-		return objService.getById(obj.getCodDatoPersonal()).map(datosGuardados -> {
+		InscripcionFor datosActualizados = new InscripcionFor();
+		try {
+			datosActualizados = objService.reenvioPin(obj);
+		} catch (DataException | MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return response(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+		
+		return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+		
+		/*return objService.getById(obj.getCodDatoPersonal()).map(datosGuardados -> {
 			datosGuardados.setCodDatoPersonal(obj.getCodDatoPersonal());
 			datosGuardados.setCorreoPersonal(obj.getCorreoPersonal());
 
@@ -207,7 +218,7 @@ public class InscripcionForResource {
 			}
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+		}).orElseGet(() -> ResponseEntity.notFound().build());*/
 	}
 	
 	@GetMapping("/usuarios")

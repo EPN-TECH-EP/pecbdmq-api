@@ -88,8 +88,8 @@ public class SubtipoPruebaResource {
 	
 	@Operation(summary = "Lista de subtipos de pruebas con datos de tipo prueba")
 	@GetMapping("/listarConDatos")
-	private List<SubTipoPruebaDatos> listarTodosConDatosTipoPrueba(){
-		return this.objService.listarTodosConDatosTipoPrueba();
+	public List<SubTipoPruebaDatos> listarTodosConDatosTipoPrueba(){
+		return objService.listarTodosConDatosTipoPrueba();
 	}
 
 }

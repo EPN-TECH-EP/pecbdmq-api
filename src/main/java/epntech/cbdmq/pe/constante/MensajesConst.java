@@ -46,5 +46,5 @@ public class MensajesConst {
     public static final String FOLDER_MAX_SIZE = "La carptea supera el límite máximo permitido ";
     public static final String NO_ENCUENTRA = "No encuentra objetos relacionados";
 	
-	
+    public static final String NO_PARAMETRO = "No se encuentra el parametro configurado";
 }

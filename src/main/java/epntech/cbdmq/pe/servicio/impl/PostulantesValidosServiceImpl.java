@@ -27,7 +27,7 @@ import jakarta.mail.MessagingException;
 
 @Service
 public class PostulantesValidosServiceImpl implements PostulantesValidosService {
-	
+
 	@Autowired
 	private PostulantesValidosRepository repo;
 	@Autowired
@@ -46,47 +46,50 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 
 	@Override
 	@Async
-	public void notificar(String mensaje, String prueba, Date fechaIni, Date fechaFin, LocalTime hora, Integer codPrueba) throws MessagingException, Exception {
+	public void notificar(String mensaje, String prueba, Date fechaIni, Date fechaFin, LocalTime hora,
+			Integer codPrueba) throws MessagingException, Exception {
 		List<PostulantesValidos> lista = new ArrayList<>();
-		//try {
-		Optional<PruebaDetalle> pruebaDetalle = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(codPrueba, periodoAcademicoRepository.getPAActive());
-		if(pruebaDetalle.isPresent() && pruebaDetalle.get().getOrdenTipoPrueba().equals(1)) {
+		// try {
+
+		Optional<PruebaDetalle> pruebaDetalle = pruebaDetalleRepository
+				.findByCodSubtipoPruebaAndCodPeriodoAcademico(codPrueba, periodoAcademicoRepository.getPAActive());
+		if (pruebaDetalle.isPresent() && pruebaDetalle.get().getOrdenTipoPrueba().equals(1)) {
 			lista = repo.getPostulantesValidos();
-		}else if(pruebaDetalle.isPresent()) {
+		} else if (pruebaDetalle.isPresent()) {
 			lista = repo.get_approved_by_test(codPrueba);
 		}
 		System.out.println("lista: " + lista.size());
 		for (PostulantesValidos postulantesValidos : lista) {
 			String msg = String.format(mensaje, postulantesValidos.getIdPostulante(), prueba, fechaIni, fechaFin, hora);
-			
+
 			emailService.enviarEmail(postulantesValidos.getCorreoPersonal(), EMAIL_SUBJECT_PRUEBAS, msg);
 		}
-		/*}catch(Exception ex) {
-			System.out.println("error: " + ex.getMessage());
-			throw new Exception(ex.getMessage());
-		}*/
+		/*
+		 * }catch(Exception ex) { System.out.println("error: " + ex.getMessage()); throw
+		 * new Exception(ex.getMessage()); }
+		 */
 	}
 
 	@Override
 	public void onInitResultado(List<PostulantesValidos> obj, Integer prueba) {
 		List<ResultadoPruebas> resultadoPruebas = new ArrayList<>();
-		
+
 		for (PostulantesValidos postulantesValidos : obj) {
-			
+
 			ResultadoPruebas pruebas = new ResultadoPruebas();
 			pruebas.setCodPostulante(postulantesValidos.getCodPostulante());
 			pruebas.setCodPruebaDetalle(prueba);
 			pruebas.setEstado("ACTIVO");
 			resultadoPruebas.add(pruebas);
 		}
-		
+
 		resultadoPruebasRepository.saveAll(resultadoPruebas);
 	}
 
 	@Override
 	public Page<PostulantesValidos> getAllPaginado(Pageable pageable, Integer codPrueba) throws Exception {
 		// TODO Auto-generated method stub
-		//return repo.getPostulantesValidosPaginado(pageable);
+		// return repo.getPostulantesValidosPaginado(pageable);
 		return repo.get_approved_by_test(pageable, codPrueba);
 	}
 
@@ -97,4 +100,3 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	}
 
 }
-

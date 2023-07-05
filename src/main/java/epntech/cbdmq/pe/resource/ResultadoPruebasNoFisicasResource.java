@@ -71,7 +71,6 @@ public class ResultadoPruebasNoFisicasResource {
 
 		Optional<PruebaDetalle> pp = pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba,
 				periodoAcademicoRepository.getPAActive());
-
 		if (pp.isPresent() && (pp.get().getEstado().equalsIgnoreCase("ACTIVO")
 				|| pp.get().getEstado().equalsIgnoreCase("INICIO"))) {
 
@@ -156,35 +155,34 @@ public class ResultadoPruebasNoFisicasResource {
 	@PostMapping("/generarArchivos")
 	public ResponseEntity<?> generarArchivos(HttpServletResponse response, @RequestParam("nombre") String nombre,
 			@RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DataException, DocumentException {
-		try {
-			Optional<PruebaDetalle> pp = pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba, periodoAcademicoRepository.getPAActive());
-
-			if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
-				throw new DataException(ESTADO_INVALIDO);
-			} else {
-				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
-						+ periodoAcademicoRepository.getPAActive().toString() + "/" + nombre;
-
-				resultadoPruebasServiceImpl.generarExcel(ruta + ".xlsx", nombre, subTipoPrueba);
-				resultadoPruebasServiceImpl.generarPDF(response, ruta + ".pdf", nombre, subTipoPrueba);
-
-				PruebaDetalle p = new PruebaDetalle();
-				p = pp.get();
-				p.setEstado("CIERRE");
-
-				pruebaDetalleServiceImpl.save(p);
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("error: " + e.getMessage());
-			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
-		}
+		
+		  try { Optional<PruebaDetalle> pp =
+		  pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba,
+		  periodoAcademicoRepository.getPAActive());
+		  
+		  if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) { throw new
+		  DataException(ESTADO_INVALIDO); } else { String ruta = ARCHIVOS_RUTA +
+		  PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
+		  + "/" + nombre;
+		  
+		  resultadoPruebasServiceImpl.generarExcel(ruta + ".xlsx", nombre,
+		  subTipoPrueba); resultadoPruebasServiceImpl.generarPDF(response, ruta +
+		  ".pdf", nombre, subTipoPrueba);
+		  
+		  PruebaDetalle p = new PruebaDetalle(); p = pp.get(); p.setEstado("CIERRE");
+		  
+		  pruebaDetalleServiceImpl.save(p); }
+		  
+		  } catch (IOException e) { e.printStackTrace(); System.out.println("error: " +
+		  e.getMessage()); return response(HttpStatus.BAD_REQUEST,
+		  ERROR_GENERAR_ARCHIVO); }
+		 
 		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 	}
 
 	@PostMapping("/generarExcel")
-	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba)
+	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre,
+			@RequestParam("subTipoPrueba") Integer subTipoPrueba)
 			throws DataException {
 		try {
 			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
@@ -223,4 +221,3 @@ public class ResultadoPruebasNoFisicasResource {
 				httpStatus);
 	}
 }
-
