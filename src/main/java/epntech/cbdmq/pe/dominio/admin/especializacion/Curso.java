@@ -72,11 +72,11 @@ public class Curso {
 	@Column(name = "cod_tipo_curso")
 	private Integer codTipoCurso;
 	
-	@Column(name = "cod_curso_estado")
-	private Long codCursoEstado;
-	
 	@Column(name = "email_notificacion")
 	private String emailNotificacion;
+	
+	@Column(name = "tiene_modulos")
+	private Boolean tieneModulos;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "esp_curso_documento", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))

@@ -37,12 +37,13 @@ public class DelegadoServiceImpl implements DelegadoService {
 	public Delegado save(Delegado obj) throws DataException {
 		PeriodoAcademico periodoAcademico = new PeriodoAcademico();
 		periodoAcademico = repoPA.getPeriodoAcademicoActivo();
+		obj.setCodPeriodoAcademico(periodoAcademico.getCodigo());
 		
 		Optional<Delegado> delegado=repo.findByCodUsuarioAndCodPeriodoAcademico(obj.getCodUsuario(), obj.getCodPeriodoAcademico());
 		if(delegado.isPresent())
 			throw new DataException(REGISTRO_YA_EXISTE);
 		
-		obj.setCodPeriodoAcademico(periodoAcademico.getCodigo());
+
 
 		
 		return repo.save(obj);
@@ -57,9 +58,8 @@ public class DelegadoServiceImpl implements DelegadoService {
 	@Override
 	public void delete(int codDelegado) throws DataException {
 		
-		PeriodoAcademico periodoAcademico = new PeriodoAcademico();
-		periodoAcademico = repoPA.getPeriodoAcademicoActivo();		
 		
+		PeriodoAcademico periodoAcademico = repoPA.getPeriodoAcademicoActivo();
 		repoDAO.delete(codDelegado, periodoAcademico.getCodigo());
 	}
 
@@ -69,6 +69,16 @@ public class DelegadoServiceImpl implements DelegadoService {
 		if(!delegado.isPresent())
 			throw new DataException(REGISTRO_NO_EXISTE);
 		return delegado;
+	}
+
+	@Override
+	public Boolean isUsuarioDelegado(int codUsuario) throws DataException {
+		Optional<Delegado> delegado=repo.delegadoByUser(codUsuario);
+		if (delegado.isPresent()) {
+			return true;
+		}
+		return false;
+
 	}
 
 	@Override

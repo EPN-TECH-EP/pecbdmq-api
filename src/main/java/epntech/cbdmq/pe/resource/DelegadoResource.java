@@ -63,6 +63,11 @@ public class DelegadoResource {
 	public List<DelegadoUtil>ObtenerTodo(){
 		return objService.delegado();
 	}
+
+	@GetMapping("esDelegado/{id}")
+	public Boolean userIsDelegado(@PathVariable("id") Integer codUsuario) throws DataException{
+		return objService.isUsuarioDelegado(codUsuario);
+	}
 	
 	
 	

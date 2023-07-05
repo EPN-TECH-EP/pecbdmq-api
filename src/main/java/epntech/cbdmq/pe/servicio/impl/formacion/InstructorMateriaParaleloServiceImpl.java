@@ -167,4 +167,51 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     }
 
 
+    @Override
+    public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
+        MateriaPeriodo objMPe = new MateriaPeriodo();
+        objMPe.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
+        objMPe.setCodMateria(codMateria);
+        objMPe.setCodAula(codAula);
+        Optional<MateriaPeriodo> objGuardado = repoMPe.findByCodMateriaAndCodPeriodoAcademico(objMPe.getCodMateria(), objMPe.getCodPeriodoAcademico());
+        MateriaPeriodo objMPeII = new MateriaPeriodo();
+        if (objGuardado.isPresent() && !objGuardado.get().getCodMateriaPeriodo().equals(objMPe.getCodMateriaPeriodo())) {
+            objMPeII = objGuardado.get();
+        }
+        MateriaParalelo objMpa = new MateriaParalelo();
+        objMpa.setCodMateriaPeriodo(objMPeII.getCodMateriaPeriodo());
+        objMpa.setCodParalelo(codParalelo);
+        Optional<MateriaParalelo> objGuardadoMPa = repoMPa.findByCodMateriaPeriodoAndCodParalelo(objMpa.getCodMateriaPeriodo(), objMpa.getCodParalelo());
+        MateriaParalelo objMPaII = new MateriaParalelo();
+        if (objGuardadoMPa.isPresent() && !objGuardadoMPa.get().getCodMateriaParalelo().equals(objMpa.getCodMateriaParalelo())) {
+            objMPaII = objGuardadoMPa.get();
+        }
+
+        InstructorMateriaParalelo objCoordinador = new InstructorMateriaParalelo();
+        objCoordinador.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
+        objCoordinador.setCodInstructor(codCoordinador);
+        objCoordinador.setCodTipoInstructor(3);
+        repoIMP.save(objCoordinador);
+
+        for (Integer codAsistente : codAsistentes) {
+            InstructorMateriaParalelo objAsistente = new InstructorMateriaParalelo();
+            objAsistente.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
+            objAsistente.setCodInstructor(codAsistente);
+            objAsistente.setCodTipoInstructor(1);
+            repoIMP.save(objAsistente);
+        }
+
+        for (Integer codInstructor : codInstructores) {
+            InstructorMateriaParalelo objInstructor = new InstructorMateriaParalelo();
+            objInstructor.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
+            objInstructor.setCodInstructor(codInstructor);
+            objInstructor.setCodTipoInstructor(2);
+            repoIMP.save(objInstructor);
+        }
+
+        return true;
+    }
+
+
+
 }

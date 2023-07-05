@@ -44,6 +44,11 @@ public class RequisitoServiceImpl implements RequisitoService {
 	}
 
 	@Override
+	public List<Requisito> getAllOrder() {
+		return null;
+	}
+
+	@Override
 	public Optional<Requisito> getById(int id) {
 		// TODO Auto-generated method stub
 		return repo.findById(id);

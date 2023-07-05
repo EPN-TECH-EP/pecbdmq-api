@@ -107,6 +107,7 @@ public class CursoResource {
 			datosGuardados.setCodTipoCurso(obj.getCodTipoCurso());
 			datosGuardados.setEmailNotificacion(obj.getEmailNotificacion());
 			datosGuardados.setEstado(obj.getEstado());
+			datosGuardados.setTieneModulos(obj.getTieneModulos());
 
 			Curso datosActualizados = null;
 			datosActualizados = cursoServiceImpl.update(datosGuardados);
