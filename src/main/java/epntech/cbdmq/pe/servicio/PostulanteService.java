@@ -27,6 +27,7 @@ public interface PostulanteService {
 	List<Postulante> getPostulantes(Integer usuario);
 	
 	List<PostulanteUtil> getPostulantesPaginado(Integer usuario, Pageable pageable);
+	List<PostulanteUtil> getMuestraPostulantesPaginado(Integer usuario, Pageable pageable);
 	
 	List<Postulante> getPostulantesAsignadosPaginado(Integer usuario, Pageable pageable);
 	

@@ -77,6 +77,11 @@ public class PostulanteServiceImpl implements PostulanteService {
     }
 
     @Override
+    public List<PostulanteUtil> getMuestraPostulantesPaginado(Integer usuario, Pageable pageable) {
+        return postulanteUtilRepository.getPostulantesMuestraPaginado(usuario, pageable);
+    }
+
+    @Override
     public Postulante update(Postulante objActualizado) throws DataException {
         Optional<Postulante> postulante;
         Boolean bandera = false;
