@@ -55,7 +55,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 		}else if(pruebaDetalle.isPresent()) {
 			lista = repo.get_approved_by_test(codPrueba);
 		}
-		System.out.println("lista: " + lista.size());
+		//System.out.println("lista: " + lista.size());
 		for (PostulantesValidos postulantesValidos : lista) {
 			String msg = String.format(mensaje, postulantesValidos.getIdPostulante(), prueba, fechaIni, fechaFin, hora);
 			
