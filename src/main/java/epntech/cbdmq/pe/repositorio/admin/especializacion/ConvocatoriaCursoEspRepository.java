@@ -76,7 +76,7 @@ public class ConvocatoriaCursoEspRepository {
 			ConvocatoriaDocumentoEsp convocatoriaDocumentoEsp = new ConvocatoriaDocumentoEsp();
 			
 			convocatoriaDocumentoEsp.setCodConvocatoria(convocatoriaCurso.getCodConvocatoria().intValue());
-			convocatoriaDocumentoEsp.setCodDocumento(elemento.getCodigo());
+			convocatoriaDocumentoEsp.setCodDocumento(elemento.getCodDocumento());
 			entityManager.persist(convocatoriaDocumentoEsp);
 		}		
 		

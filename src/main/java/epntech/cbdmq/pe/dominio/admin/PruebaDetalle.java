@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
+//import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;

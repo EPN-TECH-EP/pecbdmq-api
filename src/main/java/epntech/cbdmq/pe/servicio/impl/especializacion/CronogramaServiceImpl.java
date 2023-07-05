@@ -154,7 +154,7 @@ public class CronogramaServiceImpl implements CronogramaService {
 		documento.setRuta(resultado + multipartFile.getOriginalFilename());
 		documento = documentoRepository.save(documento);
 		
-		return (long) documento.getCodigo();
+		return (long) documento.getCodDocumento();
 
 	}
 

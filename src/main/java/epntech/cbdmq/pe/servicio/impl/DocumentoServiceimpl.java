@@ -84,7 +84,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 		if (!archivo.isEmpty()) {
 
 			//System.out.println("ruta: " +  Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()));
-			Path ruta = Paths.get(repo.findById(objActualizado.getCodigo()).get().getRuta()).toAbsolutePath()
+			Path ruta = Paths.get(repo.findById(objActualizado.getCodDocumento()).get().getRuta()).toAbsolutePath()
 
 					.normalize();
 			// ruta =Path.of( );
@@ -276,7 +276,7 @@ public class DocumentoServiceimpl implements DocumentoService {
 			
 			Documento newDocumento = this.repo.save(documento);
 			
-			listaIdsDocs.add(newDocumento.getCodigo());			
+			listaIdsDocs.add(newDocumento.getCodDocumento());			
 		}
 		
 		// registra documentos en tabla intermedia

@@ -58,7 +58,7 @@ public class JuntaFormacionServiceImpl implements JuntaFormacionService {
 		if (juntaFormacion.isEmpty())
 			throw new DataException(REGISTRO_NO_EXISTE);
 		
-		Optional<Documento> documento = documentoRepository.findById(juntaFormacion.get().getDocumento().getCodigo());
+		Optional<Documento> documento = documentoRepository.findById(juntaFormacion.get().getDocumento().getCodDocumento());
 				
 		Path ruta = Paths.get(documento.get().getRuta());
 

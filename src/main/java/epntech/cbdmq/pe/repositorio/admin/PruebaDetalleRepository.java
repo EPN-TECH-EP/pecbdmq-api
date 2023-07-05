@@ -18,5 +18,5 @@ public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, In
 	
 	//List<PruebaDetalle> listarTodosConDatosSubTipoPrueba();
 
-	Optional<PruebaDetalle> findByCodCursoEspecializacion(Long codCursoEspecializacion);
+
 }

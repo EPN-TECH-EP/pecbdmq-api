@@ -194,7 +194,7 @@ public class CursoServiceImpl implements CursoService {
 			
 			CursoDocumento cursoDocumento = new CursoDocumento();
 			cursoDocumento.setCodCursoEspecializacion(codCursoEspecializacion);
-			cursoDocumento.setCodDocumento((long) documento.getCodigo());
+			cursoDocumento.setCodDocumento((long) documento.getCodDocumento());
 			cursoDocumentoRepository.save(cursoDocumento);
 			
 		}

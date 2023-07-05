@@ -108,20 +108,21 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
 
     @Override
     public List<InstructorDatos> getInstructoresAsistentes(Integer codMateriaParalelo) {
-        return repoIdr.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "ASISTENTE");
+        //return repoIdr.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "ASISTENTE");
+        return null;
 
     }
 
     @Override
     public List<InstructorDatos> getInstructores(Integer codMateriaParalelo) {
-        return repoIdr.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "INSTRUCTOR");
+        //return repoIdr.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "INSTRUCTOR");
+        return null;
     }
 
     @Override
     public InstructorDatos getCoordinador(Integer codMateriaParalelo) {
-        return repoIdr.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "COORDINADOR").stream()
-                .findFirst()
-                .orElse(null);
+        //return repoIdr.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "COORDINADOR").stream().findFirst().orElse(null);
+                return null;
     }
 
     @Override

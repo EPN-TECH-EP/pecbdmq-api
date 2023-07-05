@@ -203,7 +203,7 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 			//System.out.println("documento.getCodigo(): " + documento.getCodigo());
 			//System.out.println("periodo: " + periodo);
 			PADocumento docsPA = new PADocumento(); 
-			docsPA.setCodDocumento(documento.getCodigo());
+			docsPA.setCodDocumento(documento.getCodDocumento());
 			docsPA.setCodPeriodoAcademico(periodo); 
 			pADocumentoRepository.save(docsPA);
 
