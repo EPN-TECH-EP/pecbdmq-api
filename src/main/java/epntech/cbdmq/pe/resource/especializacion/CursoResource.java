@@ -142,6 +142,11 @@ public class CursoResource {
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
+	@GetMapping("/cumpleMinimoAprobadosPruebasCurso/{id}")
+	public ResponseEntity<?> cumpleMinimoAprobados(@PathVariable("id") long codigo) {
+		return response(HttpStatus.OK, cursoServiceImpl.cumpleMinimoAprobadosCurso(codigo).toString());
+	}
+	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);

@@ -35,4 +35,6 @@ public interface CursoService {
 	Optional<Curso> uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long codTipoDocumento)  throws IOException, ArchivoMuyGrandeExcepcion ;
 	
 	void delete(Long codCursoEspecializacion);
+	
+	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion);
 }

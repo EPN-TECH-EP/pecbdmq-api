@@ -214,4 +214,10 @@ public class CursoServiceImpl implements CursoService {
 		
 	}
 
+	@Override
+	public Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) {
+		// TODO Auto-generated method stub
+		return cursoRepository.cumplePorcentajeMinimoAprobadosCurso(codCursoEspecializacion);
+	}
+
 }

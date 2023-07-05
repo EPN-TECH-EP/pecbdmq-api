@@ -19,4 +19,7 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 			+ "and upper(a.estado) = 'ACTIVO' "
 			+ "and cod_curso_especializacion = :codCursoEspecializacion", nativeQuery=true)
 	Optional<Curso> getCursoAprobado(Long codCursoEspecializacion);
+	
+	@Procedure(value = "cbdmq.cumple_porcentaje_min_aprobados_curso_esp")
+	Boolean cumplePorcentajeMinimoAprobadosCurso(long codCurso);
 }
