@@ -6,7 +6,7 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
 import epntech.cbdmq.pe.dominio.util.SubTipoPruebaDatos;
 
-public interface SubTipoPruebaService {
+public interface SubTipoPruebaServiceDelete {
 
 	Optional<SubTipoPrueba> findByTipoPrueba(Integer id); 
 	

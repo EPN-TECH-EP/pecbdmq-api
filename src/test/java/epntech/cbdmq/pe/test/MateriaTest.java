@@ -23,7 +23,6 @@ import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.repositorio.admin.MateriaRepository;
 
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -31,31 +30,27 @@ public class MateriaTest {
 
 	@Autowired
 	private MateriaRepository repo;
-	
+
 	@Test
 	@Order(1)
 	void testGuardar() {
-       
-        Materia obj = new Materia();
-        Paralelo paralelo = new Paralelo();
-        List<Paralelo> paralelos = new ArrayList<>();
-        paralelo.setNombreParalelo("XYZ");
-        paralelo.setEstado("ACTIVO");
-        paralelos.add(paralelo);
-        	
-		obj.setNombre("Test");
-		//obj.setNotaMinima(new BigDecimal(10.0));
 
-		//obj.setObservacionMateria("pruebas unitarias");
-		obj.setParalelos(paralelos);
+		Materia obj = new Materia();
+		Paralelo paralelo = new Paralelo();
+		List<Paralelo> paralelos = new ArrayList<>();
+		paralelo.setNombreParalelo("XYZ");
+		paralelo.setEstado("ACTIVO");
+		paralelos.add(paralelo);
+
+		obj.setNombre("Test");
+
 		obj.setEstado("activo");
 
 		Materia datos = repo.save(obj);
 		assertNotNull(datos);
 
 		assertEquals("Test", datos.getNombre());
-		//assertEquals(10, datos.getNotaMinima());
-		//assertEquals("pruebas unitarias", datos.getObservacionMateria());
+
 		assertEquals("activo", datos.getEstado());
 	}
 
@@ -66,7 +61,7 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		//obj.setNotaMinima(new BigDecimal(10));
+		// obj.setNotaMinima(new BigDecimal(10));
 
 		obj.setEstado("activo");
 
@@ -84,7 +79,7 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		//obj.setNotaMinima(new BigDecimal(10));
+		// obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 
 		repo.save(obj);
@@ -114,7 +109,7 @@ public class MateriaTest {
 
 		Materia obj = new Materia();
 		obj.setNombre(nombre);
-		//obj.setNotaMinima(new BigDecimal(10));
+		// obj.setNotaMinima(new BigDecimal(10));
 		obj.setEstado("activo");
 		repo.save(obj);
 

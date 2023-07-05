@@ -12,6 +12,7 @@ public interface MateriaPeriodoService {
 	
 	
 	MateriaPeriodo save(MateriaPeriodo obj) throws DataException;
+	MateriaPeriodo savePeriodoActivo(MateriaPeriodo obj) throws DataException;
 
     List<MateriaPeriodo> getAll();
 

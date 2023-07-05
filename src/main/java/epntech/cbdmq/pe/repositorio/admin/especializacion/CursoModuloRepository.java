@@ -18,3 +18,4 @@ public interface CursoModuloRepository extends JpaRepository<CursoModulo, Long> 
 	
 	Optional<CursoModulo> findByCodCursoEspecializacionAndCodEspModulo(Long codCursoEspecializacion, Long codEspModulo);
 }
+

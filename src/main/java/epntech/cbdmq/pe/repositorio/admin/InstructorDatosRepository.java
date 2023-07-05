@@ -32,3 +32,4 @@ public interface InstructorDatosRepository extends JpaRepository<InstructorDatos
 			+ "and p.cod_periodo_academico = cbdmq.get_pa_activo()", nativeQuery = true)
 	List<InstructorDatos> getAllInstructorDatos();
 }
+

@@ -178,3 +178,4 @@ public class Instructor {
     )
 	private List<epntech.cbdmq.pe.dominio.admin.PeriodoAcademico> PeriodoAcademico = new ArrayList<>();
 }
+

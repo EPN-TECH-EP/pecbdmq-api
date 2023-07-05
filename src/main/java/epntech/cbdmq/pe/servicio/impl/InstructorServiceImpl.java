@@ -29,34 +29,33 @@ import epntech.cbdmq.pe.servicio.InstructorService;
 
 @Service
 public class InstructorServiceImpl implements InstructorService {
-
+	
 	@Autowired
 	private InstructorRepository repo;
 	@Autowired
-	private InstructorMateriaRepository instructorMateriaRepository;
+	private InstructorMateriaRepository instructorMateriaRepository; 
 
 	@Autowired
 	private InstructorPeriodoRepository repo2;
-
+	
 	@Autowired
 	private PeriodoAcademicoRepository repo3;
 	@Autowired
 	private InstructorDatosRepository instructorDatosRepository;
-
+	
 	@Override
 	public Instructor save(Instructor obj) throws DataException {
 		Instructor instructor = new Instructor();
 		
 		try {
 			instructor = repo.save(obj);
-			PeriodoAcademico peracademico = new PeriodoAcademico();
+		PeriodoAcademico peracademico = new PeriodoAcademico();
 			peracademico = repo3.getPeriodoAcademicoActivo();
 			InstructorPeriodo insperiodo = new InstructorPeriodo();
-			insperiodo.setCodInstructor(instructor.getCodInstructor());
-			insperiodo.setCodPeriodoAcademico(peracademico.getCodigo());
-
-			repo2.save(insperiodo);
-
+		insperiodo.setCodInstructor(instructor.getCodInstructor());
+		insperiodo.setCodPeriodoAcademico(peracademico.getCodigo());
+				repo2.save(insperiodo);
+		
 		} catch (Exception e) {
 			//System.out.println("e.getMessage(): " + e.getMessage());
 			if (e.getMessage().contains("constraint")) {
@@ -71,6 +70,11 @@ public class InstructorServiceImpl implements InstructorService {
 	public List<InstructorDatos> getAll() {
 		// TODO Auto-generated method stub
 		return instructorDatosRepository.getAllInstructorDatos();
+	}
+
+	@Override
+	public List<Instructor> getAllInstructor() {
+		return repo.findAll();
 	}
 
 	@Override
@@ -96,7 +100,6 @@ public class InstructorServiceImpl implements InstructorService {
 		// TODO Auto-generated method stub
 		instructorMateriaRepository.saveAll(obj);
 	}
-
 	@Override
 	public Instructor getInstructorByUser(String coduser) {
 		return repo.getInstructorByUsuario(coduser);

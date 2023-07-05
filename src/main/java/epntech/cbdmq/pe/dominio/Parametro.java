@@ -19,3 +19,4 @@ public class Parametro {
 	@Column(name = "valor")
 	private String valor;
 }
+

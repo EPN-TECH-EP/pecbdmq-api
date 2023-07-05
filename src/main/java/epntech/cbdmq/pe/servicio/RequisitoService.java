@@ -11,6 +11,7 @@ public interface RequisitoService {
 	Requisito save(Requisito obj) throws DataException;
 	
 	List<Requisito> getAll();
+	List<Requisito> getAllOrder();
 	
 	Optional<Requisito> getById(int id);
 	

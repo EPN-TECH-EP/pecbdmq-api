@@ -17,10 +17,21 @@ public class SeguridadConst {
 	public static final String METOD_HTTP_OPTIONS = "OPTIONS";
 
 	public static final String[] URLS_PUBLICAS = {
-			"/usuario/login", "/usuario/registro", "/usuario/imagen/**", "/usuario/guardarArchivo",
+			"/usuario/login", 
+			"/usuario/registro", 
+			"/usuario/imagen/**", 
+			"/usuario/guardarArchivo",
 			"/usuario/maxArchivo",
-			"/apis/test/informes/**", "/link/**", "/usuario/resetPassword/**", "/provincia/**", "/canton/**",
-			"/inscripcionfor/**", "/apicbdmq/**", "/swagger-ui/**","/api-docs/**" };
+			"/apis/test/informes/**", 
+			"/link/**", 
+			"/usuario/resetPassword/**", 
+			"/provincia/**", 
+			"/canton/**",
+			"/inscripcionfor/**", 
+			"/apicbdmq/**", 
+			"/swagger-ui/**",
+			"/api-docs/**", 
+			"/periodoacademico/validaestado" };
 	
 	@Value("${pecb.app-key}")
 	public static String APP_KEY;

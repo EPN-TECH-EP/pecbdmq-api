@@ -23,3 +23,4 @@ public class InscripcionDatosEsp {
 	@JoinColumn(name = "cod_inscripcion")
 	private Set<InscripcionDocumentoDatos> documentos;
 }
+

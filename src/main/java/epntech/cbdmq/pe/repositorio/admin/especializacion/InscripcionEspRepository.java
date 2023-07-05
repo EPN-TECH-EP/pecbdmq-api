@@ -35,3 +35,4 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionValidaPorCurso")
 	List<InscritosEspecializacion> getInscripcionesValidasByCurso(@Param("codCurso") Long codCurso);
 }
+

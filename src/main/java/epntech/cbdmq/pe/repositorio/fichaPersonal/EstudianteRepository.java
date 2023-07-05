@@ -43,4 +43,5 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 	
 	@Query(nativeQuery = true, name = "EstudianteDatos.findEstudiante")
 	Optional<EstudianteDatos> getEstudiante(@Param("codEstudiante") Long codEstudiante);
+
 }

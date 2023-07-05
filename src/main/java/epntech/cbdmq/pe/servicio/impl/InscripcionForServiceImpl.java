@@ -4,7 +4,6 @@ import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
 import static epntech.cbdmq.pe.constante.MensajesConst.EDAD_NO_CUMPLE;
 import static epntech.cbdmq.pe.constante.MensajesConst.ERROR_REGISTRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.FECHA_INSCRIPCION_INVALIDA;
-import static epntech.cbdmq.pe.constante.MensajesConst.HORA_INSCRIPCION_INVALIDA;
 import static epntech.cbdmq.pe.constante.MensajesConst.PA_INACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.PIN_INCORRECTO;
 
@@ -12,17 +11,24 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.constante.MensajesConst;
+import epntech.cbdmq.pe.dominio.admin.Convocatoria;
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.InscripcionFor;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.util.InscripcionResult;
@@ -39,6 +45,8 @@ import jakarta.mail.MessagingException;
 
 @Service
 public class InscripcionForServiceImpl implements InscripcionForService {
+
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private InscripcionForRepository repo;
@@ -72,27 +80,41 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		fechaActual = formatoDate.parse(fechaFormateada);
 
 		LocalTime horaActual = LocalTime.now();
-		Date FechaInicio = convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria();
-		Date FechaFin = convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
-
-		// System.out.println("fechaActual "+fechaActual);
 
 		if (!periodoAcademicoRepository.getActive())
 			throw new DataException(PA_INACTIVO);
-		if (!((fechaActual.after(FechaInicio) && fechaActual.before(FechaFin)) || fechaActual.equals(FechaInicio)
-				|| fechaActual.equals(FechaFin)))
+
+		Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+		if (convocatoria == null) {
+			throw new DataException(PA_INACTIVO);
+		}
+
+		Date FechaInicio = convocatoria.getFechaInicioConvocatoria(); // convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria();
+		Date FechaFin = convocatoria.getFechaFinConvocatoria(); // convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
+
+		// System.out.println("fechaActual "+fechaActual);
+
+		/*
+		 * if (!((fechaActual.after(FechaInicio) && fechaActual.before(FechaFin)) ||
+		 * fechaActual.equals(FechaInicio) || fechaActual.equals(FechaFin))) throw new
+		 * DataException(FECHA_INSCRIPCION_INVALIDA); else if
+		 * (!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().
+		 * getHoraInicioConvocatoria()) &&
+		 * horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().
+		 * getHoraFinConvocatoria()))) throw new
+		 * DataException(HORA_INSCRIPCION_INVALIDA);
+		 */
+
+		if (!this.validarFechasInscripcion(FechaInicio, FechaFin, convocatoria)) {
 			throw new DataException(FECHA_INSCRIPCION_INVALIDA);
-		else if (!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().getHoraInicioConvocatoria())
-				&& horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().getHoraFinConvocatoria())))
-			throw new DataException(HORA_INSCRIPCION_INVALIDA);		
-		
-		// TODO: habilitar para producción
-		/*if(this.findByCedula(inscripcion.getCedula()))
-			throw new DataException(CEDULA_YA_EXISTE);
-		
-		if(this.findByCorreoPersonal(inscripcion.getCorreoPersonal()))
-			throw new DataException(CORREO_YA_EXISTE);*/
-		
+		}
+
+		if (this.findByCedula(inscripcion.getCedula(), convocatoria))
+			throw new DataException(MensajesConst.CEDULA_YA_EXISTE);
+
+		if (this.findByCorreoPersonal(inscripcion.getCorreoPersonal(), convocatoria))
+			throw new DataException(MensajesConst.CORREO_YA_EXISTE);
+
 		if (repo1.validaEdad(inscripcion.getFechaNacimiento().toLocalDate()).equals(false))
 			throw new DataException(EDAD_NO_CUMPLE);
 		else {
@@ -192,7 +214,10 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		String code = "";
 
 		code = getRandomCode();
-		System.out.println("code: " + code);
+
+		if (this.findByCorreoPersonal(obj))
+			throw new DataException(MensajesConst.CORREO_YA_EXISTE);
+
 		obj.setCorreoPersonal(obj.getCorreoPersonal());
 		obj.setPinValidacionCorreo(BCrypt.hashpw(code, BCrypt.gensalt()));
 		emailService.validateCodeEmail(obj.getNombre(), code, obj.getCorreoPersonal());
@@ -201,28 +226,58 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 
 	@Override
 	public Boolean validaFechas() throws ParseException, DataException {
-		Date fechaActual = new Date();
-		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-		String fechaFormateada = formato.format(fechaActual);
+		/*
+		 * Date fechaActual = new Date(); SimpleDateFormat formato = new
+		 * SimpleDateFormat("yyyy-MM-dd"); String fechaFormateada =
+		 * formato.format(fechaActual);
+		 * 
+		 * SimpleDateFormat formatoDate = new SimpleDateFormat("yyyy-MM-dd");
+		 * fechaActual = formatoDate.parse(fechaFormateada);
+		 * 
+		 * LocalTime horaActual = LocalTime.now(); Date FechaInicio =
+		 * convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria()
+		 * ; Date FechaFin =
+		 * convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
+		 * 
+		 * System.out.println("fechaActual " + fechaActual);
+		 * 
+		 * if (!periodoAcademicoRepository.getActive()) throw new
+		 * DataException(PA_INACTIVO); if (!((fechaActual.after(FechaInicio) &&
+		 * fechaActual.before(FechaFin)) || fechaActual.equals(FechaInicio) ||
+		 * fechaActual.equals(FechaFin))) return false; else if
+		 * (!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().
+		 * getHoraInicioConvocatoria()) &&
+		 * horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().
+		 * getHoraFinConvocatoria()))) return false; return true;
+		 */
 
-		SimpleDateFormat formatoDate = new SimpleDateFormat("yyyy-MM-dd");
-		fechaActual = formatoDate.parse(fechaFormateada);
-
-		LocalTime horaActual = LocalTime.now();
-		Date FechaInicio = convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria();
-		Date FechaFin = convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
-
-		System.out.println("fechaActual " + fechaActual);
-
+		// corrección
 		if (!periodoAcademicoRepository.getActive())
 			throw new DataException(PA_INACTIVO);
-		if (!((fechaActual.after(FechaInicio) && fechaActual.before(FechaFin)) || fechaActual.equals(FechaInicio)
-				|| fechaActual.equals(FechaFin)))
+
+		Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+		Date FechaInicio = convocatoria.getFechaInicioConvocatoria();
+		Date FechaFin = convocatoria.getFechaFinConvocatoria();
+
+		return this.validarFechasInscripcion(FechaInicio, FechaFin, convocatoria);
+
+	}
+
+	public Boolean findByCedula(String cedula, Convocatoria convocatoria) {
+
+		Optional<InscripcionFor> inscripcion = null;
+
+		inscripcion = this.repo1.findOneByCedula(cedula);
+
+		if (inscripcion.isPresent()) {
+			Optional<Postulante> postulante = this.repoPostulante
+					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get().getCodDatoPersonal(),
+							convocatoria.getCodPeriodoAcademico());
+
+			return postulante.isPresent();
+		} else {
 			return false;
-		else if (!(horaActual.isAfter(convocatoriaRepository.getConvocatoriapaactivo().getHoraInicioConvocatoria())
-				&& horaActual.isBefore(convocatoriaRepository.getConvocatoriapaactivo().getHoraFinConvocatoria())))
-			return false;
-		return true;
+		}
 	}
 
 	public Boolean findByCedula(String cedula) {
@@ -232,28 +287,157 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		inscripcion = this.repo1.findOneByCedula(cedula);
 
 		if (inscripcion.isPresent()) {
+
+			Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+
 			Optional<Postulante> postulante = this.repoPostulante
-					.findByCodDatoPersonal(inscripcion.get().getCodDatoPersonal());
+					.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get().getCodDatoPersonal(),
+							convocatoria.getCodPeriodoAcademico());
 
 			return postulante.isPresent();
 		} else {
 			return false;
 		}
 	}
-	
-	public Boolean findByCorreoPersonal(String correo) {
 
-		List<InscripcionFor> inscripcion = null;
+	public Boolean findByCorreoPersonal(String correo, Convocatoria convocatoria) {
 
-		inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
+		List<InscripcionFor> listaInscripcion = null;
 
-		if (!inscripcion.isEmpty()) {
-			Optional<Postulante> postulante = this.repoPostulante
-					.findByCodDatoPersonal(inscripcion.get(0).getCodDatoPersonal());
+		listaInscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
 
-			return postulante.isPresent();
+		if (!listaInscripcion.isEmpty()) {
+
+			for (InscripcionFor inscripcionFor : listaInscripcion) {
+
+				Optional<Postulante> postulante = this.repoPostulante
+						.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcionFor.getCodDatoPersonal(),
+								convocatoria.getCodPeriodoAcademico());
+
+				if (postulante.isPresent()) {
+					return true;
+				}
+			}
+
+			return false;
+
 		} else {
 			return false;
 		}
+	}
+
+	public Boolean findByCorreoPersonal(String correo) {
+		
+		Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+		
+		return this.findByCorreoPersonal(correo, convocatoria);
+
+		/*
+		 * List<InscripcionFor> inscripcion = null;
+		 * 
+		 * inscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(correo);
+		 * 
+		 * if (!inscripcion.isEmpty()) {
+		 * 
+		 * 
+		 * 
+		 * Optional<Postulante> postulante = this.repoPostulante
+		 * .findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.get(0).
+		 * getCodDatoPersonal(), convocatoria.getCodPeriodoAcademico());
+		 * 
+		 * return postulante.isPresent(); } else { return false; }
+		 */
+	}
+
+	public Boolean findByCorreoPersonal(InscripcionFor inscripcion) {
+
+		Boolean retval = false;
+
+		List<InscripcionFor> listaInscripcion = null;
+
+		Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
+
+		// busca el correo ingresado y verifica si es distinto
+		Optional<Postulante> postulanteOpt = this.repoPostulante
+				.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcion.getCodDatoPersonal(),
+						convocatoria.getCodPeriodoAcademico());
+
+		if (postulanteOpt.isPresent()) {
+
+			// obtiene dato personal existente
+			Optional<InscripcionFor> inscripcionExistenteOpt = this.repo1
+					.findById(postulanteOpt.get().getCodDatoPersonal());
+
+			if (inscripcionExistenteOpt.isPresent()) {
+				// compara el correo registrado antes con el enviado para el reintento. Si es
+				// igual, sale
+				if (inscripcionExistenteOpt.get().getCorreoPersonal()
+						.compareToIgnoreCase(inscripcion.getCorreoPersonal()) == 0) {
+					retval = false;
+				} else {
+
+					listaInscripcion = this.repo1.findAllByCorreoPersonalIgnoreCase(inscripcion.getCorreoPersonal());
+
+					if (!listaInscripcion.isEmpty()) {
+
+						for (InscripcionFor inscripcionFor : listaInscripcion) {
+
+							Optional<Postulante> postulante = this.repoPostulante
+									.findByCodDatoPersonalAndCodPeriodoAcademico(inscripcionFor.getCodDatoPersonal(),
+											convocatoria.getCodPeriodoAcademico());
+
+							if (postulante.isPresent()) {
+								retval = true;
+							}
+						}
+
+					} else {
+						retval = false;
+					}
+				}
+			}
+		}
+
+		return retval;
+
+	}
+
+	private Boolean validarFechasInscripcion(Date fechaInicio, Date fechaFin, Convocatoria convocatoria) {
+		Boolean retVal = false;
+
+		// obtener parámetros
+		LocalDate fechaInicioLD, fechaFinLD;
+		LocalTime horaInicioLT, horaFinLT;
+
+		horaInicioLT = convocatoria.getHoraInicioConvocatoria();
+		horaFinLT = convocatoria.getHoraFinConvocatoria();
+
+		fechaInicioLD = this.convertToLocalDateViaInstant(fechaInicio);
+		fechaFinLD = this.convertToLocalDateViaInstant(fechaFin);
+
+		// conformar fecha y hora de inicio y de fin
+		LocalDateTime fechaHoraInicio = LocalDateTime.of(fechaInicioLD, horaInicioLT);
+		LocalDateTime fechaHoraFin = LocalDateTime.of(fechaFinLD, horaFinLT);
+
+		// fechaActual
+		LocalDateTime fechaActual = LocalDateTime.now(ZoneId.of("-5"));
+
+		LOGGER.info("fechaActual = " + fechaActual);
+		LOGGER.info("fechaHoraInicio = " + fechaHoraInicio);
+		LOGGER.info("fechaHoraFin = " + fechaHoraFin);
+
+		if (fechaActual.isBefore(fechaHoraInicio) || fechaActual.isAfter(fechaHoraFin)) {
+			retVal = false;
+		} else {
+			retVal = true;
+		}
+
+		return retVal;
+	}
+
+	public LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+		return dateToConvert.toInstant()
+				.atZone(ZoneId.systemDefault())
+				.toLocalDate();
 	}
 }

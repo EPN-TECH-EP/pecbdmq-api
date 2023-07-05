@@ -21,6 +21,8 @@ public class MateriaPeriodoServiceImpl implements MateriaPeriodoService{
 	private MateriaPeriodoRepository repo;
 	@Autowired
 	MateriaRepository repo2;
+	@Autowired
+	private PeriodoAcademicoRepository periodoAcademicoRepository;
 
 
 	@Autowired
@@ -30,6 +32,12 @@ public class MateriaPeriodoServiceImpl implements MateriaPeriodoService{
 	public MateriaPeriodo save(MateriaPeriodo obj) throws DataException {
 		return repo.save(obj);
 		
+	}
+
+	@Override
+	public MateriaPeriodo savePeriodoActivo(MateriaPeriodo obj) throws DataException {
+		obj.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
+		return repo.save(obj);
 	}
 
 	@Override

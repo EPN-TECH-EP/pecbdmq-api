@@ -21,3 +21,4 @@ public interface CursoModuloService {
 	
 	List<CursoModulo> getByCurso(Long codCurso);
 }
+

@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.resource.especializacion;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;

@@ -155,3 +155,4 @@ public class InscripcionEsp {
     private List<InscripcionDocumento> documentos = new ArrayList<>();
 
 }
+

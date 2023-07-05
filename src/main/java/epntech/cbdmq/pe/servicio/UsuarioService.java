@@ -19,7 +19,7 @@ public interface UsuarioService {
 	// Usuario registrar(String firstName, String lastName, String username, String
 	// email)
 	Usuario registrar(Usuario usuario)
-			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException;
+			throws UsuarioNoEncontradoExcepcion, NombreUsuarioExisteExcepcion, EmailExisteExcepcion, MessagingException, IOException;
 
 	public Optional<Usuario> getById(Long codigo);
 
@@ -52,7 +52,7 @@ public interface UsuarioService {
 	void eliminarUsuario(String username) throws Exception;
 
 	void resetPassword(String email)
-			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion;
+			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion, IOException;
 
 	Usuario actualizarImagenPerfil(String username, MultipartFile profileImage) throws UsuarioNoEncontradoExcepcion,
 			NombreUsuarioExisteExcepcion, EmailExisteExcepcion, IOException, NoEsArchivoImagenExcepcion;

@@ -57,12 +57,11 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	private DocumentoPruebaRepository docPruebaRepo;
 	@Autowired
 	private PruebaDetalleRepository pruebaDetalleRepository;
-	
+
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
-	
 
 	@Override
 	public void insertAll(List<ResultadoPruebasFisicas> obj) {
@@ -91,7 +90,8 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	public void uploadFile(MultipartFile file) {
 		try {
 
-			List<ResultadoPruebasFisicas> datos = ResultadoPruebasHelper.excelToDatosPruebasFisicas(file.getInputStream());
+			List<ResultadoPruebasFisicas> datos = ResultadoPruebasHelper
+					.excelToDatosPruebasFisicas(file.getInputStream());
 
 			repo.saveAll(datos);
 		} catch (IOException e) {
@@ -108,7 +108,6 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 	@Override
 	public ByteArrayInputStream downloadFile() {
-		
 
 		ByteArrayInputStream in = ResultadoPruebasHelper.datosToExcel(null);
 		return in;
@@ -116,32 +115,31 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 	@Override
 	public void generarExcel(String filePath, String nombre, Integer prueba) throws IOException, DataException {
-		//Optional<Prueba> pp = pruebaRepository.findById(prueba);
-		
-		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba, periodoAcademicoRepository.getPAActive());
-		
-		if(pp.get().getEstado().equalsIgnoreCase("CIERRE"))
-		{
+		// Optional<Prueba> pp = pruebaRepository.findById(prueba);
+
+		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
+				periodoAcademicoRepository.getPAActive());
+		if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
 			throw new DataException(ESTADO_INVALIDO);
-		}
-		else {
-			String[] HEADERs = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo", "Nota Promedio" };
+		} else {
+			String[] HEADERs = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo",
+					"Nota Promedio" };
 			try {
 				ExcelHelper.generarExcel(obtenerDatos(prueba), filePath, HEADERs);
-				
+
 				generaDocumento(filePath, nombre, pp.get().getCodPruebaDetalle());
-				
+
 				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
 				p.setEstado("CIERRE");
-				
+
 				pruebaDetalleRepository.save(p);
-				
-			}catch(IOException ex) {
+
+			} catch (IOException ex) {
 				System.out.println("error: " + ex.getMessage());
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -151,15 +149,18 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	}
 
 	@Override
-	public void generarPDF(HttpServletResponse response, String nombre, Integer prueba, String[] columnas) throws DocumentException, IOException, DataException {
+	public void generarPDF(HttpServletResponse response, String nombre, Integer prueba, String[] columnas)
+			throws DocumentException, IOException, DataException {
+
 		try {
-			Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba, periodoAcademicoRepository.getPAActive());
-			if(pp.get().getEstado().equalsIgnoreCase("CIERRE"))
-			{
+			Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
+					periodoAcademicoRepository.getPAActive());
+
+			if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
 				throw new DataException(ESTADO_INVALIDO);
-			}
-			else {
-				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
+			} else {
+				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
+						+ periodoAcademicoRepository.getPAActive().toString()
 						+ "/" + nombre;
 
 				response.setContentType("application/pdf");
@@ -173,26 +174,26 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 				response.addHeader(cabecera, valor);
 
 				ExporterPdf exporter = new ExporterPdf();
-				
+
 				float[] widths = new float[] { 2.5f, 3.5f, 6f, 6f, 2.5f, 2.5f, 2.5f };
 
 				exporter.exportar(response, columnas, obtenerDatos(prueba), widths, ruta);
-				
+
 				generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
-				
+
 				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
 				p.setEstado("CIERRE");
-				
+
 				pruebaDetalleRepository.save(p);
 			}
-			
-		}catch(IOException ex) {
+
+		} catch (IOException ex) {
 			System.out.println("error: " + ex.getMessage());
 		}
 
 	}
-	
+
 	public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
 		List<ResultadosPruebasFisicasDatos> datos = repo1.getResultados(prueba);
 		return entityToArrayList(datos);
@@ -200,35 +201,38 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 	public static String[] entityToStringArray(ResultadosPruebasFisicasDatos entity) {
 		return new String[] { entity.getIdPostulante().toString(), entity.getCedula(), entity.getNombre(),
-				entity.getApellido(), entity.getResultado().toString(), entity.getResultadoTiempo().toString(), entity.getNotaPromedioFinal().toString() };
+				entity.getApellido(), entity.getResultado().toString(), entity.getResultadoTiempo().toString(),
+				entity.getNotaPromedioFinal().toString() };
 	}
 
 	public static ArrayList<ArrayList<String>> entityToArrayList(List<ResultadosPruebasFisicasDatos> datos) {
 		ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
-	
+
 		for (ResultadosPruebasFisicasDatos dato : datos) {
 			System.out.println("entityToStringArray(dato): " + entityToStringArray(dato));
 			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
 		}
 		return arrayMulti;
 	}
-	
+
 	private void generaDocumento(String ruta, String nombre, Integer prueba) {
 		Documento documento = new Documento();
 		documento.setEstado("ACTIVO");
 		documento.setNombre(nombre);
 		documento.setRuta(ruta);
-		
+
 		documento = documentoRepo.save(documento);
-		
-		DocumentoPrueba doc = new DocumentoPrueba(); 
+
+		DocumentoPrueba doc = new DocumentoPrueba();
 		doc.setCodPruebaDetalle(prueba);
-		doc.setCodDocumento(documento.getCodigo());
-		//System.out.println("documento.getCodigo(): " + documento.getCodigo());
-		
+
+		doc.setCodDocumento(documento.getCodDocumento());
+		// System.out.println("documento.getCodigo(): " + documento.getCodigo());
+
+
 		saveDocumentoPrueba(doc);
 	}
-	
+
 	private void saveDocumentoPrueba(DocumentoPrueba obj) {
 		docPruebaRepo.save(obj);
 	}
@@ -236,7 +240,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	@Override
 	public void notificar(String mensaje) throws MessagingException {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

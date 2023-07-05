@@ -3,6 +3,9 @@ package epntech.cbdmq.pe.servicio.impl;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

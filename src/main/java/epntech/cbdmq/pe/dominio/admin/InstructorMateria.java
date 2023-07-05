@@ -63,10 +63,6 @@ public class InstructorMateria {
 	@JoinTable(name = "gen_instructor_materia", joinColumns = @JoinColumn(name = "cod_instructor"), 
 	inverseJoinColumns = @JoinColumn(name = "cod_materia"))
 	private List<Materia> Materia = new ArrayList<>();*/
-	
-	
 
-
-	
 }
 
