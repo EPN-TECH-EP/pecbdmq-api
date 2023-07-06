@@ -63,7 +63,12 @@ public class MateriaPeriodoServiceImpl implements MateriaPeriodoService{
 		// TODO Auto-generated method stub
 		repo.deleteById(codigo);
 	}
+
+	@Override
+	public Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico) {
+		return repo.findByCodMateriaAndCodPeriodoAcademico(codMateria, codPeriodoAcademico);
 	}
+}
 	
 	
 

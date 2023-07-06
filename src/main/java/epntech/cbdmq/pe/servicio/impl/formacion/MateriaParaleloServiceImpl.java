@@ -25,7 +25,7 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     }
 
     @Override
-    public MateriaParalelo saveMateriaInParalelo(MateriaParalelo obj) throws DataException {
+    public MateriaParalelo saveMateriaParalelo(MateriaParalelo obj) throws DataException {
         return repo.save(obj);
     }
 }

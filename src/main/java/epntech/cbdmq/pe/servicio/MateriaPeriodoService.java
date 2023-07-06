@@ -21,6 +21,7 @@ public interface MateriaPeriodoService {
     MateriaPeriodo update(MateriaPeriodo objActualizado) throws DataException;
 
     void delete(Integer codigo);
+    Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico);
 	
 	
 	
