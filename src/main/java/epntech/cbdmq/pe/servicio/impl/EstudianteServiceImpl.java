@@ -105,13 +105,13 @@ public class EstudianteServiceImpl implements EstudianteService {
         List<Estudiante> estudiantesFiltrados = estudiantes.stream()
                 .filter(estudiante -> postulantes.stream()
                         .anyMatch(postulante -> postulante.getCedula().equals(
-                                this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante())
+                                this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante()).getCedula()
                         )))
                 .collect(Collectors.toList());
         System.out.println("asqi!+"+estudiantesFiltrados);
         List<EstudianteDto> listDto= new ArrayList<EstudianteDto>();
-        EstudianteDto objDto= new EstudianteDto();
         for (Estudiante estudiante : estudiantesFiltrados){
+            EstudianteDto objDto= new EstudianteDto();
             DatoPersonal dp= this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
             objDto.setCedula(dp.getCedula());
             objDto.setNombre(dp.getNombre());
