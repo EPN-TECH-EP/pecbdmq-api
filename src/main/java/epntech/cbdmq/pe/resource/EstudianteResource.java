@@ -110,6 +110,10 @@ public class EstudianteResource {
 	public List<MateriaEstudiante> obtenerPorIdMateriaEstudiante(@PathVariable("id") Long codigo) {
 		return materiaEstudianteServiceImpl.getByCodEstudiante(codigo);
 	}
+    @GetMapping("/estudiantePA")
+	public List<Estudiante> obtenerEstudiantesPA() {
+		return objService.getEstudiantesPA();
+	}
     
 }
 

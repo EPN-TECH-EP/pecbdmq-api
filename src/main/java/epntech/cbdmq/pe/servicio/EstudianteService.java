@@ -26,5 +26,7 @@ public interface EstudianteService {
 	void saveEstudiantes();
 	
 	Estudiante getEstudianteByUsuario(String codUsuario);
+	String getCedulaByEstudiante(Integer Estudiante);
+	List<Estudiante> getEstudiantesPA();
 
 }

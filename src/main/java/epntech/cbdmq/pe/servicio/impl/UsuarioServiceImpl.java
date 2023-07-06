@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -51,7 +50,6 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import epntech.cbdmq.pe.constante.UsuarioImplConst;
 import epntech.cbdmq.pe.dominio.UserPrincipal;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
@@ -538,7 +536,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 			usuarioInfo.setCodInstructor(instructor.getCodInstructor());
 		}
 		if (estudianteDto != null) {
-			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getIdEstudiante());
+			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getCodUnicoEstudiante());
 		}
 
 		return usuarioInfo;

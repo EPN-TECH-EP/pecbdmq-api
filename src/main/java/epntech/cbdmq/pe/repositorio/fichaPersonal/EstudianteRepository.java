@@ -40,6 +40,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
+	@Query("select gd.cedula from Estudiante ge\n" +
+			"join gen_dato_personal gd\n" +
+			"on ge.codDatosPersonales = gd.codDatosPersonales\n" +
+			"where ge.codEstudiante= :codEstudiante")
+	String getCedulaByEstudiante(@Param("codEstudiante") Integer codEstudiante);
 	
 	@Query(nativeQuery = true, name = "EstudianteDatos.findEstudiante")
 	Optional<EstudianteDatos> getEstudiante(@Param("codEstudiante") Long codEstudiante);
