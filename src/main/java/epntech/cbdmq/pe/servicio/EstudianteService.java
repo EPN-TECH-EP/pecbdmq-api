@@ -3,7 +3,9 @@ package epntech.cbdmq.pe.servicio;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 
 public interface EstudianteService {
 	
@@ -26,7 +28,7 @@ public interface EstudianteService {
 	void saveEstudiantes();
 	
 	Estudiante getEstudianteByUsuario(String codUsuario);
-	String getCedulaByEstudiante(Integer Estudiante);
-	List<Estudiante> getEstudiantesPA();
+	DatoPersonal getDatoPersonalByEstudiante(Integer Estudiante);
+	List<EstudianteDto> getEstudiantesPA();
 
 }

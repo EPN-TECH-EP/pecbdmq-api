@@ -1,13 +1,12 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
-import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
-import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
-import epntech.cbdmq.pe.servicio.PostulanteDatosService;
 import epntech.cbdmq.pe.servicio.PostulantesValidosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -95,22 +94,34 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
-    public String getCedulaByEstudiante(Integer codEstudiante) {
-        return repo.getCedulaByEstudiante(codEstudiante);
+    public DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante) {
+        return repo.getDatoPersonalByEstudiante(codEstudiante);
     }
 
     @Override
-    public List<Estudiante> getEstudiantesPA() {
+    public List<EstudianteDto> getEstudiantesPA() {
         List<Estudiante> estudiantes = this.getAll();
         List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidos();
         List<Estudiante> estudiantesFiltrados = estudiantes.stream()
                 .filter(estudiante -> postulantes.stream()
                         .anyMatch(postulante -> postulante.getCedula().equals(
-                                this.getCedulaByEstudiante(estudiante.getCodEstudiante())
+                                this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante())
                         )))
                 .collect(Collectors.toList());
+        System.out.println("asqi!+"+estudiantesFiltrados);
+        List<EstudianteDto> listDto= new ArrayList<EstudianteDto>();
+        EstudianteDto objDto= new EstudianteDto();
+        for (Estudiante estudiante : estudiantesFiltrados){
+            DatoPersonal dp= this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
+            objDto.setCedula(dp.getCedula());
+            objDto.setNombre(dp.getNombre());
+            objDto.setTelefono(dp.getNumTelefCelular());
+            objDto.setCodUnico(estudiante.getCodUnicoEstudiante());
+            listDto.add(objDto);
+            System.out.println("asqi!+"+listDto);
+        }
 
-        return estudiantesFiltrados;
+        return listDto;
     }
 
 }
