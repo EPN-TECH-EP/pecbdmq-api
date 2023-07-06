@@ -38,4 +38,10 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
+
+	@Query("select ge.codEstudiante from NotasFormacion gnf\n"+
+			"left join EstudianteMateriaParalelo gemp on gnf.codEstudianteMateriaParalelo = gemp.codEstudianteMateriaParalelo\n" +
+			"left join Estudiante ge on ge.codEstudiante = gemp.codEstudiante\n" +
+			"where gnf.codNotaFormacion=:notaFormacion")
+			Estudiante getEstudianteByNotaFormacionFinal(@Param("notaFormacion") Integer notaFormacion);
 }

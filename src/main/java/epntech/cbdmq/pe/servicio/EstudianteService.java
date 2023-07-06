@@ -26,5 +26,6 @@ public interface EstudianteService {
 	void saveEstudiantes();
 	
 	Estudiante getEstudianteByUsuario(String codUsuario);
+	Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion);
 
 }

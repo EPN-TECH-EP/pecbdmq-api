@@ -85,5 +85,10 @@ public class EstudianteServiceImpl implements EstudianteService {
 
 		return this.repo.getEstudianteByUsuario(codUsuario);
 	}
-	
+
+	@Override
+	public Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion) {
+		return repo.getEstudianteByNotaFormacionFinal(codNotaFormacion);
+	}
+
 }
