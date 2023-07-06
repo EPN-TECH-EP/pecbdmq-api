@@ -108,17 +108,15 @@ public class EstudianteServiceImpl implements EstudianteService {
                                 this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante()).getCedula()
                         )))
                 .collect(Collectors.toList());
-        System.out.println("asqi!+"+estudiantesFiltrados);
         List<EstudianteDto> listDto= new ArrayList<EstudianteDto>();
         for (Estudiante estudiante : estudiantesFiltrados){
             EstudianteDto objDto= new EstudianteDto();
             DatoPersonal dp= this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
             objDto.setCedula(dp.getCedula());
-            objDto.setNombre(dp.getNombre());
+            objDto.setNombre(dp.getNombre()+" "+dp.getApellido());
             objDto.setTelefono(dp.getNumTelefCelular());
             objDto.setCodUnico(estudiante.getCodUnicoEstudiante());
             listDto.add(objDto);
-            System.out.println("asqi!+"+listDto);
         }
 
         return listDto;
