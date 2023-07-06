@@ -17,7 +17,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
 
-	Optional<Estudiante> findByidEstudiante(String id);
+	Optional<Estudiante> findByCodUnicoEstudiante(String id);
 	
 	//@Query(nativeQuery = true)
 	//List<EstudianteDatos> findAllEstudiante();

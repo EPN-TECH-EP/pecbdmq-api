@@ -67,7 +67,7 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public Optional<Estudiante> getByIdEstudiante(String id) {
         // TODO Auto-generated method stub
-        return repo.findByidEstudiante(id);
+        return repo.findByCodUnicoEstudiante(id);
     }
 
 	/*@Override
