@@ -25,43 +25,35 @@ public class NotasFormacion {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_nota_formacion")
 	private Integer codNotaFormacion;
-	
-	@Column(name = "cod_instructor")
-	private Integer codInstructor;
-	
-	@Column(name = "estado")
-	private String estado;
-	
-	@Column(name = "cod_materia")
-	private Integer codMateria;
-	
-	@Column(name = "cod_estudiante")
-	private Integer codEstudiante;
-	
-	@Column(name = "cod_periodo_academico")
-	private Integer codPeriodoAcademico;
-	
 	@Column(name = "nota_minima")
 	private Double notaMinima;
-	
 	@Column(name = "peso_materia")
 	private Double pesoMateria;
-	
 	@Column(name = "numero_horas")
 	private Integer numeroHoras;
-	
+
 	@Column(name = "nota_materia")
 	private Double notaMateria;
-	
+
 	@Column(name = "nota_ponderacion")
 	private Double notaPonderacion;
-	
+
 	@Column(name = "nota_disciplina")
 	private Double notaDisciplina;
-	
+	@Column(name = "estado")
+	private String estado;
+
 	@Column(name = "nota_supletorio")
 	private Double notaSupletorio;
-	
+
 	@Column(name = "fecha_ingreso")
 	private LocalDateTime fechaIngreso;
+	@Column(name="cod_estudiante_materia_paralelo")
+	private Integer codEstudianteMateriaParalelo;
 }
+	
+
+	
+
+	
+
