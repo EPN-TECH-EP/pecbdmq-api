@@ -5,6 +5,7 @@ import epntech.cbdmq.pe.dominio.admin.formacion.InformacionMateriaDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import epntech.cbdmq.pe.dominio.util.InstructorDatos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface InstructorMateriaParaleloService {
 
     public InstructorMateriaParalelo save(InstructorMateriaParalelo newObj);
 
-    public Boolean asignarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo);
+    public Boolean asignarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException;
 
     List<InstructorDatos> getInstructoresAsistentes(Integer codMateriaParalelo);
 
@@ -22,6 +23,6 @@ public interface InstructorMateriaParaleloService {
     InstructorDatos getCoordinador(Integer codMateriaParalelo);
     public List<InstructorMateriaReadDto> getMateriaInfoDto();
     public List<InformacionMateriaDto> getInformacionMateriaDto();
-    public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo);
+    public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException;
 
 }
