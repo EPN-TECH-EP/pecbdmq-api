@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
@@ -20,19 +21,30 @@ import epntech.cbdmq.pe.servicio.CatalogoCursoService;
 public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	@Autowired
 	CatalogoCursoRepository repo;
-	
-	
+
 	@Override
 	public CatalogoCurso save(CatalogoCurso obj) throws DataException {
 		// TODO Auto-generated method stub
-				if (obj.getNombreCatalogoCurso().trim().isEmpty())
-					throw new DataException(REGISTRO_VACIO);
-				Optional<CatalogoCurso> objGuardado = repo.findByNombreCatalogoCursoIgnoreCase(obj.getNombreCatalogoCurso());
-				if (objGuardado.isPresent()) {
-					throw new DataException(REGISTRO_YA_EXISTE);
-				}
-				obj.setNombreCatalogoCurso(obj.getNombreCatalogoCurso().toUpperCase());
-				return repo.save(obj);
+		if (obj.getNombreCatalogoCurso().trim().isEmpty())
+			throw new DataException(REGISTRO_VACIO);
+		obj.setNombreCatalogoCurso(obj.getNombreCatalogoCurso().toUpperCase());
+		
+		Optional<CatalogoCurso> objGuardado = repo.findByNombreCatalogoCursoIgnoreCase(obj.getNombreCatalogoCurso());
+		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			CatalogoCurso stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
+				throw new DataException(REGISTRO_YA_EXISTE);
+			}
+			
+			
+		}
+		
+		return repo.save(obj);
 	}
 
 	@Override
@@ -49,13 +61,15 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 
 	@Override
 	public CatalogoCurso update(CatalogoCurso objActualizado) throws DataException {
-		if(objActualizado.getNombreCatalogoCurso() !=null) {
-			Optional<CatalogoCurso> objGuardado = repo.findByNombreCatalogoCursoIgnoreCase(objActualizado.getNombreCatalogoCurso());
-			if (objGuardado.isPresent()&& !objGuardado.get().getCodCatalogoCursos().equals(objActualizado.getCodCatalogoCursos())) {
+		if (objActualizado.getNombreCatalogoCurso() != null) {
+			Optional<CatalogoCurso> objGuardado = repo
+					.findByNombreCatalogoCursoIgnoreCase(objActualizado.getNombreCatalogoCurso());
+			if (objGuardado.isPresent()
+					&& !objGuardado.get().getCodCatalogoCursos().equals(objActualizado.getCodCatalogoCursos())) {
 				throw new DataException(REGISTRO_YA_EXISTE);
 			}
 		}
-			return repo.save(objActualizado);
+		return repo.save(objActualizado);
 	}
 
 	@Override
@@ -71,7 +85,7 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 				throw new DataException(DATOS_RELACIONADOS);
 			}
 		}
-		
+
 	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.servicio.ProvinciaService;
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.Provincia;
 import epntech.cbdmq.pe.dominio.admin.ProvinciaProjection;
 import epntech.cbdmq.pe.dominio.util.Excel;
@@ -32,7 +33,16 @@ public class ProvinciaServiceImpl implements ProvinciaService {
 			throw new DataException(REGISTRO_VACIO);
 		Optional<Provincia> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			Provincia stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
+			}
+
 		}
 
 		return repo.save(obj);
