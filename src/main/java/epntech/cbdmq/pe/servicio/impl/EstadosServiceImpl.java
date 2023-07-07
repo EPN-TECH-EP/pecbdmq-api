@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -33,7 +34,16 @@ public class EstadosServiceImpl implements EstadosService {
 			throw new DataException(REGISTRO_VACIO);
 		Optional<Estados> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
 		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			Estados stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
+			}
+
 		}
 
 		obj.setNombre(obj.getNombre().toUpperCase());	

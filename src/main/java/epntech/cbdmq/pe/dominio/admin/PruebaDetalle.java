@@ -19,6 +19,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -28,49 +30,6 @@ import lombok.Data;
 @Table(name = "gen_prueba_detalle")
 @SQLDelete(sql = "UPDATE {h-schema}gen_prueba_detalle SET estado = 'ELIMINADO' WHERE cod_prueba_detalle = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
-
-/*@NamedNativeQuery(name = "PruebaDetalle.listarTodosConDatosSubTipoPrueba", query = "select\r\n"
-		+ "	gpd.cod_prueba_detalle,\r\n"
-		+ "	gpd.descripcion_prueba,\r\n"
-		+ "	gpd.fecha_inicio,\r\n"
-		+ "	gpd.fecha_fin,\r\n"
-		+ "	gpd.hora,\r\n"
-		+ "	gpd.estado,\r\n"
-		+ "	gpd.cod_periodo_academico,\r\n"
-		+ "	gpd.cod_curso_especializacion,\r\n"
-		+ "	gpd.cod_subtipo_prueba,\r\n"
-		+ "	gpd.orden_tipo_prueba,\r\n"
-		+ "	gpd.puntaje_minimo,\r\n"
-		+ "	gpd.puntaje_maximo,\r\n"
-		+ "	gpd.tiene_puntaje,\r\n"
-		+ "	gsp.nombre as subTipoPruebaNombre,\r\n"
-		+ "	gtp.tipo_prueba as tipoPruebaNombre \r\n"
-		+ "from\r\n"
-		+ "	cbdmq.gen_prueba_detalle gpd,\r\n"
-		+ "	cbdmq.gen_subtipo_prueba gsp,\r\n"
-		+ "	cbdmq.gen_tipo_prueba gtp\r\n"
-		+ "where\r\n"
-		+ "	gpd.cod_subtipo_prueba = gsp.cod_subtipo_prueba"
-		+ " and gsp.cod_tipo_prueba = gtp.cod_tipo_prueba", resultSetMapping = "PruebaDetalleDatos")
-
-@SqlResultSetMapping(name = "PruebaDetalleDatos", classes = @ConstructorResult(targetClass = PruebaDetalle.class, columns = {
-		@ColumnResult(name = "cod_prueba_detalle"),
-		@ColumnResult(name = "descripcion_prueba"),
-		@ColumnResult(name = "fecha_inicio"),
-		@ColumnResult(name = "fecha_fin"),
-		@ColumnResult(name = "hora"),
-		@ColumnResult(name = "estado"),
-		@ColumnResult(name = "cod_periodo_academico"),
-		@ColumnResult(name = "cod_curso_especializacion"),
-		@ColumnResult(name = "cod_subtipo_prueba"),
-		@ColumnResult(name = "orden_tipo_prueba"),
-		@ColumnResult(name = "puntaje_minimo"),
-		@ColumnResult(name = "puntaje_maximo"),
-		@ColumnResult(name = "tiene_puntaje"),
-		@ColumnResult(name = "subTipoPruebaNombre"),
-		@ColumnResult(name = "tipoPruebaNombre")
-}))*/
-
 public class PruebaDetalle {
 
 	@Id

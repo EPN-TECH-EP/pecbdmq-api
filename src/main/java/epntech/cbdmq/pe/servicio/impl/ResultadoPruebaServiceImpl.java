@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebaRepository;
@@ -27,7 +28,16 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService{
 			throw new DataException(REGISTRO_VACIO);
 		Optional<ResultadoPrueba> objGuardado = repo.findByCumplePrueba(obj.getCumplePrueba());
 		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			ResultadoPrueba stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
+			}
+
 		}
 		/*if(obj.get()>=0.8) {
 			throw new DataException(CURSO_APROBADO);

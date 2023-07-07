@@ -21,6 +21,7 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
+import epntech.cbdmq.pe.dominio.util.PruebaDetalleOrden;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.PruebaDetalleServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,20 +60,34 @@ public class PruebaDetalleResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<PruebaDetalle> actualizarDatos(@PathVariable("id") int codigo, @RequestBody PruebaDetalle obj)
 			throws DataException {
-		return (ResponseEntity<PruebaDetalle>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setDescripcionPrueba(obj.getDescripcionPrueba());
-			datosGuardados.setFechaInicio(obj.getFechaInicio());
-			datosGuardados.setFechaFin(obj.getFechaFin());
-			datosGuardados.setHora(obj.getHora());
-			datosGuardados.setEstado(obj.getEstado());
-			datosGuardados.setPuntajeMinimo(obj.getPuntajeMinimo());
-			datosGuardados.setPuntajeMaximo(obj.getPuntajeMaximo());
-			datosGuardados.setTienePuntaje(obj.getTienePuntaje());
 
-			PruebaDetalle datosActualizados = null;
+		PruebaDetalle datosActualizados = null;
 
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+		datosActualizados = objService.update(obj);
+
+		return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+
+		/*
+		 * return (ResponseEntity<PruebaDetalle>)
+		 * objService.getById(codigo).map(datosGuardados -> {
+		 * datosGuardados.setDescripcionPrueba(obj.getDescripcionPrueba());
+		 * datosGuardados.setFechaInicio(obj.getFechaInicio());
+		 * datosGuardados.setFechaFin(obj.getFechaFin());
+		 * datosGuardados.setHora(obj.getHora());
+		 * datosGuardados.setEstado(obj.getEstado());
+		 * datosGuardados.setPuntajeMinimo(obj.getPuntajeMinimo());
+		 * datosGuardados.setPuntajeMaximo(obj.getPuntajeMaximo());
+		 * datosGuardados.setTienePuntaje(obj.getTienePuntaje());
+		 * 
+		 * PruebaDetalle datosActualizados = null;
+		 * 
+		 * try { datosActualizados = objService.update(obj); } catch (DataException e) {
+		 * // TODO Auto-generated catch block //e.printStackTrace(); return
+		 * response(HttpStatus.BAD_REQUEST, e.getMessage().toString()); } return new
+		 * ResponseEntity<>(datosActualizados, HttpStatus.OK);
+		 * 
+		 * }).orElseGet(() -> ResponseEntity.notFound().build());
+		 */
 	}
 
 	@DeleteMapping("/{id}")
@@ -86,5 +101,10 @@ public class PruebaDetalleResource {
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 						message),
 				httpStatus);
+	}
+	
+	@PostMapping("/reordenar")
+	public Boolean reordenar(@RequestBody List<PruebaDetalleOrden> listaOrden) throws DataException {
+		return this.objService.reordenar(listaOrden);
 	}
 }

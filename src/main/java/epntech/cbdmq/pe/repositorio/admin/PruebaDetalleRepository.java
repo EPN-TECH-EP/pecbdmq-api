@@ -5,13 +5,15 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
 
 public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, Integer> {
 
-	Optional<PruebaDetalle> findByCodSubtipoPruebaAndCodPeriodoAcademico(Integer subtipo, Integer periodo);
+	@Query(value = "select p1_0.cod_prueba_detalle,p1_0.cod_curso_especializacion,p1_0.cod_periodo_academico,p1_0.cod_subtipo_prueba,p1_0.descripcion_prueba,p1_0.estado,p1_0.fecha_fin,p1_0.fecha_inicio,p1_0.hora,p1_0.orden_tipo_prueba,p1_0.puntaje_maximo,p1_0.puntaje_minimo,p1_0.tiene_puntaje from cbdmq.gen_prueba_detalle p1_0 where p1_0.cod_subtipo_prueba=:cod_subtipo_prueba and p1_0.cod_periodo_academico=:cod_periodo_academico", nativeQuery = true)
+	Optional<PruebaDetalle> findByCodSubtipoPruebaAndCodPeriodoAcademico(@Param("cod_subtipo_prueba")Integer subtipo, @Param("cod_periodo_academico")Integer periodo);
 	
 	Optional<PruebaDetalle> findByCodCursoEspecializacion(Long codCursoEspecializacion);
 
