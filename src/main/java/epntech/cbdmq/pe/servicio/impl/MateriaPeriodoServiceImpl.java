@@ -68,6 +68,11 @@ public class MateriaPeriodoServiceImpl implements MateriaPeriodoService{
 	public Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico) {
 		return repo.findByCodMateriaAndCodPeriodoAcademico(codMateria, codPeriodoAcademico);
 	}
+
+	@Override
+	public Optional<MateriaPeriodo> findByMateriaParalelo(Integer codigoMateriaParalelo) {
+		return repo.findByMateriaParalelo(codigoMateriaParalelo);
+	}
 }
 	
 	

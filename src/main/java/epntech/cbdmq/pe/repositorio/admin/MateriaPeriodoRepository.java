@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
+import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
@@ -21,4 +22,6 @@ public interface MateriaPeriodoRepository extends JpaRepository<MateriaPeriodo, 
 
 
     Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico);
+    @Query("select MateriaPeriodo from MateriaParalelo gnf left join MateriaPeriodo gemp on gnf.codMateriaPeriodo = gemp.codMateriaPeriodo where gnf.codMateriaParalelo = :codMateriaParalelo")
+    Optional<MateriaPeriodo> findByMateriaParalelo(@Param("codMateriaParalelo")Integer codMateriaParalelo);
 }

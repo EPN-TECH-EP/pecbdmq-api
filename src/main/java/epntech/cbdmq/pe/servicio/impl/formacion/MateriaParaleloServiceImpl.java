@@ -25,6 +25,11 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     }
 
     @Override
+    public Optional<MateriaParalelo> findByEstudianteMateriaParalelo(Integer codigoEstudianteMateria) {
+        return repo.findByEstudianteMateriaParalelo(codigoEstudianteMateria);
+    }
+
+    @Override
     public MateriaParalelo saveMateriaParalelo(MateriaParalelo obj) throws DataException {
         return repo.save(obj);
     }

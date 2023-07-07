@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EstudianteMateriaParaleloServiceImpl implements EstudianteMateriaParaleloService {
@@ -29,5 +30,11 @@ public class EstudianteMateriaParaleloServiceImpl implements EstudianteMateriaPa
     public Boolean asignarEstudianteMateriaParalelo(Integer codMateria, Integer codParalelo, Estudiante[] estudiantes) {
         return null;
     }
+
+    @Override
+    public Optional<EstudianteMateriaParalelo> findByNotaFormacion(Integer codNotaFormacion) {
+        return repoObj.findByNotaFormacion(codNotaFormacion);
+    }
+
 
 }
