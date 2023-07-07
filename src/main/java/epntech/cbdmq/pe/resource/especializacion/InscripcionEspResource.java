@@ -136,10 +136,10 @@ public class InscripcionEspResource {
 	}
 	
 	@PostMapping("/notificarPrueba")
-	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion)
+	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("subTipoPrueba") Long subTipoPrueba)
 			throws MessagingException, DataException, PSQLException {
 		
-		inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion);
+		inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion, subTipoPrueba);
 
 		return response(HttpStatus.OK, EMAIL_SEND);
 	}

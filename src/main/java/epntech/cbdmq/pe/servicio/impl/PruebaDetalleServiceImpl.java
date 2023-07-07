@@ -28,7 +28,6 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 
 	@Autowired
 	private PruebaDetalleRepository pruebaDetalleRepository;
-	
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
 

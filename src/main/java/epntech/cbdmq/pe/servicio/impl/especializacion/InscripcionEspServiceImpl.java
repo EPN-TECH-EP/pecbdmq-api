@@ -26,14 +26,18 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.util.CursoDatos;
 import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
+import epntech.cbdmq.pe.dominio.util.InscritosValidos;
+import epntech.cbdmq.pe.dominio.util.PruebaDetalleData;
 import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
+import epntech.cbdmq.pe.dominio.admin.PruebaDetalleEntity;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDocumento;
@@ -44,11 +48,14 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
+import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleEntityRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoEntityRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.PruebasRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.ValidaRequisitosRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
@@ -77,6 +84,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	private ValidaRequisitosRepository validaRequisitosRepository;
 	@Autowired
 	private PruebaDetalleRepository pruebaDetalleRepository;
+	@Autowired
+	private PruebasRepository pruebasRepository;
+	@Autowired
+	private PruebaDetalleEntityRepository pruebaDetalleEntityRepository;
+	@Autowired
+	private CursoEntityRepository cursoEntityRepository;
 	
 	
 	@Value("${pecb.archivos.ruta}")
@@ -295,12 +308,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	@Async
-	public void notificarPrueba(Long codCursoEspecializacion) throws MessagingException, DataException {
+	public void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba) throws MessagingException, DataException {
 		Optional<Curso> cursoEspOptional = cursoRepository.findById(codCursoEspecializacion);
 		if(cursoEspOptional.isEmpty())
 			throw new DataException(REGISTRO_NO_EXISTE);
 		
-		Optional<PruebaDetalle> pruebaDetalleOptional = pruebaDetalleRepository.findByCodCursoEspecializacion(codCursoEspecializacion);
+		Optional<PruebaDetalle> pruebaDetalleOptional = pruebaDetalleRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(codCursoEspecializacion, codSubTipoPrueba);
 		
 		if(pruebaDetalleOptional.isEmpty())
 			throw new DataException(CURSO_NO_PRUEBAS);
@@ -343,6 +356,30 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		String[] destinatarios = {inscripcion.getCorreoPersonal()};
 		
 		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+	}
+
+	@Override
+	@Async
+	public void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba)
+			throws MessagingException, DataException {
+		
+		Optional<PruebaDetalleEntity> pruebaDetalleOptional = pruebaDetalleEntityRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(codCursoEspecializacion, codSubTipoPrueba);
+		Optional<CursoDatos> cursoDatos = cursoEntityRepository.getCursoDatos(codCursoEspecializacion);
+		
+		List<InscritosValidos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
+		
+		for (InscritosValidos inscritosValidos : listaInscritosValidos) {
+			Optional<Parametro> parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.pruebas"); 
+			if(parametro.isEmpty())
+				throw new DataException(NO_PARAMETRO);
+			
+			String nombres = inscritosValidos.getNombre() + " " + inscritosValidos.getApellido();
+			String cuerpoHtml = String.format(parametro.get().getValor(), nombres, cursoDatos.get().getNombreCatalogoCurso(), pruebaDetalleOptional.get().getFechaInicio(), pruebaDetalleOptional.get().getFechaFin());
+			
+			String[] destinatarios = {inscritosValidos.getCorreoPersonal()};
+			
+			emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+		}
 	}
 
 }

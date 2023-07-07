@@ -5,9 +5,6 @@ import java.time.LocalTime;
 import java.util.Date;
 
 import org.hibernate.annotations.NamedNativeQuery;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -22,19 +19,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Entity(name = "gen_prueba_detalle")
+@Entity
 @Table(name = "gen_prueba_detalle")
-@SQLDelete(sql = "UPDATE {h-schema}gen_prueba_detalle SET estado = 'ELIMINADO' WHERE cod_prueba_detalle = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado <> 'ELIMINADO'")
 
-
-@NamedNativeQuery(name = "PruebaDetalle.findDatosPrueba", 
+@NamedNativeQuery(name = "PruebaDetalleEntity.findDatosxPrueba", 
 query = "select p.cod_prueba_detalle as codPruebaDetalle, p.descripcion_prueba as descripcionPrueba, \r\n"
 		+ "p.fecha_inicio as fechaInicio, p.fecha_fin as fechaFin, p.hora as hora,\r\n"
 		+ "p.cod_subtipo_prueba as codSubTipoPrueba, p.orden_tipo_prueba as ordenTioPrueba, "
@@ -42,8 +33,8 @@ query = "select p.cod_prueba_detalle as codPruebaDetalle, p.descripcion_prueba a
 		+ "from cbdmq.gen_prueba_detalle p\r\n"
 		+ "where p.cod_curso_especializacion = :codCursoEspecializacion\r\n"
 		+ "and p.cod_subtipo_prueba = :codSubTipoPrueba ", 
-		resultSetMapping = "findDatosPrueba")
-@SqlResultSetMapping(name = "findDatosPrueba", classes = @ConstructorResult(targetClass = PruebaDetalleData.class, columns = {
+		resultSetMapping = "findDatosxPrueba")
+@SqlResultSetMapping(name = "findDatosxPrueba", classes = @ConstructorResult(targetClass = PruebaDetalleData.class, columns = {
 		@ColumnResult(name = "codPruebaDetalle"), 
 		@ColumnResult(name = "descripcionPrueba"), 
 		@ColumnResult(name = "fechaInicio", type = LocalDate.class),
@@ -55,13 +46,13 @@ query = "select p.cod_prueba_detalle as codPruebaDetalle, p.descripcion_prueba a
 		@ColumnResult(name = "puntajeMaximo"),
 		@ColumnResult(name = "tienePuntaje"),}))
 
-public class PruebaDetalle {
+public class PruebaDetalleEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_prueba_detalle")
 	protected Integer codPruebaDetalle;
-	
+
 	@Column(name = "descripcion_prueba")
 	protected String descripcionPrueba;
 
@@ -100,37 +91,5 @@ public class PruebaDetalle {
 
 	@Column(name = "tiene_puntaje")
 	protected Boolean tienePuntaje;
-
-	public PruebaDetalle(
-			Integer codPruebaDetalle, 
-			String descripcionPrueba, 
-			Date fechaInicio, 
-			Date fechaFin,
-			LocalTime hora, 
-			String estado, 
-			Integer codPeriodoAcademico, 
-			Integer codCursoEspecializacion,
-			Integer codSubtipoPrueba, 
-			Integer ordenTipoPrueba, 
-			Double puntajeMinimo, 
-			Double puntajeMaximo,
-			Boolean tienePuntaje) {
-		this.codPruebaDetalle = codPruebaDetalle;
-		this.descripcionPrueba = descripcionPrueba;
-		this.fechaInicio = fechaInicio;
-		this.fechaFin = fechaFin;
-		this.hora = hora;
-		this.estado = estado;
-		this.codPeriodoAcademico = codPeriodoAcademico;
-		this.codCursoEspecializacion = codCursoEspecializacion;
-		this.codSubtipoPrueba = codSubtipoPrueba;
-		this.ordenTipoPrueba = ordenTipoPrueba;
-		this.puntajeMinimo = puntajeMinimo;
-		this.puntajeMaximo = puntajeMaximo;
-		this.tienePuntaje = tienePuntaje;
-	}
-	
-	public PruebaDetalle() {
-	}
 
 }

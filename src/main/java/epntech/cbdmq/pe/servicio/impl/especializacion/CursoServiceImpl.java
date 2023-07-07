@@ -87,7 +87,7 @@ public class CursoServiceImpl implements CursoService {
 		// TODO Auto-generated method stub
 		cursoDocumentoRepository.updateEstadoAprobado(estadoAprobado, estadoValidado, observaciones,
 				codCursoEspecializacion, codDocumento);
-		cursoDocumentoRepository.validaDocumentosCurso(codCursoEspecializacion);
+		cursoRepository.validaDocumentosCursoEspecializacion(codCursoEspecializacion);
 		
 		return cursoDocumentoRepository.findByCodCursoEspecializacionAndCodDocumento(codCursoEspecializacion,
 				codDocumento);

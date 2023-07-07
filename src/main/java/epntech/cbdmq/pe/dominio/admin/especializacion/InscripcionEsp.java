@@ -122,7 +122,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and upper(c.estado) = 'ACTIVO' "
 		+ "and upper(cc.estado) = 'ACTIVO' "
 		+ "and upper(i.estado) = 'VALIDO' "
-		+ "and i.cod_curso_especializacion = :codCurso", 
+		+ "and i.cod_curso_especializacion = :codCurso ", 
 		resultSetMapping = "findInscripcionValidaPorCurso")
 @SqlResultSetMapping(name = "findInscripcionValidaPorCurso", classes = @ConstructorResult(targetClass = InscritosEspecializacion.class, columns = {
 		@ColumnResult(name = "codInscripcion"), 

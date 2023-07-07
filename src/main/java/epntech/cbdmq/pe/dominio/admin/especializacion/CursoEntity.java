@@ -1,40 +1,21 @@
 package epntech.cbdmq.pe.dominio.admin.especializacion;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hibernate.annotations.NamedNativeQuery;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import epntech.cbdmq.pe.dominio.admin.Requisito;
-import epntech.cbdmq.pe.dominio.util.CursoDatos;
 import jakarta.persistence.Column;
-import jakarta.persistence.ColumnResult;
-import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "esp_curso")
-@SQLDelete(sql = "UPDATE {h-schema}esp_curso SET estado = 'ELIMINADO' WHERE cod_curso_especializacion = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado <> 'ELIMINADO'")
-
-public class Curso {
+public class CursoEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,12 +64,4 @@ public class Curso {
 	
 	@Column(name = "tiene_modulos")
 	private Boolean tieneModulos;
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "esp_curso_documento", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))
-	private Set<DocumentoCurso> documentos = new HashSet<>();
-
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "esp_curso_requisito", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), inverseJoinColumns = @JoinColumn(name = "cod_requisito"))
-	private Set<Requisito> requisitos = new HashSet<>();
 }

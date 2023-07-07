@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import jakarta.transaction.Transactional;
@@ -17,7 +18,7 @@ public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, 
 	
 	CursoDocumento findByCodCursoEspecializacionAndCodDocumento(Long codCursoEspecializacion, Long codDocumento);
 	
-	@Procedure(name = "cbdmq.valida_documentos_curso_especializacion")
-    void validaDocumentosCurso(Long codCursoEspecializacion);
+	//@Procedure(name = "validaDocumentosCursoEspecializacion")
+    //void validaDocumentosCursoEspecializacion(@Param("codCursoEspecializacion") Long codCursoEspecializacion);
 	
 }

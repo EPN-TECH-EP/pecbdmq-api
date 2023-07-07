@@ -1,8 +1,10 @@
 package epntech.cbdmq.pe.resource.especializacion;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,7 @@ public class CursoInstructorResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody CursoInstructor obj){
+	public ResponseEntity<?> guardar(@RequestBody CursoInstructor obj) throws DataException{
 
 		return new ResponseEntity<>(cursoInstructorServiceImpl.save(obj), HttpStatus.OK);
 	}
@@ -43,14 +45,21 @@ public class CursoInstructorResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<CursoInstructor> obtenerPorId(@PathVariable("id") long codigo) {
+	public ResponseEntity<?> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
+		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorServiceImpl.getById(codigo);
+		if(cursoInstructorOptional.isEmpty())
+			return response(HttpStatus.BAD_REQUEST, REGISTRO_NO_EXISTE);
+		
 		return cursoInstructorServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<CursoInstructor> actualizarDatos(@PathVariable("id") long codigo, @RequestBody CursoInstructor obj) throws DataException{
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @RequestBody CursoInstructor obj) throws DataException{
 		
+		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorServiceImpl.getById(codigo);
+		if(cursoInstructorOptional.isEmpty())
+			return response(HttpStatus.BAD_REQUEST, REGISTRO_NO_EXISTE);
 	
 		return (ResponseEntity<CursoInstructor>) cursoInstructorServiceImpl.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setCodCursoEspecializacion(obj.getCodCursoEspecializacion());
@@ -60,7 +69,12 @@ public class CursoInstructorResource {
 			datosGuardados.setEstado(obj.getEstado());
 
 			CursoInstructor datosActualizados = null;
-			datosActualizados = cursoInstructorServiceImpl.update(datosGuardados);
+			try {
+				datosActualizados = cursoInstructorServiceImpl.update(datosGuardados);
+			} catch (DataException e) {
+				// TODO Auto-generated catch block
+				return response(HttpStatus.BAD_REQUEST, e.getMessage());
+			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
