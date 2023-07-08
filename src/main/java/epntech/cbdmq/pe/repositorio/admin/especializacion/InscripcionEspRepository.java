@@ -30,7 +30,7 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionPorCurso")
-	Optional<InscripcionDatosEspecializacion> getInscripcionByCurso(@Param("codCurso") Long codCurso);
+	List<InscripcionDatosEspecializacion> getInscripcionByCurso(@Param("codCurso") Long codCurso);
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionValidaPorCurso")
 	List<InscritosEspecializacion> getInscripcionesValidasByCurso(@Param("codCurso") Long codCurso);

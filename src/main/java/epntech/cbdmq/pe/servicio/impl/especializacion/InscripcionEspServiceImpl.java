@@ -249,7 +249,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	}
 
 	@Override
-	public Optional<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException {
+	public List<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException {
 		// TODO Auto-generated method stub
 		return inscripcionEspRepository.getInscripcionByCurso(codCurso);
 	}

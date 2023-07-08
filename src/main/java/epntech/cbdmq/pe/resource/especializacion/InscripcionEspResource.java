@@ -107,9 +107,8 @@ public class InscripcionEspResource {
 	}
 
 	@GetMapping("/porCurso/{id}")
-	public ResponseEntity<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
-		return inscripcionEspServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+	public List<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
+		return inscripcionEspServiceImpl.getByCurso(codigo);
 	}
 	
 	@PostMapping("/validacionRequisitos")

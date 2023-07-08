@@ -37,7 +37,7 @@ public interface InscripcionEspService {
 	
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
 	
-	Optional<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
+	List<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
 	
 	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos)  throws MessagingException, DataException;
 	
