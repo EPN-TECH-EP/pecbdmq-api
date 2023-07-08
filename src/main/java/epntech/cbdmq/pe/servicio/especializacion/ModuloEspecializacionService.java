@@ -15,7 +15,7 @@ public interface ModuloEspecializacionService {
 	
 	List<ModuloEspecializacion> getAll();
 	
-	Optional<ModuloEspecializacion> getById(Long codModulo);
+	Optional<ModuloEspecializacion> getById(Long codModulo)  throws DataException;
 	
-	void delete(Long codModulo);
+	void delete(Long codModulo)  throws DataException;
 }
