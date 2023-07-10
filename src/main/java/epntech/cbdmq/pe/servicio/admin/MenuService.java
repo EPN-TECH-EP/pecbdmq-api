@@ -79,5 +79,8 @@ public class MenuService {
 	public List<Menu> findByMenuPadre(Integer menuPadre) {
 		return this.menuRepository.findByMenuPadreOrderByOrden(menuPadre);
 	}
+	public Optional<Menu> findById(Integer id) {
+		return this.findById(id);
+	}
 
 }

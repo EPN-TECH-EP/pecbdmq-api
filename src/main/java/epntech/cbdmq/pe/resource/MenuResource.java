@@ -4,6 +4,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,12 @@ public class MenuResource {
 	{
 		List<Menu> listaMenu = this.menuService.findByMenuPadre(menuPadre);
         return new ResponseEntity<List<Menu>>(listaMenu, OK);
+	}
+	@GetMapping("/listar/{id}")
+	public ResponseEntity<Optional<Menu>> getMenuById(@PathVariable("id")int id) throws DataException
+	{
+		Optional<Menu> Menu = this.menuService.getById(id);
+		return new ResponseEntity<Optional<Menu>>(Menu, OK);
 	}
 	
 
