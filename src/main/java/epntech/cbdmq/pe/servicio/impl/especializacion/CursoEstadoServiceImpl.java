@@ -1,6 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +35,9 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
 	@Override
 	public CursoEstado update(CursoEstado cursoEstadoActualizado)  throws DataException{
 		Optional<CursoEstado> cursoEstadoOptional;
+		cursoEstadoOptional = cursoEstadoRepository.findById(cursoEstadoActualizado.getCodCursoEstado());
+		if(cursoEstadoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
 		
 		cursoEstadoOptional = cursoEstadoRepository.getByCursoYCatalogoEstado(cursoEstadoActualizado.getCodCursoEspecializacion(), cursoEstadoActualizado.getCodCatalogoEstados());
 		
@@ -54,13 +57,22 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
 	}
 
 	@Override
-	public Optional<CursoEstado> getById(Long codCursoEstado) {
-		// TODO Auto-generated method stub
+	public Optional<CursoEstado> getById(Long codCursoEstado) throws DataException {
+		Optional<CursoEstado> cursoEstadoOptional;
+		cursoEstadoOptional = cursoEstadoRepository.findById(codCursoEstado);
+		if(cursoEstadoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		return cursoEstadoRepository.findById(codCursoEstado);
 	}
 
 	@Override
-	public void delete(Long codCursoEstado) {
+	public void delete(Long codCursoEstado) throws DataException{
+		Optional<CursoEstado> cursoEstadoOptional;
+		cursoEstadoOptional = cursoEstadoRepository.findById(codCursoEstado);
+		if(cursoEstadoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		cursoEstadoRepository.deleteById(codCursoEstado);
 		
 	}

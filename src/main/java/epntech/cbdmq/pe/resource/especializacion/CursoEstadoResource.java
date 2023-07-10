@@ -41,7 +41,7 @@ public class CursoEstadoResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<CursoEstado> obtenerPorId(@PathVariable("id") long codigo) {
+	public ResponseEntity<CursoEstado> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
 		return cursoEstadoServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}

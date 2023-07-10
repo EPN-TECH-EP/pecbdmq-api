@@ -43,7 +43,7 @@ public class EstadosResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Estados> obtenerPorId(@PathVariable("id") int codigo) {
+	public ResponseEntity<Estados> obtenerPorId(@PathVariable("id") int codigo) throws DataException {
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}

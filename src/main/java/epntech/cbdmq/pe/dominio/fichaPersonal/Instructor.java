@@ -168,7 +168,8 @@ public class Instructor {
 	private Integer codUnidadGestion;
 	@Column(name = "cod_tipo_contrato")
 	private Integer codTipoContrato;
-	
+	@Column(name = "estado")
+	private String estado;
 	
 	
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

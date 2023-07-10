@@ -2,8 +2,7 @@
 
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,13 +56,20 @@ public class EstadosServiceImpl implements EstadosService {
 	}
 
 	@Override
-	public Optional<Estados> getById(int id) {
-		// TODO Auto-generated method stub
+	public Optional<Estados> getById(int id) throws DataException {
+		Optional<Estados> estados = repo.findById(id);
+		if (estados.isEmpty()) 
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		return repo.findById(id);
 	}
 
 	@Override
 	public Estados update(Estados objActualizado) throws DataException {
+		Optional<Estados> estados = repo.findById(objActualizado.getCodigo());
+		if (estados.isEmpty()) 
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		if(objActualizado.getNombre() !=null) {
 			Optional<Estados> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
 			if (objGuardado.isPresent()&& !objGuardado.get().getCodigo().equals(objActualizado.getCodigo())) {
@@ -74,8 +80,11 @@ public class EstadosServiceImpl implements EstadosService {
 		}
 
 	@Override
-	public void delete(int id) {
-		// TODO Auto-generated method stub
+	public void delete(int id) throws DataException {
+		Optional<Estados> estados = repo.findById(id);
+		if (estados.isEmpty()) 
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		repo.deleteById(id);
 	}
 

@@ -365,6 +365,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		
 		Optional<PruebaDetalleEntity> pruebaDetalleOptional = pruebaDetalleEntityRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(codCursoEspecializacion, codSubTipoPrueba);
 		Optional<CursoDatos> cursoDatos = cursoEntityRepository.getCursoDatos(codCursoEspecializacion);
+		if(cursoDatos.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
 		
 		List<InscritosValidos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
 		

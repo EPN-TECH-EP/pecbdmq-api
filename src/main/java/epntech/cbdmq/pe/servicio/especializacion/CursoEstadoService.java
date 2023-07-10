@@ -14,7 +14,7 @@ public interface CursoEstadoService {
 
 	List<CursoEstado> listarTodo();
 	
-	Optional<CursoEstado> getById(Long codCursoEstado);
+	Optional<CursoEstado> getById(Long codCursoEstado) throws DataException;
 	
-	void delete(Long codCursoEstado);
+	void delete(Long codCursoEstado) throws DataException;
 }

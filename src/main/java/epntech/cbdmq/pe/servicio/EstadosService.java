@@ -13,11 +13,11 @@ public interface EstadosService {
 	
 	List<Estados> getAll();
 	
-	Optional<Estados> getById(int id);
+	Optional<Estados> getById(int id)  throws DataException;
 	
 	Estados update(Estados objActualizado)throws DataException;
 	
-	void delete(int id);
+	void delete(int id) throws DataException;
 	
 }
 

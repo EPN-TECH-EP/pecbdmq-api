@@ -29,6 +29,7 @@ public class InstructorResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody Instructor obj) throws DataException {
+		obj.setEstado("ACTIVO");
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
@@ -55,6 +56,7 @@ public class InstructorResource {
 			datosGuardados.setCodEstacion(obj.getCodEstacion());
 			datosGuardados.setCodUnidadGestion(obj.getCodUnidadGestion());
 			datosGuardados.setCodTipoContrato(obj.getCodTipoContrato());
+			datosGuardados.setEstado(obj.getEstado());
 			Instructor datosActualizados = objService.update(datosGuardados);
 			datosActualizados = objService.update(datosGuardados);
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
