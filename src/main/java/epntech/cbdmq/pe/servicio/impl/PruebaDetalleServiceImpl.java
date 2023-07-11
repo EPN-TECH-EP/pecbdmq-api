@@ -3,20 +3,25 @@ package epntech.cbdmq.pe.servicio.impl;
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.constante.MensajesConst;
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
+import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleOrden;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoEspRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
 import epntech.cbdmq.pe.servicio.PruebaDetalleService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -33,6 +38,8 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
+	@Autowired
+	private CursoRepository cursoRepository;
 
 	// TODO eliminar comentario
 	@Override
@@ -183,5 +190,47 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 		}
 
 		return retval;
+	}
+
+	@Override
+	public List<PruebaDetalleDatos> getByCurso(Long codCursoEspecializacion) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
+		Query q =
+
+				this.entityManager.createNativeQuery("select "
+						+ "	gpd.cod_prueba_detalle, "
+						+ "	gpd.descripcion_prueba, "
+						+ "	gpd.fecha_inicio, "
+						+ "	gpd.fecha_fin, "
+						+ "	gpd.hora, "
+						+ "	gpd.estado, "
+						+ "	gpd.cod_periodo_academico, "
+						+ "	gpd.cod_curso_especializacion, "
+						+ "	gpd.cod_subtipo_prueba, "
+						+ "	gpd.orden_tipo_prueba, "
+						+ "	gpd.puntaje_minimo, "
+						+ "	gpd.puntaje_maximo, "
+						+ "	gpd.tiene_puntaje, "
+						+ "	gsp.nombre as sub_tipo_prueba_nombre, "
+						+ "	gtp.tipo_prueba as tipo_prueba_nombre  "
+						+ "from "
+						+ "	cbdmq.gen_prueba_detalle gpd, "
+						+ "	cbdmq.gen_subtipo_prueba gsp, "
+						+ "	cbdmq.gen_tipo_prueba gtp "
+						+ "where "
+						+ "	gpd.cod_subtipo_prueba = gsp.cod_subtipo_prueba"
+						+ " and gsp.cod_tipo_prueba = gtp.cod_tipo_prueba  "
+						+ " and gpd.estado <> 'ELIMINADO' "
+						+ "and cod_curso_especializacion = :codCursoEspecializacion",
+						PruebaDetalleDatos.class);
+		q.setParameter("codCursoEspecializacion", codCursoEspecializacion);
+		
+		List<PruebaDetalleDatos> lista = new ArrayList<>(); 
+		lista = q.getResultList();
+		
+		return lista;
 	}
 }

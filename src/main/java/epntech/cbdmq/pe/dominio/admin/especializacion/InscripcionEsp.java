@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.NamedNativeQuery;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
@@ -25,6 +28,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "esp_inscripcion")
+@SQLDelete(sql = "UPDATE {h-schema}esp_inscripcion SET estado = 'ELIMINADO' WHERE cod_inscripcion = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 
 @NamedNativeQuery(name = "InscripcionEsp.findInscripciones", 
 query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso "

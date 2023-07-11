@@ -26,5 +26,6 @@ public interface PruebaDetalleService {
 	
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException;
 
+	List<PruebaDetalleDatos> getByCurso(Long codCursoEspecializacion) throws DataException;
 }
 

@@ -116,4 +116,9 @@ public class PruebaDetalleResource {
 	public Boolean reordenar(@RequestBody List<PruebaDetalleOrden> listaOrden) throws DataException {
 		return this.objService.reordenar(listaOrden);
 	}
+	
+	@GetMapping("/listarxCurso/{id}")
+	public List<PruebaDetalleDatos> listarPorCurso(@PathVariable("id") long codigo) throws DataException {
+		return this.objService.getByCurso(codigo);
+	}
 }

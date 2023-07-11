@@ -99,6 +99,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public InscripcionEsp save(InscripcionEsp inscripcionEsp) throws DataException {
+		Optional<InscripcionEsp> inscripcionEspRepositoryOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(inscripcionEsp.getCodEstudiante(), inscripcionEsp.getCodCursoEspecializacion());
+		if(inscripcionEspRepositoryOptional.isPresent())
+			throw new DataException(REGISTRO_YA_EXISTE);
+		
 		Optional<Estudiante> estudianteOptional = estudianteRepository.findById(inscripcionEsp.getCodEstudiante().intValue());
 		Optional<Curso> cursoOptional = cursoRepository.findById(inscripcionEsp.getCodCursoEspecializacion());
 		
@@ -115,7 +119,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	@Override
 	public InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) throws DataException {
 		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(inscripcionEspActualizada.getCodEstudiante(), inscripcionEspActualizada.getCodCursoEspecializacion());
-		if(inscripcionEspOptional.isPresent())
+		if(inscripcionEspOptional.isPresent() && !inscripcionEspOptional.get().getCodInscripcion().equals(inscripcionEspActualizada.getCodInscripcion()))
 			throw new DataException(REGISTRO_YA_EXISTE);
 		
 		return inscripcionEspRepository.save(inscripcionEspActualizada);
@@ -123,8 +127,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public Optional<InscripcionDatosEsp> getById(Long codInscripcion) throws DataException {
-		// TODO Auto-generated method stub
-		//return inscripcionEspRepository.getInscripcion(codInscripcion);
+		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
+		if(inscripcionEspOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		return inscripcionDatosRepository.findByInscripcion(codInscripcion);
 	}
 
@@ -136,18 +142,28 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public void delete(Long codInscripcion) throws DataException {
-		// TODO Auto-generated method stub
+		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
+		if(inscripcionEspOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		inscripcionEspRepository.deleteById(codInscripcion);
 	}
 
 	@Override
 	public List<Documento> uploadFiles(Long codInscripcion, Long tipoDocumento, List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion {
+		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
+		if(inscripcionEspOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
 		
 		return guardarDocumentos(archivos, codInscripcion, tipoDocumento);
 	}
 	
 	public List<Documento> guardarDocumentos(List<MultipartFile> archivos, Long codInscripcion, Long tipoDocumento)
-			throws IOException, ArchivoMuyGrandeExcepcion {
+			throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
+		if(inscripcionEspOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		String resultado;
 		List<Documento> documentos = new ArrayList<>();
 
@@ -179,8 +195,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 			
 			InscripcionDocumento cursoDocumento = new InscripcionDocumento();
 			
-			//cursoDocumento.setCodInscripcion(codInscripcion);
-			//cursoDocumento.setCodDocumento((long) documento.getCodigo());
+			cursoDocumento.setCodInscripcion(codInscripcion);
+			cursoDocumento.setCodDocumento((long) documento.getCodDocumento());
 			inscripcionDocumentoRepository.save(cursoDocumento);
 			
 		}
@@ -197,11 +213,18 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public void deleteDocumento(Long codInscripcion, Long codDocumento) throws DataException {
+		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
+		if(inscripcionEspOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		Optional<Documento> documentoOptional;
 		Documento documento = new Documento();
 
 		// System.out.println("id: " + codDocumento);
 		documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		if(documentoOptional.isEmpty())
+			throw new DataException(DOCUMENTO_NO_EXISTE);
+			
 		documento = documentoOptional.get();
 
 		Path ruta = Paths.get(documento.getRuta());
@@ -226,6 +249,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public void notificarInscripcion(Long codInscripcion) throws MessagingException, DataException {
+		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
+		if(inscripcionEspOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		Optional<InscripcionEstudianteDatosEspecializacion> inscripcionOptional = inscripcionEspRepository.getInscripcionEstudiante(codInscripcion);
 		InscripcionEstudianteDatosEspecializacion inscripcion = new InscripcionEstudianteDatosEspecializacion();
 		inscripcion = inscripcionOptional.get();
