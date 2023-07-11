@@ -28,6 +28,8 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     private MateriaParaleloRepository repo;
     @Autowired
     private PeriodoAcademicoService periodoAcademicoService;
+    @Autowired
+    private MateriaPeriodoService materiaPAService;
 
     @Override
     public List<MateriaParalelo> getMateriasParalelo() throws DataException {
@@ -48,6 +50,11 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
                     objMPe.setCodPeriodoAcademico(periodoAcademicoService.getPAActivo());
                     objMPe.setCodMateria(materiaStream.getCodMateria());
                     objMPe.setCodAula(materiaStream.getCodAula());
+                    try {
+                        materiaPAService.save(objMPe);
+                    } catch (DataException e) {
+                        throw new RuntimeException(e);
+                    }
                     //replace
                     return objMPe;
                 })
@@ -68,6 +75,11 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
                         }))
                 .collect(Collectors.toList());
         return true;
+    }
+
+    @Override
+    public Optional<MateriaParalelo> findByCodMateriaPeriodoAndCodParalelo(Integer materiaParalelo, Integer paralelo) {
+        return repo.findByCodMateriaPeriodoAndCodParalelo(materiaParalelo, paralelo);
     }
 
 

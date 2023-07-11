@@ -14,4 +14,5 @@ public interface MateriaParaleloService {
     List<MateriaParalelo> getMateriasParalelo()throws DataException ;
     public Optional<MateriaParalelo> getById(Integer codigo);
     public boolean asignarMateriaParalelo(List<MateriaAulaUtil> materiasAula, List<Paralelo> paralelos);
+    Optional<MateriaParalelo> findByCodMateriaPeriodoAndCodParalelo(Integer materiaParalelo, Integer paralelo);
 }
