@@ -89,8 +89,15 @@ public class CursoServiceImpl implements CursoService {
 
 	@Override
 	public CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado,
-			String observaciones, Long codCursoEspecializacion, Long codDocumento) {
-		// TODO Auto-generated method stub
+			String observaciones, Long codCursoEspecializacion, Long codDocumento) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
+		Optional<Documento> documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		if(documentoOptional.isEmpty())
+			throw new DataException(DOCUMENTO_NO_EXISTE);
+		
 		cursoDocumentoRepository.updateEstadoAprobado(estadoAprobado, estadoValidado, observaciones,
 				codCursoEspecializacion, codDocumento);
 		cursoRepository.validaDocumentosCursoEspecializacion(codCursoEspecializacion);
@@ -101,6 +108,10 @@ public class CursoServiceImpl implements CursoService {
 
 	@Override
 	public Curso updateEstadoProceso(Long estado, Long codCurso) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCurso);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
 		int result = cursoRepository.updateEstadoProceso(estado, codCurso);
 		if (result == 1)
 			return cursoRepository.findById(codCurso).get();
@@ -109,8 +120,12 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) {
+	public Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) throws DataException {
 
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
 		Optional<CursoRequisito> cursoRequisito = cursoRequisitoRepository
 				.findFirstByCodCursoEspecializacion(codCursoEspecializacion);
 		if (cursoRequisito.isPresent())
@@ -215,14 +230,21 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public void delete(Long codCursoEspecializacion) {
+	public void delete(Long codCursoEspecializacion) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		cursoRepository.deleteById(codCursoEspecializacion);
 		
 	}
 
 	@Override
-	public Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) {
-		// TODO Auto-generated method stub
+	public Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		return cursoRepository.cumplePorcentajeMinimoAprobadosCurso(codCursoEspecializacion);
 	}
 

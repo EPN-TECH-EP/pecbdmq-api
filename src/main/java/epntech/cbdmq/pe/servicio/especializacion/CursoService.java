@@ -24,19 +24,19 @@ public interface CursoService {
 	
 	Optional<Curso> getById(Long id) throws DataException;
 	
-	CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento);
+	CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento)  throws DataException;
 
 	Curso updateEstadoProceso(Long estado, Long codCurso) throws DataException;
 	
-	Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos);
+	Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) throws DataException ;
 	
 	Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException;
 	
 	Optional<Curso> uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long codTipoDocumento)  throws IOException, ArchivoMuyGrandeExcepcion ;
 	
-	void delete(Long codCursoEspecializacion);
+	void delete(Long codCursoEspecializacion) throws DataException ;
 	
-	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion);
+	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) throws DataException ;
 	
 	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException;
 }
