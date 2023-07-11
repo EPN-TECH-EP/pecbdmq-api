@@ -6,6 +6,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class ParaleloServiceImpl implements ParaleloService{
 
 	@Autowired
 	private ParaleloRepository repo;
+	@Autowired
+	private PeriodoAcademicoService periodoAcademicoService;
 	
 	@Override
 	public Paralelo save(Paralelo obj) throws DataException{
@@ -64,5 +67,10 @@ public class ParaleloServiceImpl implements ParaleloService{
 		// TODO Auto-generated method stub
 		repo.deleteById(codigo);
 	}
-	
+
+	@Override
+	public List<Paralelo> getParalelosPA() {
+		return repo.getParalelosPA(periodoAcademicoService.getPAActivo());
+	}
+
 }

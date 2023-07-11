@@ -7,15 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ParaleloRepository extends JpaRepository<Paralelo, Integer>{
 	Optional<Paralelo> findByNombreParaleloIgnoreCase(String Nombre);
 
-	@Query(value="select p from gen_materia_paralelo mpa \n" +
-			"left join gen_materia_periodo mpe on mpa.cod_materia_periodo  = mpe.cod_materia_periodo\n" +
-			"left join gen_paralelo p on mpa.cod_paralelo = p.cod_paralelo \n" +
-			"where mpe.cod_periodo_academico = cbdmq.get_pa_activo()\n" +
-			"group by (p)", nativeQuery = true)
-	List<Paralelo> getParalelosPA();
+	@Query("select p from MateriaParalelo mpa \n" +
+			"left join MateriaPeriodo mpe on mpa.codMateriaPeriodo = mpe.codMateriaPeriodo\n" +
+			"left join gen_paralelo p on mpa.codParalelo = p.codParalelo\n" +
+			"where mpe.codPeriodoAcademico = :codPA\n" +
+			"group by (p)")
+	List<Paralelo> getParalelosPA(@Param("codPA") Integer codPA);
 
 }

@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.repositorio.admin.formacion;
 
 import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,7 @@ public interface MateriaParaleloRepository extends JpaRepository<MateriaParalelo
             "left join cbdmq.gen_usuario gu on gdp.cod_datos_personales = gu.cod_datos_personales\n" +
             "where gu.cod_usuario = :codUsuario and gti.nombre_tipo_instructor =:tipo and pe.cod_periodo_academico = cbdmq.get_pa_activo()",nativeQuery = true)
     List<MateriaParalelo> getMateriaParaleloByUser(@Param("codUsuario") Integer User, @Param("tipo") String tipo);
+    @Query(nativeQuery = true, name ="InstructorMateriaReadDto.getMateriaParaleloNombres")
+    List<InstructorMateriaReadDto> getMateriaNombres(@Param("codPA") Integer codPeriodoAcademico);
+
 }

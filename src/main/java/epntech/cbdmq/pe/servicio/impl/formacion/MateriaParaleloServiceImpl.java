@@ -1,12 +1,12 @@
 package epntech.cbdmq.pe.servicio.impl.formacion;
 
-import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelosDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import epntech.cbdmq.pe.dominio.util.MateriaAulaUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.admin.AntiguedadesRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.MateriaParaleloRepository;
 import epntech.cbdmq.pe.servicio.MateriaPeriodoService;
 import epntech.cbdmq.pe.servicio.ParaleloService;
@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
@@ -30,6 +28,10 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     private PeriodoAcademicoService periodoAcademicoService;
     @Autowired
     private MateriaPeriodoService materiaPAService;
+    @Autowired
+    private PeriodoAcademicoService pAService;
+    @Autowired
+    private ParaleloService paraleloService;
 
     @Override
     public List<MateriaParalelo> getMateriasParalelo() throws DataException {
@@ -82,6 +84,17 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     @Override
     public Optional<MateriaParalelo> findByCodMateriaPeriodoAndCodParalelo(Integer materiaParalelo, Integer paralelo) {
         return repo.findByCodMateriaPeriodoAndCodParalelo(materiaParalelo, paralelo);
+    }
+
+    @Override
+    public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() {
+        InstructorMateriaParalelosDto obj = new InstructorMateriaParalelosDto();
+        List<InstructorMateriaReadDto> materias= repo.getMateriaNombres(pAService.getPAActivo());
+        obj.setMaterias(materias);
+        List<Paralelo> paralelos= paraleloService.getParalelosPA();
+        obj.setParalelos(paralelos);
+
+        return obj;
     }
 
 
