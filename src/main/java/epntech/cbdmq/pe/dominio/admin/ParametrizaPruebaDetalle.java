@@ -50,15 +50,13 @@ public class ParametrizaPruebaDetalle {
 	private BigInteger numeroRepeticiones;
 	@Column(name = "minutos_segundos")
 	private LocalTime minutosSegundos;
-	@Column(name = "cod_subtipo_prueba")
-	private Integer codSubtipoPrueba;
+	
 	
 	/*@OneToMany(mappedBy="cod_parametriza_prueba_resumen")
     private List<ParametrizaPruebaResumen> Pruebaresumen;*/
 	
 
-	@OneToMany(mappedBy="codSubtipoPrueba")
-    private List<SubTipoPrueba> subTipoPrueba;
+	
 	  
 	
 

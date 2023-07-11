@@ -26,9 +26,11 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	@Override
 	public CatalogoCurso save(CatalogoCurso obj) throws DataException {
 		// TODO Auto-generated method stub
-				if (obj.getNombre().trim().isEmpty())
+		if (obj.getNombreCatalogoCurso().trim().isEmpty())
 					throw new DataException(REGISTRO_VACIO);
-				Optional<CatalogoCurso> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
+		obj.setNombreCatalogoCurso(obj.getNombreCatalogoCurso().toUpperCase());
+		
+		Optional<CatalogoCurso> objGuardado = repo.findByNombreCatalogoCursoIgnoreCase(obj.getNombreCatalogoCurso());
 				if (objGuardado.isPresent()) {
 
 					// valida si existe eliminado
@@ -41,7 +43,7 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 					}
 
 				}
-				obj.setNombre(obj.getNombre().toUpperCase());
+		
 				return repo.save(obj);
 	}
 
@@ -59,9 +61,11 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 
 	@Override
 	public CatalogoCurso update(CatalogoCurso objActualizado) throws DataException {
-		if(objActualizado.getNombre() !=null) {
-			Optional<CatalogoCurso> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
-			if (objGuardado.isPresent()&& !objGuardado.get().getCodCatalogoCursos().equals(objActualizado.getCodCatalogoCursos())) {
+		if (objActualizado.getNombreCatalogoCurso() != null) {
+			Optional<CatalogoCurso> objGuardado = repo
+					.findByNombreCatalogoCursoIgnoreCase(objActualizado.getNombreCatalogoCurso());
+			if (objGuardado.isPresent()
+					&& !objGuardado.get().getCodCatalogoCursos().equals(objActualizado.getCodCatalogoCursos())) {
 				throw new DataException(REGISTRO_YA_EXISTE);
 			}
 		}

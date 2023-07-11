@@ -1,8 +1,9 @@
 package epntech.cbdmq.pe.resource;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
+import epntech.cbdmq.pe.dominio.admin.PruebaDetalleEntity;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleOrden;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleEntityRepository;
 import epntech.cbdmq.pe.servicio.impl.PruebaDetalleServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -32,6 +35,8 @@ public class PruebaDetalleResource {
 
 	@Autowired
 	private PruebaDetalleServiceImpl objService;
+	@Autowired
+	private PruebaDetalleEntityRepository pruebaDetalleEntityRepository;
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -41,7 +46,11 @@ public class PruebaDetalleResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<PruebaDetalle> obtenerPorId(@PathVariable("id") int codigo) {
+	public ResponseEntity<?> obtenerPorId(@PathVariable("id") int codigo) {
+		Optional<PruebaDetalleEntity> pruebaDetalle = pruebaDetalleEntityRepository.findById(codigo);
+		if(pruebaDetalle.isEmpty())
+			return response(HttpStatus.BAD_REQUEST, REGISTRO_NO_EXISTE);
+				
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}

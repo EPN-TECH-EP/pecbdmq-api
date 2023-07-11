@@ -39,10 +39,17 @@ public class ParametrizaPruebaDetalleServiceResource {
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+	
 	@GetMapping("/listar")
 	public List<ParametrizaPruebaDetalle> listar() {
 		return objService.getAll();
 	}
+	
+	@GetMapping("/listarPorResumen")
+	public List<ParametrizaPruebaDetalle> listarPorResumen(@PathVariable("id") int codResumen) {
+		return objService.listarPorResumen(codResumen);
+	}
+	
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<ParametrizaPruebaDetalle> actualizarDatos(@PathVariable("id") int codigo, @RequestBody ParametrizaPruebaDetalle obj) throws DataException{
@@ -53,7 +60,7 @@ public class ParametrizaPruebaDetalleServiceResource {
 			datosGuardados.setCalificacion(obj.getCalificacion());
 			datosGuardados.setCodParametrizaPruebaResumen(obj.getCodParametrizaPruebaResumen());
 			datosGuardados.setMinutosSegundos(obj.getMinutosSegundos());
-			datosGuardados.setCodSubtipoPrueba(obj.getCodSubtipoPrueba());
+			//datosGuardados.setCodSubtipoPrueba(obj.getCodSubtipoPrueba());
 			datosGuardados.setEstado(obj.getEstado());
 			//datosGuardados.setCod_prueba_detalle(obj.getCod_prueba_detalle());
 			//datosGuardados.setCodparametrizapruebaresumen(obj.getCodparametrizapruebaresumen());

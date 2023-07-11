@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.repositorio.fichaPersonal;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
@@ -17,7 +18,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
 
-	Optional<Estudiante> findByidEstudiante(String id);
+	Optional<Estudiante> findByCodUnicoEstudiante(String id);
 	
 	//@Query(nativeQuery = true)
 	//List<EstudianteDatos> findAllEstudiante();
@@ -40,6 +41,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
+	@Query("select gd from Estudiante ge\n" +
+			"join gen_dato_personal gd\n" +
+			"on ge.codDatosPersonales = gd.codDatosPersonales\n" +
+			"where ge.codEstudiante= :codEstudiante")
+	DatoPersonal getDatoPersonalByEstudiante(@Param("codEstudiante") Integer codEstudiante);
 	
 	@Query(nativeQuery = true, name = "EstudianteDatos.findEstudiante")
 	Optional<EstudianteDatos> getEstudiante(@Param("codEstudiante") Long codEstudiante);

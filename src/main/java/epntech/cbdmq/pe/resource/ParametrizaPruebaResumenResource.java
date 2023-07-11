@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 
 import epntech.cbdmq.pe.dominio.admin.ParametrizaPruebaResumen;
+import epntech.cbdmq.pe.dominio.util.ParametrizaPruebaResumenDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 import epntech.cbdmq.pe.servicio.impl.ParametrizaPruebaResumenServiceImpl;
@@ -51,6 +52,12 @@ public class ParametrizaPruebaResumenResource {
 		return objService.getAll();
 	}
 	
+	@GetMapping("/listarConDatos")
+	public List<ParametrizaPruebaResumenDatos> listarTodosVigentesConDatosSubtipoPrueba(){
+		return objService.listarTodosVigentesConDatosSubtipoPrueba();
+	}
+	
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<ParametrizaPruebaResumen> actualizarDatos(@PathVariable("id") int codigo, @RequestBody ParametrizaPruebaResumen obj) throws DataException{
 		return (ResponseEntity<ParametrizaPruebaResumen>) objService.getById(codigo).map(datosGuardados -> {
@@ -58,6 +65,7 @@ public class ParametrizaPruebaResumenResource {
 			datosGuardados.setFechaInicio(obj.getFechaInicio());
 			datosGuardados.setFechaFin(obj.getFechaFin());
 			datosGuardados.setDescripcion(obj.getDescripcion());
+			datosGuardados.setCodSubTipoPrueba(obj.getCodSubTipoPrueba());
 			datosGuardados.setEstado(obj.getEstado());
 			/*datosGuardados.setPuntaje_minimo(obj.getPuntaje_minimo());
 			datosGuardados.setPuntaje_maximo(obj.getPuntaje_maximo());*/

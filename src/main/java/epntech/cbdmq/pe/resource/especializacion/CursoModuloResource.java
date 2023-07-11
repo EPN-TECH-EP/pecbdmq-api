@@ -1,3 +1,4 @@
+
 package epntech.cbdmq.pe.resource.especializacion;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
@@ -67,13 +68,13 @@ public class CursoModuloResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<CursoModulo> getById(@PathVariable("id") Long codigo) {
+	public ResponseEntity<CursoModulo> getById(@PathVariable("id") Long codigo) throws DataException {
 		return cursoModuloServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/listarByCurso/{id}")
-	public List<CursoModulo> listarByCurso(@PathVariable("id") Long codigo) {
+	public List<CursoModulo> listarByCurso(@PathVariable("id") Long codigo) throws DataException {
 		return cursoModuloServiceImpl.getByCurso(codigo);
 	}
 

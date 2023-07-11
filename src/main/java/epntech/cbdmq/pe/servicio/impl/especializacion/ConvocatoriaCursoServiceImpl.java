@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_PARAMETRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,12 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.ConvocatoriaCurso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.ConvocatoriaCursoData;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
+import epntech.cbdmq.pe.dominio.util.ListaRequisitos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.ConvocatoriaDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.ConvocatoriaCursoDataRepository;
@@ -49,6 +54,8 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 	private EmailService emailService;
 	@Autowired
 	private ConvocatoriaCursoDataRepository convocatoriaCursoDataRepository;
+	@Autowired
+	private ParametroRepository parametroRepository;
 
 	@Override
 	public ConvocatoriaCurso save(ConvocatoriaCurso convocatoriaCurso, List<MultipartFile> archivos)
@@ -77,12 +84,12 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 	@Override
 	public List<ConvocatoriaCurso> listAll() {
 		// TODO Auto-generated method stub
-		return convocatoriaCursoRepository.findAll();
+		return convocatoriaCursoRepository.getAll();
 	}
 
 	@Override
 	public Optional<ConvocatoriaCurso> getByID(Long codConvocatoria) throws DataException {
-		Optional<ConvocatoriaCurso> convocatoriaCurso = convocatoriaCursoRepository.findById(codConvocatoria);
+		Optional<ConvocatoriaCurso> convocatoriaCurso = convocatoriaCursoRepository.getConvocatoriaCursoxId(codConvocatoria);
 		if (convocatoriaCurso.isEmpty())
 			throw new DataException(REGISTRO_NO_EXISTE);
 
@@ -109,6 +116,14 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 
 	@Override
 	public ConvocatoriaCurso update(ConvocatoriaCurso convocatoriaCursoActualizado) throws DataException {
+		LocalDate fechaActual = LocalDate.now();
+		if(convocatoriaCursoActualizado.getFechaInicioConvocatoria().isBefore(fechaActual))
+			throw new DataException(FECHA_INVALIDA);
+		if(convocatoriaCursoActualizado.getFechaFinConvocatoria().isBefore(fechaActual))
+			throw new DataException(FECHA_INVALIDA);
+		if(convocatoriaCursoActualizado.getFechaFinConvocatoria().isBefore(convocatoriaCursoActualizado.getFechaInicioConvocatoria()))
+			throw new DataException(FECHA_INVALIDA);
+		
 		Optional<ConvocatoriaCurso> objGuardado = convocatoriaCursoRepository
 				.findByNombreConvocatoriaIgnoreCase(convocatoriaCursoActualizado.getNombreConvocatoria());
 		if (objGuardado.isPresent()
@@ -149,7 +164,7 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 	}
 
 	@Override
-	public void notificar(String mensaje, Long codConvocatoria) throws MessagingException, DataException {
+	public void notificar(Long codConvocatoria) throws MessagingException, DataException {
 		Optional<ConvocatoriaCursoData> convocatoriaCursoOptional = convocatoriaCursoDataRepository.getConvocatoriaCurso(codConvocatoria);
 		if(convocatoriaCursoOptional.isEmpty())
 			throw new DataException(REGISTRO_NO_EXISTE);
@@ -157,7 +172,24 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 		ConvocatoriaCursoData convocatoriaCurso = new ConvocatoriaCursoData();
 		convocatoriaCurso = convocatoriaCursoOptional.get();
 		
-		String msg = String.format(mensaje, convocatoriaCurso.getNombreCatalogoCurso(), convocatoriaCurso.getFechaInicioConvocatoria(), convocatoriaCurso.getHoraInicioConvocatoria(), convocatoriaCurso.getFechaFinConvocatoria(), convocatoriaCurso.getHoraFinConvocatoria());
+		Optional<Parametro> parametro = parametroRepository.findByNombreParametro("especializacion.convocatoria.notificacion"); 
+		if(parametro.isEmpty())
+			throw new DataException(NO_PARAMETRO);
+		
+		String tableOpen = "<table class=\"default\">";
+		String tableClose = "</table>";
+		String rowOpen = "<tr><td>";
+		String rowClose = "</td></tr>";
+		String req = tableOpen;
+		int i = 1;
+		List<ListaRequisitos> requisitos = convocatoriaCursoRepository.findRequisitosCurso(codConvocatoria);
+		for (ListaRequisitos listaRequisitos : requisitos) {
+			req += rowOpen + i + ".- " + listaRequisitos.getNombreRequisito() + rowClose;
+			i ++;
+		}
+		req += tableClose;
+		
+		String msg = String.format(parametro.get().getValor(), convocatoriaCurso.getNombreCatalogoCurso(), convocatoriaCurso.getFechaInicioConvocatoria(), convocatoriaCurso.getHoraInicioConvocatoria(), convocatoriaCurso.getFechaFinConvocatoria(), convocatoriaCurso.getHoraFinConvocatoria(), req);
 		
 		String[] destinatarios = convocatoriaCurso.getEmailNotificacion().split(",");
 		

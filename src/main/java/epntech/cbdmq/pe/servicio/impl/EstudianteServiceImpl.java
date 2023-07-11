@@ -1,11 +1,13 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
-import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
-import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.util.EstudianteDto;
+import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
+import epntech.cbdmq.pe.servicio.PostulantesValidosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,9 @@ import epntech.cbdmq.pe.repositorio.admin.AspirantesRepository;
 import epntech.cbdmq.pe.repositorio.admin.EstudianteForRepository;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.servicio.EstudianteService;
+
+import java.util.stream.Collectors;
+
 
 @Service
 public class EstudianteServiceImpl implements EstudianteService {
@@ -24,6 +29,8 @@ public class EstudianteServiceImpl implements EstudianteService {
 	private EstudianteForRepository estudianteForRepository;
 	@Autowired
 	private AspirantesRepository aspirantesRepository;
+    @Autowired
+    private PostulantesValidosService postulantesValidosService;
 	
 	
 	@Override
@@ -59,7 +66,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 	@Override
 	public Optional<Estudiante> getByIdEstudiante(String id) {
 		// TODO Auto-generated method stub
-		return repo.findByidEstudiante(id);
+        return repo.findByCodUnicoEstudiante(id);
 	}
 
 	/*@Override
@@ -81,9 +88,38 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}
 
 	@Override
-	public Estudiante getEstudianteByUsuario(String codUsuario){
+    public Estudiante getEstudianteByUsuario(String codUsuario) {
 
 		return this.repo.getEstudianteByUsuario(codUsuario);
 	}
 	
+    @Override
+    public DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante) {
+        return repo.getDatoPersonalByEstudiante(codEstudiante);
+    }
+
+    @Override
+    public List<EstudianteDto> getEstudiantesPA() {
+        List<Estudiante> estudiantes = this.getAll();
+        List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidos();
+        List<Estudiante> estudiantesFiltrados = estudiantes.stream()
+                .filter(estudiante -> postulantes.stream()
+                        .anyMatch(postulante -> postulante.getCedula().equals(
+                                this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante()).getCedula()
+                        )))
+                .collect(Collectors.toList());
+        List<EstudianteDto> listDto= new ArrayList<EstudianteDto>();
+        for (Estudiante estudiante : estudiantesFiltrados){
+            EstudianteDto objDto= new EstudianteDto();
+            DatoPersonal dp= this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
+            objDto.setCedula(dp.getCedula());
+            objDto.setNombre(dp.getNombre()+" "+dp.getApellido());
+            objDto.setTelefono(dp.getNumTelefCelular());
+            objDto.setCodUnico(estudiante.getCodUnicoEstudiante());
+            listDto.add(objDto);
+        }
+
+        return listDto;
+    }
+
 }

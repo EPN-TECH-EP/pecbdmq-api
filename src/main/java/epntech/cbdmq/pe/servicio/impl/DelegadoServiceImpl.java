@@ -73,7 +73,7 @@ public class DelegadoServiceImpl implements DelegadoService {
 
 	@Override
 	public Boolean isUsuarioDelegado(int codUsuario) throws DataException {
-		Optional<Delegado> delegado=repo.delegadoByUser(codUsuario);
+		Optional<Delegado> delegado=repo.delegadoByUser(codUsuario,repoPA.getPAActive());
 		if (delegado.isPresent()) {
 			return true;
 		}

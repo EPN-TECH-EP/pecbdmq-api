@@ -61,13 +61,15 @@ public class ConvocatoriaForRepository {
 
 	@Value("${eureka.instance.hostname}")
 	public String HOSTNAME;
+	@Value("${url.descarga.archivos}")
+	public String URLDESCARGA;
 
 
 	public PeriodoAcademicoFor insertarConvocatoriaConDocumentos(ConvocatoriaFor convocatoria,
 			Set<RequisitoFor> requisitos, List<MultipartFile> docsPeriodoAcademico, List<MultipartFile> docsConvocatoria)
 			throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, DataException {
-		String sqlConvocatoria = "INSERT INTO cbdmq.gen_convocatoria (cod_periodo_academico, nombre_convocatoria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres, correo) "
-				+ "VALUES (:periodo, :nombre, :estado, :fechaInicio, :fechaFin, :horaInicio, :horaFin, :codigoUnico, :cupoHombres, :cupoMujeres, :correo)";
+		String sqlConvocatoria = "INSERT INTO cbdmq.gen_convocatoria (cod_periodo_academico, nombre_convocatoria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, fecha_actual,hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres, correo) "
+				+ "VALUES (:periodo, :nombre, :estado, :fechaInicio, :fechaFin,:fechaActual,:horaInicio, :horaFin, :codigoUnico, :cupoHombres, :cupoMujeres, :correo)";
 		String sqlDocumento = "INSERT INTO cbdmq.gen_documento (autorizacion, cod_tipo_documento, descripcion, estado_validacion, nombre_documento, observaciones, ruta, estado) "
 				+ "VALUES (:autorizacion, :tipo, :descripcion, :estadoValidacion, :nombre, :observaciones, :ruta, :estado)";
 		String sqlConvocatoriaDocumento = "INSERT INTO cbdmq.gen_convocatoria_documento (cod_convocatoria, cod_documento) "
@@ -119,6 +121,7 @@ public class ConvocatoriaForRepository {
 				.setParameter("nombre", convocatoria.getNombre()).setParameter("estado", convocatoria.getEstado())
 				.setParameter("fechaInicio", convocatoria.getFechaInicioConvocatoria())
 				.setParameter("fechaFin", convocatoria.getFechaFinConvocatoria())
+				.setParameter("fechaActual", convocatoria.getFechaActual())
 				.setParameter("horaInicio", convocatoria.getHoraInicioConvocatoria())
 				.setParameter("horaFin", convocatoria.getHoraFinConvocatoria())
 				.setParameter("codigoUnico", convocatoria.getCodigoUnico())
@@ -186,6 +189,7 @@ public class ConvocatoriaForRepository {
 		// guardamos archivos del Periodo Academico en el servidor
 
 		List<DatosFile> archivosPA = new ArrayList<>();
+		if (docsPeriodoAcademico != null) {
 		try {
 			archivosPA = guardarArchivo(docsPeriodoAcademico, PATH_PROCESO_PERIODO_ACADEMICO, periodo.getCodigo().toString());
 		} catch (Exception e) {
@@ -234,7 +238,7 @@ public class ConvocatoriaForRepository {
 			periodoAcademicoDocumentoFor.setCodDocumento(elemento.getCodDocumento());
 			entityManager.persist(periodoAcademicoDocumentoFor);
 		}
-		
+		}
 
 		// REQUISITOS
 
@@ -275,7 +279,7 @@ public class ConvocatoriaForRepository {
 		 * .setParameter("codDocumento", elemento.getDocumentosRequisito()); }
 		 */
 		
-		String link = HOSTNAME + ":" + SERVER_PORT + "/link/" + codigoDocumento;
+		String link = URLDESCARGA+ "/link/" + codigoDocumento;
 		
 		String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
 		

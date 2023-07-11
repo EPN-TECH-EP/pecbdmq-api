@@ -1,7 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
-import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INCORRECTO;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_BAJAS;
 
@@ -64,8 +64,11 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public Curso update(Curso objActualizado) {
-		// TODO Auto-generated method stub
+	public Curso update(Curso objActualizado) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(objActualizado.getCodCursoEspecializacion());
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		return cursoRepository.save(objActualizado);
 	}
 
@@ -76,8 +79,11 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public Optional<Curso> getById(Long id) {
-		// TODO Auto-generated method stub
+	public Optional<Curso> getById(Long id) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(id);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
 		return cursoRepository.findById(id);
 	}
 
@@ -87,7 +93,7 @@ public class CursoServiceImpl implements CursoService {
 		// TODO Auto-generated method stub
 		cursoDocumentoRepository.updateEstadoAprobado(estadoAprobado, estadoValidado, observaciones,
 				codCursoEspecializacion, codDocumento);
-		cursoDocumentoRepository.validaDocumentosCurso(codCursoEspecializacion);
+		cursoRepository.validaDocumentosCursoEspecializacion(codCursoEspecializacion);
 		
 		return cursoDocumentoRepository.findByCodCursoEspecializacionAndCodDocumento(codCursoEspecializacion,
 				codDocumento);
@@ -211,6 +217,49 @@ public class CursoServiceImpl implements CursoService {
 	@Override
 	public void delete(Long codCursoEspecializacion) {
 		cursoRepository.deleteById(codCursoEspecializacion);
+		
+	}
+
+	@Override
+	public Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) {
+		// TODO Auto-generated method stub
+		return cursoRepository.cumplePorcentajeMinimoAprobadosCurso(codCursoEspecializacion);
+	}
+
+	@Override
+	public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException {
+
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
+		Optional<Documento> documentoOptional;
+		Documento documento = new Documento();
+
+		// System.out.println("id: " + codDocumento);
+		documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		if(documentoOptional.isEmpty())
+			throw new DataException(DOCUMENTO_NO_EXISTE);
+			
+		documento = documentoOptional.get();
+
+		Path ruta = Paths.get(documento.getRuta());
+
+		// System.out.println("ruta: " + ruta);
+		if (Files.exists(ruta)) {
+			try {
+				// System.out.println("ruta" + ruta);
+				Files.delete(ruta);
+				cursoDocumentoRepository.deleteByCodCursoEspecializacionAndCodDocumento(codCursoEspecializacion, codDocumento);
+				documentoRepository.deleteById(codDocumento.intValue());
+				
+			} catch (Exception e) {
+
+				throw new DataException(e.getMessage());
+				// e.printStackTrace();
+			}
+
+		}
 		
 	}
 

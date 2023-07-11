@@ -91,7 +91,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 
 		Date FechaInicio = convocatoria.getFechaInicioConvocatoria(); // convocatoriaRepository.getConvocatoriapaactivo().getFechaInicioConvocatoria();
 		Date FechaFin = convocatoria.getFechaFinConvocatoria(); // convocatoriaRepository.getConvocatoriapaactivo().getFechaFinConvocatoria();
-
+		Date FechaActual = convocatoria.getFechaActual();
 		// System.out.println("fechaActual "+fechaActual);
 
 		/*
@@ -258,6 +258,7 @@ public class InscripcionForServiceImpl implements InscripcionForService {
 		Convocatoria convocatoria = convocatoriaRepository.getConvocatoriapaactivo();
 		Date FechaInicio = convocatoria.getFechaInicioConvocatoria();
 		Date FechaFin = convocatoria.getFechaFinConvocatoria();
+		Date FechaActual = convocatoria.getFechaActual();
 
 		return this.validarFechasInscripcion(FechaInicio, FechaFin, convocatoria);
 

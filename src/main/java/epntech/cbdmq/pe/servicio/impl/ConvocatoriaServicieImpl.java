@@ -105,4 +105,9 @@ public class ConvocatoriaServicieImpl implements ConvocatoriaService{
 		return convocatoria;
 	}
 
+	@Override
+	public String getCodConvocatoriaCreacion() {
+		return repo.findNextLastCodigo();
+	}
+
 }

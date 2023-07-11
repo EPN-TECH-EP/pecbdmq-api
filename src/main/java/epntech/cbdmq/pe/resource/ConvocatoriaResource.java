@@ -66,6 +66,7 @@ public class ConvocatoriaResource {
 			datosGuardados.setEstado(obj.getEstado());
 			datosGuardados.setFechaInicioConvocatoria(obj.getFechaInicioConvocatoria());
 			datosGuardados.setFechaFinConvocatoria(obj.getFechaFinConvocatoria());
+			datosGuardados.setFechaActual(obj.getFechaActual());
 			datosGuardados.setHoraInicioConvocatoria(obj.getHoraInicioConvocatoria());
 			datosGuardados.setHoraFinConvocatoria(obj.getHoraFinConvocatoria());
 			
@@ -102,6 +103,12 @@ public class ConvocatoriaResource {
 
 	public List<Convocatorialistar> listarTodo() {
 		return objService.getConvocatorialistar();
+
+	}
+	@GetMapping("/codigoUnicoCreacion")
+
+	public String getCodLastConvocatoria()  {
+		return objService.getCodConvocatoriaCreacion();
 
 	}
 	

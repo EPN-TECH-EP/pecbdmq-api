@@ -1,5 +1,9 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +15,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "esp_catalogo_cursos")
+@SQLDelete(sql = "UPDATE {h-schema}esp_catalogo_cursos SET estado = 'ELIMINADO' WHERE cod_catalogo_cursos = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class CatalogoCurso {
 
 	
@@ -19,13 +25,9 @@ public class CatalogoCurso {
 	@Column(name = "cod_catalogo_cursos")
 	private Integer codCatalogoCursos;
 	@Column(name = "nombre_catalogo_curso")
-	private String nombre;
+	private String nombreCatalogoCurso;
 	@Column(name = "descripcion_catalogo_curso")
-	private String descripcion;
-	@Column(name = "numero_horas")
-	private Long numeroHoras;
-	@Column(name = "nota_minima")
-	private Double notaMinima;
+	private String descripcionCatalogoCurso;
 	@Column(name = "estado")
 	private String estado;
 	

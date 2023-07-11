@@ -275,7 +275,7 @@ public class Estudiante{
 	private Integer codDatosPersonales;
 	
 	@Column(name = "codigo_unico_estudiante")
-	private String idEstudiante;
+	private String codUnicoEstudiante;
 	@Column(name = "estado")
 
 	private String estado;

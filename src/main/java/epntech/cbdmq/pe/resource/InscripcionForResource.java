@@ -240,6 +240,10 @@ public class InscripcionForResource {
 	public List<PostulanteUtil> getPostulantesPaginado(@PathVariable("usuario") Integer usuario, Pageable pageable) {
 		return postulanteService.getPostulantesPaginado(usuario, pageable);
 	}
+	@GetMapping("/muestraPostulantesPaginado/{usuario}")
+	public List<PostulanteUtil> getMuestarPostulantesPaginado(@PathVariable("usuario") Integer usuario, Pageable pageable) {
+		return postulanteService.getMuestraPostulantesPaginado(usuario, pageable);
+	}
 	
 	@GetMapping("/postulantesAsignadosPaginado/{usuario}")
 	public List<Postulante> getPostulantesAsignados(@PathVariable("usuario") Integer usuario, Pageable pageable) {
@@ -273,11 +277,15 @@ public class InscripcionForResource {
 		return validacionRequisitosForService.update(requisitos);
 	}
 	
-	@GetMapping("/muestra")
-	public List<Postulante> getMuestra() throws DataException {
+	@GetMapping("/generarMuestra")
+	public List<Postulante> generarMuestra() throws DataException {
 		return postulanteService.getMuestra();
 	}
-	
+	@GetMapping("/getMuestra")
+	public List<PostulanteUtil> getMuestra(Pageable pageable) throws DataException {
+		return postulanteService.getPostulantesMuestraPA(pageable);
+	}
+	//Sirve para asignar manualmente la muestra
 	@PutMapping("/asignarMuestra")
 	public Postulante asignarMuestra(@RequestBody Postulante postulante) throws DataException {
 		return postulanteService.updateEstadoMuestra(postulante);

@@ -64,6 +64,9 @@ public class Convocatoria {
 	@Column(name = "fecha_fin_convocatoria")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date fechaFinConvocatoria;
+	@Column(name = "fecha_actual")
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date fechaActual;
 	
 	@Column(name = "hora_inicio_convocatoria")
 	@JsonFormat(pattern = "HH:mm")

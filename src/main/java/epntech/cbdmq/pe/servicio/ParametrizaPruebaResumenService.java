@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.ParametrizaPruebaResumen;
+import epntech.cbdmq.pe.dominio.util.ParametrizaPruebaResumenDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface ParametrizaPruebaResumenService {
@@ -19,5 +20,7 @@ public interface ParametrizaPruebaResumenService {
 	ParametrizaPruebaResumen update(ParametrizaPruebaResumen objActualizado) throws DataException;
 
 	void delete(int id) throws DataException;
+	
+	public List<ParametrizaPruebaResumenDatos> listarTodosVigentesConDatosSubtipoPrueba();
 	
 }

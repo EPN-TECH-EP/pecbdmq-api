@@ -7,6 +7,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class PostulanteServiceImpl implements PostulanteService {
 
 	@Autowired
 	private PostulanteUtilRepository postulanteUtilRepository;
+    @Autowired
+    PeriodoAcademicoRepository periodoAcademicoRepository;
 
 	@Override
 	public Postulante save(Postulante obj, String proceso) {
@@ -57,7 +60,7 @@ public class PostulanteServiceImpl implements PostulanteService {
 		repo.deleteById(id);
 	}
 
-	public Optional<PostulanteDatoPersonal> getByCedula(String cedula){
+    public Optional<PostulanteDatoPersonal> getByCedula(String cedula) {
 		return repo1.getByCedula(cedula);
 	}
 
@@ -74,35 +77,41 @@ public class PostulanteServiceImpl implements PostulanteService {
 	}
 
 	@Override
+    public List<PostulanteUtil> getMuestraPostulantesPaginado(Integer usuario, Pageable pageable) {
+        return postulanteUtilRepository.getPostulantesMuestraPaginado(usuario, pageable);
+    }
+
+    @Override
 	public Postulante update(Postulante objActualizado) throws DataException {
 		Optional<Postulante> postulante;
 		Boolean bandera = false;
 
 		postulante = repo.findById(objActualizado.getCodPostulante());
-		if(postulante.isPresent()) {
+        if (postulante.isPresent()) {
 
-			if(postulante.get().getEstado().equalsIgnoreCase("PENDIENTE") &&  objActualizado.getEstado().equalsIgnoreCase("ASIGNADO"))
+            String estadoPostulante = postulante.get().getEstado();
+
+            if (estadoPostulante.equalsIgnoreCase("PENDIENTE")) {
 				bandera = true;
-			else
+            } else if (estadoPostulante.equalsIgnoreCase("MUESTRA")) {
+                bandera = true;
+            } else {
 				bandera = false;
+            }
 
-			// if(bandera) {
+            if (bandera) {
 			Postulante p = postulante.get();
-
-			//p.setCodDatoPersonal(objActualizado.getCodDatoPersonal());
-			//p.setIdPostulante(objActualizado.getIdPostulante());
-			//p.setCodPeriodoAcademico(objActualizado.getCodPeriodoAcademico());
-			
-			p.setEstado(objActualizado.getEstado());
+                if (p.getEstado().equalsIgnoreCase("PENDIENTE")) {
+                    p.setEstado("ASIGNADO");
+                } else if (estadoPostulante.equalsIgnoreCase("MUESTRA")) {
+                    p.setEstado("ASIGNADO MUESTRA");
+                }
 			p.setCodUsuario(objActualizado.getCodUsuario());
 			return repo.save(p);
-		}
-		// else
-		// throw new DataException(ESTADO_INVALIDO + " Estado actual: " +
-		// postulante.get().getEstado() + ", Estado ingresado: " +
-		// objActualizado.getEstado());
-//		}
-		else
+            } else
+                throw new DataException(ESTADO_INVALIDO + " Estado actual: " +
+                        postulante.get().getEstado());
+        } else
 			throw new DataException(REGISTRO_NO_EXISTE + " - " + objActualizado.getCodPostulante());
 	}
 
@@ -163,5 +172,18 @@ public class PostulanteServiceImpl implements PostulanteService {
 		// TODO Auto-generated method stub
 		return postulanteUtilRepository.getPostulantesAllPaginadoTodoAsignado(pageable);
 	}
+
+    @Override
+    public List<PostulanteUtil> getPostulantesEstadoPA(String estado, Pageable pageable) {
+
+
+        return postulanteUtilRepository.getPostulantesEstadoPAPaginado(estado, periodoAcademicoRepository.getPAActive(), pageable);
+    }
+
+    @Override
+    public List<PostulanteUtil> getPostulantesMuestraPA(Pageable pageable) {
+
+        return this.getPostulantesEstadoPA("MUESTRA", pageable);
+    }
 
 }
