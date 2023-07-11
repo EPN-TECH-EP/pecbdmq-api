@@ -3,9 +3,8 @@ package epntech.cbdmq.pe.servicio.impl.especializacion;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION_INSCRIPCION;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_INSCRIPCION;
-import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
-import static epntech.cbdmq.pe.constante.EspecializacionConst.CURSO_NO_PRUEBAS;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,12 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.util.CursoDatos;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscritosValidos;
-import epntech.cbdmq.pe.dominio.util.PruebaDetalleData;
 import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -50,6 +47,7 @@ import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleEntityRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.ConvocatoriaCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoEntityRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionDatosRepository;
@@ -90,6 +88,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	private PruebaDetalleEntityRepository pruebaDetalleEntityRepository;
 	@Autowired
 	private CursoEntityRepository cursoEntityRepository;
+	@Autowired
+	private ConvocatoriaCursoRepository convocatoriaCursoRepository;
 	
 	
 	@Value("${pecb.archivos.ruta}")
@@ -99,6 +99,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public InscripcionEsp save(InscripcionEsp inscripcionEsp) throws DataException {
+		Boolean convocatoria = convocatoriaCursoRepository.validaConvocatoriaCursoActiva(inscripcionEsp.getCodCursoEspecializacion());
+		if(!convocatoria)
+			throw new DataException(CONVOCATORIA_NO_ACTIVA);
+		
 		Optional<InscripcionEsp> inscripcionEspRepositoryOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(inscripcionEsp.getCodEstudiante(), inscripcionEsp.getCodCursoEspecializacion());
 		if(inscripcionEspRepositoryOptional.isPresent())
 			throw new DataException(REGISTRO_YA_EXISTE);

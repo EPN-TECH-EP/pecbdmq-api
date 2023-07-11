@@ -21,4 +21,8 @@ public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, 
 	//@Procedure(name = "validaDocumentosCursoEspecializacion")
     //void validaDocumentosCursoEspecializacion(@Param("codCursoEspecializacion") Long codCursoEspecializacion);
 	
+	@Transactional
+	@Modifying
+	@Query("delete from CursoDocumento a where a.codCursoEspecializacion = ?1 and codDocumento = ?2")
+	void deleteByCodCursoEspecializacionAndCodDocumento(Long codCursoEspecializacion, Long codDocumento);
 }

@@ -18,11 +18,11 @@ public interface CursoService {
 	
 	Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento);
 	
-	Curso update(Curso objActualizado);
+	Curso update(Curso objActualizado) throws DataException;
 	
 	List<Curso> listarAll();
 	
-	Optional<Curso> getById(Long id);
+	Optional<Curso> getById(Long id) throws DataException;
 	
 	CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento);
 
@@ -37,4 +37,6 @@ public interface CursoService {
 	void delete(Long codCursoEspecializacion);
 	
 	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion);
+	
+	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException;
 }

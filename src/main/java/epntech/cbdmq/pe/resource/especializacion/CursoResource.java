@@ -79,7 +79,7 @@ public class CursoResource {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Curso> getById(@PathVariable("id") Long codigo) {
+	public ResponseEntity<Curso> getById(@PathVariable("id") Long codigo) throws DataException {
 		return cursoServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -110,7 +110,11 @@ public class CursoResource {
 			datosGuardados.setTieneModulos(obj.getTieneModulos());
 
 			Curso datosActualizados = null;
-			datosActualizados = cursoServiceImpl.update(datosGuardados);
+			try {
+				datosActualizados = cursoServiceImpl.update(datosGuardados);
+			} catch (DataException e) {
+				return response(HttpStatus.BAD_REQUEST, e.getMessage());
+			}
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
@@ -145,6 +149,15 @@ public class CursoResource {
 	@GetMapping("/cumpleMinimoAprobadosPruebasCurso/{id}")
 	public ResponseEntity<?> cumpleMinimoAprobados(@PathVariable("id") long codigo) {
 		return response(HttpStatus.OK, cursoServiceImpl.cumpleMinimoAprobadosCurso(codigo).toString());
+	}
+	
+	@DeleteMapping("/eliminarDocumento")
+	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Long codCursoEspecializacion, @RequestParam Long codDocumento)
+			throws IOException, DataException {
+
+		cursoServiceImpl.deleteDocumento(codCursoEspecializacion, codDocumento);
+		
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
