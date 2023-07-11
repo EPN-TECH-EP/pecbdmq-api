@@ -20,5 +20,7 @@ public class InstructorMateriaReadDto {
         this.nombreEje = nombreEje;
         this.cod_aula = cod_aula;
         this.nombre_aula = nombre_aula;
+        this.asistentes = new Instructor[0];
+        this.instructores = new Instructor[0];
     }
 }

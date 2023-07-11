@@ -142,15 +142,6 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
             List<InstructorDatos> instructores = this.getInstructores(objMP.getCodMateriaParalelo());
             List<InstructorDatos> asistentes = this.getInstructoresAsistentes(objMP.getCodMateriaParalelo());
             InstructorDatos coordinador = this.getCoordinador(objMP.getCodMateriaParalelo());
-            InstructorMateriaReadDto newObj = new InstructorMateriaReadDto();
-            newObj.setNombreMateria(objMateria.getNombre());
-            newObj.setNombreEjeMateria(objEjeMateria.getNombreEjeMateria());
-            newObj.setNombreParalelo(objParalelo.getNombreParalelo());
-            newObj.setAula(objAula);
-            newObj.setCoordinador(coordinador);
-            newObj.setAsistentes(asistentes);
-            newObj.setInstructores(instructores);
-            lista.add(newObj);
         }
         return lista;
 
