@@ -59,11 +59,21 @@ public class MateriaPeriodoServiceImpl implements MateriaPeriodoService{
 	}
 
 	@Override
+	public Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico) {
+		return repo.findByCodMateriaAndCodPeriodoAcademico(codMateria, codPeriodoAcademico);
+	}
+
+	@Override
 	public void delete(Integer codigo) {
 		// TODO Auto-generated method stub
 		repo.deleteById(codigo);
 	}
+
+	@Override
+	public List<MateriaPeriodo> getAllByPA(Integer codPeriodoAcademico) {
+		return repo.getAllByCodPeriodoAcademico(codPeriodoAcademico);
 	}
+}
 	
 	
 
