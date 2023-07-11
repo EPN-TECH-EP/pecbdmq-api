@@ -51,12 +51,13 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
                     objMPe.setCodMateria(materiaStream.getCodMateria());
                     objMPe.setCodAula(materiaStream.getCodAula());
                     try {
-                        materiaPAService.save(objMPe);
+                        MateriaPeriodo objMPeI=materiaPAService.save(objMPe);
+                        return objMPeI;
                     } catch (DataException e) {
                         throw new RuntimeException(e);
                     }
                     //replace
-                    return objMPe;
+
                 })
                 .collect(Collectors.toList());
 
@@ -64,14 +65,15 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
                 .flatMap(materiaPA -> paralelos.stream()
                         .map(paralelo -> {
                             MateriaParalelo materiaParalelo = new MateriaParalelo();
-                            materiaParalelo.setCodMateriaPeriodo(materiaPA.getCodMateria());
+                            materiaParalelo.setCodMateriaPeriodo(materiaPA.getCodMateriaPeriodo());
                             materiaParalelo.setCodParalelo(paralelo.getCodParalelo());
                             try {
-                                this.saveMateriaInParalelo(materiaParalelo);
+                                MateriaParalelo materiaParaleloI=this.saveMateriaInParalelo(materiaParalelo);
+                                return materiaParaleloI;
                             } catch (DataException e) {
                                 throw new RuntimeException(e);
                             }
-                            return materiaParalelo;
+
                         }))
                 .collect(Collectors.toList());
         return true;
