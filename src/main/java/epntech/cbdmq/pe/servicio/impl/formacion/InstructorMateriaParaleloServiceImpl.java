@@ -59,7 +59,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
 
     @Override
     @Transactional
-    public Boolean asignarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
+    public Boolean asignarInstructorMateriaParaleloAll(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
         MateriaPeriodo objMPe = new MateriaPeriodo();
         objMPe.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
         objMPe.setCodMateria(codMateria);
@@ -103,7 +103,8 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     }
 
     @Override
-    public Boolean asignarInstructorMateriaParaleloII(Integer codMateria, Integer codCoordinador,Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
+    @Transactional
+    public Boolean asignarInstructortoMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
         Optional<MateriaPeriodo> objGuardado = serviceMPe.findByCodMateriaAndCodPeriodoAcademico(codMateria,servicePeriodo.getPAActivo());
         if(objGuardado.isEmpty()){
             throw new RuntimeException("No se encuentra dicha materia");
