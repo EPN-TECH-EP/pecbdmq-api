@@ -117,6 +117,11 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 	@Override
 	public ConvocatoriaCurso update(ConvocatoriaCurso convocatoriaCursoActualizado) throws DataException {
 		LocalDate fechaActual = LocalDate.now();
+		
+		Optional<ConvocatoriaCurso> objGuardado = convocatoriaCursoRepository.findById(convocatoriaCursoActualizado.getCodConvocatoria());
+		if (objGuardado.isEmpty())
+				throw new DataException(REGISTRO_NO_EXISTE);
+				
 		if(convocatoriaCursoActualizado.getFechaInicioConvocatoria().isBefore(fechaActual))
 			throw new DataException(FECHA_INVALIDA);
 		if(convocatoriaCursoActualizado.getFechaFinConvocatoria().isBefore(fechaActual))
@@ -124,12 +129,16 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 		if(convocatoriaCursoActualizado.getFechaFinConvocatoria().isBefore(convocatoriaCursoActualizado.getFechaInicioConvocatoria()))
 			throw new DataException(FECHA_INVALIDA);
 		
-		Optional<ConvocatoriaCurso> objGuardado = convocatoriaCursoRepository
+		/*Optional<ConvocatoriaCurso> objGuardado = convocatoriaCursoRepository
 				.findByNombreConvocatoriaIgnoreCase(convocatoriaCursoActualizado.getNombreConvocatoria());
 		if (objGuardado.isPresent()
 				&& !objGuardado.get().getCodConvocatoria().equals(convocatoriaCursoActualizado.getCodConvocatoria())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
-		}
+		}*/
+		
+		if(convocatoriaCursoActualizado.getEstado() == null)
+			convocatoriaCursoActualizado.setEstado(objGuardado.get().getEstado());
+		
 		return convocatoriaCursoRepository.save(convocatoriaCursoActualizado);
 	}
 
