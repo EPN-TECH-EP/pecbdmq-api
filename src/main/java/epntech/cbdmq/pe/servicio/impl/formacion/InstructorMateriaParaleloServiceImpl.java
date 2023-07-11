@@ -10,20 +10,14 @@ import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.InstructorMateriaParaleloRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.MateriaParaleloRepository;
-import epntech.cbdmq.pe.servicio.AulaService;
-import epntech.cbdmq.pe.servicio.MateriaPeriodoService;
-import epntech.cbdmq.pe.servicio.MateriaService;
-import epntech.cbdmq.pe.servicio.ParaleloService;
-import epntech.cbdmq.pe.servicio.EjeMateriaService;
+import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.formacion.InstructorMateriaParaleloService;
 import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -50,6 +44,8 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     private ParaleloService serviceParalelo;
     @Autowired
     private EjeMateriaService serviceEje;
+    @Autowired
+    private PeriodoAcademicoService servicePeriodo;
 
     @Override
     public List<InstructorMateriaParalelo> getInstructoresMateriaParalelo() {
@@ -107,6 +103,42 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     }
 
     @Override
+    public Boolean asignarInstructorMateriaParaleloII(Integer codMateria, Integer codCoordinador,Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
+        Optional<MateriaPeriodo> objGuardado = serviceMPe.findByCodMateriaAndCodPeriodoAcademico(codMateria,servicePeriodo.getPAActivo());
+        if(objGuardado.isEmpty()){
+            throw new RuntimeException("No se encuentra dicha materia");
+        }
+        Optional<MateriaParalelo> objMPAGuardado = serviceMP.findByCodMateriaPeriodoAndCodParalelo(objGuardado.get().getCodMateriaPeriodo(),codParalelo);
+        if(objMPAGuardado.isEmpty()){
+            throw new RuntimeException("No se encuentra dicha materia en ese paralelo");
+        }
+
+        InstructorMateriaParalelo objCoordinador = new InstructorMateriaParalelo();
+        objCoordinador.setCodMateriaParalelo(objMPAGuardado.get().getCodMateriaParalelo());
+        objCoordinador.setCodInstructor(codCoordinador);
+        objCoordinador.setCodTipoInstructor(3);
+        repoIMP.save(objCoordinador);
+
+        for (Integer codAsistente : codAsistentes) {
+            InstructorMateriaParalelo objAsistente = new InstructorMateriaParalelo();
+            objAsistente.setCodMateriaParalelo(objMPAGuardado.get().getCodMateriaParalelo());
+            objAsistente.setCodInstructor(codAsistente);
+            objAsistente.setCodTipoInstructor(1);
+            repoIMP.save(objAsistente);
+        }
+
+        for (Integer codInstructor : codInstructores) {
+            InstructorMateriaParalelo objInstructor = new InstructorMateriaParalelo();
+            objInstructor.setCodMateriaParalelo(objMPAGuardado.get().getCodMateriaParalelo());
+            objInstructor.setCodInstructor(codInstructor);
+            objInstructor.setCodTipoInstructor(2);
+            repoIMP.save(objInstructor);
+        }
+
+        return true;
+    }
+
+    @Override
     public List<InstructorDatos> getInstructoresAsistentes(Integer codMateriaParalelo) {
         return repoIdr.getInstructoresMateriaParaleloByTipo(codMateriaParalelo, "ASISTENTE");
 
@@ -142,15 +174,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
             List<InstructorDatos> instructores = this.getInstructores(objMP.getCodMateriaParalelo());
             List<InstructorDatos> asistentes = this.getInstructoresAsistentes(objMP.getCodMateriaParalelo());
             InstructorDatos coordinador = this.getCoordinador(objMP.getCodMateriaParalelo());
-            InstructorMateriaReadDto newObj = new InstructorMateriaReadDto();
-            newObj.setNombreMateria(objMateria.getNombre());
-            newObj.setNombreEjeMateria(objEjeMateria.getNombreEjeMateria());
-            newObj.setNombreParalelo(objParalelo.getNombreParalelo());
-            newObj.setAula(objAula);
-            newObj.setCoordinador(coordinador);
-            newObj.setAsistentes(asistentes);
-            newObj.setInstructores(instructores);
-            lista.add(newObj);
+
         }
         return lista;
 

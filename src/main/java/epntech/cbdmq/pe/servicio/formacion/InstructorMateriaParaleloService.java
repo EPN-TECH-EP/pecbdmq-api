@@ -13,6 +13,7 @@ public interface InstructorMateriaParaleloService {
     public InstructorMateriaParalelo save(InstructorMateriaParalelo newObj);
 
     public Boolean asignarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo);
+    public Boolean asignarInstructorMateriaParaleloII(Integer codMateria, Integer codCoordinador, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo);
 
     List<InstructorDatos> getInstructoresAsistentes(Integer codMateriaParalelo);
 
