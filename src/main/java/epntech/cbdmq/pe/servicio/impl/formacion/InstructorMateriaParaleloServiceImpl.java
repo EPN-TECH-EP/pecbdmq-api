@@ -104,12 +104,8 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
 
     @Override
     @Transactional
-    public Boolean asignarInstructortoMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
-        Optional<MateriaPeriodo> objGuardado = serviceMPe.findByCodMateriaAndCodPeriodoAcademico(codMateria,servicePeriodo.getPAActivo());
-        if(objGuardado.isEmpty()){
-            throw new RuntimeException("No se encuentra dicha materia");
-        }
-        Optional<MateriaParalelo> objMPAGuardado = serviceMP.findByCodMateriaPeriodoAndCodParalelo(objGuardado.get().getCodMateriaPeriodo(),codParalelo);
+    public Boolean asignarInstructortoMateriaParalelo(Integer codMateriaPeriodo, Integer codCoordinador, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
+        Optional<MateriaParalelo> objMPAGuardado = serviceMP.findByCodMateriaPeriodoAndCodParalelo(codMateriaPeriodo,codParalelo);
         if(objMPAGuardado.isEmpty()){
             throw new RuntimeException("No se encuentra dicha materia en ese paralelo");
         }
