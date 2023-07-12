@@ -7,6 +7,6 @@ import java.io.Serializable;
 public class DocumentoPruebaId implements Serializable {
     private static final long serialVersionUID = -7100801367579540083L;
 
-    private Integer codMateria;
+    private Integer codPruebaDetalle;
     private Integer codDocumento;
 }
