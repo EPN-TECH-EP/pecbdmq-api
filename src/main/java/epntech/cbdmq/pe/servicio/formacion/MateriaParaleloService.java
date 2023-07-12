@@ -19,5 +19,5 @@ public interface MateriaParaleloService {
     public Optional<MateriaParalelo> getById(Integer codigo);
     public boolean asignarMateriaParalelo(List<MateriaAulaUtil> materiasAula, List<Paralelo> paralelos);
     Optional<MateriaParalelo> findByCodMateriaPeriodoAndCodParalelo(Integer materiaParalelo, Integer paralelo);
-    InstructorMateriaParalelosDto getMateriaPAParaleloNombres();
+    List<InstructorMateriaReadDto> getMateriaNombres(Integer codPeriodoAcademico);
 }
