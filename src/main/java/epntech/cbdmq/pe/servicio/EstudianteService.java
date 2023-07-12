@@ -28,6 +28,7 @@ public interface EstudianteService {
 	void saveEstudiantes();
 	
 	Estudiante getEstudianteByUsuario(String codUsuario);
+	Estudiante getEstudianteByCodigoUnico(String codUnico);
 	DatoPersonal getDatoPersonalByEstudiante(Integer Estudiante);
 	List<EstudianteDto> getEstudiantesPA();
 

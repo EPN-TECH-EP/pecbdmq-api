@@ -9,6 +9,7 @@ import epntech.cbdmq.pe.repositorio.admin.formacion.EstudianteMateriaParaleloRep
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
 import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
+import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,9 @@ public class EstudianteMateriaParaleloServiceImpl implements EstudianteMateriaPa
     private EjeMateriaService serviceEje;
     @Autowired
     private PeriodoAcademicoService servicePeriodo;
+    @Autowired
+    private EstudianteService estudianteService;
+
 
     @Override
     public List<EstudianteMateriaParalelo> getEstudiantesMateriaParalelo() {
@@ -48,33 +52,25 @@ public class EstudianteMateriaParaleloServiceImpl implements EstudianteMateriaPa
     }
 
     @Override
-    public Boolean asignarEstudiantesParalelo(List<Estudiante> estudiantes, Integer codParalelo) {
-        List<MateriaPeriodo> materias = serviceMPe.getAllByPA(servicePeriodo.getPAActivo());
-        List<MateriaParalelo> materiaParaleloL = materias.stream().map(materiaPeriodo -> {
-                    Optional<MateriaParalelo> objMateria = serviceMP.findByCodMateriaPeriodoAndCodParalelo(materiaPeriodo.getCodMateriaPeriodo(), codParalelo);
-            if (objMateria.isPresent()) {
-                return objMateria.get();
-            }
-
-                    try {
-                        throw new DataException("No se encuentra data");
-                    } catch (DataException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-        ).collect(Collectors.toList());
+    public Boolean asignarEstudiantesParalelo(List<EstudianteDto> estudiantes, Integer codParalelo) throws DataException {
+        List<MateriaParalelo> materiaParaleloL =serviceMP.getAllByCodParalelo(codParalelo);
+        if(materiaParaleloL.isEmpty()){
+            throw new DataException("No se encontraron materias para el paralelo");
+        }
 
             List<EstudianteMateriaParalelo> estudianteMateriasParalelo = materiaParaleloL.stream()
                     .flatMap(materiaParalelo -> estudiantes.stream()
-                            .map(estudiante -> {
+                            .map(estudianteDto -> {
+                                Estudiante estudiante=estudianteService.getEstudianteByCodigoUnico(estudianteDto.getCodUnico());
                                 EstudianteMateriaParalelo estudianteMateriaParaleloObj = new EstudianteMateriaParalelo();
                                 estudianteMateriaParaleloObj.setCodMateriaParalelo(materiaParalelo.getCodMateriaParalelo());
                                 estudianteMateriaParaleloObj.setCodEstudiante(estudiante.getCodEstudiante());
+                                estudianteMateriaParaleloObj.setEstado("ACTIVO");
                                 this.save(estudianteMateriaParaleloObj);
                                 return estudianteMateriaParaleloObj;
                             }))
                     .collect(Collectors.toList());
+            System.out.println(estudianteMateriasParalelo);
             return true;
 
     }

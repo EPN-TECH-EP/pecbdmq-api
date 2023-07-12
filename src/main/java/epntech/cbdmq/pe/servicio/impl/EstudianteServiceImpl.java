@@ -97,6 +97,11 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
+    public Estudiante getEstudianteByCodigoUnico(String codUnico) {
+        return this.repo.getEstudianteByCodUnicoEstudiante(codUnico);
+    }
+
+    @Override
     public DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante) {
         return dpService.getDatoPersonalByEstudiante(codEstudiante);
     }
@@ -124,7 +129,6 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         return listDto;
     }
-
 
 
 }

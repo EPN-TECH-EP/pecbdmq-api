@@ -85,6 +85,11 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     }
 
     @Override
+    public List<MateriaParalelo> getAllByCodParalelo(Integer codParalelo) {
+        return repo.getAllByCodParalelo(codParalelo);
+    }
+
+    @Override
     public MateriaParalelo saveMateriaInParalelo(MateriaParalelo obj) throws DataException {
         return repo.save(obj);
     }

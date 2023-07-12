@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class EstudianteParaleloDto {
-    List<Estudiante> lista;
+    List<EstudianteDto> lista;
     Integer codParalelo;
 
 }

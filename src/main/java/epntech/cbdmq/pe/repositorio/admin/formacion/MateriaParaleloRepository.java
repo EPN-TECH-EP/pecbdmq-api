@@ -23,5 +23,6 @@ public interface MateriaParaleloRepository extends JpaRepository<MateriaParalelo
     List<MateriaParalelo> getMateriaParaleloByUser(@Param("codUsuario") Integer User, @Param("tipo") String tipo);
     @Query(nativeQuery = true, name ="InstructorMateriaReadDto.getMateriaParaleloNombres")
     List<InstructorMateriaReadDto> getMateriaNombres(@Param("codPA") Integer codPeriodoAcademico);
+    List<MateriaParalelo> getAllByCodParalelo(Integer codParalelo);
 
 }
