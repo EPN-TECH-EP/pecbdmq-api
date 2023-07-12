@@ -1,6 +1,8 @@
 package epntech.cbdmq.pe.resource.formacion;
 
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaParalelo;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.dominio.util.EstudianteParaleloDto;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
 import epntech.cbdmq.pe.servicio.formacion.InstructorMateriaParaleloService;
@@ -26,5 +28,10 @@ public class EstudianteMateriaParaleloResource {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EstudianteMateriaParalelo> guardar(@RequestBody EstudianteMateriaParalelo obj) throws DataException {
         return new ResponseEntity<EstudianteMateriaParalelo>(objService.save(obj), HttpStatus.OK);
+    }
+    @PostMapping("/asignar")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Boolean> asignar(@RequestBody EstudianteParaleloDto obj) throws DataException {
+        return new ResponseEntity<>(objService.asignarEstudiantesParalelo(obj.getLista(),obj.getCodParalelo()), HttpStatus.OK);
     }
 }

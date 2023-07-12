@@ -168,6 +168,11 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 		}
 	}
 
+	@Override
+	public DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante) {
+		return repo.getDatoPersonalByEstudiante(codEstudiante);
+	}
+
 	public boolean isPasswordMatches(String claveOriginal, String hashPassword) {
 		return bcrypt.matches(claveOriginal, hashPassword);
 	}

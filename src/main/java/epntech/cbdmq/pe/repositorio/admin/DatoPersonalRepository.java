@@ -27,6 +27,11 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
             value = "SELECT d FROM gen_dato_personal d WHERE d.nombre LIKE %:filtro% OR d.apellido LIKE %:filtro%"
     )
     Page<DatoPersonal> searchNativo(@Param("filtro") String filtro, Pageable pageable);
+	@Query("select gd from Estudiante ge\n" +
+			"join gen_dato_personal gd\n" +
+			"on ge.codDatosPersonales = gd.codDatosPersonales\n" +
+			"where ge.codEstudiante= :codEstudiante")
+	DatoPersonal getDatoPersonalByEstudiante(@Param("codEstudiante") Integer codEstudiante);
 	
 	/*@EntityGraph(attributePaths = "documentos")
 	List<DatoPersonal> findAll();*/

@@ -7,6 +7,7 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
+import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.PostulantesValidosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class EstudianteServiceImpl implements EstudianteService {
     private AspirantesRepository aspirantesRepository;
     @Autowired
     private PostulantesValidosService postulantesValidosService;
+    @Autowired
+    private DatoPersonalService dpService;
 
 
     @Override
@@ -95,7 +98,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante) {
-        return repo.getDatoPersonalByEstudiante(codEstudiante);
+        return dpService.getDatoPersonalByEstudiante(codEstudiante);
     }
 
     @Override
@@ -121,5 +124,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         return listDto;
     }
+
+
 
 }
