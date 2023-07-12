@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.servicio.impl.formacion;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.InformacionMateriaDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelosDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import epntech.cbdmq.pe.dominio.util.InstructorDatos;
 import epntech.cbdmq.pe.repositorio.admin.InstructorDatosRepository;
@@ -25,8 +26,6 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     @Autowired
     InstructorMateriaParaleloRepository repoIMP;
     @Autowired
-    private PeriodoAcademicoRepository periodoAcademicoRepository;
-    @Autowired
     private MateriaPeriodoRepository repoMPe;
     @Autowired
     private MateriaParaleloRepository repoMPa;
@@ -47,6 +46,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     @Autowired
     private PeriodoAcademicoService servicePeriodo;
 
+
     @Override
     public List<InstructorMateriaParalelo> getInstructoresMateriaParalelo() {
         return repoIMP.findAll();
@@ -61,7 +61,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     @Transactional
     public Boolean asignarInstructorMateriaParaleloAll(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
         MateriaPeriodo objMPe = new MateriaPeriodo();
-        objMPe.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
+        objMPe.setCodPeriodoAcademico(servicePeriodo.getPAActivo());
         objMPe.setCodMateria(codMateria);
         objMPe.setCodAula(codAula);
         Optional<MateriaPeriodo> objGuardado = repoMPe.findByCodMateriaAndCodPeriodoAcademico(objMPe.getCodMateria(), objMPe.getCodPeriodoAcademico());
@@ -191,7 +191,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     @Override
     public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
         MateriaPeriodo objMPe = new MateriaPeriodo();
-        objMPe.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
+        objMPe.setCodPeriodoAcademico(servicePeriodo.getPAActivo());
         objMPe.setCodMateria(codMateria);
         objMPe.setCodAula(codAula);
         Optional<MateriaPeriodo> objGuardado = repoMPe.findByCodMateriaAndCodPeriodoAcademico(objMPe.getCodMateria(), objMPe.getCodPeriodoAcademico());
@@ -231,6 +231,25 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         }
 
         return true;
+    }
+    @Override
+    public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() {
+        InstructorMateriaParalelosDto obj = new InstructorMateriaParalelosDto();
+        List<InstructorMateriaReadDto> materias= serviceMP.getMateriaNombres(servicePeriodo.getPAActivo());
+        List<Paralelo> paralelos= serviceParalelo.getParalelosPA();
+        obj.setParalelos(paralelos);
+        for (InstructorMateriaReadDto codigo : materias) {
+                MateriaParalelo objMP = serviceMP.findByCodMateriaPeriodoAndCodParalelo(codigo.getCodMateria(),codigo.getCodParalelo()).get();
+            List<InstructorDatos> instructores = this.getInstructores(objMP.getCodMateriaParalelo());
+            List<InstructorDatos> asistentes = this.getInstructoresAsistentes(objMP.getCodMateriaParalelo());
+            InstructorDatos coordinador = this.getCoordinador(objMP.getCodMateriaParalelo());
+                codigo.setInstructores(instructores.toArray(new InstructorDatos[instructores.size()]));
+                codigo.setAsistentes(asistentes.toArray(new InstructorDatos[asistentes.size()]));
+                codigo.setCoordinador(coordinador);
+        }
+        obj.setMaterias(materias);
+
+        return obj;
     }
 
 

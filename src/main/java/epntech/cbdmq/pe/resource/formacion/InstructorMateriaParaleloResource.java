@@ -1,9 +1,6 @@
 package epntech.cbdmq.pe.resource.formacion;
 
-import epntech.cbdmq.pe.dominio.admin.formacion.InformacionMateriaDto;
-import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaCreateDto;
-import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
-import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.*;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.formacion.InstructorMateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,5 +41,9 @@ public class InstructorMateriaParaleloResource {
     @ResponseStatus(HttpStatus.CREATED)
     public List<InformacionMateriaDto> leerMateriaDtoa() throws DataException {
         return objService.getInformacionMateriaDto();
+    }
+    @GetMapping("/listarMateriasParalelos")
+    public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() throws DataException {
+        return objService.getMateriaPAParaleloNombres();
     }
 }

@@ -26,10 +26,6 @@ public class MateriaParaleloResource {
     public List<MateriaParalelo> listar() throws DataException {
         return objService.getMateriasParalelo();
     }
-    @GetMapping("/listarMateriasParalelos")
-    public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() throws DataException {
-        return objService.getMateriaPAParaleloNombres();
-    }
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)

@@ -1,16 +1,13 @@
 package epntech.cbdmq.pe.servicio.impl.formacion;
 
-import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
-import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
-import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelosDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
+import epntech.cbdmq.pe.dominio.util.InstructorDatos;
 import epntech.cbdmq.pe.dominio.util.MateriaAulaUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.formacion.MateriaParaleloRepository;
-import epntech.cbdmq.pe.servicio.MateriaPeriodoService;
-import epntech.cbdmq.pe.servicio.ParaleloService;
-import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
+import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +25,6 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     private PeriodoAcademicoService periodoAcademicoService;
     @Autowired
     private MateriaPeriodoService materiaPAService;
-    @Autowired
-    private PeriodoAcademicoService pAService;
-    @Autowired
-    private ParaleloService paraleloService;
 
     @Override
     public List<MateriaParalelo> getMateriasParalelo() throws DataException {
@@ -87,16 +80,9 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     }
 
     @Override
-    public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() {
-        InstructorMateriaParalelosDto obj = new InstructorMateriaParalelosDto();
-        List<InstructorMateriaReadDto> materias= repo.getMateriaNombres(pAService.getPAActivo());
-        obj.setMaterias(materias);
-        List<Paralelo> paralelos= paraleloService.getParalelosPA();
-        obj.setParalelos(paralelos);
-
-        return obj;
+    public List<InstructorMateriaReadDto> getMateriaNombres(Integer codPeriodoAcademico) {
+        return repo.getMateriaNombres(codPeriodoAcademico);
     }
-
 
     @Override
     public MateriaParalelo saveMateriaInParalelo(MateriaParalelo obj) throws DataException {
