@@ -30,7 +30,7 @@ public interface CursoService {
 	
 	Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) throws DataException ;
 	
-	Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException;
+	Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException, DataException;
 	
 	Optional<Curso> uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long codTipoDocumento)  throws IOException, ArchivoMuyGrandeExcepcion ;
 	

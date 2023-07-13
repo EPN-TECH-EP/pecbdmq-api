@@ -143,8 +143,12 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException {
+	public Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException, DataException {
 		Optional<Documento> documentoOptional;
+		documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		if(documentoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		Documento documento = new Documento();
 
 		documentoOptional = documentoRepository.findById(codDocumento.intValue());
@@ -152,20 +156,23 @@ public class CursoServiceImpl implements CursoService {
 
 		Path ruta = Paths.get(documento.getRuta());
 
-		//System.out.println("ruta: " + ruta);
+		System.out.println("ruta: " + ruta);
 		try {
 			
 			if (Files.exists(ruta)) {
 				Files.delete(ruta);
 			}
+	
 			MultipartFile multipartFile = archivo;
 			if (multipartFile.getSize() > TAMAÑO_MAXIMO.toBytes()) {
 				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
 			}
-
+			if (!Files.exists(ruta)) {
+				Files.createDirectories(ruta);
+			}
 			Files.copy(multipartFile.getInputStream(), ruta.getParent().resolve(multipartFile.getOriginalFilename()),
 					StandardCopyOption.REPLACE_EXISTING);
-
+			
 			documento.setNombre(archivo.getOriginalFilename());
 			documento.setRuta(ruta.getParent() + "/" + archivo.getOriginalFilename());
 			documentoRepository.save(documento);

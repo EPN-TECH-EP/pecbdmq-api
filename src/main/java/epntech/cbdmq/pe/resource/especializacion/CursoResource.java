@@ -126,7 +126,11 @@ public class CursoResource {
 	}
 	
 	@PostMapping("/updateDocumento/{id}")
-	public ResponseEntity<?> updateDocumento(@PathVariable("id") Long codDocumento, @RequestParam("archivo") MultipartFile archivo) throws IOException {
+	public ResponseEntity<?> updateDocumento(@PathVariable("id") Long codDocumento, @RequestParam(value = "archivo", required = true) MultipartFile archivo) throws IOException, DataException {
+		
+		if(archivo.getSize() == 0)
+			throw new DataException(NO_ADJUNTO);
+		
 		return new ResponseEntity<>(cursoServiceImpl.updateDocumento(codDocumento, archivo), HttpStatus.OK); 
 	}
 	

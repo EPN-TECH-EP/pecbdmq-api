@@ -153,11 +153,11 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 
 		Path ruta = Paths.get(documento.getRuta());
 
-		// System.out.println("ruta: " + ruta);
+		 //System.out.println("ruta: " + ruta);
 		if (Files.exists(ruta)) {
 			try {
-				// System.out.println("ruta" + ruta);
-				Files.delete(ruta);
+				 //System.out.println("entra");
+			Files.delete(ruta);
 				
 				convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(codConvocatoria.intValue(),
 						codDocumento.intValue());
