@@ -168,13 +168,6 @@ public class Instructor {
 	private Integer codUnidadGestion;
 	@Column(name = "cod_tipo_contrato")
 	private Integer codTipoContrato;
-	
-	
-	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_instructor_periodo",
-            joinColumns = @JoinColumn(name = "cod_instructor"),
-            inverseJoinColumns = @JoinColumn(name = "cod_periodo_academico")
-    )
-	private List<epntech.cbdmq.pe.dominio.admin.PeriodoAcademico> PeriodoAcademico = new ArrayList<>();
+	@Column(name = "estado")
+	private String estado;
 }
