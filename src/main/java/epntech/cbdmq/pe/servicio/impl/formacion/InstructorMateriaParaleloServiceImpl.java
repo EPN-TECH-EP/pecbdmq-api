@@ -113,6 +113,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         InstructorMateriaParalelo objCoordinador = new InstructorMateriaParalelo();
         objCoordinador.setCodMateriaParalelo(objMPAGuardado.get().getCodMateriaParalelo());
         objCoordinador.setCodInstructor(codCoordinador);
+        //TODO cambiar para buscar el objeto a partir del nombre del tipo instructor
         objCoordinador.setCodTipoInstructor(3);
         repoIMP.save(objCoordinador);
 

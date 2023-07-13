@@ -26,7 +26,6 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionEstudianteDatosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
