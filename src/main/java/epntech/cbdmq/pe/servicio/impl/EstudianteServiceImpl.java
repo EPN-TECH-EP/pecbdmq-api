@@ -49,6 +49,11 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
+    public List<Estudiante> getAllWithOutParalelo() {
+        return repo.estudiantesWithParalelo();
+    }
+
+    @Override
     public Optional<Estudiante> getById(int id) {
         // TODO Auto-generated method stub
         return repo.findById(id);
@@ -107,8 +112,7 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
-    public List<EstudianteDto> getEstudiantesPA() {
-        List<Estudiante> estudiantes = this.getAll();
+    public List<EstudianteDto> getEstudiantesPA(List<Estudiante> estudiantes) {
         List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidos();
         List<Estudiante> estudiantesFiltrados = estudiantes.stream()
                 .filter(estudiante -> postulantes.stream()
@@ -128,6 +132,15 @@ public class EstudianteServiceImpl implements EstudianteService {
         }
 
         return listDto;
+    }
+
+    @Override
+    public List<EstudianteDto> getEstudiantesSinAsignarPA() {
+        List<Estudiante> estudiantes = this.getAllWithOutParalelo();
+        if(estudiantes.isEmpty()){
+            throw new RuntimeException();
+        }
+        return this.getEstudiantesPA(estudiantes);
     }
 
 

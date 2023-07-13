@@ -44,5 +44,12 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"and gu.codUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
 	Estudiante getEstudianteByCodUnicoEstudiante(String codUnicoEstudiante);
-
+	@Query(value="SELECT ge.cod_estudiante, ge.cod_datos_personales , ge.codigo_unico_estudiante, ge.estado\n" +
+			"FROM cbdmq.gen_estudiante ge\n" +
+			"WHERE NOT EXISTS (\n" +
+			"  SELECT 1\n" +
+			"  FROM cbdmq.gen_estudiante_materia_paralelo gemp\n" +
+			"  WHERE gemp.cod_estudiante = ge.cod_estudiante\n" +
+			")\n",nativeQuery = true)
+	List<Estudiante> estudiantesWithParalelo();
 }
