@@ -44,6 +44,10 @@ public class PruebaDetalleResource {
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+	@GetMapping("/tipoResultado/{id}")
+	public String obtenerTipoResultado(@PathVariable("id") int codigo) {
+		return objService.getTipoResultado(codigo);
+	}
 
 	@GetMapping("/listar")
 	public List<PruebaDetalle> listar() {

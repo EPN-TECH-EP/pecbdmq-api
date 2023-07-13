@@ -119,4 +119,9 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 		List<PruebaDetalleDatos> lista = q.getResultList();
 		return lista;
 	}
+
+	@Override
+	public String getTipoResultado(int codSubtipoPrueba){
+		return pruebaDetalleRepository.getTipoResultado(codSubtipoPrueba);
+	}
 }
