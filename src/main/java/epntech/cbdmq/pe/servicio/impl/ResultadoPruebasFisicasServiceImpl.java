@@ -1,7 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.FALLA_PROCESAR_EXCEL;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
+import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 
 import java.io.ByteArrayInputStream;
@@ -88,7 +87,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	}
 
 	@Override
-	public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) {
+	public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException{
 		try {
 
 

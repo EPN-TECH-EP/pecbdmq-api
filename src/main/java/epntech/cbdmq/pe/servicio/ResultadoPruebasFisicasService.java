@@ -20,7 +20,7 @@ public interface ResultadoPruebasFisicasService {
 	void insertAll(List<ResultadoPruebasFisicas> obj);
 	
 	ResultadoPruebasFisicas update(ResultadoPruebasFisicas objActualizado);
-	void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado);
+	void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException;
 	
 	ResultadoPruebasFisicas save(ResultadoPruebasFisicas obj);
 	

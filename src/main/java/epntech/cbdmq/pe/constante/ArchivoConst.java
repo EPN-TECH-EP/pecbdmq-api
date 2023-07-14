@@ -39,6 +39,7 @@ public class ArchivoConst {
 	public static final String PATH_PROCESO_INSCRIPCION_VAL = "Inscritos Validos/";
 	
 	public static final String DOCUMENTO_ACTUALIZADO = "El documento ha sido actualizado";
-	
+	public static final String DOCUMENTO_NO_CUMPLE_FORMATO = "El documento no cumple el formato";
+
 
 }

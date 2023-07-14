@@ -12,7 +12,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
+import epntech.cbdmq.pe.servicio.PostulanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,10 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.lowagie.text.DocumentException;
 
-import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
-import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
-import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
@@ -56,6 +56,8 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 	private String ARCHIVOS_RUTA;
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
+	@Autowired
+	private PostulanteService postulanteService;
 
 	@Override
 	public void insertAll(List<ResultadoPruebas> obj) {
@@ -91,10 +93,25 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 	}
 
 	@Override
-	public void uploadFile(MultipartFile file) {
+	public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) {
 		try {
 
-			List<ResultadoPruebas> datos = ResultadoPruebasHelper.excelToDatos(file.getInputStream());
+			List<ResultadoPruebasUtil> datosUtil = ResultadoPruebasHelper.excelToDatos(file.getInputStream(),tipoResultado);
+			List<ResultadoPruebas> datos = datosUtil.stream().map(dato -> {
+				ResultadoPruebas resultadoPruebas = new ResultadoPruebas();
+				Optional<Postulante> postulante = postulanteService.getByIdPostulante(dato.getIdPostulante());
+				if(postulante.isEmpty()){
+					throw new RuntimeException("El postulante con el id: "+dato.getIdPostulante()+" no existe");
+				}
+				resultadoPruebas.setCodPostulante(postulante.get().getCodPostulante().intValue());
+				resultadoPruebas.setCumplePrueba(dato.getCumplePrueba());
+				resultadoPruebas.setNotaPromedioFinal(dato.getNotaPromedioFinal());
+				resultadoPruebas.setCodPruebaDetalle(codPruebaDetalle);
+				resultadoPruebas.setCodFuncionario(codFuncionario);
+				resultadoPruebas.setEstado("ACTIVO");
+
+				return resultadoPruebas;
+			}).collect(Collectors.toList());
 
 			repo.saveAll(datos);
 		} catch (IOException e) {

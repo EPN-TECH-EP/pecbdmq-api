@@ -22,7 +22,7 @@ public interface ResultadoPruebasService {
 	
 	Optional<ResultadoPruebas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba);
 	
-	void uploadFile(MultipartFile file);
+	void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado);
 	
 	ResultadoPruebas save(ResultadoPruebas obj);
 	
