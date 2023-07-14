@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -149,9 +150,9 @@ public class ResultadoPruebasHelper {
 		}
 	}
 
-	public static List<ResultadoPruebasFisicas> excelToDatosPruebasFisicas(InputStream is) {
+	public static List<ResultadoPruebasFisicas> excelToDatosPruebasFisicas(InputStream contenidoBytes) {
 		try {
-			Workbook workbook = new XSSFWorkbook(is);
+			Workbook workbook = new XSSFWorkbook(contenidoBytes);
 
 			Sheet sheet = workbook.getSheet(SHEET);
 			Iterator<Row> rows = sheet.iterator();
@@ -223,6 +224,72 @@ public class ResultadoPruebasHelper {
 					cellIdx++;
 				}
 				dato.setEstado("ACTIVO");
+				datos.add(dato);
+			}
+
+			workbook.close();
+
+			return datos;
+		} catch (IOException e) {
+			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
+		}
+	}
+
+	public static List<ResultadoPruebaFisicaUtil> excelToDatosPruebasFisicasI(InputStream contenidoBytes, String tipoResultado) {
+		try {
+			Workbook workbook = new XSSFWorkbook(contenidoBytes);
+
+			Sheet sheet = workbook.getSheet(SHEET);
+			int numRows = sheet.getPhysicalNumberOfRows();
+
+			Iterator<Row> rows = sheet.iterator();
+
+			List<ResultadoPruebaFisicaUtil> datos = new ArrayList<ResultadoPruebaFisicaUtil>();
+
+			int rowNumber = 0;
+
+			while (rows.hasNext()) {
+				Row currentRow = rows.next();
+				// skip header
+				if (rowNumber == 0) {
+					rowNumber++;
+					continue;
+				}
+
+				Iterator<Cell> cellsInRow = currentRow.iterator();
+
+				ResultadoPruebaFisicaUtil dato = new ResultadoPruebaFisicaUtil();
+
+				int cellIdx = 0;
+				while (cellsInRow.hasNext()) {
+
+					Cell currentCell = cellsInRow.next();
+					switch (cellIdx) {
+						case 0:
+							// System.out.println("currentCell.getStringCellValue(): " +
+							// currentCell.getStringCellValue());
+							String codPruebaDetalleStr = currentCell.getStringCellValue();
+							if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
+								// dato.setCodPostulante(Integer.parseInt(currentCell.getStringCellValue()));
+								dato.setIdPostulante(codPruebaDetalleStr);
+							}
+							break;
+						case 1:
+							// System.out.println("currentCell.getStringCellValue(): " +
+							// currentCell.getStringCellValue());
+								//dato.setResultado(Integer.parseInt(currentCell.getStringCellValue()));
+								if(tipoResultado.equals("RESULTADO TIEMPO"))
+									dato.setResultadoTiempo(Time.valueOf(currentCell.getStringCellValue()));
+								else if(tipoResultado.equals("RESULTADO"))
+									dato.setResultado((int) currentCell.getNumericCellValue());
+
+							break;
+						default:
+							break;
+					}
+
+					cellIdx++;
+				}
 				datos.add(dato);
 			}
 

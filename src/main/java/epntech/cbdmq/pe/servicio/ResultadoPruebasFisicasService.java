@@ -20,8 +20,7 @@ public interface ResultadoPruebasFisicasService {
 	void insertAll(List<ResultadoPruebasFisicas> obj);
 	
 	ResultadoPruebasFisicas update(ResultadoPruebasFisicas objActualizado);
-	
-	void uploadFile(MultipartFile file);
+	void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado);
 	
 	ResultadoPruebasFisicas save(ResultadoPruebasFisicas obj);
 	

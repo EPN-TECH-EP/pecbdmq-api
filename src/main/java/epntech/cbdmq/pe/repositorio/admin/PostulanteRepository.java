@@ -82,4 +82,5 @@ public interface PostulanteRepository extends JpaRepository<Postulante, Long> {
 	List<Postulante> getPostulantesByEstadoAndCodPeriodoAcademico(String Estado, Integer codPeriodoAcademico);
 
 	Optional<Postulante> findByCodDatoPersonalAndCodPeriodoAcademico(Integer codDatoPersonal, Integer codPeriodoAcademico);
+	Optional<Postulante> findPostulanteByIdPostulanteIgnoreCase(String idPostulante);
 }
