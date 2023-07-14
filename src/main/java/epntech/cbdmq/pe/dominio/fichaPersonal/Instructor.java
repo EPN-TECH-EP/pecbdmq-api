@@ -172,11 +172,11 @@ public class Instructor {
 	private String estado;
 	
 	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	/*@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_instructor_periodo",
             joinColumns = @JoinColumn(name = "cod_instructor"),
             inverseJoinColumns = @JoinColumn(name = "cod_periodo_academico")
     )
-	private List<epntech.cbdmq.pe.dominio.admin.PeriodoAcademico> PeriodoAcademico = new ArrayList<>();
+	private List<epntech.cbdmq.pe.dominio.admin.PeriodoAcademico> PeriodoAcademico = new ArrayList<>();*/
 }
 

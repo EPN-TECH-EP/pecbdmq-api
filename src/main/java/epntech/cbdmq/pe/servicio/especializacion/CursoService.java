@@ -16,7 +16,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface CursoService {
 	
-	Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento);
+	Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento) throws DataException;
 	
 	Curso update(Curso objActualizado) throws DataException;
 	

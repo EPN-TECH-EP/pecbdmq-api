@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.BajaDocumento;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
@@ -29,6 +30,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoRequisito;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoEspRepository;
@@ -49,6 +51,8 @@ public class CursoServiceImpl implements CursoService {
 	private CursoRequisitoRepository cursoRequisitoRepository;
 	@Autowired
 	private DocumentoRepository documentoRepository;
+	@Autowired
+	private AulaRepository aulaRepository;
 	
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -56,7 +60,11 @@ public class CursoServiceImpl implements CursoService {
 	public DataSize TAMAÑO_MAXIMO;
 
 	@Override
-	public Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento) {
+	public Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento) throws DataException {
+		Optional<Aula> aulaOptional = aulaRepository.findById(obj.getCodAula());
+		if(aulaOptional.isEmpty())
+				throw new DataException(AULA_NO_EXISTE);
+		
 		Curso cc = new Curso();
 		cc = cursoEspRepository.insertarCursosDocumentosRequisitos(obj, requisitos, documentos, codTipoDocumento);
 

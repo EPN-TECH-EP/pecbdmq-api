@@ -20,10 +20,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.TipoInstructor;
+import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.servicio.impl.InstructorServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.TipoInstructorServiceImpl;
 import epntech.cbdmq.pe.servicio.impl.especializacion.CursoInstructorServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.especializacion.CursoServiceImpl;
 
 @RestController
 @RequestMapping("/cursoInstructor")
@@ -31,6 +37,12 @@ public class CursoInstructorResource {
 
 	@Autowired
 	private CursoInstructorServiceImpl cursoInstructorServiceImpl;
+	@Autowired
+	private InstructorServiceImpl instructorServiceImpl;
+	@Autowired
+	private CursoServiceImpl cursoServiceImpl;
+	@Autowired
+	private TipoInstructorServiceImpl tipoInstructorServiceImpl;
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -56,6 +68,17 @@ public class CursoInstructorResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @RequestBody CursoInstructor obj) throws DataException{
+		Optional<Instructor> instructorOptional = instructorServiceImpl.getById(obj.getCodInstructor());
+		if(instructorOptional.isEmpty())
+			return response(HttpStatus.BAD_REQUEST, REGISTRO_NO_EXISTE);
+		
+		Optional<Curso> cursoOptional = cursoServiceImpl.getById(obj.getCodCursoEspecializacion());
+		if(cursoOptional.isEmpty())
+			return response(HttpStatus.BAD_REQUEST, REGISTRO_NO_EXISTE);
+		
+		Optional<TipoInstructor> tipoInstructorOptional = tipoInstructorServiceImpl.getById(obj.getCodTipoInstructor());
+		if(tipoInstructorOptional.isEmpty())
+			return response(HttpStatus.BAD_REQUEST, REGISTRO_NO_EXISTE);
 		
 		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorServiceImpl.getById(codigo);
 		if(cursoInstructorOptional.isEmpty())
