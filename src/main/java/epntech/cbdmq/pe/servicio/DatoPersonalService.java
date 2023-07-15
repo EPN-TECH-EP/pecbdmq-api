@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
@@ -34,6 +35,7 @@ public interface DatoPersonalService {
 	Documento actualizarImagen(String proceso,Integer codigo,  MultipartFile archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 	
 	void deleteById(int id) throws DataException;
+	DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante);
 	
 	
 }

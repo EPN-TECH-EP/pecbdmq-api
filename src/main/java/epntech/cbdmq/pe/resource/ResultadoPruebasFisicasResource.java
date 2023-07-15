@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.ArchivoConst.DOCUMENTO_NO_CUMPLE_FORMATO;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INCORRECTO;
 import static epntech.cbdmq.pe.constante.ResponseMessage.CARGA_ARCHIVO_EXCEL;
@@ -88,15 +89,15 @@ public class ResultadoPruebasFisicasResource {
 	}
 
 	@PostMapping("/cargarPlantilla")
-	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo) {
+	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo,@RequestParam("codPruebaDetalle") Integer codPruebaDetalle,@RequestParam("codFuncionario") Integer codFuncionario,@RequestParam("tipoResultado") String tipoResultado){
 
 		if (ExcelHelper.hasExcelFormat(archivo)) {
 			try {
-				resultadoPruebasServiceImpl.uploadFile(archivo);
+				resultadoPruebasServiceImpl.uploadFile(archivo,codPruebaDetalle,codFuncionario,tipoResultado);
 
 				return response(HttpStatus.OK, CARGA_EXITOSA);
 			} catch (Exception e) {
-				return response(HttpStatus.EXPECTATION_FAILED, CARGA_NO_EXITOSA);
+				return response(HttpStatus.EXPECTATION_FAILED, DOCUMENTO_NO_CUMPLE_FORMATO);
 			}
 		}
 

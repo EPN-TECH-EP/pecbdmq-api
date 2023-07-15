@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.ArchivoConst.DOCUMENTO_NO_CUMPLE_FORMATO;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.ResponseMessage.*;
@@ -128,15 +129,15 @@ public class ResultadoPruebasNoFisicasResource {
 	}
 
 	@PostMapping("/cargarPlantilla")
-	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo) {
+	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo,@RequestParam("codPruebaDetalle") Integer codPruebaDetalle,@RequestParam("codFuncionario") Integer codFuncionario,@RequestParam("tipoResultado") String tipoResultado) {
 
 		if (ExcelHelper.hasExcelFormat(archivo)) {
 			try {
-				resultadoPruebasServiceImpl.uploadFile(archivo);
+				resultadoPruebasServiceImpl.uploadFile(archivo,codPruebaDetalle,codFuncionario,tipoResultado);
 
 				return response(HttpStatus.OK, CARGA_EXITOSA);
 			} catch (Exception e) {
-				return response(HttpStatus.EXPECTATION_FAILED, CARGA_NO_EXITOSA);
+				return response(HttpStatus.EXPECTATION_FAILED,  DOCUMENTO_NO_CUMPLE_FORMATO);
 			}
 		}
 
@@ -155,20 +156,20 @@ public class ResultadoPruebasNoFisicasResource {
 	@PostMapping("/generarArchivos")
 	public ResponseEntity<?> generarArchivos(HttpServletResponse response, @RequestParam("nombre") String nombre,
 			@RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DataException, DocumentException {
-		
+
 		  try { Optional<PruebaDetalle> pp =
 		  pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba,
-		  periodoAcademicoRepository.getPAActive());
-		  
+					periodoAcademicoRepository.getPAActive());
+
 		  if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) { throw new
 		  DataException(ESTADO_INVALIDO); } else { String ruta = ARCHIVOS_RUTA +
-		  PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
-		  + "/" + nombre;
-		  
-		  resultadoPruebasServiceImpl.generarExcel(ruta + ".xlsx", nombre,
+						PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
+						+ "/" + nombre;
+
+				resultadoPruebasServiceImpl.generarExcel(ruta + ".xlsx", nombre,
 		  subTipoPrueba); resultadoPruebasServiceImpl.generarPDF(response, ruta +
-		  ".pdf", nombre, subTipoPrueba);
-		  
+						".pdf", nombre, subTipoPrueba);
+
 		  PruebaDetalle p = new PruebaDetalle(); p = pp.get(); p.setEstado("CIERRE");
 		  
 		  pruebaDetalleServiceImpl.save(p); }
@@ -176,7 +177,7 @@ public class ResultadoPruebasNoFisicasResource {
 		  } catch (IOException e) { e.printStackTrace(); System.out.println("error: " +
 		  e.getMessage()); return response(HttpStatus.BAD_REQUEST,
 		  ERROR_GENERAR_ARCHIVO); }
-		 
+
 		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 	}
 

@@ -8,7 +8,10 @@ import epntech.cbdmq.pe.dominio.admin.ParametrizaPruebaDetalle;
 
 public interface ParametrizaPruebaDetalleRepository extends JpaRepository<ParametrizaPruebaDetalle, Integer>{
 
-	public List<ParametrizaPruebaDetalle> findAllByCodParametrizaPruebaResumenOrderByEdadInicioMesesAndSexo(Integer codResumen);
+	
+	// Sort.by("edadInicioMeses").and(Sort.by("sexo")), 
+	
+	public List<ParametrizaPruebaDetalle> findAllByCodParametrizaPruebaResumenOrderByEdadInicioMesesAscSexoAsc(Integer codParametrizaPruebaResumen);
 
 	
 	

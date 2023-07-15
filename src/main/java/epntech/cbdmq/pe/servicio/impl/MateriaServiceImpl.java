@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class MateriaServiceImpl implements MateriaService {
 
 
 	@Autowired
-	private PeriodoAcademicoRepository repo3;
+	private PeriodoAcademicoService periodoAcSvc;
 
 	@Override
 	public Materia save(Materia obj) throws DataException {	
@@ -100,4 +101,15 @@ public class MateriaServiceImpl implements MateriaService {
 		}
 	}
 	
+	@Override
+	public List<Materia> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico) {
+		return repo.getAllByInstructorPA(codInstructor, nombreTipoInstructor, periodoAcademico);
+	}
+
+	@Override
+	public List<Materia> getAllByCoordinadorPA(Integer codInstructor) {
+		return this.getAllByInstructorPA(codInstructor,"COORDINADOR",periodoAcSvc.getPAActivo());
+	}
+
+
 }

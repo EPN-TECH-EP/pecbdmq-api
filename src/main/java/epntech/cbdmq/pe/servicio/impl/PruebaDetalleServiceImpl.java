@@ -158,6 +158,11 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 
 
 	@Override
+	public String getTipoResultado(int codSubtipoPrueba){
+		return pruebaDetalleRepository.getTipoResultado(codSubtipoPrueba);
+}
+
+	@Override
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException {
 		Boolean retval = false;
 

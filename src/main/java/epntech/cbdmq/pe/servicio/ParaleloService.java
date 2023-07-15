@@ -17,5 +17,6 @@ public interface ParaleloService {
 	Paralelo update(Paralelo objActualizado) throws DataException;
 
 	void delete(Integer codigo);
+	List<Paralelo> getParalelosPA();
 	
 }

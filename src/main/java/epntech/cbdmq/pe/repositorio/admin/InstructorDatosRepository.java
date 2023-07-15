@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface InstructorDatosRepository extends JpaRepository<InstructorDatos, Long> {
 
-	@Query(value = "select i.cod_instructor, tp.cod_tipo_procedencia, tp.tipo_procedencia, e.cod_estacion, e.nombre_zona, ug.cod_unidad_gestion, ug.unidad_gestion, tc.cod_tipo_contrato, tc.nombre_tipo_contrato, dp.cedula, dp.nombre, dp.apellido, dp.correo_personal " +
+	@Query(value = "select i.cod_instructor, tp.cod_tipo_procedencia, tp.tipo_procedencia, e.cod_estacion, e.nombre_zona, ug.cod_unidad_gestion, ug.unidad_gestion, tc.cod_tipo_contrato, tc.nombre_tipo_contrato, dp.cedula, dp.nombre, dp.apellido, dp.correo_personal\n" +
 			"from cbdmq.gen_instructor i, cbdmq.gen_dato_personal dp, cbdmq.gen_tipo_procedencia tp, cbdmq.gen_estacion_trabajo e, cbdmq.gen_unidad_gestion ug, cbdmq.gen_tipo_contrato tc \n" +
 			"where i.cod_datos_personales = dp.cod_datos_personales \n" +
 			"and i.cod_tipo_procedencia = tp.cod_tipo_procedencia \n" +

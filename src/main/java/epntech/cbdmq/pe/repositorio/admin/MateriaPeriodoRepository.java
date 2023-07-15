@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 public interface MateriaPeriodoRepository extends JpaRepository<MateriaPeriodo, Integer>{
 
@@ -20,4 +21,5 @@ public interface MateriaPeriodoRepository extends JpaRepository<MateriaPeriodo, 
 
 
     Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico);
+    List<MateriaPeriodo> getAllByCodPeriodoAcademico(Integer codPeriodoAcademico);
 }

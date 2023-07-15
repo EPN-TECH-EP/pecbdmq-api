@@ -127,7 +127,7 @@ public class EstudianteResource {
 	}
     @GetMapping("/listarPA")
 	public List<EstudianteDto> obtenerEstudiantesPA() {
-		return objService.getEstudiantesPA();
+		return objService.getEstudiantesSinAsignarPA();
 	}
     
 }

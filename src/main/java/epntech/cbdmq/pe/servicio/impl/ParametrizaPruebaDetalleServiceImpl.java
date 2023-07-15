@@ -66,7 +66,7 @@ public class ParametrizaPruebaDetalleServiceImpl implements ParametrizaPruebaDet
 	// buscar lista por parametrizaPruebaResumen
 	@Override
 	public List<ParametrizaPruebaDetalle> listarPorResumen(Integer codResumen) {
-		return repo.findAllByCodParametrizaPruebaResumenOrderByEdadInicioMesesAndSexo(codResumen);
+		return repo.findAllByCodParametrizaPruebaResumenOrderByEdadInicioMesesAscSexoAsc(codResumen);
 	} 
 
 }

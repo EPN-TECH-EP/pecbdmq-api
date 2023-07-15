@@ -17,4 +17,6 @@ public interface MateriaService {
 	Materia update(Materia objActualizado) throws DataException;
 	
 	void delete(int id) throws DataException;
+	List<Materia> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico);
+	List<Materia> getAllByCoordinadorPA(Integer codInstructor);
 }

@@ -85,7 +85,7 @@ public class CursoResource {
 	}
 	
 	@PutMapping("/updateEstadosAprobadoValidado")
-	public ResponseEntity<?> updateEstado(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("codDocumento") Long codDocumento, @RequestParam("estadoAprobado") Boolean estadoAprobado, @RequestParam("estadoValidado") Boolean estadoValidado, @RequestParam("observaciones") String observaciones){
+	public ResponseEntity<?> updateEstado(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("codDocumento") Long codDocumento, @RequestParam("estadoAprobado") Boolean estadoAprobado, @RequestParam("estadoValidado") Boolean estadoValidado, @RequestParam("observaciones") String observaciones) throws DataException{
 		return new ResponseEntity<>(cursoServiceImpl.updateEstadoAprobadoValidado(estadoAprobado, estadoValidado, observaciones, codCursoEspecializacion, codDocumento), HttpStatus.OK);
 	}
 	
@@ -121,12 +121,16 @@ public class CursoResource {
 	}
 	
 	@PostMapping("/updateRequisitos/{id}")
-	public ResponseEntity<Curso> updateRequisitos(@PathVariable("id") Long codCursoEspecializacion, @RequestBody List<Requisito> requisitos) {
+	public ResponseEntity<Curso> updateRequisitos(@PathVariable("id") Long codCursoEspecializacion, @RequestBody List<Requisito> requisitos) throws DataException {
 		return new ResponseEntity<>(cursoServiceImpl.updateRequisitos(codCursoEspecializacion, requisitos), HttpStatus.OK); 
 	}
 	
 	@PostMapping("/updateDocumento/{id}")
-	public ResponseEntity<?> updateDocumento(@PathVariable("id") Long codDocumento, @RequestParam("archivo") MultipartFile archivo) throws IOException {
+	public ResponseEntity<?> updateDocumento(@PathVariable("id") Long codDocumento, @RequestParam(value = "archivo", required = true) MultipartFile archivo) throws IOException, DataException {
+		
+		if(archivo.getSize() == 0)
+			throw new DataException(NO_ADJUNTO);
+		
 		return new ResponseEntity<>(cursoServiceImpl.updateDocumento(codDocumento, archivo), HttpStatus.OK); 
 	}
 	
@@ -147,7 +151,7 @@ public class CursoResource {
 	}
 	
 	@GetMapping("/cumpleMinimoAprobadosPruebasCurso/{id}")
-	public ResponseEntity<?> cumpleMinimoAprobados(@PathVariable("id") long codigo) {
+	public ResponseEntity<?> cumpleMinimoAprobados(@PathVariable("id") long codigo) throws DataException {
 		return response(HttpStatus.OK, cursoServiceImpl.cumpleMinimoAprobadosCurso(codigo).toString());
 	}
 	

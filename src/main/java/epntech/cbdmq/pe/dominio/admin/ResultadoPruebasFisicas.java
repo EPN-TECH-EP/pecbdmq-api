@@ -47,7 +47,7 @@ public class ResultadoPruebasFisicas {
 	@Column(name = "seleccionado")
 	private Boolean seleccionado;
 	
-	@Column(name = "cod_prueba")
+	@Column(name = "cod_prueba_detalle")
 	private Integer codPrueba;
 	
 	@Column(name = "resultado")

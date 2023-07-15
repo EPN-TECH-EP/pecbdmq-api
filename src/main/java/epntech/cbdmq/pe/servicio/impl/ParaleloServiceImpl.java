@@ -10,17 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ParaleloRepository;
 import epntech.cbdmq.pe.servicio.ParaleloService;
+import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 
 @Service
 public class ParaleloServiceImpl implements ParaleloService{
 
 	@Autowired
 	private ParaleloRepository repo;
+	@Autowired
+	private PeriodoAcademicoService periodoAcademicoService;
 	
 	@Override
 	public Paralelo save(Paralelo obj) throws DataException{
@@ -75,4 +77,9 @@ public class ParaleloServiceImpl implements ParaleloService{
 		repo.deleteById(codigo);
 	}
 	
+	@Override
+	public List<Paralelo> getParalelosPA() {
+		return repo.getParalelosPA(periodoAcademicoService.getPAActivo());
+	}
+
 }

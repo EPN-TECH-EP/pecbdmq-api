@@ -87,8 +87,11 @@ public class ConvocatoriaCursoResource {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @RequestBody ConvocatoriaCurso obj) throws DataException{
+				
+		obj.setCodConvocatoria(codigo);
+		return new ResponseEntity<>(convocatoriaCursoServiceImpl.update(obj), HttpStatus.OK);
 		
-		return (ResponseEntity<ConvocatoriaCurso>) convocatoriaCursoServiceImpl.getByID(codigo).map(datosGuardados -> {
+		/*return (ResponseEntity<ConvocatoriaCurso>) convocatoriaCursoServiceImpl.getByID(codigo).map(datosGuardados -> {
 			datosGuardados.setFechaInicioConvocatoria(obj.getFechaInicioConvocatoria());
 			datosGuardados.setFechaFinConvocatoria(obj.getFechaFinConvocatoria());
 			datosGuardados.setHoraInicioConvocatoria(obj.getHoraInicioConvocatoria());
@@ -106,7 +109,7 @@ public class ConvocatoriaCursoResource {
 			}
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+		}).orElseGet(() -> ResponseEntity.notFound().build());*/
 	}
 	
 	@DeleteMapping("/eliminarDocumento")

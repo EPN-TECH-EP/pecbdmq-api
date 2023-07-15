@@ -3,6 +3,8 @@ package epntech.cbdmq.pe.resource.formacion;
 import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelosDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import epntech.cbdmq.pe.dominio.util.MateriaAulaParaleloUtil;
 import epntech.cbdmq.pe.dominio.util.MateriaAulaUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;

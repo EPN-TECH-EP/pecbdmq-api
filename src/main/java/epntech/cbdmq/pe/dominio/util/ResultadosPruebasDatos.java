@@ -14,5 +14,7 @@ public class ResultadosPruebasDatos {
 	private String cedula;
 	private String nombre;
 	private String apellido;
+	private String correoPersonal;
+	private String resultado;
 }
 

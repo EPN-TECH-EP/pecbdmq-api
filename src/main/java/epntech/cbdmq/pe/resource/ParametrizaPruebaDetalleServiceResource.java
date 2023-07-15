@@ -23,7 +23,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ParametrizaPruebaDetalleServiceImpl;
 
 @RestController
-@RequestMapping("/parametrizaprueba")
+@RequestMapping("/parametrizaPruebaDetalle")
 public class ParametrizaPruebaDetalleServiceResource {
 
 	@Autowired
@@ -45,8 +45,8 @@ public class ParametrizaPruebaDetalleServiceResource {
 		return objService.getAll();
 	}
 	
-	@GetMapping("/listarPorResumen")
-	public List<ParametrizaPruebaDetalle> listarPorResumen(@PathVariable("id") int codResumen) {
+	@GetMapping("/listarPorResumen/{codResumen}")
+	public List<ParametrizaPruebaDetalle> listarPorResumen(@PathVariable("codResumen") int codResumen) {
 		return objService.listarPorResumen(codResumen);
 	}
 	

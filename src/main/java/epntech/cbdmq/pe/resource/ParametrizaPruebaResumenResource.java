@@ -28,7 +28,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ParametrizaPruebaResumenServiceImpl;
 
 @RestController
-@RequestMapping("/parametrizapruebaresumen")
+@RequestMapping("/parametrizaPruebaResumen")
 
 public class ParametrizaPruebaResumenResource {
 

@@ -7,6 +7,7 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
+import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.PostulantesValidosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class EstudianteServiceImpl implements EstudianteService {
 	private AspirantesRepository aspirantesRepository;
     @Autowired
     private PostulantesValidosService postulantesValidosService;
+    @Autowired
+    private DatoPersonalService dpService;
 	
 	
 	@Override
@@ -46,6 +49,11 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}
 
 	@Override
+    public List<Estudiante> getAllWithOutParalelo() {
+        return repo.estudiantesWithParalelo();
+    }
+
+    @Override
 	public Optional<Estudiante> getById(int id) {
 		// TODO Auto-generated method stub
 		return repo.findById(id);
@@ -94,13 +102,17 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}
 	
     @Override
-    public DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante) {
-        return repo.getDatoPersonalByEstudiante(codEstudiante);
+    public Estudiante getEstudianteByCodigoUnico(String codUnico) {
+        return this.repo.getEstudianteByCodUnicoEstudiante(codUnico);
     }
 
     @Override
-    public List<EstudianteDto> getEstudiantesPA() {
-        List<Estudiante> estudiantes = this.getAll();
+    public DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante) {
+        return dpService.getDatoPersonalByEstudiante(codEstudiante);
+    }
+
+    @Override
+    public List<EstudianteDto> getEstudiantesPA(List<Estudiante> estudiantes) {
         List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidos();
         List<Estudiante> estudiantesFiltrados = estudiantes.stream()
                 .filter(estudiante -> postulantes.stream()
@@ -121,5 +133,15 @@ public class EstudianteServiceImpl implements EstudianteService {
 
         return listDto;
     }
+
+    @Override
+    public List<EstudianteDto> getEstudiantesSinAsignarPA() {
+        List<Estudiante> estudiantes = this.getAllWithOutParalelo();
+        if(estudiantes.isEmpty()){
+            throw new RuntimeException();
+        }
+        return this.getEstudiantesPA(estudiantes);
+    }
+
 
 }

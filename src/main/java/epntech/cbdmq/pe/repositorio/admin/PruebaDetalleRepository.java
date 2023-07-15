@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
@@ -15,6 +16,10 @@ public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, In
 	Optional<PruebaDetalle> findByCodSubtipoPruebaAndCodPeriodoAcademico(@Param("cod_subtipo_prueba")Integer subtipo, @Param("cod_periodo_academico")Integer periodo);
 	
 	Optional<PruebaDetalle> findByCodCursoEspecializacion(Long codCursoEspecializacion);
+
+
+	@Procedure(value = "cbdmq.get_tipo_resultado")
+	String getTipoResultado(@Param("p_cod_subtipo_prueba") Integer p_cod_subtipo_prueba);
 
 	
 	//List<PruebaDetalle> listarTodosConDatosSubTipoPrueba();

@@ -40,6 +40,10 @@ public class ParaleloResource  {
 	public List<Paralelo> listar() {
 		return objService.getAll();
 	}
+	@GetMapping("/listarPA")
+	public List<Paralelo> listarPA() {
+		return objService.getParalelosPA();
+	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Paralelo> obtenerPorId(@PathVariable("id") Integer codigo) {

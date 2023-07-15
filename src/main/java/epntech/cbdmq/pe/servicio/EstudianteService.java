@@ -12,6 +12,7 @@ public interface EstudianteService {
 	Estudiante save(Estudiante obj);
 	
 	List<Estudiante> getAll();
+	List<Estudiante> getAllWithOutParalelo();
 	
 	Optional<Estudiante> getById(int id);
 	
@@ -28,7 +29,9 @@ public interface EstudianteService {
 	void saveEstudiantes();
 	
 	Estudiante getEstudianteByUsuario(String codUsuario);
+	Estudiante getEstudianteByCodigoUnico(String codUnico);
 	DatoPersonal getDatoPersonalByEstudiante(Integer Estudiante);
-	List<EstudianteDto> getEstudiantesPA();
+	List<EstudianteDto> getEstudiantesPA(List<Estudiante> estudiantes);
+	List<EstudianteDto> getEstudiantesSinAsignarPA();
 
 }

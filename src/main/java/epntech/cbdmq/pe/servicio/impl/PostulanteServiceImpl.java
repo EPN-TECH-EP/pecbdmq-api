@@ -55,6 +55,11 @@ public class PostulanteServiceImpl implements PostulanteService {
 	}
 
 	@Override
+    public Optional<Postulante> getByIdPostulante(String id) {
+        return repo.findPostulanteByIdPostulanteIgnoreCase(id);
+    }
+
+    @Override
 	public void delete(Long id) throws DataException {
 		// TODO Auto-generated method stub
 		repo.deleteById(id);

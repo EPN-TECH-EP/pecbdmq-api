@@ -1,7 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.FALLA_PROCESAR_EXCEL;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
+import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 
 import java.io.ByteArrayInputStream;
@@ -13,7 +12,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.servicio.PostulanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,11 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.lowagie.text.DocumentException;
 
-import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
-import epntech.cbdmq.pe.dominio.admin.Prueba;
-import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
-import epntech.cbdmq.pe.dominio.admin.ResultadoPruebasFisicas;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasFisicasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
@@ -41,6 +38,7 @@ import epntech.cbdmq.pe.servicio.ResultadoPruebasFisicasService;
 import epntech.cbdmq.pe.util.ExporterPdf;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 
 @Service
 public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisicasService {
@@ -57,6 +55,8 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	private DocumentoPruebaRepository docPruebaRepo;
 	@Autowired
 	private PruebaDetalleRepository pruebaDetalleRepository;
+	@Autowired
+	private PostulanteService postulanteService;
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -87,12 +87,27 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	}
 
 	@Override
-	public void uploadFile(MultipartFile file) {
+	public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException{
 		try {
 
-			List<ResultadoPruebasFisicas> datos = ResultadoPruebasHelper
-					.excelToDatosPruebasFisicas(file.getInputStream());
 
+			List<ResultadoPruebaFisicaUtil> datosUtil = ResultadoPruebasHelper
+					.excelToDatosPruebasFisicasI(file.getInputStream(),tipoResultado);
+			List<ResultadoPruebasFisicas> datos = datosUtil.stream().map(resultadoPruebaFisicaUtil -> {
+				ResultadoPruebasFisicas resultadoPruebasFisicas = new ResultadoPruebasFisicas();
+				Optional<Postulante> postulante = postulanteService.getByIdPostulante(resultadoPruebaFisicaUtil.getIdPostulante());
+				if(postulante.isEmpty()){
+					throw new RuntimeException("El postulante con el id: "+resultadoPruebaFisicaUtil.getIdPostulante()+" no existe");
+				}
+				resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
+				resultadoPruebasFisicas.setResultado(resultadoPruebaFisicaUtil.getResultado());
+				resultadoPruebasFisicas.setResultadoTiempo(resultadoPruebaFisicaUtil.getResultadoTiempo());
+				resultadoPruebasFisicas.setCodPrueba(codPruebaDetalle);
+				resultadoPruebasFisicas.setCodFuncionario(codFuncionario);
+				resultadoPruebasFisicas.setEstado("ACTIVO");
+				return resultadoPruebasFisicas;
+
+			}).collect(Collectors.toList());
 			repo.saveAll(datos);
 		} catch (IOException e) {
 			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
