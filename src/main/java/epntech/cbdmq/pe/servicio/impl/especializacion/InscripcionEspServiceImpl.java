@@ -1,7 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION_INSCRIPCION;
+import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_INSCRIPCION;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
@@ -233,7 +232,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 		Path ruta = Paths.get(documento.getRuta());
 
-		// System.out.println("ruta: " + ruta);
+		//System.out.println("ruta: " + ruta);
 		if (Files.exists(ruta)) {
 			try {
 				// System.out.println("ruta" + ruta);
@@ -247,6 +246,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 				// e.printStackTrace();
 			}
 
+		}
+		else {
+			//System.out.println("PATH_NO_EXISTE: " + PATH_NO_EXISTE);
+			throw new DataException(PATH_NO_EXISTE);
 		}
 		
 	}

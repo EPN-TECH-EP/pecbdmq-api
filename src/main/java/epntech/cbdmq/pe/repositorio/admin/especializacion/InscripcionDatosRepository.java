@@ -20,7 +20,7 @@ public interface InscripcionDatosRepository extends JpaRepository<InscripcionDat
 			+ "and upper(dp.estado) = 'ACTIVO' \r\n" 
 			+ "and upper(c.estado) = 'ACTIVO' \r\n"
 			+ "and upper(cc.estado) = 'ACTIVO' \r\n"
-			+ "and upper(i.estado) in ('ACTIVO', 'INSCRITO') \r\n"
+			+ "and upper(i.estado) != ('ELIMINADO') \r\n"
 			+ "and i.cod_inscripcion = :codInscripcion", nativeQuery = true)
 	Optional<InscripcionDatosEsp> findByInscripcion(Long codInscripcion);
 }
