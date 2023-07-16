@@ -1,9 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
+import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
-import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_BAJAS;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -296,6 +294,9 @@ public class CursoServiceImpl implements CursoService {
 				// e.printStackTrace();
 			}
 
+		}
+		else {
+			throw new DataException(PATH_NO_EXISTE);
 		}
 		
 	}
