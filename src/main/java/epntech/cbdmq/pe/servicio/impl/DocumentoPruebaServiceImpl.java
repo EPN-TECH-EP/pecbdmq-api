@@ -61,7 +61,7 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
     @Autowired
     PruebaDetalleRepository repo3;
 
-    private String ruta(String proceso, String codigo) {
+    private String ruta(String codigo) {
 
         String resultado = null;
         PeriodoAcademico periodo=periodoAcademicoRepository.getPeriodoAcademicoActivo();
@@ -72,10 +72,10 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
     }
 
     @Override
-    public List<DocumentoRuta> guardarArchivo(String proceso, Integer prueba, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion {
+    public List<DocumentoRuta> guardarArchivo( Integer prueba, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion {
         String resultado;
 
-        resultado = ruta(proceso, prueba.toString());
+        resultado = ruta(prueba.toString());
         Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
 
         if (!Files.exists(ruta)) {
@@ -105,7 +105,7 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
             documento.setRuta(resultado + multipartFile.getOriginalFilename());
             documento = documentoRepository.save(documento);
             System.out.println("documento.getCodigo() " + documento.getCodDocumento());
-            System.out.println("materia " + prueba);
+            System.out.println("prueba " + prueba);
 
             DocumentoPrueba matdoc = new DocumentoPrueba();
             matdoc.setCodDocumento(documento.getCodDocumento());
