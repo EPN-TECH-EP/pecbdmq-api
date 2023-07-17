@@ -120,6 +120,16 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	}
 
 	@Override
+	public NotasFormacion updateII(NotasFormacion objActualizado) throws DataException {
+		Optional<NotasFormacion> notasFormacion = this.getById(objActualizado.getCodNotaFormacion());
+		if(notasFormacion.isEmpty()){
+			throw new DataException(NO_ENCUENTRA);
+		}
+
+		return notasFormacionRepository.save(objActualizado);
+	}
+
+	@Override
 	public Optional<NotasFormacion> getById(int id) {
 		// TODO Auto-generated method stub
 		return notasFormacionRepository.findById(id);

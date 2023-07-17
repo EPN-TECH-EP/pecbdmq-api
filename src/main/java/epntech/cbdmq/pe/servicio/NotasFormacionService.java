@@ -20,7 +20,8 @@ public interface NotasFormacionService {
 	List<NotasFormacion> getByEstudiante(int id);
 	
 	NotasFormacion update(NotasFormacion objActualizado) throws DataException;
-	
+	NotasFormacion updateII(NotasFormacion objActualizado) throws DataException;
+
 	Optional<NotasFormacion> getById(int id);
 	
 	List<NotasDatosFormacion> getNotasEstudiante(long codEstudiante);
