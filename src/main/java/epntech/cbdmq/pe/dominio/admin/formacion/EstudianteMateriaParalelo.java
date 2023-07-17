@@ -10,7 +10,7 @@ public class EstudianteMateriaParalelo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_estudiante_materia_paralelo")
-    private Integer codInstructorMateriaParalelo;
+    private Integer codEstudianteMateriaParalelo;
     @Column(name = "cod_materia_paralelo")
     private Integer codMateriaParalelo;
     @Column(name = "cod_estudiante")

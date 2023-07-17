@@ -42,6 +42,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"and gu.isNotLocked =true\n" +
 			"and gu.codUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
+
 	Estudiante getEstudianteByCodUnicoEstudiante(String codUnicoEstudiante);
 	@Query(value="SELECT ge.cod_estudiante, ge.cod_datos_personales , ge.codigo_unico_estudiante, ge.estado\n" +
 			"FROM cbdmq.gen_estudiante ge\n" +
@@ -51,4 +52,13 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"  WHERE gemp.cod_estudiante = ge.cod_estudiante\n" +
 			")\n",nativeQuery = true)
 	List<Estudiante> estudiantesWithParalelo();
+
+
+
+	@Query("select ge.codEstudiante from NotasFormacion gnf\n"+
+			"left join EstudianteMateriaParalelo gemp on gnf.codEstudianteMateriaParalelo = gemp.codEstudianteMateriaParalelo\n" +
+			"left join Estudiante ge on ge.codEstudiante = gemp.codEstudiante\n" +
+			"where gnf.codNotaFormacion=:notaFormacion")
+			Estudiante getEstudianteByNotaFormacionFinal(@Param("notaFormacion") Integer notaFormacion);
 }
+

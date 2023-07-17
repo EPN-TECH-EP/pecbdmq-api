@@ -73,6 +73,12 @@ public class MateriaPeriodoServiceImpl implements MateriaPeriodoService{
 	public List<MateriaPeriodo> getAllByPA(Integer codPeriodoAcademico) {
 		return repo.getAllByCodPeriodoAcademico(codPeriodoAcademico);
 	}
+
+
+	@Override
+	public Optional<MateriaPeriodo> findByMateriaParalelo(Integer codigoMateriaParalelo) {
+		return repo.findByMateriaParalelo(codigoMateriaParalelo);
+	}
 }
 	
 	
