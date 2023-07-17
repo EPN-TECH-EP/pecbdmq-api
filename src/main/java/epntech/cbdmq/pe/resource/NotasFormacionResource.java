@@ -5,6 +5,11 @@ import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaParalelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.dominio.util.EstudianteDto;
+import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +41,7 @@ public class NotasFormacionResource {
 	private NotasFormacionServiceImpl notasFormacionServiceImpl;
 	@Autowired
 	private NotasFormacionFinalServiceImpl notasFormacionFinalServiceImpl;
+
 
 	@PostMapping("/registrar")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -97,6 +103,11 @@ public class NotasFormacionResource {
 		notasFormacionFinalServiceImpl.calcularNotas();
 		return response(HttpStatus.OK, PROCESO_EXITO);
 	}
+	@PostMapping("/listarEstudiantesByMateria/{id}")
+	public NotaEstudianteFormacionDto listarNotas(@PathVariable("id") Integer codMateria) throws DataException {
+		NotaEstudianteFormacionDto estudianteMateriaParalelo= notasFormacionServiceImpl.getEstudianteMateriaParalelo(codMateria);
+		return estudianteMateriaParalelo;
+	}
 
 	/*actualiza el estado a true del campo realizo_prueba del estudiante*/
 	@PostMapping("/actualizaEstadoRealizoEncuesta/{id}")
@@ -106,8 +117,8 @@ public class NotasFormacionResource {
 		return response(HttpStatus.OK, PROCESO_EXITO);
 	}
 
-	/*método para saber si realizó o no la encuesta, true(si realizó), 
-	 * false(no realizó)*/
+	/*mï¿½todo para saber si realizï¿½ o no la encuesta, true(si realizï¿½), 
+	 * false(no realizï¿½)*/
 	@GetMapping("/realizoEncuesta/{id}")
 	public ResponseEntity<?> realizoEncuenta(@PathVariable("id") Long codigo) {
 		return response(HttpStatus.OK, Boolean.toString(notasFormacionFinalServiceImpl.realizoEncuesta(codigo)));

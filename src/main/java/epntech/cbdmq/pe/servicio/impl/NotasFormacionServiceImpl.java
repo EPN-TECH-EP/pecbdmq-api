@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.servicio.ParaleloService;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.util.NotasDatosFormacion;
-import epntech.cbdmq.pe.dominio.admin.Materia;
-import epntech.cbdmq.pe.dominio.admin.MateriaPeriodoData;
-import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
@@ -51,6 +51,8 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	private MateriaRepository materiaRepository;
 	@Autowired
 	private NotasDatosFormacionRepository notasDatosFormacionRepository;
+	@Autowired
+	private ParaleloService paraleloSvc;
 
 	@Override
 	@Async
@@ -146,5 +148,14 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	public List<NotasDatosFormacion> getNotasMateria(long codMateria) {
 		// TODO Auto-generated method stub
 		return notasDatosFormacionRepository.getNotasMateria(codMateria);
+	}
+
+	@Override
+	public NotaEstudianteFormacionDto getEstudianteMateriaParalelo(Integer codMateria) {
+		NotaEstudianteFormacionDto notaEstudianteFormacionDto = new NotaEstudianteFormacionDto();
+		List<Paralelo> paralelos= paraleloSvc.getParalelosPA();
+		notaEstudianteFormacionDto.setParalelos(paralelos);
+		notaEstudianteFormacionDto.setEstudianteDatos(notasFormacionRepository.getEstudianteMateriaParalelo(codMateria, periodoAcademicoRepository.getPAActive()));
+		return notaEstudianteFormacionDto;
 	}
 }

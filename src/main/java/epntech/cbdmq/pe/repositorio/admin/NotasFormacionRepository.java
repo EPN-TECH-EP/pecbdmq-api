@@ -2,10 +2,12 @@ package epntech.cbdmq.pe.repositorio.admin;
 
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
+import org.springframework.data.repository.query.Param;
 
 public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, Integer> {
 
@@ -31,5 +33,7 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 			"left join gen_periodo_academico gpa on gnf.codPeriodoAcademico = gpa.codigo \n" +
 			"group by gm.nombre,gpa.descripcion")
 	List<?> listaMateriasHistorico();
+	@Query(nativeQuery = true, name = "EstudianteDatos.getNotasEstudiantesMateria")
+	List<EstudianteDatos> getEstudianteMateriaParalelo(@Param("codMateria") Integer codMateria, @Param("codPA") Integer codPA);
 }
 
