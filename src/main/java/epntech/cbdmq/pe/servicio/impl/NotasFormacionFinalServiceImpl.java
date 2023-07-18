@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Paralelo;
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplina;
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplinaDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.servicio.ParaleloService;
+import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +27,13 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 	@Autowired
 	private NotasFormacionFinalRepository notasFormacionFinalRepository;
 	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
+	private PeriodoAcademicoService periodoAcademicoSvc;
+	@Autowired
+	private ParaleloService paraleloSvc;
 	
 	@Override
 	public void cargarDisciplina(List<NotasFormacionFinal> lista) throws DataException {
-		Integer periodo = periodoAcademicoRepository.getPAActive();
+		Integer periodo = periodoAcademicoSvc.getPAActivo();
 		if(periodo == null)
 			throw new DataException(NO_PERIODO_ACTIVO);
 		List<NotasFormacionFinal> nn = new ArrayList<>();
@@ -62,6 +70,20 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 	public Optional<NotasFormacionFinal> getByEstudiante(Long codEstudiante) {
 		// TODO Auto-generated method stub
 		return notasFormacionFinalRepository.getByEstudiante(codEstudiante);
+	}
+
+	@Override
+	public List<EstudiantesNotaDisciplina> getEstudiantesNotaDisciplina() {
+		return notasFormacionFinalRepository.getEstudiantesNotaDisciplina(periodoAcademicoSvc.getPAActivo());
+	}
+
+	@Override
+	public EstudiantesNotaDisciplinaDto getEstudiantesNotaDisciplinaDto() {
+		EstudiantesNotaDisciplinaDto notaDisciplinaEstudianteDto = new EstudiantesNotaDisciplinaDto();
+		List<Paralelo> paralelos= paraleloSvc.getParalelosPA();
+		notaDisciplinaEstudianteDto.setParalelos(paralelos);
+		notaDisciplinaEstudianteDto.setEstudiantesNotaDisciplina(this.getEstudiantesNotaDisciplina());
+		return notaDisciplinaEstudianteDto;
 	}
 
 }
