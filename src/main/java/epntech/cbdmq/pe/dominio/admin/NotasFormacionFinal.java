@@ -16,16 +16,16 @@ import lombok.Data;
 		}))
 @NamedNativeQuery(name = "EstudiantesNotaDisciplina.getEstudiantes",
 		query = "select e.cod_estudiante , e.codigo_unico_estudiante, gdp.nombre || gdp.apellido as \"nombre\", gdp.cedula , mpa.cod_paralelo \n" +
-				"\tfrom {h-schema}gen_nota_formacion gnf\n" +
-				"\tleft join {h-schema}gen_estudiante_materia_paralelo gemp on gnf.cod_estudiante_materia_paralelo = gemp.cod_estudiante_materia_paralelo  \n" +
-				"\tleft join {h-schema}gen_estudiante e on gemp.cod_estudiante = e.cod_estudiante \n" +
-				"\tleft join {h-schema}gen_dato_personal gdp on e.cod_datos_personales= gdp.cod_datos_personales \n" +
-				"\tleft join {h-schema}gen_materia_paralelo mpa on gemp.cod_materia_paralelo = mpa.cod_materia_paralelo \n" +
-				"\tleft join {h-schema}gen_materia_periodo mpe on mpa.cod_materia_periodo = mpe.cod_materia_periodo \n" +
-				"\twhere mpe.cod_periodo_academico = :codPA-\n" +
-				"\tand upper(e.estado) = 'ACTIVO'\n" +
-				"\tand upper(gnf.estado) = 'ACTIVO'\n" +
-				"\tGROUP BY e.cod_estudiante , e.codigo_unico_estudiante, gdp.nombre, gdp.apellido, gdp.cedula , mpa.cod_paralelo ",resultSetMapping = "EstudiantesNotaDisciplina"
+				"from {h-schema}gen_nota_formacion gnf\n" +
+				"left join {h-schema}gen_estudiante_materia_paralelo gemp on gnf.cod_estudiante_materia_paralelo = gemp.cod_estudiante_materia_paralelo  \n" +
+				"left join {h-schema}gen_estudiante e on gemp.cod_estudiante = e.cod_estudiante \n" +
+				"left join {h-schema}gen_dato_personal gdp on e.cod_datos_personales= gdp.cod_datos_personales \n" +
+				"left join {h-schema}gen_materia_paralelo mpa on gemp.cod_materia_paralelo = mpa.cod_materia_paralelo \n" +
+				"left join {h-schema}gen_materia_periodo mpe on mpa.cod_materia_periodo = mpe.cod_materia_periodo \n" +
+				"where mpe.cod_periodo_academico = :codPA\n" +
+				"and upper(e.estado) = 'ACTIVO'\n" +
+				"and upper(gnf.estado) = 'ACTIVO'\n" +
+				"GROUP BY e.cod_estudiante , e.codigo_unico_estudiante, gdp.nombre, gdp.apellido, gdp.cedula , mpa.cod_paralelo ",resultSetMapping = "EstudiantesNotaDisciplina"
 )
 @Data
 @Entity
