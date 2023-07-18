@@ -32,7 +32,7 @@ public interface NotasFormacionFinalRepository extends JpaRepository<NotasFormac
 	Boolean realizoEncuesta(Long codEstudiante);
 	
 	@Query(value = "select n.* "
-			+ "from cbdmq.gen_nota_formacion_final n"
+			+ "from cbdmq.gen_nota_formacion_final n "
 			+ "where n.cod_periodo_academico = cbdmq.get_pa_activo() "
 			+ "and n.cod_estudiante = :codEstudiante", nativeQuery=true)
 	Optional<NotasFormacionFinal> getByEstudiante(Long codEstudiante);

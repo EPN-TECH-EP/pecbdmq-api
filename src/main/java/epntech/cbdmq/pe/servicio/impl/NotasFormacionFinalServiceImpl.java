@@ -74,7 +74,13 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 
 	@Override
 	public List<EstudiantesNotaDisciplina> getEstudiantesNotaDisciplina() {
-		return notasFormacionFinalRepository.getEstudiantesNotaDisciplina(periodoAcademicoSvc.getPAActivo());
+		List<EstudiantesNotaDisciplina> estudiantesNotaDisciplina = notasFormacionFinalRepository.getEstudiantesNotaDisciplina(periodoAcademicoSvc.getPAActivo());
+		return estudiantesNotaDisciplina.stream().map(estudiante -> {
+			Optional<NotasFormacionFinal> notasFormacionFinal = notasFormacionFinalRepository.getByEstudiante(Long.valueOf(estudiante.getCodEstudiante()));
+			if(notasFormacionFinal.isPresent())
+				estudiante.setPromedioDisciplinaOficialSemana(notasFormacionFinal.get().getPromedioDisciplinaOficialSemana());
+			return estudiante;
+		}).toList();
 	}
 
 	@Override
