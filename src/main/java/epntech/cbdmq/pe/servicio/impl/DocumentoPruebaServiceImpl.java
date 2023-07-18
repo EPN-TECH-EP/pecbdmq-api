@@ -28,10 +28,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
@@ -143,6 +141,10 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
 
         }
 
+    }
+    @Override
+    public Set<Documento> getDocumentos(Integer codPrueba) {
+        return documentoRepository.getDocumentosPruebaDetalle(codPrueba);
     }
 //TODO: revisar si una prueba puede tener muchos documentos asociados
     @Override

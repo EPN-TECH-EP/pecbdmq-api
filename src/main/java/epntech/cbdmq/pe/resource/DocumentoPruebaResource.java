@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoPruebaRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
@@ -43,6 +45,10 @@ public class DocumentoPruebaResource {
         objService.deleteDocumento(pruebaDetalle,codDocumento);
 
         return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
+    @GetMapping("/listar/{id}")
+    public Set<Documento> listarDocumentos(@PathVariable("id") Integer id) {
+        return objService.getDocumentos(id);
     }
 
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
