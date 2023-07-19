@@ -92,7 +92,7 @@ public class NotasFormacionResource {
             throws DataException {
         return (ResponseEntity<NotasFormacion>) notasFormacionServiceImpl.getById(id).map(datosGuardados -> {
             datosGuardados.setNotaSupletorio(obj.getNotaSupletorio());
-            datosGuardados.setNotaPonderacion(obj.getNotaFinal());
+            datosGuardados.setNotaMateria(obj.getNotaFinal());
             datosGuardados.setNotaDisciplina(obj.getNotaDisciplina());
 
 

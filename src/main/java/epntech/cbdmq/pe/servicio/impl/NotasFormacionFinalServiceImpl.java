@@ -76,8 +76,10 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 	
 	@Override
 	public Boolean realizoEncuesta(Long codEstudiante) {
-		// TODO Auto-generated method stub
-		return notasFormacionFinalRepository.realizoEncuesta(codEstudiante);
+		if(notasFormacionFinalRepository.realizoEncuesta(codEstudiante) != null){
+			return notasFormacionFinalRepository.realizoEncuesta(codEstudiante);
+		}
+		return null;
 	}
 
 	@Override

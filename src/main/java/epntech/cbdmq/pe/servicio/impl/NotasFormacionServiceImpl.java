@@ -12,9 +12,8 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
-import epntech.cbdmq.pe.servicio.ParaleloService;
+import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaParalelo;
-import epntech.cbdmq.pe.servicio.MateriaPeriodoService;
 import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
 import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.postgresql.util.PSQLException;
@@ -32,8 +31,6 @@ import epntech.cbdmq.pe.repositorio.admin.MateriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasDatosFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
-import epntech.cbdmq.pe.servicio.EmailService;
-import epntech.cbdmq.pe.servicio.NotasFormacionService;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -44,7 +41,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	@Autowired
 	private MateriaPeriodoDataRepository materiaPeriodoDataRepository;
 	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
+	private PeriodoAcademicoService periodoAcademicoService;
 	@Autowired
 	private EmailService emailService;
 	@Autowired
@@ -68,7 +65,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	public void saveAll(List<NotasFormacion> lista) throws DataException, MessagingException, PSQLException {
 		NotasFormacion nn = new NotasFormacion();
 		List<NotasFormacion> listaNotasFormacion = new ArrayList<>();
-		Integer periodo = periodoAcademicoRepository.getPAActive();
+		Integer periodo = periodoAcademicoService.getPAActivo();
 
 		if (periodo == null)
 			throw new DataException(NO_PERIODO_ACTIVO);
@@ -87,7 +84,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 				nn = lista.get(i);
 				MateriaPeriodoData materiaPeriodoData = new MateriaPeriodoData();
 				materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(periodo,
-						objMpe.getCodPeriodoAcademico());
+						objMpe.getCodMateria());
 
 				nn.setEstado("ACTIVO");
 				nn.setNotaMinima(materiaPeriodoData.getNotaMinima());
@@ -139,7 +136,14 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 		if(notasFormacion.isEmpty()){
 			throw new DataException(NO_ENCUENTRA);
 		}
-
+		objActualizado.setNotaPonderacion(notasFormacion.get().getPesoMateria()*objActualizado.getNotaMateria());
+		MateriaPeriodoData materiaPeriodoData = new MateriaPeriodoData();
+		EstudianteMateriaParalelo estudianteMateriaParalelo= estudianteMateriaParaleloService.findByNotaFormacion(objActualizado.getCodNotaFormacion()).get();
+		MateriaParalelo materiaPa = materiaParaleloService.findByEstudianteMateriaParalelo(estudianteMateriaParalelo.getCodEstudianteMateriaParalelo()).get();
+		MateriaPeriodo materiaPe= materiaPeriodoService.findByMateriaParalelo(materiaPa.getCodMateriaParalelo()).get();
+		materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(periodoAcademicoService.getPAActivo(),
+				materiaPe.getCodMateria());
+		objActualizado.setNotaPonderacion(materiaPeriodoData.getPesoMateria() * objActualizado.getNotaMinima());
 		return notasFormacionRepository.save(objActualizado);
 	}
 
@@ -182,7 +186,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 		NotaEstudianteFormacionDto notaEstudianteFormacionDto = new NotaEstudianteFormacionDto();
 		List<Paralelo> paralelos= paraleloSvc.getParalelosPA();
 		notaEstudianteFormacionDto.setParalelos(paralelos);
-		notaEstudianteFormacionDto.setEstudianteDatos(notasFormacionRepository.getEstudianteMateriaParalelo(codMateria, periodoAcademicoRepository.getPAActive()));
+		notaEstudianteFormacionDto.setEstudianteDatos(notasFormacionRepository.getEstudianteMateriaParalelo(codMateria, periodoAcademicoService.getPAActivo()));
 		return notaEstudianteFormacionDto;
 	}
 }

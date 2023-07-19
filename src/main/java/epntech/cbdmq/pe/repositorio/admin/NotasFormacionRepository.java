@@ -13,8 +13,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, Integer> {
-	@Query(value = "select gnf from gen_nota_formacion gnf \n" +
-			"left join gen_estudiante_materia_paralelo gemp on gnf.cod_estudiante_materia_paralelo = gemp.cod_estudiante_materia_paralelo \n" +
+	@Query(value = "select gnf.* from cbdmq.gen_nota_formacion gnf \n" +
+			"left join cbdmq.gen_estudiante_materia_paralelo gemp on gnf.cod_estudiante_materia_paralelo = gemp.cod_estudiante_materia_paralelo \n" +
 			"where gemp.cod_estudiante =:codEstudiante", nativeQuery=true)
 	List<NotasFormacion> findByCodEstudiante(Integer codEstudiante);
 	
@@ -45,5 +45,6 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 	List<?> listaMateriasHistorico();
 	@Query(nativeQuery = true, name = "EstudianteDatos.getNotasEstudiantesMateria")
 	List<EstudianteDatos> getEstudianteMateriaParalelo(@Param("codMateria") Integer codMateria, @Param("codPA") Integer codPA);
+
 }
 
