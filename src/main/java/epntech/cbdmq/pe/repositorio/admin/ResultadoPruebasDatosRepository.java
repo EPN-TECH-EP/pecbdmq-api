@@ -3,6 +3,8 @@ package epntech.cbdmq.pe.repositorio.admin;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -31,7 +33,7 @@ public interface ResultadoPruebasDatosRepository extends JpaRepository<Resultado
 	List<ResultadosPruebasDatos> get_approved_applicants(Integer prueba);
 	
 	@Query(value = "select * from cbdmq.get_all_resultados_prueba(:prueba)", nativeQuery=true)
-	List<ResultadosPruebasDatos> getResultados(Integer prueba);
+	Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba);
 	
 }
 

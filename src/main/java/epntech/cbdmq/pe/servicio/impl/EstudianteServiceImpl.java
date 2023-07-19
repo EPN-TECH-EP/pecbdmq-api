@@ -142,6 +142,9 @@ public class EstudianteServiceImpl implements EstudianteService {
         }
         return this.getEstudiantesPA(estudiantes);
     }
-
+	@Override
+	public Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion) {
+		return repo.getEstudianteByNotaFormacionFinal(codNotaFormacion);
+	}
 
 }

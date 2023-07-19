@@ -7,7 +7,6 @@ import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -51,4 +50,12 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"  WHERE gemp.cod_estudiante = ge.cod_estudiante\n" +
 			")\n",nativeQuery = true)
 	List<Estudiante> estudiantesWithParalelo();
+
+
+
+	@Query("select ge.codEstudiante from NotasFormacion gnf\n"+
+			"left join EstudianteMateriaParalelo gemp on gnf.codEstudianteMateriaParalelo = gemp.codEstudianteMateriaParalelo\n" +
+			"left join Estudiante ge on ge.codEstudiante = gemp.codEstudiante\n" +
+			"where gnf.codNotaFormacion=:notaFormacion")
+			Estudiante getEstudianteByNotaFormacionFinal(@Param("notaFormacion") Integer notaFormacion);
 }

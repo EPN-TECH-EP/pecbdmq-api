@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lowagie.text.DocumentException;
@@ -30,7 +32,7 @@ public interface ResultadoPruebasService {
 	
 	void generarExcel(String filePath, String nombre, Integer subtipoPrueba)  throws IOException, DataException;
 	
-	void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer subtipoPrueba) throws DocumentException, IOException, DataException;
-	
-	List<ResultadosPruebasDatos> getResultados(Integer subtipoPrueba);
+	void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer subtipoPrueba) throws DocumentException, IOException, DataException;	
+
+	Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba);
 }

@@ -3,11 +3,7 @@ package epntech.cbdmq.pe.servicio.impl;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -143,6 +139,10 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 
 	private void generaDocumento(String ruta, String nombre, Integer codTipoDocumento) {
 		Documento documento = new Documento();
+		Optional<Documento> documento2= documentoRepo.findByNombre(nombre);
+		if(documento2.isPresent()) {
+			documento = documento2.get();
+		}
 		documento.setEstado("ACTIVO");
 		documento.setNombre(nombre);
 		documento.setRuta(ruta);

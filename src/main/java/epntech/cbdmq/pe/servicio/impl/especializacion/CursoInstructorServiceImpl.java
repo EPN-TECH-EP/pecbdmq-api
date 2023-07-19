@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoInstructorRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InstructoresCursoRepository;
 import epntech.cbdmq.pe.servicio.especializacion.CursoInstructorService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CursoInstructorServiceImpl implements CursoInstructorService {
@@ -39,21 +41,33 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	}
 
 	@Override
-	public CursoInstructor update(CursoInstructor cursoInstructorActualizado) throws DataException {
+	public CursoInstructor update(CursoInstructor cursoInstructorActualizado) {
+		CursoInstructor cursoInstructor = cursoInstructorRepository.findById(cursoInstructorActualizado.getCodInstructorCurso())
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+		validarCursoInstructor(cursoInstructorActualizado);
+
+		cursoInstructor.setCodCursoEspecializacion(cursoInstructorActualizado.getCodCursoEspecializacion());
+		cursoInstructor.setCodInstructor(cursoInstructorActualizado.getCodInstructor());
+		cursoInstructor.setCodTipoInstructor(cursoInstructorActualizado.getCodTipoInstructor());
+		cursoInstructor.setDescripcion(cursoInstructorActualizado.getDescripcion());
+		cursoInstructor.setEstado(cursoInstructorActualizado.getEstado());
+
+		return cursoInstructorRepository.save(cursoInstructor);
+	}
+
+	private void validarCursoInstructor(CursoInstructor cursoInstructorActualizado) {
 		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorRepository
 				.findByCodInstructorAndCodCursoEspecializacion(cursoInstructorActualizado.getCodInstructor().intValue(),
 						cursoInstructorActualizado.getCodCursoEspecializacion());
 
 		if (cursoInstructorOptional.isPresent() && !cursoInstructorOptional.get().getCodInstructorCurso()
 				.equals(cursoInstructorActualizado.getCodInstructorCurso()))
-			throw new DataException(REGISTRO_YA_EXISTE);
-
-		return cursoInstructorRepository.save(cursoInstructorActualizado);
+			throw new BusinessException(REGISTRO_YA_EXISTE);
 	}
 
 	@Override
 	public List<CursoInstructor> listAll() {
-		// TODO Auto-generated method stub
 		return cursoInstructorRepository.findAll();
 	}
 
@@ -77,15 +91,15 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<InstructoresCurso> listInstructoresCurso(Long codCurso) {
-		// TODO Auto-generated method stub
 		return instructoresCursoRepository.findInstructoresCurso(codCurso);
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<InstructoresCurso> listCursosInstructor(Long codInstructor) {
-		// TODO Auto-generated method stub
 		return instructoresCursoRepository.findCursosInstructor(codInstructor);
 	}
 

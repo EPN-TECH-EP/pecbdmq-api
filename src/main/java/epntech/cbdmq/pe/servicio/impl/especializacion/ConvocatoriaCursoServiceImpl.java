@@ -1,7 +1,9 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
-import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.CONVOCATORIA_CURSO_EXISTE;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.CURSO_NO_APROBADO;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.FECHA_INVALIDA;
 import static epntech.cbdmq.pe.constante.MensajesConst.NO_PARAMETRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.Parametro;
@@ -142,6 +145,7 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 		return convocatoriaCursoRepository.save(convocatoriaCursoActualizado);
 	}
 
+	@Transactional
 	@Override
 	public void deleteDocumento(Long codConvocatoria, Long codDocumento) throws DataException {
 		Optional<Documento> documentoOptional;
@@ -151,6 +155,10 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 		documentoOptional = documentoRepository.findById(codDocumento.intValue());
 		documento = documentoOptional.get();
 
+		convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(codConvocatoria.intValue(),
+				codDocumento.intValue());
+		documentoRepository.deleteById(codDocumento.intValue());
+
 		Path ruta = Paths.get(documento.getRuta());
 
 		 //System.out.println("ruta: " + ruta);
@@ -158,10 +166,7 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 			try {
 				 //System.out.println("entra");
 			Files.delete(ruta);
-				
-				convocatoriaDocumentoRepository.deleteByCodConvocatoriaAndCodDocumento(codConvocatoria.intValue(),
-						codDocumento.intValue());
-				documentoRepository.deleteById(codDocumento.intValue());
+
 			} catch (Exception e) {
 
 				throw new DataException(e.getMessage());

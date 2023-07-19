@@ -35,6 +35,8 @@ import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
+import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
+import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
@@ -58,12 +60,7 @@ public class ResultadoPruebasNoFisicasResource {
 	private PruebaDetalleServiceImpl pruebaDetalleServiceImpl;
 
 	@Value("${pecb.archivos.ruta}")
-	private String ARCHIVOS_RUTA;
-
-	@GetMapping("/postulantesValidos")
-	public List<PostulantesValidos> listar() {
-		return objService.getPostulantesValidos();
-	}
+	private String ARCHIVOS_RUTA;	
 
 	@PostMapping("/notificar")
 	public ResponseEntity<?> notificar(@RequestParam("mensaje") String mensaje,
@@ -98,7 +95,17 @@ public class ResultadoPruebasNoFisicasResource {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(objService.getAllPaginado(pageable, subTipoPrueba));
 		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, ERROR_REGISTRO);
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
+	}
+	
+	@GetMapping("/resultados")
+	public ResponseEntity<?> getResultados(Pageable pageable, @RequestParam("subTipoPrueba") Integer subTipoPrueba) {
+		
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(resultadoPruebasServiceImpl.getResultados(pageable, subTipoPrueba));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
 		}
 	}
 
@@ -129,7 +136,7 @@ public class ResultadoPruebasNoFisicasResource {
 	}
 
 	@PostMapping("/cargarPlantilla")
-	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo,@RequestParam("codPruebaDetalle") Integer codPruebaDetalle,@RequestParam("codFuncionario") Integer codFuncionario,@RequestParam("tipoResultado") String tipoResultado) {
+	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo,@RequestParam("codPruebaDetalle") Integer codPruebaDetalle,@RequestParam(required = false) Integer codFuncionario,@RequestParam("tipoResultado") String tipoResultado) {
 
 		if (ExcelHelper.hasExcelFormat(archivo)) {
 			try {

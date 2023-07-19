@@ -6,7 +6,6 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
-import epntech.cbdmq.pe.dominio.util.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import jakarta.persistence.*;
 import lombok.Data;

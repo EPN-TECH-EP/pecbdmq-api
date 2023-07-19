@@ -5,37 +5,39 @@ import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import epntech.cbdmq.pe.dominio.admin.*;
-import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
-import epntech.cbdmq.pe.servicio.PostulanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lowagie.text.DocumentException;
 
+import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
+import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
+import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.helper.ResultadoPruebasHelper;
-import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoPruebaRepository;
+import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebasDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebasRepository;
+import epntech.cbdmq.pe.servicio.PostulanteService;
 import epntech.cbdmq.pe.servicio.ResultadoPruebasService;
-import epntech.cbdmq.pe.util.ExporterPdf;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Service
@@ -103,6 +105,16 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 				if(postulante.isEmpty()){
 					throw new RuntimeException("El postulante con el id: "+dato.getIdPostulante()+" no existe");
 				}
+				
+				// busca registro existente
+				Optional<ResultadoPruebas> resultadoPruebasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+				
+				if (resultadoPruebasOpt.isEmpty()) {
+					resultadoPruebas = new ResultadoPruebas();
+				} else {
+					resultadoPruebas = resultadoPruebasOpt.get();
+				}
+				
 				resultadoPruebas.setCodPostulante(postulante.get().getCodPostulante().intValue());
 				resultadoPruebas.setCumplePrueba(dato.getCumplePrueba());
 				resultadoPruebas.setNotaPromedioFinal(dato.getNotaPromedioFinal());
@@ -154,10 +166,11 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 
 	}
 
+	// lista de todos los registros
 	@Override
-	public List<ResultadosPruebasDatos> getResultados(Integer prueba) {
+	public Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba) {
 		// TODO Auto-generated method stub
-		return repo1.getResultados(prueba);
+		return repo1.getResultados(pageable, prueba);
 	}
 
 	@Override

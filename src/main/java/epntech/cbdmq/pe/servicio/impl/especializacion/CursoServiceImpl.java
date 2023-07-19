@@ -1,9 +1,10 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
-import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_BAJAS;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
+import static epntech.cbdmq.pe.constante.MensajesConst.DOCUMENTO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INCORRECTO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,14 +22,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.BajaDocumento;
+import epntech.cbdmq.pe.constante.MensajesConst;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoRequisito;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoEspRepository;
@@ -49,6 +52,8 @@ public class CursoServiceImpl implements CursoService {
 	private CursoRequisitoRepository cursoRequisitoRepository;
 	@Autowired
 	private DocumentoRepository documentoRepository;
+	@Autowired
+	private AulaRepository aulaRepository;
 	
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -57,10 +62,13 @@ public class CursoServiceImpl implements CursoService {
 
 	@Override
 	public Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento) {
-		Curso cc = new Curso();
+		aulaRepository.findById(obj.getCodAula())
+				.orElseThrow(() -> new BusinessException(MensajesConst.AULA_NO_EXISTE));
+
+		Curso cc;
 		cc = cursoEspRepository.insertarCursosDocumentosRequisitos(obj, requisitos, documentos, codTipoDocumento);
 
-		return cursoRepository.findById(cc.getCodCursoEspecializacion()).get();
+		return cc;
 	}
 
 	@Override

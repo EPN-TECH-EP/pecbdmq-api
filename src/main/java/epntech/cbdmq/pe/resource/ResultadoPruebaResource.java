@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
+import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ResultadoPruebaServiceImpl;
 
@@ -29,6 +30,7 @@ public class ResultadoPruebaResource {
 
 	@Autowired
 	private ResultadoPruebaServiceImpl objService;
+	
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)

@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.servicio.CatalogoCursoService;
@@ -25,9 +25,6 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	
 	@Override
 	public CatalogoCurso save(CatalogoCurso obj) throws DataException {
-		// TODO Auto-generated method stub
-		if (obj.getNombreCatalogoCurso().trim().isEmpty())
-					throw new DataException(REGISTRO_VACIO);
 		obj.setNombreCatalogoCurso(obj.getNombreCatalogoCurso().toUpperCase());
 		
 		Optional<CatalogoCurso> objGuardado = repo.findByNombreCatalogoCursoIgnoreCase(obj.getNombreCatalogoCurso());
@@ -46,7 +43,6 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 		
 				return repo.save(obj);
 	}
-
 	@Override
 	public List<CatalogoCurso> getAll() {
 		// TODO Auto-generated method stub
@@ -60,16 +56,27 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	}
 
 	@Override
-	public CatalogoCurso update(CatalogoCurso objActualizado) throws DataException {
-		if (objActualizado.getNombreCatalogoCurso() != null) {
-			Optional<CatalogoCurso> objGuardado = repo
-					.findByNombreCatalogoCursoIgnoreCase(objActualizado.getNombreCatalogoCurso());
-			if (objGuardado.isPresent()
-					&& !objGuardado.get().getCodCatalogoCursos().equals(objActualizado.getCodCatalogoCursos())) {
-				throw new DataException(REGISTRO_YA_EXISTE);
-			}
+	public CatalogoCurso update(CatalogoCurso objActualizado) {
+		objActualizado.setNombreCatalogoCurso(objActualizado.getNombreCatalogoCurso().toUpperCase());
+		CatalogoCurso catalogoCurso = repo.findById(objActualizado.getCodCatalogoCursos())
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+		validarCatalogoCurso(objActualizado);
+
+		catalogoCurso.setDescripcionCatalogoCurso(objActualizado.getDescripcionCatalogoCurso());
+		catalogoCurso.setNombreCatalogoCurso(objActualizado.getNombreCatalogoCurso());
+		catalogoCurso.setEstado(objActualizado.getEstado());
+
+		return repo.save(catalogoCurso);
+	}
+
+	private void validarCatalogoCurso(CatalogoCurso objActualizado) {
+		Optional<CatalogoCurso> objGuardado = repo
+				.findByNombreCatalogoCursoIgnoreCase(objActualizado.getNombreCatalogoCurso());
+		if (objGuardado.isPresent()
+				&& !objGuardado.get().getCodCatalogoCursos().equals(objActualizado.getCodCatalogoCursos())) {
+			throw new BusinessException(REGISTRO_YA_EXISTE);
 		}
-			return repo.save(objActualizado);
 	}
 
 	@Override

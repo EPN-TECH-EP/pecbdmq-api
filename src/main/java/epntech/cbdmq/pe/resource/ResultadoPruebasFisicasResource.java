@@ -57,10 +57,10 @@ public class ResultadoPruebasFisicasResource {
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
 
-	@GetMapping("/postulantesValidos")
-	public List<PostulantesValidos> listar() {
-		return objService.getPostulantesValidos();
-	}
+//	@GetMapping("/postulantesValidos")
+//	public List<PostulantesValidos> listar() {
+//		return objService.getPostulantesValidos();
+//	}
 
 
 	/*@PutMapping("/update")
@@ -89,7 +89,7 @@ public class ResultadoPruebasFisicasResource {
 	}
 
 	@PostMapping("/cargarPlantilla")
-	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo,@RequestParam("codPruebaDetalle") Integer codPruebaDetalle,@RequestParam("codFuncionario") Integer codFuncionario,@RequestParam("tipoResultado") String tipoResultado){
+	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo,@RequestParam("codPruebaDetalle") Integer codPruebaDetalle,@RequestParam(required = false) Integer codFuncionario,@RequestParam("tipoResultado") String tipoResultado){
 
 		if (ExcelHelper.hasExcelFormat(archivo)) {
 			try {

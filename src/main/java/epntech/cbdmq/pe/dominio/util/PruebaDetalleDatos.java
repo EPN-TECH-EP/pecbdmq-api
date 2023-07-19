@@ -66,6 +66,7 @@ public class PruebaDetalleDatos{
 	protected Boolean tienePuntaje;
 	private String subTipoPruebaNombre;
 	private String tipoPruebaNombre;
+	protected Boolean esFisica;
 
 	public PruebaDetalleDatos() {
 	};
@@ -85,7 +86,8 @@ public class PruebaDetalleDatos{
 			Double puntajeMaximo,
 			Boolean tienePuntaje,
 			String subTipoPruebaNombre,
-			String tipoPruebaNombre) {
+			String tipoPruebaNombre,
+			Boolean esFisica) {
 		this.codPruebaDetalle = codPruebaDetalle;
 		this.descripcionPrueba = descripcionPrueba;
 		this.fechaInicio = fechaInicio;
@@ -101,6 +103,7 @@ public class PruebaDetalleDatos{
 		this.tienePuntaje = tienePuntaje;
 		this.subTipoPruebaNombre = subTipoPruebaNombre;
 		this.tipoPruebaNombre = tipoPruebaNombre;
+		this.esFisica = esFisica;
 	}
 
 }

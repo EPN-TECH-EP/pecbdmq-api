@@ -9,17 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.servicio.*;
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaParalelo;
+import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
+import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.util.NotasDatosFormacion;
-import epntech.cbdmq.pe.dominio.admin.Materia;
-import epntech.cbdmq.pe.dominio.admin.MateriaPeriodoData;
-import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
@@ -28,8 +31,6 @@ import epntech.cbdmq.pe.repositorio.admin.MateriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasDatosFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
-import epntech.cbdmq.pe.servicio.EmailService;
-import epntech.cbdmq.pe.servicio.NotasFormacionService;
 import jakarta.mail.MessagingException;
 
 @Service
@@ -40,7 +41,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	@Autowired
 	private MateriaPeriodoDataRepository materiaPeriodoDataRepository;
 	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
+	private PeriodoAcademicoService periodoAcademicoService;
 	@Autowired
 	private EmailService emailService;
 	@Autowired
@@ -51,35 +52,44 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	private MateriaRepository materiaRepository;
 	@Autowired
 	private NotasDatosFormacionRepository notasDatosFormacionRepository;
+	@Autowired
+	private ParaleloService paraleloSvc;
+	private EstudianteMateriaParaleloService estudianteMateriaParaleloService;
+	@Autowired
+	private MateriaParaleloService materiaParaleloService;
+	@Autowired
+	private MateriaPeriodoService materiaPeriodoService;
 
 	@Override
 	@Async
 	public void saveAll(List<NotasFormacion> lista) throws DataException, MessagingException, PSQLException {
 		NotasFormacion nn = new NotasFormacion();
 		List<NotasFormacion> listaNotasFormacion = new ArrayList<>();
-		Integer periodo = periodoAcademicoRepository.getPAActive();
+		Integer periodo = periodoAcademicoService.getPAActivo();
 
 		if (periodo == null)
 			throw new DataException(NO_PERIODO_ACTIVO);
 
 		Integer i = 0;
 		for (NotasFormacion notasFormacion : lista) {
+			EstudianteMateriaParalelo objMP=estudianteMateriaParaleloService.findByNotaFormacion(notasFormacion.getCodNotaFormacion()).get();
+			MateriaParalelo objMpa= materiaParaleloService.findByEstudianteMateriaParalelo(objMP.getCodEstudianteMateriaParalelo()).get();
+			MateriaPeriodo objMpe= materiaPeriodoService.findByMateriaParalelo(objMpa.getCodMateriaParalelo()).get();
 
-			if (notasFormacionRepository.existeNota(notasFormacion.getCodInstructor(), notasFormacion.getCodMateria(),
-					notasFormacion.getCodEstudiante()) == 0) {
+			if (notasFormacionRepository.existeNota(objMpe.getCodMateria(),
+					objMP.getCodEstudiante()) == 0) {
 
 				LocalDateTime fecha = LocalDateTime.now();
 
 				nn = lista.get(i);
 				MateriaPeriodoData materiaPeriodoData = new MateriaPeriodoData();
 				materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(periodo,
-						notasFormacion.getCodMateria());
+						objMpe.getCodMateria());
 
 				nn.setEstado("ACTIVO");
 				nn.setNotaMinima(materiaPeriodoData.getNotaMinima());
 				nn.setNumeroHoras(materiaPeriodoData.getNumeroHoras());
 				nn.setPesoMateria(materiaPeriodoData.getPesoMateria());
-				nn.setCodPeriodoAcademico(periodo);
 				nn.setNotaPonderacion(materiaPeriodoData.getPesoMateria() * nn.getNotaMateria());
 				nn.setFechaIngreso(fecha);
 
@@ -104,8 +114,11 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	@Override
 	public NotasFormacion update(NotasFormacion objActualizado) throws DataException {
 		MateriaPeriodoData materiaPeriodoData = new MateriaPeriodoData();
+		EstudianteMateriaParalelo estudianteMateriaParalelo= estudianteMateriaParaleloService.findByNotaFormacion(objActualizado.getCodNotaFormacion()).get();
+		MateriaParalelo materiaPa = materiaParaleloService.findByEstudianteMateriaParalelo(estudianteMateriaParalelo.getCodEstudianteMateriaParalelo()).get();
+		MateriaPeriodo materiaPe= materiaPeriodoService.findByMateriaParalelo(materiaPa.getCodMateriaParalelo()).get();
 		materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(
-				objActualizado.getCodPeriodoAcademico(), objActualizado.getCodMateria());
+				materiaPe.getCodPeriodoAcademico(), materiaPe.getCodMateria());
 
 		if (objActualizado.getNotaSupletorio() < materiaPeriodoData.getNotaMinima()) {
 			throw new DataException(NOTA_MINIMA_MATERIA);
@@ -118,6 +131,23 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	}
 
 	@Override
+	public NotasFormacion updateII(NotasFormacion objActualizado) throws DataException {
+		Optional<NotasFormacion> notasFormacion = this.getById(objActualizado.getCodNotaFormacion());
+		if(notasFormacion.isEmpty()){
+			throw new DataException(NO_ENCUENTRA);
+		}
+		objActualizado.setNotaPonderacion(notasFormacion.get().getPesoMateria()*objActualizado.getNotaMateria());
+		MateriaPeriodoData materiaPeriodoData = new MateriaPeriodoData();
+		EstudianteMateriaParalelo estudianteMateriaParalelo= estudianteMateriaParaleloService.findByNotaFormacion(objActualizado.getCodNotaFormacion()).get();
+		MateriaParalelo materiaPa = materiaParaleloService.findByEstudianteMateriaParalelo(estudianteMateriaParalelo.getCodEstudianteMateriaParalelo()).get();
+		MateriaPeriodo materiaPe= materiaPeriodoService.findByMateriaParalelo(materiaPa.getCodMateriaParalelo()).get();
+		materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(periodoAcademicoService.getPAActivo(),
+				materiaPe.getCodMateria());
+		objActualizado.setNotaPonderacion(materiaPeriodoData.getPesoMateria() * objActualizado.getNotaMinima());
+		return notasFormacionRepository.save(objActualizado);
+	}
+
+	@Override
 	public Optional<NotasFormacion> getById(int id) {
 		// TODO Auto-generated method stub
 		return notasFormacionRepository.findById(id);
@@ -126,10 +156,13 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	private void enviarCorreo(List<NotasFormacion> lista) throws MessagingException {
 
 		for (NotasFormacion notasFormacion : lista) {
-			Optional<Estudiante> estudiante = estudianteRepository.findById(notasFormacion.getCodEstudiante());
+			EstudianteMateriaParalelo estudianteMateriaParalelo= estudianteMateriaParaleloService.findByNotaFormacion(notasFormacion.getCodNotaFormacion()).get();
+			MateriaParalelo materiaPa = materiaParaleloService.findByEstudianteMateriaParalelo(estudianteMateriaParalelo.getCodEstudianteMateriaParalelo()).get();
+			MateriaPeriodo materiaPe= materiaPeriodoService.findByMateriaParalelo(materiaPa.getCodMateriaParalelo()).get();
+			Optional<Estudiante> estudiante = estudianteRepository.findById(estudianteMateriaParalelo.getCodEstudiante());
 			Optional<DatoPersonal> datoPersonal = datoPersonalRepository
 					.findById(estudiante.get().getCodDatosPersonales());
-			Optional<Materia> materia = materiaRepository.findById(notasFormacion.getCodMateria());
+			Optional<Materia> materia = materiaRepository.findById(materiaPe.getCodMateria());
 
 			emailService.enviarEmail(datoPersonal.get().getCorreoPersonal(), EMAIL_SUBJECT_REG_NOTA,
 					"Se ha registrado una nota en la materia: " + materia.get().getNombre());
@@ -146,5 +179,14 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	public List<NotasDatosFormacion> getNotasMateria(long codMateria) {
 		// TODO Auto-generated method stub
 		return notasDatosFormacionRepository.getNotasMateria(codMateria);
+	}
+
+	@Override
+	public NotaEstudianteFormacionDto getEstudianteMateriaParalelo(Integer codMateria) {
+		NotaEstudianteFormacionDto notaEstudianteFormacionDto = new NotaEstudianteFormacionDto();
+		List<Paralelo> paralelos= paraleloSvc.getParalelosPA();
+		notaEstudianteFormacionDto.setParalelos(paralelos);
+		notaEstudianteFormacionDto.setEstudianteDatos(notasFormacionRepository.getEstudianteMateriaParalelo(codMateria, periodoAcademicoService.getPAActivo()));
+		return notaEstudianteFormacionDto;
 	}
 }

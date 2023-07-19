@@ -5,6 +5,7 @@ import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaParalelo;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+
 import epntech.cbdmq.pe.repositorio.admin.formacion.EstudianteMateriaParaleloRepository;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
@@ -74,5 +75,15 @@ public class EstudianteMateriaParaleloServiceImpl implements EstudianteMateriaPa
             return true;
 
     }
+
+    public Boolean asignarEstudianteMateriaParalelo(Integer codMateria, Integer codParalelo, Estudiante[] estudiantes) {
+        return null;
+    }
+
+    @Override
+    public Optional<EstudianteMateriaParalelo> findByNotaFormacion(Integer codNotaFormacion) {
+        return repoObj.findByNotaFormacion(codNotaFormacion);
+    }
+
 
 }

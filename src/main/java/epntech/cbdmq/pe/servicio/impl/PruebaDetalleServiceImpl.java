@@ -141,7 +141,7 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 						+ "	gpd.puntaje_maximo, "
 						+ "	gpd.tiene_puntaje, "
 						+ "	gsp.nombre as sub_tipo_prueba_nombre, "
-						+ "	gtp.tipo_prueba as tipo_prueba_nombre  "
+						+ "	gtp.tipo_prueba as tipo_prueba_nombre, gtp.es_fisica as es_fisica  "
 						+ "from "
 						+ "	cbdmq.gen_prueba_detalle gpd, "
 						+ "	cbdmq.gen_subtipo_prueba gsp, "

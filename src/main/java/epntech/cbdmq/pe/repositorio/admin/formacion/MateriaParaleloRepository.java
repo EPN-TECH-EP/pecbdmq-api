@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +25,6 @@ public interface MateriaParaleloRepository extends JpaRepository<MateriaParalelo
     @Query(nativeQuery = true, name ="InstructorMateriaReadDto.getMateriaParaleloNombres")
     List<InstructorMateriaReadDto> getMateriaNombres(@Param("codPA") Integer codPeriodoAcademico);
     List<MateriaParalelo> getAllByCodParalelo(Integer codParalelo);
-
+    @Query("select MateriaParalelo from EstudianteMateriaParalelo gnf left join MateriaParalelo gemp on gnf.codMateriaParalelo = gemp.codMateriaParalelo where gnf.codEstudianteMateriaParalelo = :codEstudianteMateriaParalelo")
+    Optional<MateriaParalelo> findByEstudianteMateriaParalelo(@Param("codEstudianteMateriaParalelo")Integer codEstudianteMateriaParalelo);
 }

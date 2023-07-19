@@ -9,10 +9,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.servicio.EstudianteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.Apelacion;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ApelacionRepository;
@@ -29,6 +31,8 @@ public class ApelacionServiceImpl implements ApelacionService {
 	private NotasFormacionRepository notasFormacionRepository;
 	@Autowired
 	private NotasFormacionFinalRepository notasFormacionFinalRepository;
+	@Autowired
+	private EstudianteService estudianteService;
 
 	@Override
 	public Apelacion save(Apelacion obj) throws DataException, ParseException {
@@ -84,8 +88,9 @@ public class ApelacionServiceImpl implements ApelacionService {
 				notasFormacion.setNotaPonderacion(objActualizado.getNotaNueva() * notasFormacion.getPesoMateria());
 
 				notasFormacionRepository.save(notasFormacion);
+				Estudiante estudiante= estudianteService.getEstudianteByNotaFormacion(notasFormacion.getCodNotaFormacion());
 
-				notasFormacionFinalRepository.calcular_notafinal_x_estudiante(notasFormacion.getCodEstudiante());
+				notasFormacionFinalRepository.calcular_notafinal_x_estudiante(estudiante.getCodEstudiante());
 			}
 		}
 		return repo.save(objActualizado);

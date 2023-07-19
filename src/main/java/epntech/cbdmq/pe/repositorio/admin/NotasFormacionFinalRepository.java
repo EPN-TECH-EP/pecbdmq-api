@@ -1,11 +1,15 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
+import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplina;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import epntech.cbdmq.pe.dominio.admin.NotasFormacionFinal;
@@ -28,7 +32,7 @@ public interface NotasFormacionFinalRepository extends JpaRepository<NotasFormac
 	Boolean realizoEncuesta(Long codEstudiante);
 	
 	@Query(value = "select n.* "
-			+ "from cbdmq.gen_nota_formacion_final n"
+			+ "from cbdmq.gen_nota_formacion_final n "
 			+ "where n.cod_periodo_academico = cbdmq.get_pa_activo() "
 			+ "and n.cod_estudiante = :codEstudiante", nativeQuery=true)
 	Optional<NotasFormacionFinal> getByEstudiante(Long codEstudiante);
@@ -36,5 +40,11 @@ public interface NotasFormacionFinalRepository extends JpaRepository<NotasFormac
 	@Modifying
 	@Query("UPDATE NotasFormacionFinal n SET n.realizoEncuesta = true WHERE n.codPeriodoAcademico = cbdmq.get_pa_activo() and n.codEstudiante = ?1")
 	void actualizarEstadorealizoEncuesta(Long codEstudiante);
+
+	@Query(nativeQuery = true, name = "EstudiantesNotaDisciplina.getEstudiantes")
+	List<EstudiantesNotaDisciplina> getEstudiantesNotaDisciplina(@Param("codPA") Integer codPA);
+
+	List<NotasFormacionFinal> getAllByCodPeriodoAcademico(Integer codPA);
+
 }
 

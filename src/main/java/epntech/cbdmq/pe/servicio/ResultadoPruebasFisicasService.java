@@ -33,4 +33,6 @@ public interface ResultadoPruebasFisicasService {
 	List<ResultadosPruebasFisicasDatos> getResultados(Integer subtipoPrueba);
 	
 	void notificar(String mensaje) throws MessagingException;
+	
+	public Optional<ResultadoPruebasFisicas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba);
 }

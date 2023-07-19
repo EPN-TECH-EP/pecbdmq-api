@@ -39,9 +39,29 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
 
-	@Override
+@Override
 	public List<PostulantesValidos> getPostulantesValidos() {
 		return repo.getPostulantesValidos();
+	}
+
+	@Override
+	public List<PostulantesValidos> getAllPostulantesValidos() {
+		return repo.getAllPostulantesValidos();
+	}
+	
+	@Override
+	public Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable){
+		return this.repo.getAllPostulantesValidosPaginado(pageable);
+	}
+	
+	@Override
+	public List<PostulantesValidos> getAllPostulantesValidosOrderApellido() {
+		return this.repo.getAllPostulantesValidosOrderApellido();
+	}
+
+	@Override
+	public Page<PostulantesValidos> getAllPostulantesValidosPaginadoOrderApellido(Pageable pageable) {
+		return this.repo.getAllPostulantesValidosPaginadoOrderApellido(pageable);
 	}
 
 	@Override
@@ -54,7 +74,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 		Optional<PruebaDetalle> pruebaDetalle = pruebaDetalleRepository
 				.findByCodSubtipoPruebaAndCodPeriodoAcademico(codPrueba, periodoAcademicoRepository.getPAActive());
 		if (pruebaDetalle.isPresent() && pruebaDetalle.get().getOrdenTipoPrueba().equals(1)) {
-			lista = repo.getPostulantesValidos();
+			lista = repo.getAllPostulantesValidos();
 		} else if (pruebaDetalle.isPresent()) {
 			lista = repo.get_approved_by_test(codPrueba);
 		}
@@ -88,14 +108,12 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 
 	@Override
 	public Page<PostulantesValidos> getAllPaginado(Pageable pageable, Integer codPrueba) throws Exception {
-		// TODO Auto-generated method stub
 		// return repo.getPostulantesValidosPaginado(pageable);
 		return repo.get_approved_by_test(pageable, codPrueba);
 	}
 
 	@Override
 	public List<PostulantesValidos> getPostulantesAprovadosPrueba(Integer prueba) {
-		// TODO Auto-generated method stub
 		return repo.get_approved_by_test(prueba);
 	}
 

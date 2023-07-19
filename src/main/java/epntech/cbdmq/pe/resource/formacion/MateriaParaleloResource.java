@@ -1,12 +1,7 @@
 package epntech.cbdmq.pe.resource.formacion;
 
 import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
-import epntech.cbdmq.pe.dominio.admin.MateriaPeriodo;
-import epntech.cbdmq.pe.dominio.admin.Paralelo;
-import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelosDto;
-import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import epntech.cbdmq.pe.dominio.util.MateriaAulaParaleloUtil;
-import epntech.cbdmq.pe.dominio.util.MateriaAulaUtil;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.formacion.MateriaParaleloServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +25,7 @@ public class MateriaParaleloResource {
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<MateriaParalelo> guardar(@RequestBody MateriaParalelo obj) throws DataException {
-        return new ResponseEntity<MateriaParalelo>(objService.saveMateriaInParalelo(obj), HttpStatus.OK);
+        return new ResponseEntity<MateriaParalelo>(objService.saveMateriaParalelo(obj), HttpStatus.OK);
     }
     @PostMapping("/asignar")
     @ResponseStatus(HttpStatus.CREATED)

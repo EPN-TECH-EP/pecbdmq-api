@@ -6,12 +6,18 @@ import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelo;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaParalelosDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.InstructorMateriaReadDto;
 import epntech.cbdmq.pe.dominio.util.InstructorDatos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.InstructorDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.InstructorMateriaParaleloRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.MateriaParaleloRepository;
 import epntech.cbdmq.pe.servicio.*;
+import epntech.cbdmq.pe.servicio.AulaService;
+import epntech.cbdmq.pe.servicio.MateriaPeriodoService;
+import epntech.cbdmq.pe.servicio.MateriaService;
+import epntech.cbdmq.pe.servicio.ParaleloService;
+import epntech.cbdmq.pe.servicio.EjeMateriaService;
 import epntech.cbdmq.pe.servicio.formacion.InstructorMateriaParaleloService;
 import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +40,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     @Autowired
     private AulaService serviceAula;
     @Autowired
-    private MateriaParaleloService serviceMP;
+    private MateriaParaleloService serviceMPa;
     @Autowired
     private MateriaPeriodoService serviceMPe;
     @Autowired
@@ -59,36 +65,36 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
 
     @Override
     @Transactional
-    public Boolean asignarInstructorMateriaParaleloAll(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
+    public Boolean asignarInstructorMateriaParaleloAll(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException {
         MateriaPeriodo objMPe = new MateriaPeriodo();
         objMPe.setCodPeriodoAcademico(servicePeriodo.getPAActivo());
         objMPe.setCodMateria(codMateria);
         objMPe.setCodAula(codAula);
-        Optional<MateriaPeriodo> objGuardado = repoMPe.findByCodMateriaAndCodPeriodoAcademico(objMPe.getCodMateria(), objMPe.getCodPeriodoAcademico());
+        Optional<MateriaPeriodo> objGuardado = serviceMPe.findByCodMateriaAndCodPeriodoAcademico(objMPe.getCodMateria(), objMPe.getCodPeriodoAcademico());
         MateriaPeriodo objMPeII = new MateriaPeriodo();
         if (objGuardado.isPresent() && !objGuardado.get().getCodMateriaPeriodo().equals(objMPe.getCodMateriaPeriodo())) {
             objMPeII = objGuardado.get();
         } else {
-            objMPeII = repoMPe.save(objMPe);
+            objMPeII = serviceMPe.save(objMPe);
         }
 
         MateriaParalelo objMpa = new MateriaParalelo();
         objMpa.setCodMateriaPeriodo(objMPeII.getCodMateriaPeriodo());
         objMpa.setCodParalelo(codParalelo);
-        MateriaParalelo objMPaII = repoMPa.save(objMpa);
+        MateriaParalelo objMPaII = serviceMPa.saveMateriaParalelo(objMpa);
 
         InstructorMateriaParalelo objCoordinador = new InstructorMateriaParalelo();
         objCoordinador.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
         objCoordinador.setCodInstructor(codCoordinador);
         objCoordinador.setCodTipoInstructor(3);
-        repoIMP.save(objCoordinador);
+        save(objCoordinador);
 
         for (Integer codAsistente : codAsistentes) {
             InstructorMateriaParalelo objAsistente = new InstructorMateriaParalelo();
             objAsistente.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
             objAsistente.setCodInstructor(codAsistente);
             objAsistente.setCodTipoInstructor(1);
-            repoIMP.save(objAsistente);
+            save(objAsistente);
         }
 
         for (Integer codInstructor : codInstructores) {
@@ -96,7 +102,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
             objInstructor.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
             objInstructor.setCodInstructor(codInstructor);
             objInstructor.setCodTipoInstructor(2);
-            repoIMP.save(objInstructor);
+            save(objInstructor);
         }
 
         return true;
@@ -105,7 +111,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     @Override
     @Transactional
     public Boolean asignarInstructortoMateriaParalelo(Integer codMateriaPeriodo, Integer codCoordinador, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) {
-        Optional<MateriaParalelo> objMPAGuardado = serviceMP.findByCodMateriaPeriodoAndCodParalelo(codMateriaPeriodo,codParalelo);
+        Optional<MateriaParalelo> objMPAGuardado = serviceMPa.findByCodMateriaPeriodoAndCodParalelo(codMateriaPeriodo,codParalelo);
         if(objMPAGuardado.isEmpty()){
             throw new RuntimeException("No se encuentra dicha materia en ese paralelo");
         }
@@ -163,7 +169,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
             codigosUnicos.add(item.getCodMateriaParalelo());
         }
         for (Integer codigo : codigosUnicos) {
-            MateriaParalelo objMP = serviceMP.getById(codigo).get();
+            MateriaParalelo objMP = serviceMPa.getById(codigo).get();
             MateriaPeriodo objPe = serviceMPe.getById(objMP.getCodMateriaPeriodo()).get();
             Aula objAula = serviceAula.getById(objPe.getCodAula()).get();
             Paralelo objParalelo = serviceParalelo.getById(objMP.getCodParalelo()).get();
@@ -236,22 +242,23 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
     @Override
     public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() {
         InstructorMateriaParalelosDto obj = new InstructorMateriaParalelosDto();
-        List<InstructorMateriaReadDto> materias= serviceMP.getMateriaNombres(servicePeriodo.getPAActivo());
+        List<InstructorMateriaReadDto> materias= serviceMPa.getMateriaNombres(servicePeriodo.getPAActivo());
         List<Paralelo> paralelos= serviceParalelo.getParalelosPA();
         obj.setParalelos(paralelos);
         for (InstructorMateriaReadDto codigo : materias) {
-                MateriaParalelo objMP = serviceMP.findByCodMateriaPeriodoAndCodParalelo(codigo.getCodMateria(),codigo.getCodParalelo()).get();
+            MateriaParalelo objMP = serviceMPa.findByCodMateriaPeriodoAndCodParalelo(codigo.getCodMateria(),codigo.getCodParalelo()).get();
             List<InstructorDatos> instructores = this.getInstructores(objMP.getCodMateriaParalelo());
             List<InstructorDatos> asistentes = this.getInstructoresAsistentes(objMP.getCodMateriaParalelo());
             InstructorDatos coordinador = this.getCoordinador(objMP.getCodMateriaParalelo());
-                codigo.setInstructores(instructores.toArray(new InstructorDatos[instructores.size()]));
-                codigo.setAsistentes(asistentes.toArray(new InstructorDatos[asistentes.size()]));
-                codigo.setCoordinador(coordinador);
+            codigo.setInstructores(instructores.toArray(new InstructorDatos[instructores.size()]));
+            codigo.setAsistentes(asistentes.toArray(new InstructorDatos[asistentes.size()]));
+            codigo.setCoordinador(coordinador);
         }
         obj.setMaterias(materias);
 
         return obj;
     }
+
 
 
 

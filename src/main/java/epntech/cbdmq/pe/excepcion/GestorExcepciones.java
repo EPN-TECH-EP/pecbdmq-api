@@ -10,12 +10,18 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,7 +33,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,11 +56,12 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.NoResultException;
 
 @RestControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class GestorExcepciones implements ErrorController {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	private static final String CUENTA_BLOQUEADA = "Cuenta bloqueada - Contacte al administrador";
 	private static final String METODO_NO_PERMITIDO = "Este método no está permitido en el endpoint. Enviar un request: '%s'";
-	private static final String ERROR_INTERNO_SERVIDOR = "Un error inesperado se ha producido al procesar el requerimiento";
+	public static final String ERROR_INTERNO_SERVIDOR = "Un error inesperado se ha producido al procesar el requerimiento";
 	private static final String CREDENCIALES_INCORRECTAS = "Nombre de usuario / password incorrecto";
 	private static final String CUENTA_DESHABILITADA = "Cuenta deshabilitada - Contacte al administrador";
 	private static final String ERROR_PROCESO_ARCHIVO = "Error al procesar el archivo";
@@ -245,6 +254,38 @@ public class GestorExcepciones implements ErrorController {
 	 * LOGGER.error(exception.getMessage()); return createHttpResponse(BAD_REQUEST,
 	 * "No se puede modificar/eliminar: existen dependencias en los módulos"); }
 	 */
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<HttpResponse> methodArgumentNotValidException(MethodArgumentNotValidException exception){
+		LOGGER.error(exception.getMessage());
+		Map<String, String> errorsArgument = new HashMap<>();
+		exception.getBindingResult().getAllErrors().forEach(error -> {
+			String errorMessage = error.getDefaultMessage();
+			String fieldName = ((FieldError) error).getField();
+			errorsArgument.put(fieldName, errorMessage);
+		});
+
+		String str = errorsArgument.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue())
+				.map(err -> "[Atributo '" + err.getKey() + "' con error: " + err.getValue() + "]")
+				.collect(Collectors.joining(""));
+		return createHttpResponse(BAD_REQUEST, str);
+	}
+
+	@ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+	public ResponseEntity<HttpResponse> constraintViolationException(jakarta.validation.ConstraintViolationException exception){
+		LOGGER.error(exception.getMessage());
+		ArrayList<String> errors = new ArrayList<>();
+		exception.getConstraintViolations().forEach(error -> {
+			String errorMessage = error.getMessage();
+			errors.add(errorMessage);
+		});
+
+		String str = errors.stream()
+				.map(err -> "[" + err + "]")
+				.collect(Collectors.joining(""));
+		return createHttpResponse(BAD_REQUEST, str);
+	}
 	
 }
 

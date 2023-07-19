@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.*;
+import static epntech.cbdmq.pe.constante.ArchivoConst.FALLA_PROCESAR_EXCEL;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 
 import java.io.ByteArrayInputStream;
@@ -14,8 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import epntech.cbdmq.pe.dominio.admin.*;
-import epntech.cbdmq.pe.servicio.PostulanteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,25 +24,35 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.lowagie.text.DocumentException;
 
+import epntech.cbdmq.pe.constante.EstadosConst;
+import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
+import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.admin.Prueba;
+import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
+import epntech.cbdmq.pe.dominio.admin.ResultadoPruebasFisicas;
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasFisicasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.helper.ResultadoPruebasHelper;
-import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoPruebaRepository;
+import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaRepository;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebasFisicasDatosRepository;
 import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebasFisicasRepository;
+import epntech.cbdmq.pe.servicio.PostulanteService;
 import epntech.cbdmq.pe.servicio.ResultadoPruebasFisicasService;
 import epntech.cbdmq.pe.util.ExporterPdf;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
-import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 
 @Service
 public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisicasService {
+	
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());  
 
 	@Autowired
 	private ResultadoPruebasFisicasRepository repo;
@@ -72,7 +83,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	@Override
 	public ResultadoPruebasFisicas update(ResultadoPruebasFisicas objActualizado) {
 		ResultadoPruebasFisicas resultadoPruebas = new ResultadoPruebasFisicas();
-		Optional<Prueba> prueba = pruebaRepository.findById(objActualizado.getCodPrueba());
+		Optional<Prueba> prueba = pruebaRepository.findById(objActualizado.getCodPruebaDetalle());
 		if (prueba.isPresent()) {
 			resultadoPruebas = repo.save(objActualizado);
 
@@ -93,16 +104,30 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 			List<ResultadoPruebaFisicaUtil> datosUtil = ResultadoPruebasHelper
 					.excelToDatosPruebasFisicasI(file.getInputStream(),tipoResultado);
+			
+			LOGGER.info(tipoResultado);
+			
 			List<ResultadoPruebasFisicas> datos = datosUtil.stream().map(resultadoPruebaFisicaUtil -> {
 				ResultadoPruebasFisicas resultadoPruebasFisicas = new ResultadoPruebasFisicas();
 				Optional<Postulante> postulante = postulanteService.getByIdPostulante(resultadoPruebaFisicaUtil.getIdPostulante());
 				if(postulante.isEmpty()){
 					throw new RuntimeException("El postulante con el id: "+resultadoPruebaFisicaUtil.getIdPostulante()+" no existe");
 				}
+				
+				// busca registro existente
+				Optional<ResultadoPruebasFisicas> resultadoPruebasFisicasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+				
+				if (resultadoPruebasFisicasOpt.isEmpty()) {
+					resultadoPruebasFisicas = new ResultadoPruebasFisicas();
+				} else {
+					resultadoPruebasFisicas = resultadoPruebasFisicasOpt.get(); 
+				}
+				
+				
 				resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
 				resultadoPruebasFisicas.setResultado(resultadoPruebaFisicaUtil.getResultado());
 				resultadoPruebasFisicas.setResultadoTiempo(resultadoPruebaFisicaUtil.getResultadoTiempo());
-				resultadoPruebasFisicas.setCodPrueba(codPruebaDetalle);
+				resultadoPruebasFisicas.setCodPruebaDetalle(codPruebaDetalle);
 				resultadoPruebasFisicas.setCodFuncionario(codFuncionario);
 				resultadoPruebasFisicas.setEstado("ACTIVO");
 				return resultadoPruebasFisicas;
@@ -134,7 +159,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
 				periodoAcademicoRepository.getPAActive());
-		if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
+		if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
 			throw new DataException(ESTADO_INVALIDO);
 		} else {
 			String[] HEADERs = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo",
@@ -171,7 +196,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 			Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
 					periodoAcademicoRepository.getPAActive());
 
-			if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
+			if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
 				throw new DataException(ESTADO_INVALIDO);
 			} else {
 				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
@@ -254,6 +279,12 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	public void notificar(String mensaje) throws MessagingException {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public Optional<ResultadoPruebasFisicas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba) {
+		// TODO Auto-generated method stub
+		return repo.findByCodPostulanteAndCodPruebaDetalle(CodPostulante, codPrueba);
 	}
 
 }

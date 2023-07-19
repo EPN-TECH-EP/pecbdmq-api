@@ -28,10 +28,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
@@ -61,7 +59,7 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
     @Autowired
     PruebaDetalleRepository repo3;
 
-    private String ruta(String proceso, String codigo) {
+    private String ruta(String codigo) {
 
         String resultado = null;
         PeriodoAcademico periodo=periodoAcademicoRepository.getPeriodoAcademicoActivo();
@@ -72,10 +70,10 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
     }
 
     @Override
-    public List<DocumentoRuta> guardarArchivo(String proceso, Integer prueba, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion {
+    public List<DocumentoRuta> guardarArchivo( Integer prueba, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion {
         String resultado;
 
-        resultado = ruta(proceso, prueba.toString());
+        resultado = ruta(prueba.toString());
         Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
 
         if (!Files.exists(ruta)) {
@@ -105,7 +103,7 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
             documento.setRuta(resultado + multipartFile.getOriginalFilename());
             documento = documentoRepository.save(documento);
             System.out.println("documento.getCodigo() " + documento.getCodDocumento());
-            System.out.println("materia " + prueba);
+            System.out.println("prueba " + prueba);
 
             DocumentoPrueba matdoc = new DocumentoPrueba();
             matdoc.setCodDocumento(documento.getCodDocumento());
@@ -144,7 +142,11 @@ public class DocumentoPruebaServiceImpl implements DocumentoPruebaService {
         }
 
     }
-    //TODO: revisar si una prueba puede tener muchos documentos asociados
+    @Override
+    public Set<Documento> getDocumentos(Integer codPrueba) {
+        return documentoRepository.getDocumentosPruebaDetalle(codPrueba);
+    }
+//TODO: revisar si una prueba puede tener muchos documentos asociados
     @Override
     public MultipartFile getDocumento(Integer codPrueba, Long codDocumento) throws DataException, FileNotFoundException {
         Documento archivo = documentoRepository.findById(codDocumento.intValue()).orElse(null);

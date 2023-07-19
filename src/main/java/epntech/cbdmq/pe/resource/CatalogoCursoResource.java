@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
-
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.CatalogoCursoServiceImpl;
+import jakarta.validation.Valid;
 
 @RestController
+@Validated
 @RequestMapping("/catalogocurso")
 public class CatalogoCursoResource {
 
@@ -33,7 +35,7 @@ public class CatalogoCursoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody CatalogoCurso obj) throws DataException {
+	public ResponseEntity<?> guardar(@Valid @RequestBody CatalogoCurso obj) throws DataException {
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	 
@@ -49,24 +51,9 @@ public class CatalogoCursoResource {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<CatalogoCurso> actualizarDatos(@PathVariable("id") Integer codigo,
-			@RequestBody CatalogoCurso obj) throws DataException {
-		return (ResponseEntity<CatalogoCurso>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombreCatalogoCurso(obj.getNombreCatalogoCurso());
-			datosGuardados.setDescripcionCatalogoCurso(obj.getDescripcionCatalogoCurso());
-			datosGuardados.setEstado(obj.getEstado());
-			
-			
-			CatalogoCurso datosActualizados = null;
-			try {
-				datosActualizados = objService.update(datosGuardados);
-			} catch (DataException e) {
-				// TODO Auto-generated catch block
-				
-				//e.printStackTrace();
-				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-			}
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+			@Valid @RequestBody CatalogoCurso obj) {
+		obj.setCodCatalogoCursos(codigo);
+		return new ResponseEntity<>(objService.update(obj), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
