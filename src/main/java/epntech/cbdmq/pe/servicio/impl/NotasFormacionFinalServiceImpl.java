@@ -37,13 +37,18 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 		if(periodo == null)
 			throw new DataException(NO_PERIODO_ACTIVO);
 		List<NotasFormacionFinal> nn = new ArrayList<>();
-		NotasFormacionFinal notas = new NotasFormacionFinal();
-		int i = 0;
+		NotasFormacionFinal notas;
 		for (NotasFormacionFinal notasFormacionFinal : lista) {
-			notas = lista.get(i);
-			notas.setCodPeriodoAcademico(periodo);
+			notas = notasFormacionFinalRepository.getByEstudiante(Long.valueOf(notasFormacionFinal.getCodEstudiante())).get();
+			notas.setPromedioDisciplinaOficialSemana(notasFormacionFinal.getPromedioDisciplinaOficialSemana());
+			if(notas == null){
+				notas= new NotasFormacionFinal();
+				notas=notasFormacionFinal;
+				notas.setCodPeriodoAcademico(periodo);
+			}
+			//TODO poner que se actualice si ya existe, ademas poner que haya un constraint que sea unico
+
 			nn.add(notas);
-			i++;
 		}
 		
 		notasFormacionFinalRepository.saveAll(nn);
