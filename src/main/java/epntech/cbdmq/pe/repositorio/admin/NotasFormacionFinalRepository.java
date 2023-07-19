@@ -44,5 +44,7 @@ public interface NotasFormacionFinalRepository extends JpaRepository<NotasFormac
 	@Query(nativeQuery = true, name = "EstudiantesNotaDisciplina.getEstudiantes")
 	List<EstudiantesNotaDisciplina> getEstudiantesNotaDisciplina(@Param("codPA") Integer codPA);
 
+	List<NotasFormacionFinal> getAllByCodPeriodoAcademico(Integer codPA);
+
 }
 

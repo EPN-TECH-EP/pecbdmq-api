@@ -5,10 +5,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 
-import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
-import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplina;
-import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplinaDto;
-import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.*;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -157,6 +154,10 @@ public class NotasFormacionResource {
     @GetMapping("/estudiantesDisciplina")
     public EstudiantesNotaDisciplinaDto getEstudiantesNotaDisciplina() {
         return notasFormacionFinalServiceImpl.getEstudiantesNotaDisciplinaDto();
+    }
+    @GetMapping("/listarPA")
+    public List<EstudianteNotaFinalDto> getNotasDisciplina() {
+        return notasFormacionFinalServiceImpl.getNotasFinalCodPeriodoAcademico();
     }
 
 
