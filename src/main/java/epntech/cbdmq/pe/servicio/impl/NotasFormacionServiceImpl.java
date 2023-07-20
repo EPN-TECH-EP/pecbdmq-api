@@ -54,6 +54,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	private NotasDatosFormacionRepository notasDatosFormacionRepository;
 	@Autowired
 	private ParaleloService paraleloSvc;
+	@Autowired
 	private EstudianteMateriaParaleloService estudianteMateriaParaleloService;
 	@Autowired
 	private MateriaParaleloService materiaParaleloService;
@@ -95,7 +96,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 
 				listaNotasFormacion.add(nn);
 			}
-			
+
 			i++;
 		}
 
@@ -136,14 +137,13 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 		if(notasFormacion.isEmpty()){
 			throw new DataException(NO_ENCUENTRA);
 		}
-		objActualizado.setNotaPonderacion(notasFormacion.get().getPesoMateria()*objActualizado.getNotaMateria());
 		MateriaPeriodoData materiaPeriodoData = new MateriaPeriodoData();
 		EstudianteMateriaParalelo estudianteMateriaParalelo= estudianteMateriaParaleloService.findByNotaFormacion(objActualizado.getCodNotaFormacion()).get();
 		MateriaParalelo materiaPa = materiaParaleloService.findByEstudianteMateriaParalelo(estudianteMateriaParalelo.getCodEstudianteMateriaParalelo()).get();
 		MateriaPeriodo materiaPe= materiaPeriodoService.findByMateriaParalelo(materiaPa.getCodMateriaParalelo()).get();
 		materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(periodoAcademicoService.getPAActivo(),
 				materiaPe.getCodMateria());
-		objActualizado.setNotaPonderacion(materiaPeriodoData.getPesoMateria() * objActualizado.getNotaMinima());
+		objActualizado.setNotaPonderacion(materiaPeriodoData.getPesoMateria() * objActualizado.getNotaMateria());
 		return notasFormacionRepository.save(objActualizado);
 	}
 
