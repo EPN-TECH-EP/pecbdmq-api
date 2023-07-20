@@ -2,12 +2,15 @@ package epntech.cbdmq.pe.repositorio.admin;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.util.AspirantesDatos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -46,5 +49,7 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 	@Query(nativeQuery = true, name = "EstudianteDatos.getNotasEstudiantesMateria")
 	List<EstudianteDatos> getEstudianteMateriaParalelo(@Param("codMateria") Integer codMateria, @Param("codPA") Integer codPA);
 
+	@Query(value = "CALL cbdmq.insertar_lista_estudiantes_notas()", nativeQuery = true)
+	void insertar_lista_estudiantes_notas();
 }
 

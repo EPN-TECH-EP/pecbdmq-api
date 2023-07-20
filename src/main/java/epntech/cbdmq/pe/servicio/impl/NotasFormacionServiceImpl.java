@@ -189,4 +189,14 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 		notaEstudianteFormacionDto.setEstudianteDatos(notasFormacionRepository.getEstudianteMateriaParalelo(codMateria, periodoAcademicoService.getPAActivo()));
 		return notaEstudianteFormacionDto;
 	}
+
+	@Override
+	public void insertarEstudiantesNotas() {
+		try {
+			notasFormacionRepository.insertar_lista_estudiantes_notas();
+		} catch (Exception ex) {
+			throw new RuntimeException("No se actualizo");
+		}
+
+	}
 }
