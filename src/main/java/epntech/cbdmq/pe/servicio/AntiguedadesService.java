@@ -23,9 +23,9 @@ public interface AntiguedadesService {
 
 	Set<AntiguedadesFormacion> getAntiguedadesFormacion();
 	
-	void generarExcel(String filePath, String nombre, Integer codTipoDocumento) throws IOException, DataException;
+	void generarExcel(String filePath, String nombre) throws IOException, DataException;
 	
-	void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer codTipoDocumento)
+	void generarPDF(HttpServletResponse response, String filePath, String nombre)
 			throws DocumentException, IOException, DataException;
 }
 

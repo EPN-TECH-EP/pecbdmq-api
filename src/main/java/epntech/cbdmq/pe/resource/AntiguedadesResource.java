@@ -92,15 +92,15 @@ public class AntiguedadesResource {
 	}
 	
 	/*genera los archivos con el resultado de antiguedades femenino y masculino del proceso de aspirantes aprobados*/
-	@PostMapping("/generaArchivosAntiguedadesFormacion")
-	public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response, @RequestParam("tipoDocumento") Integer tipoDocumento) throws DataException, DocumentException {
+	@GetMapping("/generaArchivosAntiguedadesFormacion")
+	public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response) throws DataException, DocumentException {
 		try {
 
 			String nombre= ANTIGUEDADESFORMACION+periodoAcademicoRepository.getPAActive().toString();
 			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_ANTIGUEDADES + periodoAcademicoRepository.getPAActive().toString() + "/" + nombre;
 
-			objService.generarExcel(ruta + ".xlsx", nombre + ".xlsx", tipoDocumento);
-			objService.generarPDF(response, ruta + ".pdf", nombre + ".pdf", tipoDocumento);
+			objService.generarExcel(ruta + ".xlsx", nombre + ".xlsx");
+			objService.generarPDF(response, ruta + ".pdf", nombre + ".pdf");
 			
 			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 

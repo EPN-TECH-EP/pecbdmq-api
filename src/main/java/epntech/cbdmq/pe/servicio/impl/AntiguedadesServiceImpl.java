@@ -57,7 +57,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		try {
 			ExcelHelper.generarExcel(obtenerDatos(genero), filePath, HEADERs);
 
-			generaDocumento(filePath, nombre, codTipoDocumento);
+			generaDocumento(filePath, nombre);
 
 		} catch (IOException ex) {
 			System.out.println("error: " + ex.getMessage());
@@ -84,7 +84,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 
 		exporter.exportar(response, columnas, obtenerDatos(genero), widths, filePath);
 
-		generaDocumento(filePath, nombre, codTipoDocumento);
+		generaDocumento(filePath, nombre);
 
 	}
 
@@ -137,7 +137,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		return arrayMulti;
 	}
 
-	private void generaDocumento(String ruta, String nombre, Integer codTipoDocumento) {
+	private void generaDocumento(String ruta, String nombre) {
 		Documento documento = new Documento();
 		Optional<Documento> documento2= documentoRepo.findByNombre(nombre);
 		if(documento2.isPresent()) {
@@ -146,7 +146,6 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		documento.setEstado("ACTIVO");
 		documento.setNombre(nombre);
 		documento.setRuta(ruta);
-		documento.setTipo(codTipoDocumento);
 
 		documento = documentoRepo.save(documento);
 
@@ -165,13 +164,13 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	}
 
 	@Override
-	public void generarExcel(String filePath, String nombre, Integer codTipoDocumento)
+	public void generarExcel(String filePath, String nombre)
 			throws IOException, DataException {
 		String[] HEADERs = { "Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota" };
 		try {
 			ExcelHelper.generarExcel(obtenerDatos(), filePath, HEADERs);
 
-			generaDocumento(filePath, nombre, codTipoDocumento);
+			generaDocumento(filePath, nombre);
 
 		} catch (IOException ex) {
 			System.out.println("error: " + ex.getMessage());
@@ -180,7 +179,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	}
 
 	@Override
-	public void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer codTipoDocumento)
+	public void generarPDF(HttpServletResponse response, String filePath, String nombre)
 			throws DocumentException, IOException, DataException {
 		response.setContentType("application/pdf");
 
@@ -198,7 +197,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 
 		exporter.exportar(response, columnas, obtenerDatos(), widths, filePath);
 
-		generaDocumento(filePath, nombre, codTipoDocumento);
+		generaDocumento(filePath, nombre);
 		
 	}
 
