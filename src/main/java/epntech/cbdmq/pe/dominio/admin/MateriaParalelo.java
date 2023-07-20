@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.NamedNativeQuery;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name ="gen_materia_paralelo")
@@ -15,6 +17,8 @@ import org.hibernate.annotations.NamedNativeQuery;
 				targetClass = InstructorMateriaReadDto.class,
 				columns = {
 				@ColumnResult(name = "cod_materia_periodo", type= Integer.class),
+				@ColumnResult(name = "nota_minima_supletorio_inicio", type= BigDecimal.class),
+				@ColumnResult(name = "peso_materia", type= BigDecimal.class),
 				@ColumnResult(name = "nombre_materia", type = String.class),
 				@ColumnResult(name = "nombre_eje_materia", type = String.class),
 				@ColumnResult(name = "cod_aula", type = Integer.class),
@@ -23,7 +27,7 @@ import org.hibernate.annotations.NamedNativeQuery;
 				@ColumnResult(name = "nombre_paralelo", type = String.class)
 		}))
 @NamedNativeQuery(name = "InstructorMateriaReadDto.getMateriaParaleloNombres",
-		query = "select distinct m2_0.cod_materia_periodo,m3_0.nombre_materia,e1_0.nombre_eje_materia, a1_0.cod_aula,a1_0.nombre_aula,p.cod_paralelo,p.nombre_paralelo\n" +
+		query = "select distinct m2_0.cod_materia_periodo,m2_0.nota_minima_supletorio_inicio, m2_0.peso_materia,m3_0.nombre_materia,e1_0.nombre_eje_materia, a1_0.cod_aula,a1_0.nombre_aula,p.cod_paralelo,p.nombre_paralelo\n" +
 				"from cbdmq.gen_materia_paralelo m1_0 \n" +
 				"left join cbdmq.gen_materia_periodo m2_0 on m1_0.cod_materia_periodo=m2_0.cod_materia_periodo \n" +
 				"left join cbdmq.gen_aula a1_0 on m2_0.cod_aula=a1_0.cod_aula \n" +
