@@ -42,7 +42,7 @@ public class ModuloEspecializacionResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ModuloEspecializacion> obtenerPorId(@PathVariable("id") long codigo) {
+	public ResponseEntity<ModuloEspecializacion> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
 		return moduloEspecializacionServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}

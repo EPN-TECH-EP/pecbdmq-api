@@ -1,5 +1,10 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +16,8 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "esp_catalogo_cursos")
+@SQLDelete(sql = "UPDATE {h-schema}esp_catalogo_cursos SET estado = 'ELIMINADO' WHERE cod_catalogo_cursos = ?", check = ResultCheckStyle.COUNT)
+@Where(clause = "estado <> 'ELIMINADO'")
 public class CatalogoCurso {
 
 	
@@ -18,14 +25,13 @@ public class CatalogoCurso {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_catalogo_cursos")
 	private Integer codCatalogoCursos;
+	@NotBlank(message = "El atributo 'nombreCatalogoCurso' es obligatorio")
 	@Column(name = "nombre_catalogo_curso")
-	private String nombre;
+	private String nombreCatalogoCurso;
+	@NotBlank(message = "El atributo 'descripcionCatalogoCurso' es obligatorio")
 	@Column(name = "descripcion_catalogo_curso")
-	private String descripcion;
-	@Column(name = "numero_horas")
-	private Long numeroHoras;
-	@Column(name = "nota_minima")
-	private Double notaMinima;
+	private String descripcionCatalogoCurso;
+	@NotBlank(message = "El atributo 'estado' es obligatorio")
 	@Column(name = "estado")
 	private String estado;
 	

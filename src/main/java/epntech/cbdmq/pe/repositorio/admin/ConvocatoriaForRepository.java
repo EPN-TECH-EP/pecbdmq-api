@@ -190,7 +190,7 @@ public class ConvocatoriaForRepository {
 
 		List<DatosFile> archivosPA = new ArrayList<>();
 		if (docsPeriodoAcademico != null) {
-			try {
+		try {
 			archivosPA = guardarArchivo(docsPeriodoAcademico, PATH_PROCESO_PERIODO_ACADEMICO, periodo.getCodigo().toString());
 		} catch (Exception e) {
 			HttpHeaders headers = new HttpHeaders();
@@ -278,10 +278,9 @@ public class ConvocatoriaForRepository {
 		 * .setParameter("codRequisito", elemento.getCodigoRequisito())
 		 * .setParameter("codDocumento", elemento.getDocumentosRequisito()); }
 		 */
-
+		
 		String link = URLDESCARGA+ "/link/" + codigoDocumento;
-
-		//String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
+		
 		String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
 
 		emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);

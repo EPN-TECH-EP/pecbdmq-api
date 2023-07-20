@@ -12,7 +12,7 @@ import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
 
 @Repository
 public interface PostulantesValidosRepository extends JpaRepository<PostulantesValidos, String> {
-
+	
 	@Query(value = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "
 			+ "from cbdmq.gen_postulante p, cbdmq.gen_dato_personal dp "
 			+ "where p.cod_datos_personales = dp.cod_datos_personales "
@@ -20,6 +20,28 @@ public interface PostulantesValidosRepository extends JpaRepository<PostulantesV
 			+ "and UPPER(p.estado) in ('VALIDO', 'VALIDO MUESTRA') "
 			+ "and cod_periodo_academico = cbdmq.get_pa_activo()", nativeQuery=true)
 	List<PostulantesValidos> getPostulantesValidos();
+
+	
+	String queryBase = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "
+			+ "from cbdmq.gen_postulante p, cbdmq.gen_dato_personal dp "
+			+ "where p.cod_datos_personales = dp.cod_datos_personales "
+			+ "and UPPER(dp.estado) = 'ACTIVO' "
+			+ "and UPPER(p.estado) in ('VALIDO', 'VALIDO MUESTRA') "
+			+ "and cod_periodo_academico = cbdmq.get_pa_activo() ";
+	String orderByIdPostulante	=	 "order by p.id_postulante";
+	String orderByApellidoPostulante	=	 "order by dp.apellido";
+
+	@Query(value = queryBase  + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getAllPostulantesValidos();
+	
+	@Query(value = queryBase  + orderByApellidoPostulante, nativeQuery=true)
+	List<PostulantesValidos> getAllPostulantesValidosOrderApellido();
+	
+	@Query(value = queryBase + orderByIdPostulante, nativeQuery=true)
+	Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable);
+	
+	@Query(value = queryBase + orderByApellidoPostulante, nativeQuery=true)
+	Page<PostulantesValidos> getAllPostulantesValidosPaginadoOrderApellido(Pageable pageable);
 	
 	@Query(value = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "
 			+ "from cbdmq.gen_postulante p, cbdmq.gen_dato_personal dp "

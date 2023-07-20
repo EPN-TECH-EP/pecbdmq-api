@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.servicio.AulaService;
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
@@ -25,8 +26,16 @@ public class AulaServiceImpl implements AulaService {
 			throw new DataException(REGISTRO_VACIO);
 		Optional<Aula> objGuardado = repo.findByNombreAulaIgnoreCase(obj.getNombreAula());
 		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			Aula stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
 				throw new DataException(REGISTRO_YA_EXISTE);
 			}
+		}
 			
 		obj.setNombreAula(obj.getNombreAula().toUpperCase());
 		return repo.save(obj);

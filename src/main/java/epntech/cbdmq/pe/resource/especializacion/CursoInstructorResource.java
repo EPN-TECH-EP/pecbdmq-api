@@ -4,9 +4,11 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,16 +26,16 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.especializacion.CursoInstructorServiceImpl;
 
 @RestController
+@Validated
 @RequestMapping("/cursoInstructor")
 public class CursoInstructorResource {
 
 	@Autowired
 	private CursoInstructorServiceImpl cursoInstructorServiceImpl;
-	
+
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody CursoInstructor obj){
-
+	public ResponseEntity<?> guardar(@Valid @RequestBody CursoInstructor obj) throws DataException {
 		return new ResponseEntity<>(cursoInstructorServiceImpl.save(obj), HttpStatus.OK);
 	}
 
@@ -43,45 +45,34 @@ public class CursoInstructorResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<CursoInstructor> obtenerPorId(@PathVariable("id") long codigo) {
+	public ResponseEntity<?> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
 		return cursoInstructorServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<CursoInstructor> actualizarDatos(@PathVariable("id") long codigo, @RequestBody CursoInstructor obj) throws DataException{
-		
-	
-		return (ResponseEntity<CursoInstructor>) cursoInstructorServiceImpl.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodCursoEspecializacion(obj.getCodCursoEspecializacion());
-			datosGuardados.setCodInstructor(obj.getCodInstructor());
-			datosGuardados.setCodTipoInstructor(obj.getCodTipoInstructor());
-			datosGuardados.setDescripcion(obj.getDescripcion());
-			datosGuardados.setEstado(obj.getEstado());
-
-			CursoInstructor datosActualizados = null;
-			datosActualizados = cursoInstructorServiceImpl.update(datosGuardados);
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @Valid @RequestBody CursoInstructor obj)
+			throws DataException {
+		obj.setCodInstructorCurso(codigo);
+		return new ResponseEntity<>(cursoInstructorServiceImpl.update(obj), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) throws DataException {
-
 		cursoInstructorServiceImpl.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
-	
-	@GetMapping("/listarInstructoresCurso/{id}")
-	public List<InstructoresCurso> listarInstructoresCurso(@PathVariable("id") long codigo) {
+
+	@GetMapping("/listarInstructoresCurso/{idCurso}")
+	public List<InstructoresCurso> listarInstructoresCurso(@PathVariable("idCurso") long codigo) {
 		return cursoInstructorServiceImpl.listInstructoresCurso(codigo);
 	}
-	
-	@GetMapping("/listarCursosInstructor/{id}")
-	public List<InstructoresCurso> listarCursosInstructor(@PathVariable("id") long codigo) {
+
+	@GetMapping("/listarCursosInstructor/{idInstructor}")
+	public List<InstructoresCurso> listarCursosInstructor(@PathVariable("idInstructor") long codigo) {
 		return cursoInstructorServiceImpl.listCursosInstructor(codigo);
 	}
-	
+
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);

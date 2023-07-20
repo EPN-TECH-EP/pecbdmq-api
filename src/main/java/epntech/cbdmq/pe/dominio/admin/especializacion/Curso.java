@@ -7,6 +7,7 @@ import java.util.Set;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -21,6 +22,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -28,23 +30,28 @@ import lombok.Data;
 @Table(name = "esp_curso")
 @SQLDelete(sql = "UPDATE {h-schema}esp_curso SET estado = 'ELIMINADO' WHERE cod_curso_especializacion = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
+@Validated
 public class Curso {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_curso_especializacion")
 	private Long codCursoEspecializacion;
-	
+
+	@NotNull(message = "El atributo 'codAula' es obligatorio")
 	@Column(name = "cod_aula")
 	private Integer codAula;
-	
+
+	@NotNull(message = "El atributo 'numeroCupo' es obligatorio")
 	@Column(name = "numero_cupo")
 	private Integer numeroCupo;
-	
+
+	@NotNull(message = "El atributo 'fechaInicioCurso' es obligatorio")
 	@Column(name = "fecha_inicio_curso")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaInicioCurso;
-	
+
+	@NotNull(message = "El atributo 'fechaFinCurso' es obligatorio")
 	@Column(name = "fecha_fin_curso")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaFinCurso;
@@ -74,7 +81,8 @@ public class Curso {
 	
 	@Column(name = "email_notificacion")
 	private String emailNotificacion;
-	
+
+	@NotNull(message = "El atributo 'tieneModulos' es obligatorio")
 	@Column(name = "tiene_modulos")
 	private Boolean tieneModulos;
 	

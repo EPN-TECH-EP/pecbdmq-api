@@ -18,7 +18,7 @@ public interface PostulanteService {
 	
 	Optional<Postulante> getById(Long id);
 	Optional<Postulante> getByIdPostulante(String id);
-
+	
 	void delete(Long id) throws DataException;
 	
 	Postulante update(Postulante objActualizado) throws DataException; //PARA ASIGNAR UN POSTULANTE
@@ -41,5 +41,5 @@ public interface PostulanteService {
 	List<PostulanteUtil> getPostulantesAllPaginadoTodo(Pageable pageable);
 	List<PostulanteUtil> getPostulantesEstadoPA(String estado,Pageable pageable);
 	List<PostulanteUtil> getPostulantesMuestraPA(Pageable pageable);
-
+	
 }

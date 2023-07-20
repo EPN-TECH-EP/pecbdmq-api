@@ -6,13 +6,14 @@ import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
+import epntech.cbdmq.pe.dominio.util.PruebaDetalleOrden;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PruebaDetalleService {
 
 	Optional<PruebaDetalle> getBySubtipoAndPA(Integer subtipo, Integer periodo);
 
-	PruebaDetalle update(PruebaDetalle objActualizado);
+	PruebaDetalle update(PruebaDetalle objActualizado) throws DataException;
 
 	PruebaDetalle save(PruebaDetalle obj) throws DataException;
 
@@ -24,6 +25,8 @@ public interface PruebaDetalleService {
 
 	public List<PruebaDetalleDatos> listarTodosConDatosSubTipoPrueba();
 	public String getTipoResultado(int codSubtipoPrueba);
+	
+	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException;
 
 
 }

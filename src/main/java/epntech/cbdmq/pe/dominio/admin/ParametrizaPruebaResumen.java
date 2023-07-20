@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.dominio.admin;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -14,15 +15,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "gen_parametriza_prueba_resumen")
 @SQLDelete(sql = "UPDATE {h-schema}gen_parametriza_prueba_resumen SET estado = 'ELIMINADO' WHERE cod_parametriza_prueba_resumen = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ParametrizaPruebaResumen {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +53,9 @@ public class ParametrizaPruebaResumen {
 	
 	@Column(name = "estado")
 	private String estado;
+	
+	@OneToMany(mappedBy="codSubtipoPrueba")
+    private List<SubTipoPrueba> codSubTipoPrueba;
 	
 	
 	

@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.DocumentoHabilitante;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoHabilitanteRepository;
 import epntech.cbdmq.pe.servicio.DocumentoHabilitanteService;
@@ -25,7 +26,16 @@ public class DocumentoHabilitanteServiceImpl implements DocumentoHabilitanteServ
 			throw new DataException(REGISTRO_VACIO);
 		Optional<DocumentoHabilitante> objGuardado = repo.findByNombre(obj.getNombre());
 		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			DocumentoHabilitante stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
+			}
+
 		}
 		obj.setNombre(obj.getNombre().toUpperCase());
 		return repo.save(obj);

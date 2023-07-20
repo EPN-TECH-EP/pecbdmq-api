@@ -23,6 +23,6 @@ public interface MateriaPeriodoService {
     void delete(Integer codigo);
     List<MateriaPeriodo> getAllByPA(Integer codPeriodoAcademico);
     Optional<MateriaPeriodo> findByMateriaParalelo(Integer codigoMateriaParalelo);
-
+	
 	
 }

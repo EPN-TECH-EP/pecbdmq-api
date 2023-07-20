@@ -20,3 +20,4 @@ public interface ValidaRequisitosRepository extends JpaRepository<ValidaRequisit
 	@Procedure(value = "cbdmq.cumple_requisitos_curso_esp")
 	Boolean cumpleRequisitosCurso(Long codCurso, Long codEstudiante);
 }
+

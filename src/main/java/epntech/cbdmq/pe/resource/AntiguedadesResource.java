@@ -121,7 +121,7 @@ public class AntiguedadesResource {
 		// Crear un objeto Resource para el archivo
 		File file = new File(archivo.getRuta());
 		InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-		// Obtener la extensión del archivo
+		// Obtener la extensi�n del archivo
 		String contentType = "application/pdf";
 		// Devolver una respuesta con el archivo adjunto y la URL de descarga
 		return ResponseEntity.ok()

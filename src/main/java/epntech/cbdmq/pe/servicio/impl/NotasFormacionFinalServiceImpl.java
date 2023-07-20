@@ -77,8 +77,8 @@ public class NotasFormacionFinalServiceImpl implements NotasFormacionFinalServic
 	@Override
 	public Boolean realizoEncuesta(Long codEstudiante) {
 		if(notasFormacionFinalRepository.realizoEncuesta(codEstudiante) != null){
-			return notasFormacionFinalRepository.realizoEncuesta(codEstudiante);
-		}
+		return notasFormacionFinalRepository.realizoEncuesta(codEstudiante);
+	}
 		return null;
 	}
 

@@ -47,4 +47,7 @@ public class MensajesConst {
     public static final String NO_ENCUENTRA = "No encuentra objetos relacionados";
 	
     public static final String NO_PARAMETRO = "No se encuentra el parametro configurado";
+    
+    public static final String DOCUMENTO_NO_EXISTE = "El id del documento no existe";
+    public static final String AULA_NO_EXISTE = "El aula no existe";
 }

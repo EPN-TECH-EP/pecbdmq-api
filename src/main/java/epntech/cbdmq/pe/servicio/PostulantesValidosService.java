@@ -14,8 +14,17 @@ import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
 import jakarta.mail.MessagingException;
 
 public interface PostulantesValidosService {
-
+	
 	List<PostulantesValidos> getPostulantesValidos();
+
+	List<PostulantesValidos> getAllPostulantesValidos();
+	
+	Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable);
+	
+	// OrderApellido
+	List<PostulantesValidos> getAllPostulantesValidosOrderApellido();
+	
+	Page<PostulantesValidos> getAllPostulantesValidosPaginadoOrderApellido(Pageable pageable);
 	
 	void notificar(String mensaje, String prueba, Date fechaIni, Date fechaFin, LocalTime hora, Integer codPrueba) throws MessagingException, Exception, PSQLException;
 	

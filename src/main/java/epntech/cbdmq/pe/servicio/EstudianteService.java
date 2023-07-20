@@ -13,7 +13,7 @@ public interface EstudianteService {
 	
 	List<Estudiante> getAll();
 	List<Estudiante> getAllWithOutParalelo();
-
+	
 	Optional<Estudiante> getById(int id);
 	
 	Estudiante update(Estudiante objActualizado);

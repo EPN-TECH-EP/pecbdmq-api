@@ -15,9 +15,10 @@ public interface CursoModuloService {
 	
 	List<CursoModuloDatosEspecializacion> listAll();
 	
-	Optional<CursoModulo> getById(Long codCursoModulo);
+	Optional<CursoModulo> getById(Long codCursoModulo)  throws DataException;
 	
-	void delete(Long codCursoModulo);
+	void delete(Long codCursoModulo)  throws DataException;
 	
-	List<CursoModulo> getByCurso(Long codCurso);
+	List<CursoModulo> getByCurso(Long codCurso) throws DataException;
 }
+

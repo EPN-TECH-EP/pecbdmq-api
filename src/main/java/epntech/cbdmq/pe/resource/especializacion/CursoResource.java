@@ -79,13 +79,13 @@ public class CursoResource {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Curso> getById(@PathVariable("id") Long codigo) {
+	public ResponseEntity<Curso> getById(@PathVariable("id") Long codigo) throws DataException {
 		return cursoServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@PutMapping("/updateEstadosAprobadoValidado")
-	public ResponseEntity<?> updateEstado(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("codDocumento") Long codDocumento, @RequestParam("estadoAprobado") Boolean estadoAprobado, @RequestParam("estadoValidado") Boolean estadoValidado, @RequestParam("observaciones") String observaciones){
+	public ResponseEntity<?> updateEstado(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("codDocumento") Long codDocumento, @RequestParam("estadoAprobado") Boolean estadoAprobado, @RequestParam("estadoValidado") Boolean estadoValidado, @RequestParam("observaciones") String observaciones) throws DataException{
 		return new ResponseEntity<>(cursoServiceImpl.updateEstadoAprobadoValidado(estadoAprobado, estadoValidado, observaciones, codCursoEspecializacion, codDocumento), HttpStatus.OK);
 	}
 	
@@ -110,19 +110,27 @@ public class CursoResource {
 			datosGuardados.setTieneModulos(obj.getTieneModulos());
 
 			Curso datosActualizados = null;
-			datosActualizados = cursoServiceImpl.update(datosGuardados);
+			try {
+				datosActualizados = cursoServiceImpl.update(datosGuardados);
+			} catch (DataException e) {
+				return response(HttpStatus.BAD_REQUEST, e.getMessage());
+			}
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping("/updateRequisitos/{id}")
-	public ResponseEntity<Curso> updateRequisitos(@PathVariable("id") Long codCursoEspecializacion, @RequestBody List<Requisito> requisitos) {
+	public ResponseEntity<Curso> updateRequisitos(@PathVariable("id") Long codCursoEspecializacion, @RequestBody List<Requisito> requisitos) throws DataException {
 		return new ResponseEntity<>(cursoServiceImpl.updateRequisitos(codCursoEspecializacion, requisitos), HttpStatus.OK); 
 	}
 	
 	@PostMapping("/updateDocumento/{id}")
-	public ResponseEntity<?> updateDocumento(@PathVariable("id") Long codDocumento, @RequestParam("archivo") MultipartFile archivo) throws IOException {
+	public ResponseEntity<?> updateDocumento(@PathVariable("id") Long codDocumento, @RequestParam(value = "archivo", required = true) MultipartFile archivo) throws IOException, DataException {
+		
+		if(archivo.getSize() == 0)
+			throw new DataException(NO_ADJUNTO);
+		
 		return new ResponseEntity<>(cursoServiceImpl.updateDocumento(codDocumento, archivo), HttpStatus.OK); 
 	}
 	
@@ -139,6 +147,20 @@ public class CursoResource {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) throws DataException {
 		cursoServiceImpl.delete(codigo);
+		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+	}
+	
+	@GetMapping("/cumpleMinimoAprobadosPruebasCurso/{id}")
+	public ResponseEntity<?> cumpleMinimoAprobados(@PathVariable("id") long codigo) throws DataException {
+		return response(HttpStatus.OK, cursoServiceImpl.cumpleMinimoAprobadosCurso(codigo).toString());
+	}
+	
+	@DeleteMapping("/eliminarDocumento")
+	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Long codCursoEspecializacion, @RequestParam Long codDocumento)
+			throws IOException, DataException {
+
+		cursoServiceImpl.deleteDocumento(codCursoEspecializacion, codDocumento);
+		
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	

@@ -9,6 +9,6 @@ import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 
 public interface CatalogoCursoRepository extends JpaRepository<CatalogoCurso, Integer> {
 
-	Optional<CatalogoCurso> findByNombreIgnoreCase(String Nombre);
+	Optional<CatalogoCurso> findByNombreCatalogoCursoIgnoreCase(String Nombre);
 	
 }

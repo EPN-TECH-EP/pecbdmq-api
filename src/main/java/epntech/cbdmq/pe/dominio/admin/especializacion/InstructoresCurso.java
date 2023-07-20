@@ -9,6 +9,7 @@ import lombok.Data;
 public class InstructoresCurso {
 
 	@Id
+	private Long codInstructorCurso;
 	private Long codInstructor;
 	private String cedula;
 	private String nombre;
@@ -19,3 +20,4 @@ public class InstructoresCurso {
 	private String nombreTipoInstructor;
 	
 }
+

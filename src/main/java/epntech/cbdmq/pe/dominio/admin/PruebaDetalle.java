@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 
@@ -7,11 +8,10 @@ import org.hibernate.annotations.NamedNativeQuery;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.data.jpa.repository.Query;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
+import epntech.cbdmq.pe.dominio.util.PruebaDetalleData;
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;
@@ -29,47 +29,27 @@ import lombok.Data;
 @SQLDelete(sql = "UPDATE {h-schema}gen_prueba_detalle SET estado = 'ELIMINADO' WHERE cod_prueba_detalle = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
 
-/*@NamedNativeQuery(name = "PruebaDetalle.listarTodosConDatosSubTipoPrueba", query = "select\r\n"
-		+ "	gpd.cod_prueba_detalle,\r\n"
-		+ "	gpd.descripcion_prueba,\r\n"
-		+ "	gpd.fecha_inicio,\r\n"
-		+ "	gpd.fecha_fin,\r\n"
-		+ "	gpd.hora,\r\n"
-		+ "	gpd.estado,\r\n"
-		+ "	gpd.cod_periodo_academico,\r\n"
-		+ "	gpd.cod_curso_especializacion,\r\n"
-		+ "	gpd.cod_subtipo_prueba,\r\n"
-		+ "	gpd.orden_tipo_prueba,\r\n"
-		+ "	gpd.puntaje_minimo,\r\n"
-		+ "	gpd.puntaje_maximo,\r\n"
-		+ "	gpd.tiene_puntaje,\r\n"
-		+ "	gsp.nombre as subTipoPruebaNombre,\r\n"
-		+ "	gtp.tipo_prueba as tipoPruebaNombre \r\n"
-		+ "from\r\n"
-		+ "	cbdmq.gen_prueba_detalle gpd,\r\n"
-		+ "	cbdmq.gen_subtipo_prueba gsp,\r\n"
-		+ "	cbdmq.gen_tipo_prueba gtp\r\n"
-		+ "where\r\n"
-		+ "	gpd.cod_subtipo_prueba = gsp.cod_subtipo_prueba"
-		+ " and gsp.cod_tipo_prueba = gtp.cod_tipo_prueba", resultSetMapping = "PruebaDetalleDatos")
 
-@SqlResultSetMapping(name = "PruebaDetalleDatos", classes = @ConstructorResult(targetClass = PruebaDetalle.class, columns = {
-		@ColumnResult(name = "cod_prueba_detalle"),
-		@ColumnResult(name = "descripcion_prueba"),
-		@ColumnResult(name = "fecha_inicio"),
-		@ColumnResult(name = "fecha_fin"),
-		@ColumnResult(name = "hora"),
-		@ColumnResult(name = "estado"),
-		@ColumnResult(name = "cod_periodo_academico"),
-		@ColumnResult(name = "cod_curso_especializacion"),
-		@ColumnResult(name = "cod_subtipo_prueba"),
-		@ColumnResult(name = "orden_tipo_prueba"),
-		@ColumnResult(name = "puntaje_minimo"),
-		@ColumnResult(name = "puntaje_maximo"),
-		@ColumnResult(name = "tiene_puntaje"),
-		@ColumnResult(name = "subTipoPruebaNombre"),
-		@ColumnResult(name = "tipoPruebaNombre")
-}))*/
+@NamedNativeQuery(name = "PruebaDetalle.findDatosPrueba", 
+query = "select p.cod_prueba_detalle as codPruebaDetalle, p.descripcion_prueba as descripcionPrueba, \r\n"
+		+ "p.fecha_inicio as fechaInicio, p.fecha_fin as fechaFin, p.hora as hora,\r\n"
+		+ "p.cod_subtipo_prueba as codSubTipoPrueba, p.orden_tipo_prueba as ordenTioPrueba, "
+		+ "p.puntaje_minimo as puntajeMinimo, p.puntaje_maximo as puntajeMaximo, p.tiene_puntaje as tienePuntaje \r\n"
+		+ "from cbdmq.gen_prueba_detalle p\r\n"
+		+ "where p.cod_curso_especializacion = :codCursoEspecializacion\r\n"
+		+ "and p.cod_subtipo_prueba = :codSubTipoPrueba ", 
+		resultSetMapping = "findDatosPrueba")
+@SqlResultSetMapping(name = "findDatosPrueba", classes = @ConstructorResult(targetClass = PruebaDetalleData.class, columns = {
+		@ColumnResult(name = "codPruebaDetalle"), 
+		@ColumnResult(name = "descripcionPrueba"), 
+		@ColumnResult(name = "fechaInicio", type = LocalDate.class),
+		@ColumnResult(name = "fechaFin", type = LocalDate.class), 
+		@ColumnResult(name = "hora", type = LocalTime.class), 
+		@ColumnResult(name = "codSubTipoPrueba"),
+		@ColumnResult(name = "ordenTioPrueba"),
+		@ColumnResult(name = "puntajeMinimo"),
+		@ColumnResult(name = "puntajeMaximo"),
+		@ColumnResult(name = "tienePuntaje"),}))
 
 public class PruebaDetalle {
 

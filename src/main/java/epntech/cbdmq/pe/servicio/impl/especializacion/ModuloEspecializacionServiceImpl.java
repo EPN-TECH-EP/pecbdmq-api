@@ -1,7 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import epntech.cbdmq.pe.servicio.especializacion.ModuloEspecializacionService;
 
 @Service
 public class ModuloEspecializacionServiceImpl implements ModuloEspecializacionService {
-	
+
 	@Autowired
 	private ModuloEspecializacionRepository moduloEspecializacionRepository;
 
@@ -24,7 +23,8 @@ public class ModuloEspecializacionServiceImpl implements ModuloEspecializacionSe
 	public ModuloEspecializacion save(ModuloEspecializacion moduloEspecializacion) throws DataException {
 		if (moduloEspecializacion.getNombreEspModulo().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<ModuloEspecializacion> objGuardado = moduloEspecializacionRepository.findByNombreEspModuloIgnoreCase(moduloEspecializacion.getNombreEspModulo());
+		Optional<ModuloEspecializacion> objGuardado = moduloEspecializacionRepository
+				.findByNombreEspModuloIgnoreCase(moduloEspecializacion.getNombreEspModulo());
 		if (objGuardado.isPresent()) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
@@ -35,8 +35,10 @@ public class ModuloEspecializacionServiceImpl implements ModuloEspecializacionSe
 
 	@Override
 	public ModuloEspecializacion update(ModuloEspecializacion moduloEspecializacionActualizado) throws DataException {
-		Optional<ModuloEspecializacion> objGuardado = moduloEspecializacionRepository.findByNombreEspModuloIgnoreCase(moduloEspecializacionActualizado.getNombreEspModulo());
-		if (objGuardado.isPresent() && !objGuardado.get().getCodEspModulo().equals(moduloEspecializacionActualizado.getCodEspModulo())) {
+		Optional<ModuloEspecializacion> objGuardado = moduloEspecializacionRepository
+				.findByNombreEspModuloIgnoreCase(moduloEspecializacionActualizado.getNombreEspModulo());
+		if (objGuardado.isPresent()
+				&& !objGuardado.get().getCodEspModulo().equals(moduloEspecializacionActualizado.getCodEspModulo())) {
 			throw new DataException(REGISTRO_YA_EXISTE);
 		}
 		return moduloEspecializacionRepository.save(moduloEspecializacionActualizado);
@@ -49,15 +51,24 @@ public class ModuloEspecializacionServiceImpl implements ModuloEspecializacionSe
 	}
 
 	@Override
-	public Optional<ModuloEspecializacion> getById(Long codModulo) {
-		// TODO Auto-generated method stub
+	public Optional<ModuloEspecializacion> getById(Long codModulo) throws DataException {
+		Optional<ModuloEspecializacion> moduloEspecializacionOptional = moduloEspecializacionRepository
+				.findById(codModulo);
+		if (moduloEspecializacionOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+
 		return moduloEspecializacionRepository.findById(codModulo);
 	}
 
 	@Override
-	public void delete(Long codModulo) {
-		moduloEspecializacionRepository.deleteById(codModulo);
+	public void delete(Long codModulo) throws DataException {
+		Optional<ModuloEspecializacion> moduloEspecializacionOptional = moduloEspecializacionRepository
+				.findById(codModulo);
+		if (moduloEspecializacionOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
 		
+		moduloEspecializacionRepository.deleteById(codModulo);
+
 	}
 
 }

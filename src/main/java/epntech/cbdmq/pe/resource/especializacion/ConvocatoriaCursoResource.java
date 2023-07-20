@@ -87,14 +87,15 @@ public class ConvocatoriaCursoResource {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @RequestBody ConvocatoriaCurso obj) throws DataException{
+				
+		obj.setCodConvocatoria(codigo);
+		return new ResponseEntity<>(convocatoriaCursoServiceImpl.update(obj), HttpStatus.OK);
 		
-		return (ResponseEntity<ConvocatoriaCurso>) convocatoriaCursoServiceImpl.getByID(codigo).map(datosGuardados -> {
-			datosGuardados.setNombreConvocatoria(obj.getNombreConvocatoria());
+		/*return (ResponseEntity<ConvocatoriaCurso>) convocatoriaCursoServiceImpl.getByID(codigo).map(datosGuardados -> {
 			datosGuardados.setFechaInicioConvocatoria(obj.getFechaInicioConvocatoria());
 			datosGuardados.setFechaFinConvocatoria(obj.getFechaFinConvocatoria());
 			datosGuardados.setHoraInicioConvocatoria(obj.getHoraInicioConvocatoria());
 			datosGuardados.setHoraFinConvocatoria(obj.getHoraFinConvocatoria());
-			datosGuardados.setCodCursoEspecializacion(obj.getCodCursoEspecializacion());
 			datosGuardados.setEstado(obj.getEstado());
 
 			ConvocatoriaCurso datosActualizados = new ConvocatoriaCurso();
@@ -104,11 +105,11 @@ public class ConvocatoriaCursoResource {
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
 				
-				return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+				return response(HttpStatus.BAD_REQUEST, e.getMessage());
 			}
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+		}).orElseGet(() -> ResponseEntity.notFound().build());*/
 	}
 	
 	@DeleteMapping("/eliminarDocumento")
@@ -121,12 +122,11 @@ public class ConvocatoriaCursoResource {
 	}
 	
 	@PostMapping("/notificar")
-	public ResponseEntity<?> notificar(@RequestParam("mensaje") String mensaje,
-			@RequestParam("codConvocatoria") Long codConvocatoria)
+	public ResponseEntity<?> notificar(@RequestParam("codConvocatoria") Long codConvocatoria)
 			throws MessagingException, DataException, PSQLException {
 		
-		mensaje = "Estimad@, la convocatoria al curso %s inicia Desde: %tF, %tT Hasta: %tF, %tT ";
-		convocatoriaCursoServiceImpl.notificar(mensaje, codConvocatoria);
+		//mensaje = "Estimad@, la convocatoria al curso %s inicia Desde: %tF, %tT Hasta: %tF, %tT ";
+		convocatoriaCursoServiceImpl.notificar(codConvocatoria);
 		
 		return response(HttpStatus.OK, EMAIL_SEND);
 	}

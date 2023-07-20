@@ -10,11 +10,12 @@ import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.Aula;
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.ParaleloRepository;
 import epntech.cbdmq.pe.servicio.ParaleloService;
+import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 
 @Service
 public class ParaleloServiceImpl implements ParaleloService{
@@ -31,7 +32,16 @@ public class ParaleloServiceImpl implements ParaleloService{
 			throw new DataException(REGISTRO_VACIO);
 		Optional<Paralelo> objGuardado = repo.findByNombreParaleloIgnoreCase(obj.getNombreParalelo());
 		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			Paralelo stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
+			}
+
 		}
 
 		return repo.save(obj);
@@ -67,7 +77,7 @@ public class ParaleloServiceImpl implements ParaleloService{
 		// TODO Auto-generated method stub
 		repo.deleteById(codigo);
 	}
-
+	
 	@Override
 	public List<Paralelo> getParalelosPA() {
 		return repo.getParalelosPA(periodoAcademicoService.getPAActivo());

@@ -18,4 +18,6 @@ public interface ParametrizaPruebaDetalleService {
 
 	void delete(int id) throws DataException;
 	
+	public List<ParametrizaPruebaDetalle> listarPorResumen(Integer codResumen);
+	
 }

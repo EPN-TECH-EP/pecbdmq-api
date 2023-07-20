@@ -1,17 +1,14 @@
 package epntech.cbdmq.pe.helper;
 
-import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
-import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
-import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
-import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.multipart.MultipartFile;
-import org.apache.poi.ss.usermodel.DataFormatter;
+import static epntech.cbdmq.pe.constante.ArchivoConst.DOCUMENTO_NO_CUMPLE_FORMATO;
+import static epntech.cbdmq.pe.constante.ArchivoConst.FALLA_PROCESAR_EXCEL;
 
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,11 +16,29 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.DOCUMENTO_NO_CUMPLE_FORMATO;
-import static epntech.cbdmq.pe.constante.ArchivoConst.FALLA_PROCESAR_EXCEL;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.web.multipart.MultipartFile;
 
+import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
+import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.servicio.impl.ResultadoPruebasFisicasServiceImpl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResultadoPruebasHelper {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
     static String SHEET = "Hoja1";
@@ -86,7 +101,7 @@ public class ResultadoPruebasHelper {
                 DateFormat dateFormat = new SimpleDateFormat("h:mm:ss");
                 return dateFormat.format(cell.getDateCellValue());
             } else {
-                // Formatear el valor numérico como una cadena
+                // Formatear el valor num�rico como una cadena
                 return String.valueOf(cell.getNumericCellValue());
             }
         } else if (cell.getCellType() == CellType.BOOLEAN) {
@@ -130,7 +145,6 @@ public class ResultadoPruebasHelper {
                             if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
                                 dato.setIdPostulante(codPruebaDetalleStr);
                             }
-
                             break;
                         case 1:
 
@@ -184,7 +198,6 @@ public class ResultadoPruebasHelper {
             List<ResultadoPruebaFisicaUtil> datos = new ArrayList<ResultadoPruebaFisicaUtil>();
 
             int rowNumber = 0;
-
             while (rows.hasNext()) {
                 Row currentRow = rows.next();
                 // skip header
@@ -208,8 +221,6 @@ public class ResultadoPruebasHelper {
                             if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
                                 dato.setIdPostulante(codPruebaDetalleStr);
                             }
-
-
                             break;
                         case 1:
                             codPruebaDetalleStr = getCellValueAsString(currentCell);
@@ -224,7 +235,6 @@ public class ResultadoPruebasHelper {
                                     throw new RuntimeException("No se reconoce el tipo de resultado");
                                 }
                             }
-
                             break;
                         default:
                             break;
@@ -243,7 +253,6 @@ public class ResultadoPruebasHelper {
             throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
         }
     }
-
 
     public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();

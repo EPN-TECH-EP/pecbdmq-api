@@ -107,9 +107,8 @@ public class InscripcionEspResource {
 	}
 
 	@GetMapping("/porCurso/{id}")
-	public ResponseEntity<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
-		return inscripcionEspServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+	public List<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
+		return inscripcionEspServiceImpl.getByCurso(codigo);
 	}
 	
 	@PostMapping("/validacionRequisitos")
@@ -136,10 +135,10 @@ public class InscripcionEspResource {
 	}
 	
 	@PostMapping("/notificarPrueba")
-	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion)
+	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("subTipoPrueba") Long subTipoPrueba)
 			throws MessagingException, DataException, PSQLException {
 		
-		inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion);
+		inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion, subTipoPrueba);
 
 		return response(HttpStatus.OK, EMAIL_SEND);
 	}

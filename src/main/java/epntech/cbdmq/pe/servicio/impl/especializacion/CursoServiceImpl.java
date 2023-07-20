@@ -1,9 +1,10 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
-import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INCORRECTO;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_BAJAS;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
+import static epntech.cbdmq.pe.constante.MensajesConst.DOCUMENTO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INCORRECTO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,14 +22,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.BajaDocumento;
+import epntech.cbdmq.pe.constante.MensajesConst;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoRequisito;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoEspRepository;
@@ -49,6 +52,8 @@ public class CursoServiceImpl implements CursoService {
 	private CursoRequisitoRepository cursoRequisitoRepository;
 	@Autowired
 	private DocumentoRepository documentoRepository;
+	@Autowired
+	private AulaRepository aulaRepository;
 	
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -57,15 +62,21 @@ public class CursoServiceImpl implements CursoService {
 
 	@Override
 	public Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento) {
-		Curso cc = new Curso();
+		aulaRepository.findById(obj.getCodAula())
+				.orElseThrow(() -> new BusinessException(MensajesConst.AULA_NO_EXISTE));
+
+		Curso cc;
 		cc = cursoEspRepository.insertarCursosDocumentosRequisitos(obj, requisitos, documentos, codTipoDocumento);
 
-		return cursoRepository.findById(cc.getCodCursoEspecializacion()).get();
+		return cc;
 	}
 
 	@Override
-	public Curso update(Curso objActualizado) {
-		// TODO Auto-generated method stub
+	public Curso update(Curso objActualizado) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(objActualizado.getCodCursoEspecializacion());
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		return cursoRepository.save(objActualizado);
 	}
 
@@ -76,18 +87,28 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public Optional<Curso> getById(Long id) {
-		// TODO Auto-generated method stub
+	public Optional<Curso> getById(Long id) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(id);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
 		return cursoRepository.findById(id);
 	}
 
 	@Override
 	public CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado,
-			String observaciones, Long codCursoEspecializacion, Long codDocumento) {
-		// TODO Auto-generated method stub
+			String observaciones, Long codCursoEspecializacion, Long codDocumento) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
+		Optional<Documento> documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		if(documentoOptional.isEmpty())
+			throw new DataException(DOCUMENTO_NO_EXISTE);
+		
 		cursoDocumentoRepository.updateEstadoAprobado(estadoAprobado, estadoValidado, observaciones,
 				codCursoEspecializacion, codDocumento);
-		cursoDocumentoRepository.validaDocumentosCurso(codCursoEspecializacion);
+		cursoRepository.validaDocumentosCursoEspecializacion(codCursoEspecializacion);
 		
 		return cursoDocumentoRepository.findByCodCursoEspecializacionAndCodDocumento(codCursoEspecializacion,
 				codDocumento);
@@ -95,6 +116,10 @@ public class CursoServiceImpl implements CursoService {
 
 	@Override
 	public Curso updateEstadoProceso(Long estado, Long codCurso) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCurso);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
 		int result = cursoRepository.updateEstadoProceso(estado, codCurso);
 		if (result == 1)
 			return cursoRepository.findById(codCurso).get();
@@ -103,8 +128,12 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) {
+	public Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) throws DataException {
 
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+			
 		Optional<CursoRequisito> cursoRequisito = cursoRequisitoRepository
 				.findFirstByCodCursoEspecializacion(codCursoEspecializacion);
 		if (cursoRequisito.isPresent())
@@ -122,8 +151,12 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException {
+	public Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException, DataException {
 		Optional<Documento> documentoOptional;
+		documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		if(documentoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		Documento documento = new Documento();
 
 		documentoOptional = documentoRepository.findById(codDocumento.intValue());
@@ -131,20 +164,23 @@ public class CursoServiceImpl implements CursoService {
 
 		Path ruta = Paths.get(documento.getRuta());
 
-		//System.out.println("ruta: " + ruta);
+		System.out.println("ruta: " + ruta);
 		try {
 			
 			if (Files.exists(ruta)) {
 				Files.delete(ruta);
 			}
+	
 			MultipartFile multipartFile = archivo;
 			if (multipartFile.getSize() > TAMAÑO_MAXIMO.toBytes()) {
 				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
 			}
-
+			if (!Files.exists(ruta)) {
+				Files.createDirectories(ruta);
+			}
 			Files.copy(multipartFile.getInputStream(), ruta.getParent().resolve(multipartFile.getOriginalFilename()),
 					StandardCopyOption.REPLACE_EXISTING);
-
+			
 			documento.setNombre(archivo.getOriginalFilename());
 			documento.setRuta(ruta.getParent() + "/" + archivo.getOriginalFilename());
 			documentoRepository.save(documento);
@@ -209,8 +245,58 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public void delete(Long codCursoEspecializacion) {
+	public void delete(Long codCursoEspecializacion) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
 		cursoRepository.deleteById(codCursoEspecializacion);
+		
+	}
+
+	@Override
+	public Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) throws DataException {
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
+		return cursoRepository.cumplePorcentajeMinimoAprobadosCurso(codCursoEspecializacion);
+	}
+
+	@Override
+	public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException {
+
+		Optional<Curso> cursoOptional = cursoRepository.findById(codCursoEspecializacion);
+		if(cursoOptional.isEmpty())
+			throw new DataException(REGISTRO_NO_EXISTE);
+		
+		Optional<Documento> documentoOptional;
+		Documento documento = new Documento();
+
+		// System.out.println("id: " + codDocumento);
+		documentoOptional = documentoRepository.findById(codDocumento.intValue());
+		if(documentoOptional.isEmpty())
+			throw new DataException(DOCUMENTO_NO_EXISTE);
+			
+		documento = documentoOptional.get();
+
+		Path ruta = Paths.get(documento.getRuta());
+
+		// System.out.println("ruta: " + ruta);
+		if (Files.exists(ruta)) {
+			try {
+				// System.out.println("ruta" + ruta);
+				Files.delete(ruta);
+				cursoDocumentoRepository.deleteByCodCursoEspecializacionAndCodDocumento(codCursoEspecializacion, codDocumento);
+				documentoRepository.deleteById(codDocumento.intValue());
+				
+			} catch (Exception e) {
+
+				throw new DataException(e.getMessage());
+				// e.printStackTrace();
+			}
+
+		}
 		
 	}
 

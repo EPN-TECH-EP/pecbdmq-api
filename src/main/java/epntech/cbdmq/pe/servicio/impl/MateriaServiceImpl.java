@@ -100,7 +100,7 @@ public class MateriaServiceImpl implements MateriaService {
 			}
 		}
 	}
-
+	
 	@Override
 	public List<Materia> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico) {
 		return repo.getAllByInstructorPA(codInstructor, nombreTipoInstructor, periodoAcademico);

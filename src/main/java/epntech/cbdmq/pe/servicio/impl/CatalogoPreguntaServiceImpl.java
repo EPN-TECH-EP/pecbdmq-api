@@ -12,7 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.CatalogoPreguntas;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoPreguntasRepository;
@@ -32,7 +32,16 @@ public class CatalogoPreguntaServiceImpl implements CatalogoPreguntasService{
 			throw new DataException(REGISTRO_VACIO);
 		Optional<CatalogoPreguntas> objGuardado = repo.findByPreguntaIgnoreCase(obj.getPregunta());
 		if (objGuardado.isPresent()) {
+
+			// valida si existe eliminado
+			CatalogoPreguntas stp = objGuardado.get();
+			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
+				stp.setEstado(EstadosConst.ACTIVO);
+				return repo.save(stp);
+			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
+			}
+
 		}
 		obj.setPregunta(obj.getPregunta().toUpperCase());
 		return repo.save(obj);
