@@ -87,7 +87,7 @@ public class SubtipoPruebaServiceImpl implements SubtipoPruebaService {
 
 	@Override
 	public List<SubTipoPrueba> getAllByCodTipoPrueba(Long codTipoPrueba) {
-		return this.repo.getAllByCodTipoPruebaOrderByNombre(codTipoPrueba);
+		return this.repo.listarAllByCodTipoPruebaOrderByNombre(codTipoPrueba);
 	}
 
 }

@@ -45,6 +45,8 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
                     objMPe.setCodPeriodoAcademico(periodoAcademicoService.getPAActivo());
                     objMPe.setCodMateria(materiaStream.getCodMateria());
                     objMPe.setCodAula(materiaStream.getCodAula());
+                    objMPe.setPesoMateria(materiaStream.getPonderacionMateria());
+                    objMPe.setNotaMinimaSupletorioInicio(materiaStream.getNotaMinimaSupletorio());
                     try {
                         MateriaPeriodo objMPeI=materiaPAService.save(objMPe);
                         return objMPeI;

@@ -91,15 +91,15 @@ public class AntiguedadesResource {
 	}
 	
 	/*genera los archivos con el resultado de antiguedades femenino y masculino del proceso de aspirantes aprobados*/
-	@PostMapping("/generaArchivosAntiguedadesFormacion")
-	public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response, @RequestParam("tipoDocumento") Integer tipoDocumento) throws DataException, DocumentException {
+	@GetMapping("/generaArchivosAntiguedadesFormacion")
+	public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response) throws DataException, DocumentException {
 		try {
 
 			String nombre= ANTIGUEDADESFORMACION+periodoAcademicoRepository.getPAActive().toString();
 			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_ANTIGUEDADES + periodoAcademicoRepository.getPAActive().toString() + "/" + nombre;
 
-			objService.generarExcel(ruta + ".xlsx", nombre + ".xlsx", tipoDocumento);
-			objService.generarPDF(response, ruta + ".pdf", nombre + ".pdf", tipoDocumento);
+			objService.generarExcel(ruta + ".xlsx", nombre + ".xlsx");
+			objService.generarPDF(response, ruta + ".pdf", nombre + ".pdf");
 			
 			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 
@@ -128,6 +128,44 @@ public class AntiguedadesResource {
 				.contentType(MediaType.parseMediaType(contentType))
 				.body(resource);
 	}
+	//TODO mirar como optimizar todo
+	@GetMapping("/descargarAntiguedadesFormacionXls")
+	public ResponseEntity<?> descargarArchivoExcel( HttpServletRequest request) throws FileNotFoundException {
+		String nombre = ANTIGUEDADESFORMACION + periodoAcademicoRepository.getPAActive().toString() + ".xlsx";
+		String xlsNombre = ANTIGUEDADESFORMACION + periodoAcademicoRepository.getPAActive().toString() + ".xls";
+
+		// Buscar el archivo en la base de datos
+		Documento archivo = repository.findByNombre(nombre).orElse(null);
+		File file;
+		if (nombre == null) {
+			Documento xlsArchivo = repository.findByNombre(xlsNombre).orElse(null);
+			System.out.println("xlsArchivo: " + xlsArchivo);
+			if (xlsArchivo == null) {
+				return response(HttpStatus.BAD_REQUEST, ARCHIVO_NO_EXISTE);
+			}
+			// Crear un objeto Resource para el archivo
+			file = new File(xlsArchivo.getRuta());
+			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+			// Obtener la extensión del archivo
+			String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+			// Devolver una respuesta con el archivo adjunto y la URL de descarga
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
+					.contentType(MediaType.parseMediaType(contentType))
+					.body(resource);
+
+		}
+			// Crear un objeto Resource para el archivo
+			file = new File(archivo.getRuta());
+			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+			// Obtener la extensión del archivo
+			String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+			// Devolver una respuesta con el archivo adjunto y la URL de descarga
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
+					.contentType(MediaType.parseMediaType(contentType))
+					.body(resource);
+		}
 	
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

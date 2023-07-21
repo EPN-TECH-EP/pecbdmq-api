@@ -85,19 +85,14 @@ public class InscripcionEspResource {
 	@DeleteMapping("/eliminarDocumento")
 	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Long codInscripcion, @RequestParam Long codDocumento)
 			throws IOException, DataException {
-
 		inscripcionEspServiceImpl.deleteDocumento(codInscripcion, codDocumento);
-		
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	
 	@PostMapping("/notificar")
 	public ResponseEntity<?> notificar(@RequestParam("codInscripcion") Long codInscripcion)
 			throws MessagingException, DataException, PSQLException {
-
-		
 		inscripcionEspServiceImpl.notificarInscripcion(codInscripcion);
-
 		return response(HttpStatus.OK, EMAIL_SEND);
 	}
 
@@ -114,7 +109,6 @@ public class InscripcionEspResource {
 	@PostMapping("/validacionRequisitos")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException, MessagingException {
-
 		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
 	}
 	

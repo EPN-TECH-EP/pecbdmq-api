@@ -2,7 +2,7 @@ package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION_INSCRIPCION;
-import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_INSCRIPCION;
+import static epntech.cbdmq.pe.constante.EmailConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
 
@@ -17,8 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.unit.DataSize;
@@ -270,7 +272,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		
 		String[] destinatarios = {inscripcion.getCorreoPersonal()};
 		
-		emailService.enviarEmail(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
 	}
 
 	@Override
@@ -287,53 +289,49 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 	@Override
 	public List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos) throws MessagingException, DataException {
-		List<ValidaRequisitos> listValidaRequisitos = new ArrayList<>();
-		listValidaRequisitos = validaRequisitosRepository.saveAll(validaRequisitos);
-		
-		//for (ValidaRequisitos validaRequisito : listValidaRequisitos) {
-		//	validaRequisitosRepository.cumpleRequisitosCurso(validaRequisito.getCodCursoEspecializacion(), validaRequisito.getCodEstudiante());
-		//}
-		
-		Boolean validaRequisitoEstudiante = validaRequisitosRepository.cumpleRequisitosCurso(validaRequisitos.get(0).getCodCursoEspecializacion(), validaRequisitos.get(0).getCodEstudiante());
-		Optional<InscripcionEsp> inscripcion = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(validaRequisitos.get(0).getCodEstudiante(), validaRequisitos.get(0).getCodCursoEspecializacion());
-		
-		if(validaRequisitoEstudiante)
-			notificarInscripcionValida(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.valida");
-		else
-			notificarInscripcionValida(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.novalida");
-		
-		return listValidaRequisitos;
+		List<ValidaRequisitos> listValidaRequisitos;
+		try {
+			listValidaRequisitos = validaRequisitosRepository.saveAll(validaRequisitos);
+			boolean validaRequisitoEstudiante = validaRequisitosRepository.cumpleRequisitosCurso(validaRequisitos.get(0).getCodCursoEspecializacion(), validaRequisitos.get(0).getCodEstudiante());
+			Optional<InscripcionEsp> inscripcion = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(validaRequisitos.get(0).getCodEstudiante(), validaRequisitos.get(0).getCodCursoEspecializacion());
+
+			if (inscripcion.isPresent()) {
+				if (validaRequisitoEstudiante)
+					notificarInscripcion(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.valida");
+				else
+					notificarInscripcion(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.novalida");
+			}
+			return listValidaRequisitos;
+		} catch (DataIntegrityViolationException dive) {
+			throw new BusinessException(REGISTRO_YA_EXISTE);
+		}
 	}
 
 	@Override
 	public List<ValidacionRequisitosDatos> getValidacionRequisito(Long codEstudiante, Long codCursoEspecializacion) {
-		// TODO Auto-generated method stub
 		return validaRequisitosRepository.findRequisitosPorEstudiante(codEstudiante, codCursoEspecializacion);
 	}
 
 	@Override
 	public List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos) throws MessagingException, DataException {
-		List<ValidaRequisitos> listValidaRequisitos = new ArrayList<>();
+		List<ValidaRequisitos> listValidaRequisitos;
 		listValidaRequisitos = validaRequisitosRepository.saveAll(validaRequisitos);
 		
-		/*for (ValidaRequisitos validaRequisito : listValidaRequisitos) {
-			validaRequisitosRepository.cumpleRequisitosCurso(validaRequisito.getCodCursoEspecializacion(), validaRequisito.getCodEstudiante());
-		}*/
-		
-		Boolean validaRequisitoEstudiante = validaRequisitosRepository.cumpleRequisitosCurso(validaRequisitos.get(0).getCodCursoEspecializacion(), validaRequisitos.get(0).getCodEstudiante());
+		boolean validaRequisitoEstudiante = validaRequisitosRepository.cumpleRequisitosCurso(validaRequisitos.get(0).getCodCursoEspecializacion(), validaRequisitos.get(0).getCodEstudiante());
 		Optional<InscripcionEsp> inscripcion = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(validaRequisitos.get(0).getCodEstudiante(), validaRequisitos.get(0).getCodCursoEspecializacion());
-		
-		if(validaRequisitoEstudiante)
-			notificarInscripcionValida(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.valida");
-		else
-			notificarInscripcionValida(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.novalida");
+
+		if (inscripcion.isPresent()) {
+			if (validaRequisitoEstudiante)
+				notificarInscripcion(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.valida");
+			else
+				notificarInscripcion(inscripcion.get().getCodInscripcion(), "especializacion.notificacion.inscripcion.novalida");
+		}
 		
 		return listValidaRequisitos;
 	}
 
 	@Override
 	public List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion) {
-		// TODO Auto-generated method stub
 		return inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
 	}
 
@@ -349,10 +347,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		if(pruebaDetalleOptional.isEmpty())
 			throw new DataException(CURSO_NO_PRUEBAS);
 		
-		PruebaDetalle  pruebaDetalle = new PruebaDetalle();
+		PruebaDetalle  pruebaDetalle;
 		pruebaDetalle = pruebaDetalleOptional.get();
 		
-		List<InscritosEspecializacion> listaInscritos = new ArrayList<>();
+		List<InscritosEspecializacion> listaInscritos;
 		listaInscritos = inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
 		
 		for (InscritosEspecializacion inscritosEspecializacion : listaInscritos) {
@@ -366,16 +364,14 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 			
 			String[] destinatarios = {inscritosEspecializacion.getCorreoPersonal()};
 			
-			emailService.enviarEmail(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+			emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT2, cuerpoHtml);
 		}
 		
 	}
 	
-	public void notificarInscripcionValida(Long codInscripcion, String nombreParametro) throws MessagingException, DataException {
-				
-		Optional<InscripcionEstudianteDatosEspecializacion> inscripcionOptional = inscripcionEspRepository.getInscripcionEstudiante(codInscripcion);
-		InscripcionEstudianteDatosEspecializacion inscripcion = new InscripcionEstudianteDatosEspecializacion();
-		inscripcion = inscripcionOptional.get();
+	private void notificarInscripcion(Long codInscripcion, String nombreParametro) throws MessagingException, DataException {
+		InscripcionEstudianteDatosEspecializacion inscripcion = inscripcionEspRepository.getInscripcionEstudiante(codInscripcion)
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 		
 		Optional<Parametro> parametro = parametroRepository.findByNombreParametro(nombreParametro); 
 		if(parametro.isEmpty())
@@ -386,7 +382,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		
 		String[] destinatarios = {inscripcion.getCorreoPersonal()};
 		
-		emailService.enviarEmail(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
 	}
 
 	@Override
@@ -402,7 +398,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		List<InscritosValidos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
 		
 		for (InscritosValidos inscritosValidos : listaInscritosValidos) {
-			Optional<Parametro> parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.pruebas"); 
+			Optional<Parametro> parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.resultado.prueba");
 			if(parametro.isEmpty())
 				throw new DataException(NO_PARAMETRO);
 			
@@ -411,7 +407,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 			
 			String[] destinatarios = {inscritosValidos.getCorreoPersonal()};
 			
-			emailService.enviarEmail(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+			emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_PRUEBAS, cuerpoHtml);
 		}
 	}
 

@@ -296,5 +296,30 @@ public class EmailService {
 		emailSender.send(message);
 
 	}
+	
+	public void enviarEmailHtml(String[] destinatarios, String subject, String texto) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		MimeMessage message = this.createEmailHtml(destinatarios, subject, texto);
+		emailSender.send(message);
+	}
+
+	private MimeMessage createEmailHtml(String[] destinatarios, String subject, String texto)
+			throws MessagingException {
+		MimeMessage message = this.getJavaMailSender().createMimeMessage();
+		InternetAddress fromAddress = new InternetAddress(USERNAME);
+		message.setFrom(fromAddress);
+
+		List<InternetAddress> recipientList = new ArrayList<>();
+		for (String destinatario : destinatarios) {
+			recipientList.add(new InternetAddress(destinatario));
+		}
+
+		message.setRecipients(MimeMessage.RecipientType.TO, recipientList.toArray(new InternetAddress[0]));
+		message.setSubject(subject);
+
+		message.setContent(texto, "text/html; charset=utf-8");
+		return message;
+
+	}
 }
 

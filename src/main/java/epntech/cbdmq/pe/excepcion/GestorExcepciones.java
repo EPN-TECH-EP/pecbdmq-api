@@ -10,12 +10,11 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import jakarta.mail.AuthenticationFailedException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -67,6 +67,7 @@ public class GestorExcepciones implements ErrorController {
 	private static final String ERROR_PROCESO_ARCHIVO = "Error al procesar el archivo";
 	private static final String PERMISOS_INSUFICIENTES = "Permisos insuficientes para esta acción";
 	private static final String ERROR_ENVIO_EMAIL = "Error al enviar email, verifique que la dirección ingresada sea válida.";
+	private static final String ERROR_ENVIO_EMAIL_CREDENCIALES = "Error al enviar email, verifique las credenciales de envío.";
 	public static final String RUTA_ERROR = "/error";
 
 	@ExceptionHandler(DisabledException.class)
@@ -129,7 +130,7 @@ public class GestorExcepciones implements ErrorController {
 	public ResponseEntity<HttpResponse> internalServerErrorException(Exception exception) {
 		LOGGER.error(exception.getMessage());
 		exception.printStackTrace();
-		return createHttpResponse(INTERNAL_SERVER_ERROR, ERROR_INTERNO_SERVIDOR);
+		return createHttpResponse(INTERNAL_SERVER_ERROR, exception.getLocalizedMessage());
 	}
 
 	@ExceptionHandler(NoEsArchivoImagenExcepcion.class)
@@ -196,6 +197,11 @@ public class GestorExcepciones implements ErrorController {
 	public ResponseEntity<HttpResponse> dataException(DataException exception) {
 		return createHttpResponse(BAD_REQUEST, exception.getMessage());
 	}
+
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<HttpResponse> dataException(BusinessException exception) {
+		return createHttpResponse(BAD_REQUEST, exception.getMessage());
+	}
 	
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<HttpResponse> dataIntegrityViolationException(DataIntegrityViolationException exception) {
@@ -229,31 +235,18 @@ public class GestorExcepciones implements ErrorController {
 		LOGGER.error(exception.getMessage());
 		return createHttpResponse(BAD_REQUEST, ERROR_ENVIO_EMAIL);
 	}
+
+	@ExceptionHandler(MailAuthenticationException.class)
+	public ResponseEntity<HttpResponse> mailAuthenticationException(MailAuthenticationException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, ERROR_ENVIO_EMAIL_CREDENCIALES);
+	}
 	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<HttpResponse> messageNotReadableException(HttpMessageNotReadableException exception){
 		LOGGER.error(exception.getMessage());
 		return createHttpResponse(BAD_REQUEST, "Dato inválido - Revise el formato");
 	}
-	
-	/*
-	 * catch (DataIntegrityViolationException cve) {
-	 * 
-	 * LOGGER.warn("No se puede eliminar el usuario: " + username +
-	 * " - Usuario tiene dependencias en módulos."); cve.printStackTrace();
-	 * 
-	 * throw new DataException(UsuarioImplConst.USUARIO_TIENE_DEPENDENCIAS);
-	 * 
-	 * }
-	 */
-	
-	/*
-	 * @ExceptionHandler(DataIntegrityViolationException.class) public
-	 * ResponseEntity<HttpResponse>
-	 * dataIntegrityViolationException(DataIntegrityViolationException exception){
-	 * LOGGER.error(exception.getMessage()); return createHttpResponse(BAD_REQUEST,
-	 * "No se puede modificar/eliminar: existen dependencias en los módulos"); }
-	 */
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<HttpResponse> methodArgumentNotValidException(MethodArgumentNotValidException exception){
@@ -286,6 +279,25 @@ public class GestorExcepciones implements ErrorController {
 				.collect(Collectors.joining(""));
 		return createHttpResponse(BAD_REQUEST, str);
 	}
+	
+	/*
+	 * catch (DataIntegrityViolationException cve) {
+	 * 
+	 * LOGGER.warn("No se puede eliminar el usuario: " + username +
+	 * " - Usuario tiene dependencias en módulos."); cve.printStackTrace();
+	 * 
+	 * throw new DataException(UsuarioImplConst.USUARIO_TIENE_DEPENDENCIAS);
+	 * 
+	 * }
+	 */
+	
+	/*
+	 * @ExceptionHandler(DataIntegrityViolationException.class) public
+	 * ResponseEntity<HttpResponse>
+	 * dataIntegrityViolationException(DataIntegrityViolationException exception){
+	 * LOGGER.error(exception.getMessage()); return createHttpResponse(BAD_REQUEST,
+	 * "No se puede modificar/eliminar: existen dependencias en los módulos"); }
+	 */
 	
 }
 

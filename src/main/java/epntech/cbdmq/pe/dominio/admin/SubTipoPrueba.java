@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
-@Entity
+@Entity(name = "SubTipoPrueba")
 @Table(name = "gen_subtipo_prueba")
 @SQLDelete(sql = "UPDATE {h-schema}gen_subtipo_prueba SET estado = 'ELIMINADO' WHERE cod_subtipo_prueba = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
@@ -21,18 +21,17 @@ public class SubTipoPrueba {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//@EqualsAndHashCode.Include()
 	@Column(name = "cod_subtipo_prueba")
 	private Integer codSubtipoPrueba;	
+
 	@Column(name = "cod_tipo_prueba")
 	private Integer codTipoPrueba;	
+
 	@Column(name = "nombre")
 	private String nombre;
+
 	@Column(name = "estado")
 	private String estado;
 	
-	/* @ManyToOne
-	    @JoinColumn(name ="cod_tipo_prueba")
-	 	private TipoPrueba tipo;*/
 }
 

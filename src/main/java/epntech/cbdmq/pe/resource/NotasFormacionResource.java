@@ -158,6 +158,11 @@ public class NotasFormacionResource {
     public List<EstudianteNotaFinalDto> getNotasDisciplina() {
         return notasFormacionFinalServiceImpl.getNotasFinalCodPeriodoAcademico();
     }
+	@GetMapping("/registroEstudiantesNotas")
+	public ResponseEntity<?> registroEstudiantes() {
+		notasFormacionServiceImpl.insertarEstudiantesNotas();
+		return response(HttpStatus.OK, PROCESO_EXITO);
+	}
 
 
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

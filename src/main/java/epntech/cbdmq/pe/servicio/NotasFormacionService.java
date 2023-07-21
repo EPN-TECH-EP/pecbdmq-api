@@ -28,6 +28,7 @@ public interface NotasFormacionService {
 	
 	List<NotasDatosFormacion> getNotasMateria(long codMateria);
 	NotaEstudianteFormacionDto getEstudianteMateriaParalelo(Integer codMateria);
+	void insertarEstudiantesNotas();
 
 	
 }

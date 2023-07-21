@@ -36,9 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ResultadoPruebasHelper {
-	
-	private final Logger LOGGER = LoggerFactory.getLogger(getClass());	
-	
+
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
 	static String SHEET = "Hoja1";
@@ -88,39 +88,39 @@ public class ResultadoPruebasHelper {
 		}
 	}
 
-    private static String getCellValueAsString(Cell cell) throws DataException {
-        if (cell == null) {
-            throw new DataException(DOCUMENTO_NO_CUMPLE_FORMATO);
-        }
+	private static String getCellValueAsString(Cell cell) throws DataException {
+		if (cell == null) {
+			throw new DataException(DOCUMENTO_NO_CUMPLE_FORMATO);
+		}
 
-        if (cell.getCellType() == CellType.STRING) {
-            return cell.getStringCellValue();
-        } else if (cell.getCellType() == CellType.NUMERIC) {
-            if (DateUtil.isCellDateFormatted(cell)) {
-                // Manejar celdas con formato de fecha
-                DateFormat dateFormat = new SimpleDateFormat("h:mm:ss");
-                return dateFormat.format(cell.getDateCellValue());
-            } else {
-                // Formatear el valor num�rico como una cadena
-                return String.valueOf(cell.getNumericCellValue());
-            }
-        } else if (cell.getCellType() == CellType.BOOLEAN) {
-            return String.valueOf(cell.getBooleanCellValue());
-        } else if (cell.getCellType() == CellType.BLANK) {
-            throw new DataException(DOCUMENTO_NO_CUMPLE_FORMATO);
-        } else {
-            throw new DataException(DOCUMENTO_NO_CUMPLE_FORMATO);
-        }
-    }
+		if (cell.getCellType() == CellType.STRING) {
+			return cell.getStringCellValue();
+		} else if (cell.getCellType() == CellType.NUMERIC) {
+			if (DateUtil.isCellDateFormatted(cell)) {
+				// Manejar celdas con formato de fecha
+				DateFormat dateFormat = new SimpleDateFormat("h:mm:ss");
+				return dateFormat.format(cell.getDateCellValue());
+			} else {
+				// Formatear el valor num�rico como una cadena
+				return String.valueOf(cell.getNumericCellValue());
+			}
+		} else if (cell.getCellType() == CellType.BOOLEAN) {
+			return String.valueOf(cell.getBooleanCellValue());
+		} else if (cell.getCellType() == CellType.BLANK) {
+			throw new DataException(DOCUMENTO_NO_CUMPLE_FORMATO);
+		} else {
+			throw new DataException(DOCUMENTO_NO_CUMPLE_FORMATO);
+		}
+	}
 
-    public static List<ResultadoPruebasUtil> excelToDatos(InputStream is, String tipoResultado) {
+	public static List<ResultadoPruebasUtil> excelToDatos(InputStream is, String tipoResultado) {
 		try {
 			Workbook workbook = new XSSFWorkbook(is);
 
 			Sheet sheet = workbook.getSheet(SHEET);
 			Iterator<Row> rows = sheet.iterator();
 
-            List<ResultadoPruebasUtil> datos = new ArrayList<ResultadoPruebasUtil>();
+			List<ResultadoPruebasUtil> datos = new ArrayList<ResultadoPruebasUtil>();
 
 			int rowNumber = 0;
 			while (rows.hasNext()) {
@@ -133,7 +133,7 @@ public class ResultadoPruebasHelper {
 
 				Iterator<Cell> cellsInRow = currentRow.iterator();
 
-                ResultadoPruebasUtil dato = new ResultadoPruebasUtil();
+				ResultadoPruebasUtil dato = new ResultadoPruebasUtil();
 
 				int cellIdx = 0;
 				while (cellsInRow.hasNext()) {
@@ -141,29 +141,28 @@ public class ResultadoPruebasHelper {
 					Cell currentCell = cellsInRow.next();
 					switch (cellIdx) {
 					case 0:
-                            String codPruebaDetalleStr = getCellValueAsString(currentCell);
+						String codPruebaDetalleStr = getCellValueAsString(currentCell);
 						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
-                                dato.setIdPostulante(codPruebaDetalleStr);
+							dato.setIdPostulante(codPruebaDetalleStr);
 						}
 						break;
-                        case 1:
+					case 1:
 
-                            codPruebaDetalleStr = getCellValueAsString(currentCell);
+						codPruebaDetalleStr = getCellValueAsString(currentCell);
 						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
 
-                                if (tipoResultado.equals("CUMPLE|NO-CUMPLE")) {
-                                    if (codPruebaDetalleStr.equals("CUMPLE"))
-                                        dato.setCumplePrueba(true);
-                                    else
-                                        dato.setCumplePrueba(false);
-                                }
-                                if (tipoResultado.equals("NOTA")) {
-                                    Double nota = Double.parseDouble(getCellValueAsString(currentCell));
-                                    dato.setNotaPromedioFinal(nota);
+							if (tipoResultado.equals("CUMPLE|NO-CUMPLE")) {
+								if (codPruebaDetalleStr.equals("CUMPLE"))
+									dato.setCumplePrueba(true);
+								else
+									dato.setCumplePrueba(false);
+							}
+							if (tipoResultado.equals("NOTA")) {
+								Double nota = Double.parseDouble(getCellValueAsString(currentCell));
+								dato.setNotaPromedioFinal(nota);
 
+							}
 						}
-						}
-
 
 						break;
 					default:
@@ -180,22 +179,25 @@ public class ResultadoPruebasHelper {
 			return datos;
 		} catch (IOException e) {
 			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
-        } catch (DataException e) {
-            throw new RuntimeException(e);
+		} catch (DataException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
+	public static List<ResultadoPruebaFisicaUtil> excelToDatosPruebasFisicasI(InputStream contenidoBytes,
+			String tipoResultado) throws DataException {
 
-    public static List<ResultadoPruebaFisicaUtil> excelToDatosPruebasFisicasI(InputStream contenidoBytes, String tipoResultado) throws DataException {
+		final Logger LOGGER = LoggerFactory.getLogger(ResultadoPruebasFisicasServiceImpl.class);
+
 		try {
-            Workbook workbook = new XSSFWorkbook(contenidoBytes);
+			Workbook workbook = new XSSFWorkbook(contenidoBytes);
 
 			Sheet sheet = workbook.getSheet(SHEET);
-            int numRows = sheet.getPhysicalNumberOfRows();
+			int numRows = sheet.getPhysicalNumberOfRows();
 
 			Iterator<Row> rows = sheet.iterator();
 
-            List<ResultadoPruebaFisicaUtil> datos = new ArrayList<ResultadoPruebaFisicaUtil>();
+			List<ResultadoPruebaFisicaUtil> datos = new ArrayList<ResultadoPruebaFisicaUtil>();
 
 			int rowNumber = 0;
 			while (rows.hasNext()) {
@@ -208,38 +210,41 @@ public class ResultadoPruebasHelper {
 
 				Iterator<Cell> cellsInRow = currentRow.iterator();
 
-                ResultadoPruebaFisicaUtil dato = new ResultadoPruebaFisicaUtil();
+				ResultadoPruebaFisicaUtil dato = new ResultadoPruebaFisicaUtil();
 
 				int cellIdx = 0;
 				while (cellsInRow.hasNext()) {
 
 					Cell currentCell = cellsInRow.next();
+
+					LOGGER.info(currentCell.toString());
+
 					switch (cellIdx) {
 					case 0:
 
-                            String codPruebaDetalleStr = getCellValueAsString(currentCell);
+						String codPruebaDetalleStr = getCellValueAsString(currentCell);
 						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
-                                dato.setIdPostulante(codPruebaDetalleStr);
+							dato.setIdPostulante(codPruebaDetalleStr);
 						}
 						break;
 					case 1:
-                            codPruebaDetalleStr = getCellValueAsString(currentCell);
+						codPruebaDetalleStr = getCellValueAsString(currentCell);
 						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
-                                if (tipoResultado.equals("RESULTADO TIEMPO"))
-                                    dato.setResultadoTiempo(Time.valueOf(codPruebaDetalleStr));
-                                else if (tipoResultado.equals("RESULTADO")) {
-                                    double valorNumerico = Double.parseDouble(codPruebaDetalleStr);
-                                    int resultado = (int) Math.round(valorNumerico);
-                                    dato.setResultado(resultado);
-                                } else {
-                                    throw new RuntimeException("No se reconoce el tipo de resultado");
-						}
+							if (tipoResultado.equals("RESULTADO TIEMPO"))
+								dato.setResultadoTiempo(Time.valueOf(codPruebaDetalleStr));
+							else if (tipoResultado.equals("RESULTADO")) {
+								double valorNumerico = Double.parseDouble(codPruebaDetalleStr);
+								int resultado = (int) Math.round(valorNumerico);
+								dato.setResultado(resultado);
+							} else {
+								throw new RuntimeException("No se reconoce el tipo de resultado");
+							}
 						}
 						break;
 					default:
 						break;
 					}
-                    System.out.println("datos" + dato.toString());
+					System.out.println("datos" + dato.toString());
 
 					cellIdx++;
 				}
@@ -249,26 +254,26 @@ public class ResultadoPruebasHelper {
 			workbook.close();
 
 			return datos;
-        } catch (IOException | DataException e) {
+		} catch (IOException | DataException e) {
 			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
 		}
 	}
-	
-	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Datos");
 
-        // Header
+	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Datos");
+
+		// Header
 		Row headerRow = sheet.createRow(0);
 
 		for (int col = 0; col < HEADERs.length; col++) {
 			Cell cell = headerRow.createCell(col);
 			cell.setCellValue(HEADERs[col]);
 		}
-		
-        int rowIndex = 1;
-        
-        for (ResultadosPruebasDatos dato : datos) {
+
+		int rowIndex = 1;
+
+		for (ResultadosPruebasDatos dato : datos) {
 			Row row = sheet.createRow(rowIndex++);
 
 			row.createCell(0).setCellValue(dato.getCodPostulante());
@@ -276,44 +281,44 @@ public class ResultadoPruebasHelper {
 			row.createCell(2).setCellValue(dato.getCedula());
 			row.createCell(3).setCellValue(dato.getNombre());
 			row.createCell(4).setCellValue(dato.getApellido());
-			
-		}    
 
-        File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        FileOutputStream outputStream = new FileOutputStream(file);
-        workbook.write(outputStream);
-        workbook.close();
-    }
-	
+		}
+
+		File file = new File(filePath);
+		file.getParentFile().mkdirs();
+		FileOutputStream outputStream = new FileOutputStream(file);
+		workbook.write(outputStream);
+		workbook.close();
+	}
+
 	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Datos");
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Datos");
 
-        // Header
+		// Header
 		Row headerRow = sheet.createRow(0);
 
 		for (int col = 0; col < HEADERs.length; col++) {
 			Cell cell = headerRow.createCell(col);
 			cell.setCellValue(HEADERs[col]);
 		}
-		
-        int rowIndex = 1;        
-        for (int i = 0; i < lista.size(); i++) {
-			//System.out.println("valor " + lista.get(i).get(i));
+
+		int rowIndex = 1;
+		for (int i = 0; i < lista.size(); i++) {
+			// System.out.println("valor " + lista.get(i).get(i));
 			Row row = sheet.createRow(rowIndex++);
 
 			for (int j = 0; j < lista.get(i).size(); j++) {
 				row.createCell(j).setCellValue(String.valueOf(lista.get(i).get(j)));
-				//System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
+				// System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
 			}
 
 		}
 
-        File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        FileOutputStream outputStream = new FileOutputStream(file);
-        workbook.write(outputStream);
-        workbook.close();
-    }
+		File file = new File(filePath);
+		file.getParentFile().mkdirs();
+		FileOutputStream outputStream = new FileOutputStream(file);
+		workbook.write(outputStream);
+		workbook.close();
+	}
 }

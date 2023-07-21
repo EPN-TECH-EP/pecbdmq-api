@@ -23,6 +23,6 @@ public interface MateriaPeriodoRepository extends JpaRepository<MateriaPeriodo, 
 
     Optional<MateriaPeriodo> findByCodMateriaAndCodPeriodoAcademico(Integer codMateria, Integer codPeriodoAcademico);
     List<MateriaPeriodo> getAllByCodPeriodoAcademico(Integer codPeriodoAcademico);
-    @Query("select MateriaPeriodo from MateriaParalelo gnf left join MateriaPeriodo gemp on gnf.codMateriaPeriodo = gemp.codMateriaPeriodo where gnf.codMateriaParalelo = :codMateriaParalelo")
+    @Query("select gemp from MateriaParalelo gnf left join MateriaPeriodo gemp on gnf.codMateriaPeriodo = gemp.codMateriaPeriodo where gnf.codMateriaParalelo = :codMateriaParalelo")
     Optional<MateriaPeriodo> findByMateriaParalelo(@Param("codMateriaParalelo")Integer codMateriaParalelo);
 }

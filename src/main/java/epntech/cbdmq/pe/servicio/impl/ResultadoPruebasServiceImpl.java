@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.lowagie.text.DocumentException;
 
+import epntech.cbdmq.pe.constante.FormacionConst;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
 import epntech.cbdmq.pe.dominio.admin.Postulante;
@@ -98,23 +100,25 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 	public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) {
 		try {
 
-			List<ResultadoPruebasUtil> datosUtil = ResultadoPruebasHelper.excelToDatos(file.getInputStream(),tipoResultado);
+			List<ResultadoPruebasUtil> datosUtil = ResultadoPruebasHelper.excelToDatos(file.getInputStream(),
+					tipoResultado);
 			List<ResultadoPruebas> datos = datosUtil.stream().map(dato -> {
 				ResultadoPruebas resultadoPruebas = new ResultadoPruebas();
 				Optional<Postulante> postulante = postulanteService.getByIdPostulante(dato.getIdPostulante());
-				if(postulante.isEmpty()){
-					throw new RuntimeException("El postulante con el id: "+dato.getIdPostulante()+" no existe");
+				if (postulante.isEmpty()) {
+					throw new RuntimeException("El postulante con el id: " + dato.getIdPostulante() + " no existe");
 				}
-				
+
 				// busca registro existente
-				Optional<ResultadoPruebas> resultadoPruebasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
-				
+				Optional<ResultadoPruebas> resultadoPruebasOpt = this.getByCodPostulanteAndCodPruebaDetalle(
+						Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+
 				if (resultadoPruebasOpt.isEmpty()) {
 					resultadoPruebas = new ResultadoPruebas();
 				} else {
 					resultadoPruebas = resultadoPruebasOpt.get();
 				}
-				
+
 				resultadoPruebas.setCodPostulante(postulante.get().getCodPostulante().intValue());
 				resultadoPruebas.setCumplePrueba(dato.getCumplePrueba());
 				resultadoPruebas.setNotaPromedioFinal(dato.getNotaPromedioFinal());
@@ -240,7 +244,65 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 		return arrayMulti;
 	}
 
-	private void generaDocumento(String ruta, String nombre, Integer prueba) {
+	private void generaDocumento(String ruta, String nombre, Integer prueba) throws DataException {
+
+		// busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
+		Integer codPruebaDetalle = null;
+
+		Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
+				prueba,
+				periodoAcademicoRepository.getPAActive());
+
+		if (pruebaDetalleOpt.isPresent()) {
+			codPruebaDetalle = pruebaDetalleOpt.get().getCodPruebaDetalle();
+		} else {
+			throw new DataException(FormacionConst.PRUEBA_NO_EXISTE);
+		}
+
+		// busca documentos para la prueba
+		List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
+
+		if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
+
+			// busca si existe un documento con el mismo nombre para la prueba
+			List<Documento> docs = this.documentoRepo.findAllByNombre(nombre);
+
+			// si hay documentos con el mismo nombre, busca el que corresponda a esa prueba
+			// y ese periodo de formación
+			if (docs != null && docs.size() > 0) {
+
+				List<Integer> listaCodDocumentoPrueba = listaDocPrueba.stream()
+						.map(DocumentoPrueba::getCodDocumento)
+						.collect(Collectors.toList());
+				
+				List<Integer> listaCodDocumento = docs.stream()
+						.map(Documento::getCodDocumento)
+						.collect(Collectors.toList());
+
+				// intersección de las listas
+				Set<Integer> resultado = listaCodDocumentoPrueba.stream()
+						.distinct()
+						.filter(listaCodDocumento::contains)
+						.collect(Collectors.toSet());
+				
+				if (resultado != null && resultado.size() > 0) {
+					
+					final Integer codPrueba = codPruebaDetalle;
+					
+					resultado.stream()
+	                .forEach(codDoc -> {
+	                	// elimina de documentoPrueba
+	                	this.docPruebaRepo.deleteByCodPruebaDetalleAndCodDocumento(codPrueba, codDoc);
+	                	this.documentoRepo.deleteById(codPrueba);	                    
+	                });
+					
+				}
+
+			}
+
+		}
+
+		// genera documento
 		Documento documento = new Documento();
 		documento.setEstado("ACTIVO");
 		documento.setNombre(nombre);

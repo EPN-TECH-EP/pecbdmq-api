@@ -100,12 +100,17 @@ public class PostulanteServiceImpl implements PostulanteService {
 				bandera = true;
             } else if (estadoPostulante.equalsIgnoreCase("MUESTRA")) {
                 bandera = true;
+            } else if (estadoPostulante.equalsIgnoreCase("ASIGNADO")) {
+                Postulante p = postulante.get();
+                p.setCodUsuario(objActualizado.getCodUsuario());
+                return repo.save(p);
             } else {
 				bandera = false;
             }
 
             if (bandera) {
 			Postulante p = postulante.get();
+                System.out.println("Estado actual: " + p.getEstado());
                 if (p.getEstado().equalsIgnoreCase("PENDIENTE")) {
                     p.setEstado("ASIGNADO");
                 } else if (estadoPostulante.equalsIgnoreCase("MUESTRA")) {
