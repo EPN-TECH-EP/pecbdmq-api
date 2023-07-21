@@ -128,8 +128,8 @@ public class ExcelHelper {
       throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
     }
   }
-	
-	
+
+
 
 	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera)
 			throws IOException {
@@ -137,19 +137,18 @@ public class ExcelHelper {
 		Sheet sheet = workbook.createSheet("Datos");
 
 		// Header
-		Row headerRow = sheet.createRow(0);
-
-
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String fechaActual = dateFormatter.format(new Date());
-		Row headerPrincipal = sheet.createRow(1);
-		Cell cellTitulo = headerPrincipal.createCell(0);
-		cellTitulo.setCellValue("Resultados pruebas generado el: "+fechaActual);
+		Row headerRow = sheet.createRow(1);
 
 		for (int col = 0; col < cabecera.length; col++) {
 			Cell cell = headerRow.createCell(col);
 			cell.setCellValue(cabecera[col]);
 		}
+
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String fechaActual = dateFormatter.format(new Date());
+		Row headerPrincipal = sheet.createRow(0);
+		Cell cellTitulo = headerPrincipal.createCell(0);
+		cellTitulo.setCellValue("Resultados pruebas generado el: "+fechaActual);
 
 
 		int rowIndex = 2;
@@ -170,6 +169,7 @@ public class ExcelHelper {
 		workbook.write(outputStream);
 		workbook.close();
 	}
+
 	public static void generarExcelII(ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera)
 			throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
