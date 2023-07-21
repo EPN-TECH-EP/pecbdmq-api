@@ -109,7 +109,7 @@ public class PostulanteServiceImpl implements PostulanteService {
             }
 
             if (bandera) {
-                Postulante p = postulante.get();
+			Postulante p = postulante.get();
                 System.out.println("Estado actual: " + p.getEstado());
                 if (p.getEstado().equalsIgnoreCase("PENDIENTE")) {
                     p.setEstado("ASIGNADO");

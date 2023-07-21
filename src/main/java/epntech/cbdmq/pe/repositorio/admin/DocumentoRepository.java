@@ -5,14 +5,16 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import epntech.cbdmq.pe.dominio.admin.Documento;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import epntech.cbdmq.pe.dominio.admin.Documento;
 
 public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 
 	Optional<Documento> findByNombre(String nombre);
+	
+
 	@Query(value="select d.* \r\n"
 			+ "from \r\n"
 			+ "cbdmq.gen_documento d, \r\n"

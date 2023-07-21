@@ -150,15 +150,15 @@ public class NotasFormacionResource {
 	public List<NotasDatosFormacion> getNotasMateria(@PathVariable("id") long codigo) {
 		return notasFormacionServiceImpl.getNotasMateria(codigo);
 	}
-
-	@GetMapping("/estudiantesDisciplina")
-	public EstudiantesNotaDisciplinaDto getEstudiantesNotaDisciplina() {
-		return notasFormacionFinalServiceImpl.getEstudiantesNotaDisciplinaDto();
-	}
-	@GetMapping("/listarPA")
-	public List<EstudianteNotaFinalDto> getNotasDisciplina() {
-		return notasFormacionFinalServiceImpl.getNotasFinalCodPeriodoAcademico();
-	}
+	
+    @GetMapping("/estudiantesDisciplina")
+    public EstudiantesNotaDisciplinaDto getEstudiantesNotaDisciplina() {
+        return notasFormacionFinalServiceImpl.getEstudiantesNotaDisciplinaDto();
+    }
+    @GetMapping("/listarPA")
+    public List<EstudianteNotaFinalDto> getNotasDisciplina() {
+        return notasFormacionFinalServiceImpl.getNotasFinalCodPeriodoAcademico();
+    }
 	@GetMapping("/registroEstudiantesNotas")
 	public ResponseEntity<?> registroEstudiantes() {
 		notasFormacionServiceImpl.insertarEstudiantesNotas();

@@ -15,7 +15,6 @@ import epntech.cbdmq.pe.dominio.util.SubTipoPruebaDatos;
 public interface SubTipoPruebaRepository extends JpaRepository<SubTipoPrueba, Integer> {
 	
 	public static Sort defaultSort = Sort.by(Sort.Order.asc("nombre"));
-	//Optional<SubTipoPrueba> findByCodTipoPrueba(Integer id);
 	
 	@Query(value = "select\r\n"
 			+ "	gsp.cod_subtipo_prueba, gsp.cod_tipo_prueba, gsp.nombre, gsp.estado,\r\n"
@@ -31,7 +30,17 @@ public interface SubTipoPruebaRepository extends JpaRepository<SubTipoPrueba, In
 			+ "	gsp.nombre ", nativeQuery = true)
 	List<SubTipoPruebaDatos> listarTodosConDatosTipoPrueba();	
 	
-	List<SubTipoPrueba>getAllByCodTipoPruebaOrderByNombre(Long codTipoPrueba);
+	
+	@Query(value = "select\r\n"
+			+ "	gsp.cod_subtipo_prueba, gsp.cod_tipo_prueba, gsp.nombre, gsp.estado \r\n"
+			+ " from\r\n"
+			+ "	cbdmq.gen_subtipo_prueba gsp \r\n"
+			+ " where\r\n"
+			+ "	gsp.cod_tipo_prueba = :codTipoPrueba\r\n"
+			+ " order by \r\n"
+			+ "	gsp.nombre ", nativeQuery = true)
+	List<SubTipoPrueba> listarAllByCodTipoPruebaOrderByNombre(@Param("codTipoPrueba") Long codTipoPrueba);
+	
 	
 	@Query(value = "select s1_0.cod_subtipo_prueba,s1_0.cod_tipo_prueba,s1_0.estado,s1_0.nombre from cbdmq.gen_subtipo_prueba s1_0 where upper(s1_0.nombre)=upper(:nombre)", nativeQuery = true)
 	Optional<SubTipoPrueba> findByNombreIgnoreCase(@Param("nombre") String nombre);

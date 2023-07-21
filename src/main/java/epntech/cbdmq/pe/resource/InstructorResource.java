@@ -49,16 +49,8 @@ public class InstructorResource {
 	@PutMapping("/{id}")
 	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Instructor obj)
 			throws DataException {
-		return objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodDatosPersonales(obj.getCodDatosPersonales());
-			datosGuardados.setCodTipoProcedencia(obj.getCodTipoProcedencia());
-			datosGuardados.setCodEstacion(obj.getCodEstacion());
-			datosGuardados.setCodUnidadGestion(obj.getCodUnidadGestion());
-			datosGuardados.setCodTipoContrato(obj.getCodTipoContrato());
-			Instructor datosActualizados = objService.update(datosGuardados);
-			datosActualizados = objService.update(datosGuardados);
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+		obj.setCodInstructor(codigo);
+		return new ResponseEntity<>(objService.update(obj), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

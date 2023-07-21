@@ -147,7 +147,7 @@ public class AntiguedadesResource {
 			// Crear un objeto Resource para el archivo
 			file = new File(xlsArchivo.getRuta());
 			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-			// Obtener la extensión del archivo
+			// Obtener la extensi�n del archivo
 			String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 			// Devolver una respuesta con el archivo adjunto y la URL de descarga
 			return ResponseEntity.ok()
@@ -159,7 +159,7 @@ public class AntiguedadesResource {
 			// Crear un objeto Resource para el archivo
 			file = new File(archivo.getRuta());
 			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-			// Obtener la extensión del archivo
+			// Obtener la extensi�n del archivo
 			String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 			// Devolver una respuesta con el archivo adjunto y la URL de descarga
 			return ResponseEntity.ok()
@@ -167,7 +167,6 @@ public class AntiguedadesResource {
 					.contentType(MediaType.parseMediaType(contentType))
 					.body(resource);
 		}
-
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
