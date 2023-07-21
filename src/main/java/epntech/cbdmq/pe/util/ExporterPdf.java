@@ -6,8 +6,12 @@ import java.io.File;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.stereotype.Component;
 
 import com.lowagie.text.Font;
@@ -106,23 +110,25 @@ public class ExporterPdf {
 		documento.add(tabla);
 		documento.close();
 	}
-	
+
 	public void exportar(HttpServletResponse response, String[] columnas, ArrayList<ArrayList<String>> lista, float[] widths, String filePath)
 			throws DocumentException, IOException {
-		
+
 		File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        
+		file.getParentFile().mkdirs();
+
 		Document documento = new Document(PageSize.A4);
 		PdfWriter.getInstance(documento, new FileOutputStream(filePath));
 
 		documento.open();
 
 		Font fuente = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-		fuente.setColor(Color.WHITE);
+		fuente.setColor(Color.CYAN);
 		fuente.setSize(18);
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String fechaActual = dateFormatter.format(new Date());
 
-		Paragraph titulo = new Paragraph("Lista", fuente);
+		Paragraph titulo = new Paragraph("Resultados prueba generado el: "+ fechaActual, fuente);
 		titulo.setAlignment(Paragraph.ALIGN_CENTER);
 		documento.add(titulo);
 
@@ -134,9 +140,10 @@ public class ExporterPdf {
 
 		escribirCabeceraDeLaTabla(tabla, columnas);
 		escribirDatosDeLaTabla(tabla, lista);
-        
-		documento.add(tabla);        
+
+		documento.add(tabla);
 		documento.close();
 	}
+
 
 }

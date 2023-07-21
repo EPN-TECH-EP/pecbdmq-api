@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,5 +21,6 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 			+ "and d.cod_documento = pd.cod_documento \r\n"
 			+ "and UPPER(d.estado) = 'ACTIVO';", nativeQuery=true)
 	Set<Documento> getDocumentosPruebaDetalle(@Param("codPruebaDetalle") Integer codPruebaDetalle);
+	List<Documento> findAllByNombre(String nombre);
 
 }

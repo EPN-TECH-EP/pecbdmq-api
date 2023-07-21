@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.lowagie.text.DocumentException;
+import epntech.cbdmq.pe.constante.FormacionConst;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
@@ -222,7 +224,82 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     }
 
 
-    private void generaDocumento(String ruta, String nombre, Integer prueba) {
+    private void generaDocumentoII(String ruta, String nombre, Integer prueba) {
+        Documento documento = new Documento();
+        documento.setEstado("ACTIVO");
+        documento.setNombre(nombre);
+        documento.setRuta(ruta);
+
+        documento = documentoRepo.save(documento);
+
+        DocumentoPrueba doc = new DocumentoPrueba();
+        doc.setCodPruebaDetalle(prueba);
+        doc.setCodDocumento(documento.getCodDocumento());
+        // System.out.println("documento.getCodigo(): " + documento.getCodigo());
+
+        saveDocumentoPrueba(doc);
+    }
+    private void generaDocumento(String ruta, String nombre, Integer prueba) throws DataException {
+
+        // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
+        Integer codPruebaDetalle = null;
+    System.out.println("prueba: " + prueba);
+
+
+        Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
+                prueba,
+                periodoAcademicoRepository.getPAActive());
+
+        if (pruebaDetalleOpt.isPresent()) {
+            codPruebaDetalle = pruebaDetalleOpt.get().getCodPruebaDetalle();
+        } else {
+            throw new DataException(FormacionConst.PRUEBA_NO_EXISTE);
+        }
+
+        // busca documentos para la prueba
+        List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
+
+        if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
+
+            // busca si existe un documento con el mismo nombre para la prueba
+            List<Documento> docs = this.documentoRepo.findAllByNombre(nombre);
+
+            // si hay documentos con el mismo nombre, busca el que corresponda a esa prueba
+            // y ese periodo de formación
+            if (docs != null && docs.size() > 0) {
+
+                List<Integer> listaCodDocumentoPrueba = listaDocPrueba.stream()
+                        .map(DocumentoPrueba::getCodDocumento)
+                        .collect(Collectors.toList());
+
+                List<Integer> listaCodDocumento = docs.stream()
+                        .map(Documento::getCodDocumento)
+                        .collect(Collectors.toList());
+
+                // intersección de las listas
+                Set<Integer> resultado = listaCodDocumentoPrueba.stream()
+                        .distinct()
+                        .filter(listaCodDocumento::contains)
+                        .collect(Collectors.toSet());
+
+                if (resultado != null && resultado.size() > 0) {
+
+                    final Integer codPrueba = codPruebaDetalle;
+
+                    resultado.stream()
+                            .forEach(codDoc -> {
+                                // elimina de documentoPrueba
+                                this.docPruebaRepo.deleteByCodPruebaDetalleAndCodDocumento(codPrueba, codDoc);
+                                this.documentoRepo.deleteById(codPrueba);
+                            });
+
+                }
+
+            }
+
+        }
+
+        // genera documento
         Documento documento = new Documento();
         documento.setEstado("ACTIVO");
         documento.setNombre(nombre);

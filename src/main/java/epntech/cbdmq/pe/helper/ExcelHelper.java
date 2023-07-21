@@ -6,7 +6,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -129,6 +132,45 @@ public class ExcelHelper {
 	
 
 	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera)
+			throws IOException {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Datos");
+
+		// Header
+		Row headerRow = sheet.createRow(0);
+
+
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String fechaActual = dateFormatter.format(new Date());
+		Row headerPrincipal = sheet.createRow(1);
+		Cell cellTitulo = headerPrincipal.createCell(0);
+		cellTitulo.setCellValue("Resultados pruebas generado el: "+fechaActual);
+
+		for (int col = 0; col < cabecera.length; col++) {
+			Cell cell = headerRow.createCell(col);
+			cell.setCellValue(cabecera[col]);
+		}
+
+
+		int rowIndex = 2;
+		for (int i = 0; i < lista.size(); i++) {
+			// System.out.println("valor " + lista.get(i).get(i));
+			Row row = sheet.createRow(rowIndex++);
+
+			for (int j = 0; j < lista.get(i).size(); j++) {
+				row.createCell(j).setCellValue(String.valueOf(lista.get(i).get(j)));
+				// System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
+			}
+
+		}
+
+		File file = new File(filePath);
+		file.getParentFile().mkdirs();
+		FileOutputStream outputStream = new FileOutputStream(file);
+		workbook.write(outputStream);
+		workbook.close();
+	}
+	public static void generarExcelII(ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera)
 			throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Datos");
