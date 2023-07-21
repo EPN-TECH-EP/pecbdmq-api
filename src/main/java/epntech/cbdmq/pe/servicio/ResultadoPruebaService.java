@@ -1,10 +1,13 @@
 package epntech.cbdmq.pe.servicio;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface ResultadoPruebaService {
 
@@ -18,6 +21,7 @@ public interface ResultadoPruebaService {
 	ResultadoPrueba update(ResultadoPrueba objActualizado) throws DataException;
 	
 	void delete(Integer codigo);
+	Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba) throws DataException, DocumentException, IOException;
 	
 	
 	
