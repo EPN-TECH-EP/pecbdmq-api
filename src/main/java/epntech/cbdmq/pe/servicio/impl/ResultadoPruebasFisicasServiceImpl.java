@@ -154,7 +154,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	}
 
 	@Override
-	public void generarExcel(String filePath, String nombre, Integer prueba) throws IOException, DataException {
+	public void generarExcel(String nombre, Integer prueba) throws IOException, DataException {
 		// Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
@@ -162,18 +162,23 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 		if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
 			throw new DataException(ESTADO_INVALIDO);
 		} else {
+			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
+					+ "/" + nombre;
 			String[] HEADERs = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo",
 					"Nota Promedio" };
 			try {
-				ExcelHelper.generarExcel(obtenerDatos(prueba), filePath, HEADERs);
+				ExcelHelper.generarExcel(obtenerDatos(prueba), ruta, HEADERs);
 
-				generaDocumento(filePath, nombre, pp.get().getCodPruebaDetalle());
+				generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
+				/*
 
 				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
 				p.setEstado("CIERRE");
 
 				pruebaDetalleRepository.save(p);
+
+				 */
 
 			} catch (IOException ex) {
 				System.out.println("error: " + ex.getMessage());
@@ -189,7 +194,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 	}
 
 	@Override
-	public void generarPDF(HttpServletResponse response, String nombre, Integer prueba, String[] columnas)
+	public void generarPDF(HttpServletResponse response, String nombre, Integer prueba)
 			throws DocumentException, IOException, DataException {
 
 		try {
@@ -202,7 +207,9 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
 						+ periodoAcademicoRepository.getPAActive().toString()
 						+ "/" + nombre;
+				String[] columnas = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo", "Nota Promedio" };
 
+				//TODO el response no tiene ninguna funcionalidad
 				response.setContentType("application/pdf");
 
 				DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -214,18 +221,21 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 				response.addHeader(cabecera, valor);
 
 				ExporterPdf exporter = new ExporterPdf();
-
+				//TODO los anchos de las columnas
 				float[] widths = new float[] { 2.5f, 3.5f, 6f, 6f, 2.5f, 2.5f, 2.5f };
 
+				//Genera el pdf
 				exporter.exportar(response, columnas, obtenerDatos(prueba), widths, ruta);
 
 				generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
-
+/*
 				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
 				p.setEstado("CIERRE");
 
 				pruebaDetalleRepository.save(p);
+
+ */
 			}
 
 		} catch (IOException ex) {
@@ -233,23 +243,28 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 		}
 
 	}
-
+	//obtener resultados dto por una prueba detalle, y pasarlo a una array de registros
 	public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
 		List<ResultadosPruebasFisicasDatos> datos = repo1.getResultados(prueba);
+		System.out.println("Array de datos para excel"+entityToArrayList(datos));
 		return entityToArrayList(datos);
 	}
-
+	//pasar a array un registro
 	public static String[] entityToStringArray(ResultadosPruebasFisicasDatos entity) {
-		return new String[] { entity.getIdPostulante().toString(), entity.getCedula(), entity.getNombre(),
-				entity.getApellido(), entity.getResultado().toString(), entity.getResultadoTiempo().toString(),
+		return new String[] {
+				entity.getIdPostulante().toString(),
+				entity.getCedula(),
+				entity.getNombre(),
+				entity.getApellido(),
+				entity.getResultado().toString(),
+				entity.getResultadoTiempo() != null ? entity.getResultadoTiempo().toString() : "",
 				entity.getNotaPromedioFinal().toString() };
 	}
-
+	//Para pasar a arrays lista de registros
 	public static ArrayList<ArrayList<String>> entityToArrayList(List<ResultadosPruebasFisicasDatos> datos) {
 		ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
 
 		for (ResultadosPruebasFisicasDatos dato : datos) {
-			System.out.println("entityToStringArray(dato): " + entityToStringArray(dato));
 			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
 		}
 		return arrayMulti;
