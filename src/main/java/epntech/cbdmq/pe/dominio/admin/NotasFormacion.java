@@ -24,7 +24,7 @@ import lombok.Data;
 				@ColumnResult(name = "nombre_paralelo", type = String.class),
 		}))
 @NamedNativeQuery(name = "EstudianteDatos.getNotasEstudiantesMateria",
-		query = "select gnf.cod_nota_formacion,ge.codigo_unico_estudiante, gdp.cedula ,gdp.nombre || gdp.apellido as \"nombre\", gnf.nota_materia , gnf.nota_disciplina , gnf.nota_supletorio,mp.cod_paralelo, p.nombre_paralelo from {h-schema}gen_nota_formacion gnf\n" +
+		query = "select gnf.cod_nota_formacion,ge.codigo_unico_estudiante, gdp.cedula ,gdp.nombre || '  ' ||  gdp.apellido as \"nombre\", gnf.nota_materia , gnf.nota_disciplina , gnf.nota_supletorio,mp.cod_paralelo, p.nombre_paralelo from {h-schema}gen_nota_formacion gnf\n" +
 				"        left join {h-schema}gen_estudiante_materia_paralelo emp on gnf.cod_estudiante_materia_paralelo = emp.cod_estudiante_materia_paralelo\n" +
 				"        left join {h-schema}gen_estudiante ge on emp.cod_estudiante = ge.cod_estudiante\n" +
 				"        left join {h-schema}gen_dato_personal gdp on ge.cod_datos_personales = gdp.cod_datos_personales\n" +
