@@ -12,6 +12,7 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaParalelo;
 import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
@@ -201,5 +202,15 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 			throw new RuntimeException("Error al intentar ejecutar el procedimiento almacenado");
 		}
 
+	}
+
+	@Override
+	public List<NotaMateriaByEstudiante> getNotaMateriasByEstudiante(Integer codEstudiante, String tipoInstructor) {
+		return notasFormacionRepository.get(codEstudiante, tipoInstructor, periodoAcademicoService.getPAActivo());
+	}
+
+	@Override
+	public List<NotaMateriaByEstudiante> getNotaMateriasCoordinadorByEstudiante(Integer codEstudiante) {
+		return this.getNotaMateriasByEstudiante(codEstudiante,"COORDINADOR");
 	}
 }

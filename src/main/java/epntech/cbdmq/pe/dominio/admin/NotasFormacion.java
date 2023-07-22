@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.dominio.admin;
 import java.time.LocalDateTime;
 
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -34,6 +35,35 @@ import lombok.Data;
 				"        left join {h-schema}gen_materia m on mpe.cod_materia = m.cod_materia\n" +
 				"        where m.cod_materia = :codMateria\n" +
 				"        and mpe.cod_periodo_academico = :codPA",resultSetMapping = "EstudianteDatos"
+)
+
+@SqlResultSetMapping(name = "NotaMateriaByEstudiante", classes =
+@ConstructorResult(
+		targetClass = NotaMateriaByEstudiante.class,
+		columns = {
+				@ColumnResult(name = "cod_nota_formacion", type= Integer.class),
+				@ColumnResult(name = "nombre_materia", type= String.class),
+				@ColumnResult(name = "nota_materia", type = Double.class),
+				@ColumnResult(name = "nota_disciplina", type = Double.class),
+				@ColumnResult(name = "nota_supletorio", type = Double.class),
+				@ColumnResult(name = "cod_instructor", type = Integer.class),
+				@ColumnResult(name = "nombre_completo_instructor", type = String.class),
+		}))
+@NamedNativeQuery(name = "NotaMateriaByEstudiante.get",
+		query = "select gnf.cod_nota_formacion, gm.nombre_materia, gnf.nota_materia , gnf.nota_disciplina , gnf.nota_supletorio, gimp.cod_instructor, gdp.nombre || ' ' || gdp.apellido as nombre_completo_instructor from cbdmq.gen_nota_formacion gnf \n" +
+				"left join cbdmq.gen_estudiante_materia_paralelo gemp on gnf.cod_estudiante_materia_paralelo = gemp.cod_estudiante_materia_paralelo  \n" +
+				"left join cbdmq.gen_estudiante ge on gemp.cod_estudiante = ge.cod_estudiante \n" +
+				"left join cbdmq.gen_nota_formacion_final gnff on ge.cod_estudiante = gnff.cod_estudiante \n" +
+				"left join cbdmq.gen_materia_paralelo gmp on gemp.cod_materia_paralelo = gmp.cod_materia_paralelo\n" +
+				"left join cbdmq.gen_instructor_materia_paralelo gimp on gmp.cod_materia_paralelo = gimp.cod_materia_paralelo\n" +
+				"left join cbdmq.gen_tipo_instructor gti on gimp.cod_tipo_instructor = gti.cod_tipo_instructor \n" +
+				"left join cbdmq.gen_instructor gi on gimp.cod_instructor = gi.cod_instructor \n" +
+				"left join cbdmq.gen_dato_personal gdp on gi.cod_datos_personales = gdp.cod_datos_personales \n" +
+				"left join cbdmq.gen_materia_periodo mp on gmp.cod_materia_periodo = mp.cod_materia_periodo \n" +
+				"left join cbdmq.gen_materia gm on mp.cod_materia = gm.cod_materia \n" +
+				"where ge.cod_estudiante = :codEstudiante \n" +
+				"and gti.nombre_tipo_instructor = :tipoInstructor \n" +
+				"and mp.cod_periodo_academico =  :codPA",resultSetMapping = "NotaMateriaByEstudiante"
 )
 
 @Data
