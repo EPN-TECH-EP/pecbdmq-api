@@ -65,12 +65,20 @@ public class SancionesResource {
 	    public ResponseEntity<Sanciones> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
 	        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	    }
-	 
+	 //TODO no vale actualizar
 	 @PutMapping("/{id}")
-	    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestParam Integer codEstudiante, @RequestParam String observacionSancion, @RequestParam Integer codInstructor, @RequestParam Integer codFaltaPeriodo, @RequestParam Integer codDocumento, @RequestParam String estado, @RequestParam MultipartFile archivo) {
+	    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestParam Integer codEstudiante, @RequestParam String observacionSancion, @RequestParam Integer codInstructor, @RequestParam Integer codFaltaPeriodo, @RequestParam String estado, @RequestParam MultipartFile archivo) {
 	        return objServices.getById(codigo).map(datosGuardados -> {
-	        	datosGuardados.setCodDocumento(codDocumento);
-	        	datosGuardados.setCodEstudiante(codEstudiante);
+				Date fechaActual = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String fechaFormateada = sdf.format(fechaActual);
+				try {
+					Date date = sdf.parse(fechaFormateada);
+					datosGuardados.setFechaSancion(date);
+				} catch (ParseException e) {
+					throw new RuntimeException(e);
+				}
+				datosGuardados.setCodEstudiante(codEstudiante);
 	            datosGuardados.setObservacionSancion(observacionSancion);
 	            datosGuardados.setCodInstructor(codInstructor);
 	            datosGuardados.setCodFaltaPeriodo(codFaltaPeriodo);
