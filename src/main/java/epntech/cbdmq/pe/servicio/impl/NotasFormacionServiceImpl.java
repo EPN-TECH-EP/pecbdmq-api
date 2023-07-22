@@ -32,6 +32,7 @@ import epntech.cbdmq.pe.repositorio.admin.NotasDatosFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import jakarta.mail.MessagingException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class NotasFormacionServiceImpl implements NotasFormacionService {
@@ -191,11 +192,13 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	}
 
 	@Override
+	@Transactional
 	public void insertarEstudiantesNotas() {
 		try {
 			notasFormacionRepository.insertar_lista_estudiantes_notas();
 		} catch (Exception ex) {
-			throw new RuntimeException("No se actualizo");
+			ex.printStackTrace(); // Imprimir la traza de la excepción en la consola
+			throw new RuntimeException("Error al intentar ejecutar el procedimiento almacenado");
 		}
 
 	}
