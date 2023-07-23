@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface InstructorMateriaParaleloRepository extends JpaRepository<InstructorMateriaParalelo,Integer> {
 
@@ -23,5 +25,7 @@ public interface InstructorMateriaParaleloRepository extends JpaRepository<Instr
     void deleteByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(Integer codInstructor, Integer codTipoInstructor,Integer codMateriaParalelo);
     @Transactional
     void deleteAllByCodTipoInstructor(Integer codTipoInstructor);
+    Optional<InstructorMateriaParalelo> findByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(Integer codInstructor, Integer codTipoInstructor, Integer codMateriaParalelo);
+    List<InstructorMateriaParalelo> findAllByCodTipoInstructorAndCodMateriaParalelo(Integer codTipoInstructor, Integer codMateriaParalelo);
 
 }

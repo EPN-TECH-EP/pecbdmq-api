@@ -159,83 +159,72 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
                 .findFirst()
                 .orElse(null);
     }
-    
+
     @Override
     @Transactional
-    public Boolean actualizarInstructorMateriaParalelo(Integer codMateriaPeriodo, Integer codCoordinador,  Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException {
+    public Boolean actualizarInstructorMateriaParalelo(Integer codMateriaPeriodo, Integer codCoordinador, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException {
         Optional<MateriaPeriodo> objGuardado = repoMPe.findById(codMateriaPeriodo);
-        if(objGuardado.isEmpty()){
+        if (objGuardado.isEmpty()) {
             throw new RuntimeException();
         }
         MateriaPeriodo objMPeII = objGuardado.get();
         Optional<MateriaParalelo> objGuardadoMPa = repoMPa.findByCodMateriaPeriodoAndCodParalelo(objMPeII.getCodMateriaPeriodo(), codParalelo);
-        if(objGuardadoMPa.isEmpty()){
+        if (objGuardadoMPa.isEmpty()) {
             throw new RuntimeException();
         }
         MateriaParalelo objMPaII = objGuardadoMPa.get();
-        InstructorDatos coordinador= this.getCoordinador(objMPaII.getCodMateriaParalelo());
-        if (coordinador!=null) {
+        InstructorDatos coordinador = this.getCoordinador(objMPaII.getCodMateriaParalelo());
+        if (coordinador != null) {
             repoIMP.deleteByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(coordinador.getCodInstructor().intValue(), 3, objMPaII.getCodMateriaParalelo());
         }
-        InstructorMateriaParalelo objCoordinador = new InstructorMateriaParalelo();
-        objCoordinador.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
-        objCoordinador.setCodInstructor(codCoordinador);
-        //TODO cambiar para buscar el objeto a partir del nombre del tipo instructor
-        objCoordinador.setCodTipoInstructor(3);
-        repoIMP.save(objCoordinador);
 
-        List<InstructorDatos> instructores = this.getInstructores(objMPaII.getCodMateriaParalelo());
-        List<Long> idsInstructoresActuales = instructores.stream()
-                .map(fiscalizador -> fiscalizador.getCodInstructor())
-                .collect(Collectors.toList());
+        // Check and save coordinador (codTipoInstructor = 3)
+        saveOrUpdateInstructor(objMPaII.getCodMateriaParalelo(), codCoordinador, 3);
 
-        // si es que los actuales instructores no se encuentra en la lista de nuevos, entonces se elimina
-        for (InstructorDatos instructor : instructores) {
-            Integer idInstructor = instructor.getCodInstructor().intValue();
-            if (!Arrays.asList(codInstructores).contains(idInstructor)) {
-                repoIMP.deleteByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(idInstructor, 2,objMPaII.getCodMateriaParalelo());
-            }
-        }
+        // Delete instructors that are no longer needed
+        deleteInstructorsNotNeeded(objMPaII.getCodMateriaParalelo(), codInstructores, 2);
 
-        //si es que los nuevos instructores no se encuentra en la lista de actuales, entonces se agrega
+        // Add new instructors if they don't already exist
         for (Integer codInstructorNuevo : codInstructores) {
-            if (!idsInstructoresActuales.contains(codInstructorNuevo)) {
-                    InstructorMateriaParalelo objInstructor = new InstructorMateriaParalelo();
-                    objInstructor.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
-                    objInstructor.setCodInstructor(codInstructorNuevo);
-                    //TODO cambiar para buscar el objeto a partir del nombre del tipo instructor
-                    objInstructor.setCodTipoInstructor(2);
-                    repoIMP.save(objInstructor);
-            }
+            saveOrUpdateInstructor(objMPaII.getCodMateriaParalelo(), codInstructorNuevo, 2);
         }
 
-        List<InstructorDatos> asistentes = this.getInstructoresAsistentes(objMPaII.getCodMateriaParalelo());
-        List<Long> idsAsistentesActuales = asistentes.stream()
-                .map(fiscalizador -> fiscalizador.getCodInstructor())
-                .collect(Collectors.toList());
+        // Delete asistentes that are no longer needed
+        deleteInstructorsNotNeeded(objMPaII.getCodMateriaParalelo(), codAsistentes, 1);
 
-        // si es que los actuales instructores no se encuentra en la lista de nuevos, entonces se elimina
-        for (InstructorDatos asistente : asistentes) {
-            Integer idAsistentes = asistente.getCodInstructor().intValue();
-            if (!Arrays.asList(codAsistentes).contains(idAsistentes)) {
-                repoIMP.deleteByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(idAsistentes, 1,objMPaII.getCodMateriaParalelo());
-            }
-        }
-
-        //si es que los nuevos instructores no se encuentra en la lista de actuales, entonces se agrega
+        // Add new asistentes if they don't already exist
         for (Integer codAsistenteNuevo : codAsistentes) {
-            if (!idsAsistentesActuales.contains(codAsistenteNuevo)) {
-                InstructorMateriaParalelo objInstructor = new InstructorMateriaParalelo();
-                objInstructor.setCodMateriaParalelo(objMPaII.getCodMateriaParalelo());
-                objInstructor.setCodInstructor(codAsistenteNuevo);
-                //TODO cambiar para buscar el objeto a partir del nombre del tipo instructor
-                objInstructor.setCodTipoInstructor(1);
-                repoIMP.save(objInstructor);
-            }
+            saveOrUpdateInstructor(objMPaII.getCodMateriaParalelo(), codAsistenteNuevo, 1);
         }
 
         return true;
     }
+
+    private void saveOrUpdateInstructor(Integer codMateriaParalelo, Integer codInstructor, Integer codTipoInstructor) {
+        Optional<InstructorMateriaParalelo> existingInstructor = repoIMP.findByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(codInstructor, codTipoInstructor, codMateriaParalelo);
+        if (existingInstructor.isEmpty()) {
+            InstructorMateriaParalelo objInstructor = new InstructorMateriaParalelo();
+            objInstructor.setCodMateriaParalelo(codMateriaParalelo);
+            objInstructor.setCodInstructor(codInstructor);
+            objInstructor.setCodTipoInstructor(codTipoInstructor);
+            repoIMP.save(objInstructor);
+        }
+    }
+
+// ... Your other methods ...
+
+    private void deleteInstructorsNotNeeded(Integer codMateriaParalelo, Integer[] codInstructors, Integer codTipoInstructor) {
+        List<InstructorMateriaParalelo> instructors = repoIMP.findAllByCodTipoInstructorAndCodMateriaParalelo(codTipoInstructor, codMateriaParalelo);
+
+        for (InstructorMateriaParalelo instructor : instructors) {
+            Integer idInstructor = instructor.getCodInstructor();
+            if (!Arrays.asList(codInstructors).contains(idInstructor)) {
+                repoIMP.deleteByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(idInstructor, codTipoInstructor, codMateriaParalelo);
+            }
+        }
+    }
+
+
     @Override
     public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() {
         InstructorMateriaParalelosDto obj = new InstructorMateriaParalelosDto();
