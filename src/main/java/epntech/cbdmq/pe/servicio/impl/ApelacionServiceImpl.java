@@ -44,11 +44,11 @@ public class ApelacionServiceImpl implements ApelacionService {
 		Optional<NotasFormacion> notasFormacion = notasFormacionRepository.findById(obj.getCodNotaFormacion());
 
 		if (notasFormacion.isPresent()) {
-			LocalDateTime dateTime = LocalDateTime.now();
+			LocalDateTime fechaApelacion = LocalDateTime.now();
 			LocalDateTime fechaIngreso = notasFormacion.get().getFechaIngreso();
-			LocalDateTime newDateTime = notasFormacion.get().getFechaIngreso().plusHours(24);
-
-			if (!(dateTime.isAfter(fechaIngreso) && dateTime.isBefore(newDateTime)))
+			LocalDateTime fechaPlazo = notasFormacion.get().getFechaIngreso().plusHours(24);
+			//para apelar tiene 24 horas despues de ingresar la nota
+			if (!(fechaApelacion.isAfter(fechaIngreso) && fechaApelacion.isBefore(fechaPlazo)))
 				throw new DataException(FECHA_APELACION_INVALIDA);
 
 			obj.setEstado("ACTIVO");
@@ -84,12 +84,9 @@ public class ApelacionServiceImpl implements ApelacionService {
 				NotasFormacion notasFormacion = new NotasFormacion();
 				notasFormacion = nn.get();
 				notasFormacion.setNotaMateria(objActualizado.getNotaNueva());
-				System.out.println("notasFormacion.getPesoMateria(): " + notasFormacion.getPesoMateria());
 				notasFormacion.setNotaPonderacion(objActualizado.getNotaNueva() * notasFormacion.getPesoMateria());
-
 				notasFormacionRepository.save(notasFormacion);
 				Estudiante estudiante= estudianteService.getEstudianteByNotaFormacion(notasFormacion.getCodNotaFormacion());
-
 				notasFormacionFinalRepository.calcular_notafinal_x_estudiante(estudiante.getCodEstudiante());
 			}
 		}

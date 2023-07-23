@@ -135,6 +135,9 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 
 	@Override
 	public NotasFormacion updateII(NotasFormacion objActualizado) throws DataException {
+		LocalDateTime dateTime = LocalDateTime.now();
+		objActualizado.setFechaIngreso(dateTime);
+
 		Optional<NotasFormacion> notasFormacion = this.getById(objActualizado.getCodNotaFormacion());
 		if(notasFormacion.isEmpty()){
 			throw new DataException(NO_ENCUENTRA);
