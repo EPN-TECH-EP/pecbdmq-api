@@ -23,7 +23,6 @@ public interface InstructorMateriaParaleloService {
     List<InstructorDatos> getInstructores(Integer codMateriaParalelo);
 
     InstructorDatos getCoordinador(Integer codMateriaParalelo);
-    public List<InstructorMateriaReadDto> getMateriaInfoDto();
     public Boolean actualizarInstructorMateriaParalelo(Integer codMateria, Integer codCoordinador, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException;
     InstructorMateriaParalelosDto getMateriaPAParaleloNombres();
 

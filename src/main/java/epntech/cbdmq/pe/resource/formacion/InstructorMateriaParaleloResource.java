@@ -37,11 +37,6 @@ public class InstructorMateriaParaleloResource {
     public Boolean actualizar(@RequestBody InstructorMateriaCreateDto objInstructorMateria) throws DataException {
         return objService.actualizarInstructorMateriaParalelo(objInstructorMateria.getCodMateria(),objInstructorMateria.getCodCoordinador(),objInstructorMateria.getCodAsistentes(),objInstructorMateria.getCodInstructores(), objInstructorMateria.getCodParalelo());
     }
-    @GetMapping("/listarRead")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<InstructorMateriaReadDto> leerMateriaDto() throws DataException {
-        return objService.getMateriaInfoDto();
-    }
     @GetMapping("/listarMateriasGroupByParalelos")
     public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() throws DataException {
         return objService.getMateriaPAParaleloNombres();

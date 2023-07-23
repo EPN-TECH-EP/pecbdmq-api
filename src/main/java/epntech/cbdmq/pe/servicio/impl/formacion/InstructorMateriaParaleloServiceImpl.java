@@ -159,31 +159,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
                 .findFirst()
                 .orElse(null);
     }
-
-    @Override
-    //TODO tampoco se utiliza
-    public List<InstructorMateriaReadDto> getMateriaInfoDto() {
-        Set<Integer> codigosUnicos = new HashSet<>();
-        List<InstructorMateriaReadDto> lista = new ArrayList<>();
-
-        for (InstructorMateriaParalelo item : this.getInstructoresMateriaParalelo()) {
-            codigosUnicos.add(item.getCodMateriaParalelo());
-        }
-        for (Integer codigo : codigosUnicos) {
-            MateriaParalelo objMP = serviceMPa.getById(codigo).get();
-            MateriaPeriodo objPe = serviceMPe.getById(objMP.getCodMateriaPeriodo()).get();
-            Aula objAula = serviceAula.getById(objPe.getCodAula()).get();
-            Paralelo objParalelo = serviceParalelo.getById(objMP.getCodParalelo()).get();
-            Materia objMateria = serviceMateria.getById(objPe.getCodMateria()).get();
-            EjeMateria objEjeMateria = serviceEje.getByIdEje(objMateria.getCodEjeMateria().longValue()).get();
-            List<InstructorDatos> instructores = this.getInstructores(objMP.getCodMateriaParalelo());
-            List<InstructorDatos> asistentes = this.getInstructoresAsistentes(objMP.getCodMateriaParalelo());
-            InstructorDatos coordinador = this.getCoordinador(objMP.getCodMateriaParalelo());
-
-        }
-        return lista;
-
-    }
+    
     @Override
     @Transactional
     public Boolean actualizarInstructorMateriaParalelo(Integer codMateriaPeriodo, Integer codCoordinador,  Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException {
