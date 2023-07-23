@@ -126,15 +126,15 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             String nombre1=nombreArchivo+".pdf";
             String nombre2=nombreArchivo+".xlsx";
 
-            this.generarPDF(response, ruta+nombre1, nombre1, codSubtipoPrueba, columnas,pp.get().getCodPruebaDetalle());
-            this.generarExcel(ruta+nombre2, nombre2, codSubtipoPrueba,columnas,pp.get().getCodPruebaDetalle());
+            this.generarPDF(response, ruta+nombre1, nombre1, codSubtipoPrueba, columnas);
+            this.generarExcel(ruta+nombre2, nombre2, codSubtipoPrueba,columnas);
         }
 
 
         return true;
     }
 
-    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer subTipoprueba, String[] headers, Integer pruebaDetalle)
+    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, String[] headers)
             throws DocumentException, IOException, DataException {
 
 
@@ -154,19 +154,19 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                 float[] widths = new float[]{2.5f};
 
                 //Genera el pdf
-                exporter.exportar(response, headers, obtenerDatos(subTipoprueba), widths, ruta);
+                exporter.exportar(response, headers, obtenerDatos(subTipoPrueba), widths, ruta);
 
-                generaDocumento(ruta, nombre, pruebaDetalle);
+                generaDocumento(ruta, nombre, subTipoPrueba);
 
     }
 
-    public void generarExcel(String ruta,String nombre, Integer subTipoprueba, String[] headers, Integer pruebaDetalle) throws IOException, DataException {
+    public void generarExcel(String ruta,String nombre, Integer subTipoPrueba, String[] headers) throws IOException, DataException {
         // Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 
-                ExcelHelper.generarExcel(obtenerDatos(subTipoprueba), ruta, headers);
+                ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba), ruta, headers);
 
-                generaDocumento(ruta, nombre, pruebaDetalle);
+                generaDocumento(ruta, nombre, subTipoPrueba);
 
     }
 
@@ -243,7 +243,6 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
         Integer codPruebaDetalle = null;
-    System.out.println("prueba: " + prueba);
 
 
         Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
@@ -258,7 +257,6 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         // busca documentos para la prueba
         List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
-
         if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
 
             // busca si existe un documento con el mismo nombre para la prueba
@@ -271,7 +269,6 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                 List<Integer> listaCodDocumentoPrueba = listaDocPrueba.stream()
                         .map(DocumentoPrueba::getCodDocumento)
                         .collect(Collectors.toList());
-
                 List<Integer> listaCodDocumento = docs.stream()
                         .map(Documento::getCodDocumento)
                         .collect(Collectors.toList());
@@ -290,7 +287,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                             .forEach(codDoc -> {
                                 // elimina de documentoPrueba
                                 this.docPruebaRepo.deleteByCodPruebaDetalleAndCodDocumento(codPrueba, codDoc);
-                                this.documentoRepo.deleteById(codPrueba);
+                                this.documentoRepo.deleteById(codDoc);
                             });
 
                 }
@@ -308,7 +305,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         documento = documentoRepo.save(documento);
 
         DocumentoPrueba doc = new DocumentoPrueba();
-        doc.setCodPruebaDetalle(prueba);
+        doc.setCodPruebaDetalle(codPruebaDetalle);
         doc.setCodDocumento(documento.getCodDocumento());
         // System.out.println("documento.getCodigo(): " + documento.getCodigo());
 
