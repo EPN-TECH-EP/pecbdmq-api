@@ -71,7 +71,7 @@ public class ApelacionResource {
 		objServices.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
-	
+	//TODO no vale
 	@GetMapping("/listarByEstudiante/{id}")
 	public List<Apelacion> listarByEstudiante(@PathVariable("id") Integer id) {
 		return objServices.getByEstudiante(id);

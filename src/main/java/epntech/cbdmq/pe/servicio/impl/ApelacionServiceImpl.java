@@ -100,14 +100,12 @@ public class ApelacionServiceImpl implements ApelacionService {
 
 	@Override
 	public List<Apelacion> getByEstudiante(Integer codigo) {
-		// TODO Auto-generated method stub
 		return repo.getApelacionesByEstudiante(codigo);
 	}
 
 	@Override
 	public List<Apelacion> getByInstructor(Integer codigo) {
-		// TODO Auto-generated method stub
-		return repo.getApelacionesByInstructor(codigo);
+		return repo.getApelacionesByInstructor(codigo, "COORDINADOR");
 	}
 
 	@Override
