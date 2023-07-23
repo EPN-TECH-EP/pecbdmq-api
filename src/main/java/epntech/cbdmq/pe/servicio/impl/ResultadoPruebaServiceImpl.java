@@ -118,6 +118,8 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(codSubtipoPrueba,
                 periodoAcademicoRepository.getPAActive());
+        if(pp.isEmpty())
+            throw new DataException(NO_ENCUENTRA);
 
         if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
             throw new DataException(ESTADO_INVALIDO);
