@@ -2,6 +2,8 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.FormacionConst.FECHA_APELACION_INVALIDA;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -36,6 +38,11 @@ public class ApelacionServiceImpl implements ApelacionService {
 
 	@Override
 	public Apelacion save(Apelacion obj) throws DataException, ParseException {
+
+		Optional<?> objGuardado = repo.findApelacionByCodNotaFormacion(obj.getCodNotaFormacion());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		Date fechaActual = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaFormateada = sdf.format(fechaActual);
@@ -65,13 +72,11 @@ public class ApelacionServiceImpl implements ApelacionService {
 
 	@Override
 	public List<Apelacion> getAll() {
-		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
 
 	@Override
 	public Optional<Apelacion> getById(Integer codigo) {
-		// TODO Auto-generated method stub
 		return repo.findById(codigo);
 	}
 

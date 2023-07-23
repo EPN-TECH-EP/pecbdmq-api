@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -38,5 +39,6 @@ public interface ApelacionRepository extends JpaRepository<Apelacion, Integer>{
 			"and gimp.cod_instructor = :codInstructor\n" +
 			"and gti.nombre_tipo_instructor = :nombreTipoInstructor", nativeQuery=true)
 	List<Apelacion> getApelacionesByInstructor(Integer codInstructor, String nombreTipoInstructor);
+	Optional<Apelacion> findApelacionByCodNotaFormacion(Integer codNotaFormacion);
 	
 }
