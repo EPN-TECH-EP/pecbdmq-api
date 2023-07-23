@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin.formacion;
 
-import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
 import epntech.cbdmq.pe.dominio.util.InstructorDatos;
 import lombok.Data;
 
@@ -8,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 public class InstructorMateriaReadDto {
-    private Integer codMateria;
+    private Integer codMateriaPeriodo;
     private BigDecimal notaMinimaSupletorio;
     private BigDecimal ponderacionMateria;
     private String nombre;
@@ -21,8 +20,8 @@ public class InstructorMateriaReadDto {
     private Integer codParalelo;
     private String nombreParalelo;
 
-    public InstructorMateriaReadDto(Integer codMateria,BigDecimal notaMinimaSupletorio, BigDecimal ponderacionMateria,String nombre, String nombreEje, Integer codAula, String nombreAula, Integer codParalelo, String nombreParalelo) {
-        this.codMateria = codMateria;
+    public InstructorMateriaReadDto(Integer codMateriaPeriodo, BigDecimal notaMinimaSupletorio, BigDecimal ponderacionMateria, String nombre, String nombreEje, Integer codAula, String nombreAula, Integer codParalelo, String nombreParalelo) {
+        this.codMateriaPeriodo = codMateriaPeriodo;
         this.notaMinimaSupletorio=notaMinimaSupletorio;
         this.ponderacionMateria= ponderacionMateria;
         this.nombre = nombre;

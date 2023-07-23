@@ -32,17 +32,17 @@ public class InstructorMateriaParaleloResource {
     public Boolean asignar(@RequestBody InstructorMateriaCreateDto objInstructorMateria) throws DataException {
         return objService.asignarInstructortoMateriaParalelo(objInstructorMateria.getCodMateria(),objInstructorMateria.getCodCoordinador(),objInstructorMateria.getCodAsistentes(),objInstructorMateria.getCodInstructores(), objInstructorMateria.getCodParalelo());
     }
+    @PostMapping("/actualizarInstructores")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Boolean actualizar(@RequestBody InstructorMateriaCreateDto objInstructorMateria) throws DataException {
+        return objService.actualizarInstructorMateriaParalelo(objInstructorMateria.getCodMateria(),objInstructorMateria.getCodCoordinador(),objInstructorMateria.getCodAsistentes(),objInstructorMateria.getCodInstructores(), objInstructorMateria.getCodParalelo());
+    }
     @GetMapping("/listarRead")
     @ResponseStatus(HttpStatus.CREATED)
     public List<InstructorMateriaReadDto> leerMateriaDto() throws DataException {
         return objService.getMateriaInfoDto();
     }
-    @GetMapping("/listarUnico")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<InformacionMateriaDto> leerMateriaDtoa() throws DataException {
-        return objService.getInformacionMateriaDto();
-    }
-    @GetMapping("/listarMateriasParalelos")
+    @GetMapping("/listarMateriasGroupByParalelos")
     public InstructorMateriaParalelosDto getMateriaPAParaleloNombres() throws DataException {
         return objService.getMateriaPAParaleloNombres();
     }
