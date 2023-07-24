@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.resource;
 
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.TipoFaltaPeriodoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,10 @@ public class FaltaPeriodoResource {
 	public List<FaltaPeriodo> listar() {
 		return objService.getAll();
 	}
+	@GetMapping("/listarPA")
+	public List<TipoFaltaPeriodoUtil> getFaltasPeriodo(){
+		return objService.getFaltasPeriodo();
+	}
 
-	
+
 }

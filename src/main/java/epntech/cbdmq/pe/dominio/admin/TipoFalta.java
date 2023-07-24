@@ -20,7 +20,7 @@ import lombok.Data;
  * @version $Revision: $
  */
 @Data
-@Entity(name = "gen_tipo_falsta")
+@Entity
 @Table(name = "gen_tipo_falta")
 @SQLDelete(sql = "UPDATE {h-schema}gen_tipo_falta SET estado = 'ELIMINADO' WHERE cod_tipo_falta = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
