@@ -294,6 +294,26 @@ public class EmailService {
         MimeMessage message = this.sendEmail(destinatarios, subject, texto, emailSender);
 
 	}
+	private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail( String nombrePrueba, String email)
+			throws MessagingException {
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom(USERNAME);
+		message.setTo(email);
+		message.setSubject(EMAIL_SUBJECT2);
+		message.setText("Usted ha aprobado la prueba " + nombrePrueba
+				+ "\n \n Plataforma educativa - CBDMQ");
+
+		return message;
+	}
+	public String notificacionAprobadoEmail(String nombrePrueba, String email) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, email);
+
+		emailSender.send(message);
+        return message.getText();
+
+	}
 	
 	public void enviarEmailHtml(String[] destinatarios, String subject, String texto) throws MessagingException {
 		JavaMailSender emailSender = this.getJavaMailSender();
