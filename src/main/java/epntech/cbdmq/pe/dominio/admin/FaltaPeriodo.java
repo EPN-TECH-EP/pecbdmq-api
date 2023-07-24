@@ -23,22 +23,13 @@ public class FaltaPeriodo {
 	
 	@Column(name = "cod_falta_periodo")
 	private Integer codFaltaPeriodo;
-	
-	/*@Column(name = "cod_falta")
-	private Integer cod_falta;*/
-	
+
 	@Column(name = "cod_periodo_academico")
 	private Integer codPeriodoAcademico;
 	
 	@Column(name = "puntaje")
 	private BigDecimal puntaje;
-	
-	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_falta_periodo",
-            joinColumns = @JoinColumn(name = "cod_falta_periodo"),
-            inverseJoinColumns = @JoinColumn(name = "cod_falta")
-    )
-	private List<TipoFalta> falta = new ArrayList<>();
+	@Column(name = "cod_tipo_falta")
+	private Integer codTipoFalta;
 	
 }

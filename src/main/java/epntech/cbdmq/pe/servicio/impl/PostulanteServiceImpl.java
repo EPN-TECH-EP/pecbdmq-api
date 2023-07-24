@@ -83,6 +83,7 @@ public class PostulanteServiceImpl implements PostulanteService {
 
     @Override
     public List<PostulanteUtil> getMuestraPostulantesPaginado(Integer usuario, Pageable pageable) {
+        repo.getMuestra();
         return postulanteUtilRepository.getPostulantesMuestraPaginado(usuario, pageable);
     }
 
@@ -133,13 +134,11 @@ public class PostulanteServiceImpl implements PostulanteService {
 
     @Override
     public List<PostulanteUtil> getPostulantesAllPaginado(Pageable pageable) {
-        // TODO Auto-generated method stub
         return postulanteUtilRepository.getPostulantesAllPaginadoTodoAsignado(pageable);
     }
 
     @Override
     public List<Postulante> getMuestra() {
-        // TODO Auto-generated method stub
         return repo.getMuestra();
     }
 

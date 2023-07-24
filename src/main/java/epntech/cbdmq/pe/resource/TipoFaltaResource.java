@@ -62,7 +62,6 @@ public class TipoFaltaResource {
 			try {
 				datosActualizados = objServices.update(datosGuardados);
 			} catch (DataException e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
 			}
