@@ -73,6 +73,11 @@ public class SancionesServiceImpl implements SancionesService {
 		repo.deleteById(codigo);
 	}
 
+	@Override
+	public List<Sanciones> findAllByCodEstudiante(Integer codEstudiante) {
+		return repo.findAllByCodEstudiante(codEstudiante);
+	}
+
 	private String ruta(Integer codEstudiante) {
 
 		String resultado = null;
