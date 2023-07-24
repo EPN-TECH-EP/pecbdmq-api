@@ -120,12 +120,12 @@ public class EstudianteServiceImpl implements EstudianteService {
                                 this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante()).getCedula()
                         )))
                 .collect(Collectors.toList());
-        List<EstudianteDto> listDto= new ArrayList<EstudianteDto>();
-        for (Estudiante estudiante : estudiantesFiltrados){
-            EstudianteDto objDto= new EstudianteDto();
-            DatoPersonal dp= this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
+        List<EstudianteDto> listDto = new ArrayList<EstudianteDto>();
+        for (Estudiante estudiante : estudiantesFiltrados) {
+            EstudianteDto objDto = new EstudianteDto();
+            DatoPersonal dp = this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
             objDto.setCedula(dp.getCedula());
-            objDto.setNombre(dp.getNombre()+" "+dp.getApellido());
+            objDto.setNombre(dp.getNombre() + " " + dp.getApellido());
             objDto.setTelefono(dp.getNumTelefCelular());
             objDto.setCodUnico(estudiante.getCodUnicoEstudiante());
             listDto.add(objDto);
@@ -137,14 +137,46 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public List<EstudianteDto> getEstudiantesSinAsignarPA() {
         List<Estudiante> estudiantes = this.getAllWithOutParalelo();
-        if(estudiantes.isEmpty()){
+        if (estudiantes.isEmpty()) {
             throw new RuntimeException();
+
         }
         return this.getEstudiantesPA(estudiantes);
     }
+
+    @Override
+    public List<EstudianteDto> getEstudiantesBaja() {
+
+        List<Estudiante> estudiantes = this.getEstudiantesIs("BAJA");
+        List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidos();
+        List<Estudiante> estudiantesFiltrados = estudiantes.stream()
+                .filter(estudiante -> postulantes.stream()
+                        .anyMatch(postulante -> postulante.getCedula().equals(
+                                this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante()).getCedula()
+                        )))
+                .collect(Collectors.toList());
+        List<EstudianteDto> listDto = new ArrayList<EstudianteDto>();
+        for (Estudiante estudiante : estudiantesFiltrados) {
+            EstudianteDto objDto = new EstudianteDto();
+            DatoPersonal dp = this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
+            objDto.setCedula(dp.getCedula());
+            objDto.setNombre(dp.getNombre() + " " + dp.getApellido());
+            objDto.setTelefono(dp.getNumTelefCelular());
+            objDto.setCodUnico(estudiante.getCodUnicoEstudiante());
+            listDto.add(objDto);
+        }
+
+        return listDto;
+    }
+
     @Override
     public Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion) {
         return repo.getEstudianteByNotaFormacionFinal(codNotaFormacion);
+    }
+
+    @Override
+    public List<Estudiante> getEstudiantesIs(String Estado) {
+        return repo.getAllByEstadoIsIgnoreCase(Estado);
     }
 
 }

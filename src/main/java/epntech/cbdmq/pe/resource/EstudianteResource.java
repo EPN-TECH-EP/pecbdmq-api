@@ -115,6 +115,10 @@ public class EstudianteResource {
 	public List<EstudianteDto> obtenerEstudiantesPA() {
 		return objService.getEstudiantesSinAsignarPA();
 	}
+	@GetMapping("/listarBajaPA")
+	public List<EstudianteDto> obtenerEstudiantesPAbAJA() {
+		return objService.getEstudiantesBaja();
+	}
     
 }
 
