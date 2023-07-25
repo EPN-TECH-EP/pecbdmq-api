@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class SancionesResource {
         obj.setCodEstudiante(codEstudiante);
         obj.setFechaSancion(date);
         obj.setObservacionSancion(observacionSancion);
-        obj.setEstado("ACTIVO");
+        obj.setEstado(ACTIVO);
         obj.setCodInstructor(codInstructor);
         obj.setCodFaltaPeriodo(codFaltaPeriodo);
 

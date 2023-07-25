@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_BAJAS;
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.FormacionConst.*;
 
 import java.io.IOException;
@@ -132,7 +133,7 @@ public class BajaServiceImpl implements BajaService {
 			// LOGGER.info("Archivo guardado: " + resultado +
 			
 			Documento documento = new Documento();
-			documento.setEstado("ACTIVO");
+			documento.setEstado(ACTIVO);
 			documento.setNombre(multipartFile.getOriginalFilename());
 			documento.setRuta(resultado + multipartFile.getOriginalFilename());
 			documento = documentoRepository.save(documento);

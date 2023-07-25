@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
+
 @Service
 public class MateriaParaleloServiceImpl implements MateriaParaleloService {
     @Autowired
@@ -64,6 +66,7 @@ public class MateriaParaleloServiceImpl implements MateriaParaleloService {
                             MateriaParalelo materiaParalelo = new MateriaParalelo();
                             materiaParalelo.setCodMateriaPeriodo(materiaPA.getCodMateriaPeriodo());
                             materiaParalelo.setCodParalelo(paralelo.getCodParalelo());
+                            materiaParalelo.setEstado(ACTIVO);
                             try {
                                 MateriaParalelo materiaParaleloI=this.saveMateriaParalelo(materiaParalelo);
                                 return materiaParaleloI;

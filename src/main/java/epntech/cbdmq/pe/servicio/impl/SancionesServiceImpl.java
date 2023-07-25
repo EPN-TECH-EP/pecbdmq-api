@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_SANCIONES;
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -101,7 +102,7 @@ public class SancionesServiceImpl implements SancionesService {
 		// System.out.println("ruta: " + ruta);
 
 		Documento documento = new Documento();
-		documento.setEstado("ACTIVO");
+		documento.setEstado(ACTIVO);
 		documento.setNombre(multipartFile.getOriginalFilename());
 		documento.setRuta(ruta + "\\" + multipartFile.getOriginalFilename());
 		documento = documentoRepository.save(documento);

@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 
 import java.text.ParseException;
@@ -87,7 +88,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             noti.setCodDatosPersonales(dato.getCodDatosPersonales());
             noti.setCodPrueba(pruebaDetalle.getCodPruebaDetalle());
             noti.setFechaPrueba(fechaActual);
-            noti.setEstado("ACTIVO");
+            noti.setEstado(ACTIVO);
 
             try {
                 String mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato.getCorreoPersonal());

@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class BajaResource {
         baja.setCodSancion(codSancion);
         baja.setCodTipoBaja(codTipoBaja);
         baja.setDescripcionBaja(descripcionBaja);
-        baja.setEstado("ACTIVO");
+        baja.setEstado(ACTIVO);
         baja.setFechaBajaActual(date);
 
         try {

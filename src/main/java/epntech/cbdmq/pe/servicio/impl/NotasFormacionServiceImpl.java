@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.FormacionConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.EmailConst.*;
@@ -89,7 +90,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 				materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(periodo,
 						objMpe.getCodMateria());
 
-				nn.setEstado("ACTIVO");
+				nn.setEstado(ACTIVO);
 				nn.setNotaMinima(materiaPeriodoData.getNotaMinima());
 				nn.setNumeroHoras(materiaPeriodoData.getNumeroHoras());
 				nn.setPesoMateria(materiaPeriodoData.getPesoMateria());

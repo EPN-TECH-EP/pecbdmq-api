@@ -3,6 +3,7 @@
  */
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
@@ -33,7 +34,7 @@ public class ComponenteNotaServiceImpl implements ComponenteNotaService {
     @Override
     public ComponenteNota save(ComponenteNota obj) throws DataException {
 		obj.setCodPeriodoAcademico(periodoAcademicoService.getPAActivo());
-		obj.setEstado("ACTIVO");
+		obj.setEstado(ACTIVO);
     	if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
 		Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCaseAndCodPeriodoAcademico(obj.getNombre(), periodoAcademicoService.getPAActivo());
@@ -42,7 +43,7 @@ public class ComponenteNotaServiceImpl implements ComponenteNotaService {
 			// valida si existe eliminado
 			ComponenteNota stp = objGuardado.get();
 			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
-				stp.setEstado(EstadosConst.ACTIVO);
+				stp.setEstado(ACTIVO);
 				return repo.save(stp);
 			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
