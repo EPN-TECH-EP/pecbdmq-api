@@ -97,7 +97,7 @@ public class ResultadoPruebasFisicasResource {
 
 				return response(HttpStatus.OK, CARGA_EXITOSA);
 			} catch (Exception e) {
-				return response(HttpStatus.EXPECTATION_FAILED, DOCUMENTO_NO_CUMPLE_FORMATO);
+				return response(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 			}
 		}
 

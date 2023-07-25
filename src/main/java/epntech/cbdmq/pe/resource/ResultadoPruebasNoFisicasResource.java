@@ -98,16 +98,6 @@ public class ResultadoPruebasNoFisicasResource {
 			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
 		}
 	}
-	
-	@GetMapping("/resultados")
-	public ResponseEntity<?> getResultados(Pageable pageable, @RequestParam("subTipoPrueba") Integer subTipoPrueba) {
-		
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(resultadoPruebasServiceImpl.getResultados(pageable, subTipoPrueba));
-		} catch (Exception e) {
-			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
-		}
-	}
 
 	@PutMapping("/update")
 	// public ResponseEntity<?> update(@RequestParam("codPostulante") Integer
@@ -144,7 +134,7 @@ public class ResultadoPruebasNoFisicasResource {
 
 				return response(HttpStatus.OK, CARGA_EXITOSA);
 			} catch (Exception e) {
-				return response(HttpStatus.EXPECTATION_FAILED,  DOCUMENTO_NO_CUMPLE_FORMATO);
+				return response(HttpStatus.EXPECTATION_FAILED,  e.getMessage());
 			}
 		}
 

@@ -176,7 +176,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         InstructorDatos coordinador = this.getCoordinador(objMPaII.getCodMateriaParalelo());
         if (coordinador != null) {
             repoIMP.deleteByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(coordinador.getCodInstructor().intValue(), 3, objMPaII.getCodMateriaParalelo());
-        }
+    }
 
         // Check and save coordinador (codTipoInstructor = 3)
         saveOrUpdateInstructor(objMPaII.getCodMateriaParalelo(), codCoordinador, 3);
@@ -187,7 +187,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         // Add new instructors if they don't already exist
         for (Integer codInstructorNuevo : codInstructores) {
             saveOrUpdateInstructor(objMPaII.getCodMateriaParalelo(), codInstructorNuevo, 2);
-        }
+    }
 
         // Delete asistentes that are no longer needed
         deleteInstructorsNotNeeded(objMPaII.getCodMateriaParalelo(), codAsistentes, 1);
@@ -198,7 +198,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
         }
 
         return true;
-    }
+        }
 
     private void saveOrUpdateInstructor(Integer codMateriaParalelo, Integer codInstructor, Integer codTipoInstructor) {
         Optional<InstructorMateriaParalelo> existingInstructor = repoIMP.findByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(codInstructor, codTipoInstructor, codMateriaParalelo);
@@ -221,7 +221,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
             if (!Arrays.asList(codInstructors).contains(idInstructor)) {
                 repoIMP.deleteByCodInstructorAndCodTipoInstructorAndCodMateriaParalelo(idInstructor, codTipoInstructor, codMateriaParalelo);
             }
-        }
+    }
     }
 
 

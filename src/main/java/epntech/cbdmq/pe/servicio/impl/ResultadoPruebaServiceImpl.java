@@ -1,21 +1,19 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.lowagie.text.DocumentException;
+import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.constante.FormacionConst;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
+import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasFisicasDatos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.*;
-import epntech.cbdmq.pe.servicio.PostulanteService;
+import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
+import epntech.cbdmq.pe.servicio.ResultadoPruebaService;
 import epntech.cbdmq.pe.util.ExporterPdf;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -24,10 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.constante.EstadosConst;
-import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.ResultadoPruebaService;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
@@ -49,7 +46,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     @Autowired
     ResultadoPruebaRepository repo;
     @Autowired
-    private ResultadoPruebasDatosRepository repo2;
+    private ResultadoPruebasTodoRepository repo2;
 
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
@@ -107,7 +104,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     }
 
     @Override
-    public Boolean generarArchivoAprobados(HttpServletResponse response,Integer codSubtipoPrueba) throws DataException, DocumentException, IOException {
+    public Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba) throws DataException, DocumentException, IOException {
         String[] columnas = {"Id postulante"};
 
         String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
@@ -118,20 +115,17 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(codSubtipoPrueba,
                 periodoAcademicoRepository.getPAActive());
-        if(pp.isEmpty())
-            throw new DataException(NO_ENCUENTRA);
 
-        if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
+        /*if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
             throw new DataException(ESTADO_INVALIDO);
-        } else {
-            String nombreArchivo = "Lista de aprobados "+pp.get().getDescripcionPrueba()+pActive;
-            String nombre1=nombreArchivo+".pdf";
-            String nombre2=nombreArchivo+".xlsx";
+        } else {*/
+            String nombreArchivo = "Lista de aprobados " + pp.get().getDescripcionPrueba() + " " + pActive;
+            String nombre1 = nombreArchivo + ".pdf";
+            String nombre2 = nombreArchivo + ".xlsx";
 
-            this.generarPDF(response, ruta+nombre1, nombre1, codSubtipoPrueba, columnas);
-            this.generarExcel(ruta+nombre2, nombre2, codSubtipoPrueba,columnas);
-        }
-
+            this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas);
+            this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas);
+        //}
 
         return true;
     }
@@ -140,8 +134,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             throws DocumentException, IOException, DataException {
 
 
-
-                //TODO el response no tiene ninguna funcionalidad
+        //TODO el response no tiene ninguna funcionalidad
         /*
                 response.setContentType("application/pdf");
                 DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -151,24 +144,24 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                 response.addHeader(cabecera, valor);
 
          */
-                ExporterPdf exporter = new ExporterPdf();
-                //anchos de las columnas
-                float[] widths = new float[]{2.5f};
+        ExporterPdf exporter = new ExporterPdf();
+        //anchos de las columnas
+        float[] widths = new float[]{2.5f};
 
-                //Genera el pdf
-                exporter.exportar(response, headers, obtenerDatos(subTipoPrueba), widths, ruta);
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        exporter.exportar(response, headers, obtenerDatos(subTipoPrueba), widths, ruta);
+        generaDocumento(ruta, nombre, subTipoPrueba);
 
-                generaDocumento(ruta, nombre, subTipoPrueba);
 
     }
 
-    public void generarExcel(String ruta,String nombre, Integer subTipoPrueba, String[] headers) throws IOException, DataException {
+    public void generarExcel(String ruta, String nombre, Integer subTipoPrueba, String[] headers) throws IOException, DataException {
         // Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 
-                ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba), ruta, headers);
-
-                generaDocumento(ruta, nombre, subTipoPrueba);
+        ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba), ruta, headers);
+        generaDocumento(ruta, nombre, subTipoPrueba);
 
     }
 
@@ -241,10 +234,12 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         saveDocumentoPrueba(doc);
     }
+
     private void generaDocumento(String ruta, String nombre, Integer prueba) throws DataException {
 
         // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
         Integer codPruebaDetalle = null;
+        System.out.println("prueba: " + prueba);
 
 
         Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
@@ -259,6 +254,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         // busca documentos para la prueba
         List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
+
         if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
 
             // busca si existe un documento con el mismo nombre para la prueba
@@ -271,6 +267,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                 List<Integer> listaCodDocumentoPrueba = listaDocPrueba.stream()
                         .map(DocumentoPrueba::getCodDocumento)
                         .collect(Collectors.toList());
+
                 List<Integer> listaCodDocumento = docs.stream()
                         .map(Documento::getCodDocumento)
                         .collect(Collectors.toList());
@@ -303,6 +300,11 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         documento.setEstado("ACTIVO");
         documento.setNombre(nombre);
         documento.setRuta(ruta);
+
+        // si el nombre contiene la plabara aprobados, se coloca APROBADOS en campo descripción de documento
+        if (nombre.toLowerCase().contains("aprobados")) {
+            documento.setDescripcion("APROBADOS");
+        }
 
         documento = documentoRepo.save(documento);
 

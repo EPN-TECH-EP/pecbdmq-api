@@ -74,7 +74,9 @@ public class ForAprobadoValidacionServiceImpl implements forAprobadosValidacionS
 		float[] widths = new float[] { 2f};
 		String rutapdf= ARCHIVOS_RUTA+PATH_PROCESO_INSCRIPCION_VAL + repo.getPeriodoAcademicoActivo().getCodigo()+"/"+nombre+".pdf";
 		String rutaexel= ARCHIVOS_RUTA+PATH_PROCESO_INSCRIPCION_VAL + repo.getPeriodoAcademicoActivo().getCodigo()+"/"+nombre+".xlsx";
-		
+
+		//Genera el pdf
+		exporter.setArchivosRuta(ARCHIVOS_RUTA);
 		pdf.exportar(response, columnas, obtenerDatos(), widths, rutapdf);
 		generaDocumento(rutapdf, "listdo.pdf", repo.getPeriodoAcademicoActivo().getCodigo());
 		

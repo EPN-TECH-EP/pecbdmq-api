@@ -18,6 +18,7 @@ import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.repositorio.admin.*;
+import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
 import epntech.cbdmq.pe.servicio.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
     @Autowired
     DatoPersonalService dpSvc;
     @Autowired
-    ResultadoPruebasDatosRepository repo1;
+    ResultadoPruebasTodoRepository repo1;
 
     @Autowired
     PruebaDetalleService pruebaDetalleService;

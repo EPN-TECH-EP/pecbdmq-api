@@ -16,7 +16,7 @@ public interface SubTipoPruebaRepository extends JpaRepository<SubTipoPrueba, In
 	
 	public static Sort defaultSort = Sort.by(Sort.Order.asc("nombre"));
 	
-	@Query(value = "select\r\n"
+	@Query(/*value = "select\r\n"
 			+ "	gsp.cod_subtipo_prueba, gsp.cod_tipo_prueba, gsp.nombre, gsp.estado,\r\n"
 			+ "	gtp.tipo_prueba ,\r\n"
 			+ "	gtp.es_fisica \r\n"
@@ -27,7 +27,7 @@ public interface SubTipoPruebaRepository extends JpaRepository<SubTipoPrueba, In
 			+ "	gtp.cod_tipo_prueba = gsp.cod_tipo_prueba\r\n"
 			+ "order by \r\n"
 			+ "	gtp.tipo_prueba,\r\n"
-			+ "	gsp.nombre ", nativeQuery = true)
+			+ "	gsp.nombre "*/name = "SubTipoPruebaDatos.get", nativeQuery = true)
 	List<SubTipoPruebaDatos> listarTodosConDatosTipoPrueba();	
 	
 	

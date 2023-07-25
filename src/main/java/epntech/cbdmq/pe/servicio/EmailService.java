@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
@@ -310,15 +311,36 @@ public class EmailService {
 		JavaMailSender emailSender = this.getJavaMailSender();
 		SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, email);
 
+	}
+	private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail( String nombrePrueba, String email)
+			throws MessagingException {
+
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom(USERNAME);
+		message.setTo(email);
+		message.setSubject(EMAIL_SUBJECT2);
+		message.setText("Usted ha aprobado la prueba " + nombrePrueba
+				+ "\n \n Plataforma educativa - CBDMQ");
+
+		return message;
+	}
+	public String notificacionAprobadoEmail(String nombrePrueba, String email) throws MessagingException {
+		JavaMailSender emailSender = this.getJavaMailSender();
+		SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, email);
+
 		emailSender.send(message);
         return message.getText();
 
 	}
 	
-	public void enviarEmailHtml(String[] destinatarios, String subject, String texto) throws MessagingException {
-		JavaMailSender emailSender = this.getJavaMailSender();
-		MimeMessage message = this.createEmailHtml(destinatarios, subject, texto);
-		emailSender.send(message);
+	public void enviarEmailHtml(String[] destinatarios, String subject, String texto) {
+		try {
+			JavaMailSender emailSender = this.getJavaMailSender();
+			MimeMessage message = this.createEmailHtml(destinatarios, subject, texto);
+			emailSender.send(message);
+		} catch (MessagingException me) {
+			throw new BusinessException("Error al enviar correo");
+		}
 	}
 
 	private MimeMessage createEmailHtml(String[] destinatarios, String subject, String texto)

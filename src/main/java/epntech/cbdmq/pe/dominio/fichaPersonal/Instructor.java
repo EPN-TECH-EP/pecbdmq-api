@@ -125,35 +125,38 @@ import org.hibernate.annotations.NamedNativeQuery;
 }))
 
 @NamedNativeQuery(name = "Instructor.findInstructoresCurso",
-query = "select ci.cod_instructor as codInstructor, dp.cedula, dp.nombre, dp.apellido, \r\n"
-		+ "c.cod_curso_especializacion codCursoEspecializacion, cc.nombre_catalogo_curso as nombreCatalogoCurso,\r\n"
-		+ "ti.cod_tipo_instructor as codTipoInstructor, ti.nombre_tipo_instructor as nombreTipoInstructor \r\n"
-		+ "from cbdmq.esp_curso_instructor ci, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc, \r\n"
-		+ "cbdmq.gen_instructor i, cbdmq.gen_dato_personal dp, cbdmq.gen_tipo_instructor ti \r\n"
-		+ "where ci.cod_curso_especializacion = c.cod_curso_especializacion \r\n"
-		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos \r\n"
-		+ "and ci.cod_instructor = i.cod_instructor \r\n"
-		+ "and i.cod_datos_personales = dp.cod_datos_personales \r\n"
-		+ "and ci.cod_tipo_instructor = ti.cod_tipo_instructor\r\n"
-		+ "and upper(ci.estado) = 'ACTIVO'\r\n"
-		+ "and upper(c.estado) = 'ACTIVO'\r\n"
-		+ "and upper(cc.estado) = 'ACTIVO'\r\n"
-		+ "and upper(dp.estado) = 'ACTIVO' \r\n"
-		+ "and ci.cod_curso_especializacion = :codCurso",
+		query = "select ci.cod_instructor as codInstructor, dp.cedula, dp.nombre, dp.apellido, "
+				+ "c.cod_curso_especializacion codCursoEspecializacion, cc.nombre_catalogo_curso as nombreCatalogoCurso, "
+				+ "ti.cod_tipo_instructor as codTipoInstructor, ti.nombre_tipo_instructor as nombreTipoInstructor, "
+				+ "dp.correo_personal as correoPersonal, dp.correo_institucional as correoInstitucional "
+				+ "from cbdmq.esp_curso_instructor ci, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc, "
+				+ "cbdmq.gen_instructor i, cbdmq.gen_dato_personal dp, cbdmq.gen_tipo_instructor ti "
+				+ "where ci.cod_curso_especializacion = c.cod_curso_especializacion "
+				+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
+				+ "and ci.cod_instructor = i.cod_instructor "
+				+ "and i.cod_datos_personales = dp.cod_datos_personales "
+				+ "and ci.cod_tipo_instructor = ti.cod_tipo_instructor "
+				+ "and upper(ci.estado) = 'ACTIVO' "
+				+ "and upper(c.estado) = 'ACTIVO' "
+				+ "and upper(cc.estado) = 'ACTIVO' "
+				+ "and upper(dp.estado) = 'ACTIVO' "
+				+ "and ci.cod_curso_especializacion = :codCurso",
 		resultSetMapping = "findInstructoresCurso")
 @SqlResultSetMapping(name = "findInstructoresCurso", classes = @ConstructorResult(targetClass = InstructoresCurso.class, columns = {
-@ColumnResult(name = "codInstructor"),
-@ColumnResult(name = "cedula"),
-@ColumnResult(name = "nombre"),
-@ColumnResult(name = "apellido"),
-@ColumnResult(name = "codCursoEspecializacion"),
-@ColumnResult(name = "nombreCatalogoCurso"),
-@ColumnResult(name = "codTipoInstructor"),
-@ColumnResult(name = "nombreTipoInstructor"),
+		@ColumnResult(name = "codInstructor"),
+		@ColumnResult(name = "cedula"),
+		@ColumnResult(name = "nombre"),
+		@ColumnResult(name = "apellido"),
+		@ColumnResult(name = "codCursoEspecializacion"),
+		@ColumnResult(name = "nombreCatalogoCurso"),
+		@ColumnResult(name = "codTipoInstructor"),
+		@ColumnResult(name = "nombreTipoInstructor"),
+		@ColumnResult(name = "correoPersonal"),
+		@ColumnResult(name = "correoInstitucional"),
 }))
 
 public class Instructor {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_instructor")
@@ -170,4 +173,13 @@ public class Instructor {
 	private Integer codTipoContrato;
 	@Column(name = "estado")
 	private String estado;
+
+
+
+	/*@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinTable(name = "gen_instructor_periodo",
+            joinColumns = @JoinColumn(name = "cod_instructor"),
+            inverseJoinColumns = @JoinColumn(name = "cod_periodo_academico")
+    )
+	private List<epntech.cbdmq.pe.dominio.admin.PeriodoAcademico> PeriodoAcademico = new ArrayList<>();*/
 }

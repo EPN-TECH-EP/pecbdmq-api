@@ -34,5 +34,8 @@ public interface PostulantesValidosService {
 	Page<PostulantesValidos> getAllPaginado(Pageable pageable, Integer codPrueba) throws Exception;
 	
 	List<PostulantesValidos> getPostulantesAprovadosPrueba(Integer codPrueba);
+
+	// buscar postulantes válidos por filtro
+	List<PostulantesValidos> getPostulantesValidosFiltro(String tipoFiltro, String valorFiltro);
 }
 

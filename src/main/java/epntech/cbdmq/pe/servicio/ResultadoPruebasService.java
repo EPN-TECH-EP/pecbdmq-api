@@ -34,5 +34,5 @@ public interface ResultadoPruebasService {
 	
 	void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer subtipoPrueba) throws DocumentException, IOException, DataException;	
 
-	Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba);
+
 }

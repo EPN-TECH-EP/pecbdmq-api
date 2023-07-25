@@ -8,10 +8,13 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
+
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
 import epntech.cbdmq.pe.servicio.PostulanteService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -50,7 +53,7 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 	@Autowired
 	private PruebaDetalleRepository pruebaDetalleRepository;
 	@Autowired
-	private ResultadoPruebasDatosRepository repo1;
+	private ResultadoPruebasTodoRepository repo1;
 	@Autowired
 	private DocumentoRepository documentoRepo;
 	@Autowired
@@ -179,12 +182,7 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 
 	}
 
-	// lista de todos los registros
-	@Override
-	public Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba) {
-		// TODO Auto-generated method stub
-		return repo1.getResultados(pageable, prueba);
-	}
+
 
 	@Override
 	public void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer subTipoPrueba)

@@ -46,13 +46,13 @@ public class DescargarDocumentoResourse {
 	     // Crear un objeto Resource para el archivo
 	     File file = new File(archivo.getRuta());
 	     InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-		// Obtener la extensi�n del archivo
+		// Obtener la extensión del archivo
 		Path filePath = Paths.get(archivo.getNombre());
 		String extension = filePath.getFileName().toString();
 		if (extension.lastIndexOf('.') != -1) {
 			extension = extension.substring(extension.lastIndexOf('.') + 1);
 		}
-		// Determinar el tipo de contenido seg�n la extensi�n del archivo
+		// Determinar el tipo de contenido segón la extensión del archivo
 		String contentType;
 		if ("pdf".equalsIgnoreCase(extension)) {
 			contentType = "application/pdf";

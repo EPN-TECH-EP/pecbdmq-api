@@ -15,28 +15,30 @@ import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface CursoService {
-	
+
 	Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento);
-	
+
 	Curso update(Curso objActualizado) throws DataException;
-	
+
 	List<Curso> listarAll();
-	
+
 	Optional<Curso> getById(Long id) throws DataException;
-	
+
 	CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento)  throws DataException;
 
+	Curso iniciarCurso(Long codCursoEspecializacion);
+
 	Curso updateEstadoProceso(Long estado, Long codCurso) throws DataException;
-	
+
 	Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) throws DataException ;
-	
+
 	Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException, DataException;
-	
+
 	Optional<Curso> uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long codTipoDocumento)  throws IOException, ArchivoMuyGrandeExcepcion ;
-	
+
 	void delete(Long codCursoEspecializacion) throws DataException ;
-	
+
 	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) throws DataException ;
-	
+
 	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException;
 }

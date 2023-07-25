@@ -74,7 +74,8 @@ public class EstudianteResource {
 	public List<EstudianteDatos> listarAll() {
 		return objService.findAllEstudiante();
 	}*/
-	
+
+	// crear estudiantes de formación (aprobados de pruebas)
 	@PostMapping("/crearEstudiantes")
 	@ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardarAll() throws DataException {

@@ -90,13 +90,53 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
             pruebaRepository.save(p);
         }
 
-        return resultadoPruebas;
-    }
+	@Override
+    public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException {
+		try {
 
     @Override
     public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException {
         try {
 
+			List<ResultadoPruebaFisicaUtil> datosUtil = ResultadoPruebasHelper
+                    .excelToDatosPruebasFisicasI(file.getInputStream(), tipoResultado);
+            // Crear el HashMap para almacenar el último registro para cada idPostulante
+            Map<String, ResultadoPruebaFisicaUtil> ultimoResultadoPorPostulante = new HashMap<>();
+
+			// Iterar sobre datosUtil y actualizar el HashMap solo con los últimos registros para cada idPostulante
+            for (ResultadoPruebaFisicaUtil resultadoPruebaFisicaUtil : datosUtil) {
+                ultimoResultadoPorPostulante.put(resultadoPruebaFisicaUtil.getIdPostulante(), resultadoPruebaFisicaUtil);
+            }
+			// Filtrar los valores del HashMap para obtener la lista deseada
+            List<ResultadoPruebaFisicaUtil> datosFiltrados = new ArrayList<>(ultimoResultadoPorPostulante.values());
+
+			
+			LOGGER.info(tipoResultado);
+			
+            List<ResultadoPruebasFisicas> datos = datosFiltrados.stream().map(resultadoPruebaFisicaUtil -> {
+				ResultadoPruebasFisicas resultadoPruebasFisicas = new ResultadoPruebasFisicas();
+				Optional<Postulante> postulante = postulanteService.getByIdPostulante(resultadoPruebaFisicaUtil.getIdPostulante());
+                if (postulante.isEmpty()) {
+                    throw new RuntimeException("El postulante con el id: " + resultadoPruebaFisicaUtil.getIdPostulante() + " no existe");
+				}
+				
+				// busca registro existente
+				Optional<ResultadoPruebasFisicas> resultadoPruebasFisicasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+				
+				if (resultadoPruebasFisicasOpt.isEmpty()) {
+					resultadoPruebasFisicas = new ResultadoPruebasFisicas();
+				} else {
+					resultadoPruebasFisicas = resultadoPruebasFisicasOpt.get(); 
+				}
+				
+				
+				resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
+				resultadoPruebasFisicas.setResultado(resultadoPruebaFisicaUtil.getResultado());
+				resultadoPruebasFisicas.setResultadoTiempo(resultadoPruebaFisicaUtil.getResultadoTiempo());
+				resultadoPruebasFisicas.setCodPruebaDetalle(codPruebaDetalle);
+				resultadoPruebasFisicas.setCodFuncionario(codFuncionario);
+				resultadoPruebasFisicas.setEstado("ACTIVO");
+				return resultadoPruebasFisicas;
 
             List<ResultadoPruebaFisicaUtil> datosUtil = ResultadoPruebasHelper
                     .excelToDatosPruebasFisicasI(file.getInputStream(), tipoResultado);
@@ -120,69 +160,30 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
                     throw new RuntimeException("El postulante con el id: " + resultadoPruebaFisicaUtil.getIdPostulante() + " no existe");
                 }
 
-                // busca registro existente
-                Optional<ResultadoPruebasFisicas> resultadoPruebasFisicasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+	@Override
+	public void generarExcel(String nombre, Integer prueba) throws IOException, DataException {
+		// Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
-                if (resultadoPruebasFisicasOpt.isEmpty()) {
-                    resultadoPruebasFisicas = new ResultadoPruebasFisicas();
-                } else {
-                    resultadoPruebasFisicas = resultadoPruebasFisicasOpt.get();
-                }
-
-
-                resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
-                resultadoPruebasFisicas.setResultado(resultadoPruebaFisicaUtil.getResultado());
-                resultadoPruebasFisicas.setResultadoTiempo(resultadoPruebaFisicaUtil.getResultadoTiempo());
-                resultadoPruebasFisicas.setCodPruebaDetalle(codPruebaDetalle);
-                resultadoPruebasFisicas.setCodFuncionario(codFuncionario);
-                resultadoPruebasFisicas.setEstado("ACTIVO");
-                return resultadoPruebasFisicas;
-
-            }).collect(Collectors.toList());
-            repo.saveAll(datos);
-        } catch (IOException e) {
-            throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
-        }
-
-    }
-
-    @Override
-    public ResultadoPruebasFisicas save(ResultadoPruebasFisicas obj) {
-        // TODO Auto-generated method stub
-        return repo.save(obj);
-    }
-
-    @Override
-    public ByteArrayInputStream downloadFile() {
-
-        ByteArrayInputStream in = ResultadoPruebasHelper.datosToExcel(null);
-        return in;
-    }
-
-    @Override
-    public void generarExcel(String nombre, Integer prueba) throws IOException, DataException {
-        // Optional<Prueba> pp = pruebaRepository.findById(prueba);
-
-        Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
-                periodoAcademicoRepository.getPAActive());
-        if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
-            throw new DataException(ESTADO_INVALIDO);
-        } else {
-            String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
-                    + "/" + nombre;
+		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
+				periodoAcademicoRepository.getPAActive());
+		if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
+			throw new DataException(ESTADO_INVALIDO);
+		} else {
+			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
+					+ "/" + nombre;
             String[] HEADERs = {"Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo",
                     "Nota Promedio"};
-            try {
-                ExcelHelper.generarExcel(obtenerDatos(prueba), ruta, HEADERs);
+			try {
+				ExcelHelper.generarExcel(obtenerDatos(prueba), ruta, HEADERs);
 
-                generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
+				generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
+
 				/*
-
 				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
 				p.setEstado("CIERRE");
 
-				pruebaDetalleRepository.save(p);
+				pruebaDetalleRepository.save(p);*/
 
 				 */
 
@@ -193,19 +194,21 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
     }
 
-    @Override
-    public List<ResultadosPruebasFisicasDatos> getResultados(Integer prueba) {
-        // TODO Auto-generated method stub
-        return repo1.getResultados(prueba);
-    }
+	@Override
+	public void generarPDF(HttpServletResponse response, String nombre, Integer prueba)
+			throws DocumentException, IOException, DataException {
 
     @Override
     public void generarPDF(HttpServletResponse response, String nombre, Integer prueba)
             throws DocumentException, IOException, DataException {
 
-        try {
-            Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
-                    periodoAcademicoRepository.getPAActive());
+			if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
+				throw new DataException(ESTADO_INVALIDO);
+			} else {
+				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
+						+ periodoAcademicoRepository.getPAActive().toString()
+						+ "/" + nombre;
+                String[] columnas = {"Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo", "Nota Promedio"};
 
             if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
                 throw new DataException(ESTADO_INVALIDO);
@@ -224,14 +227,13 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
                 String cabecera = "Cuerpo-Bomberos";
                 String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
 
-                response.addHeader(cabecera, valor);
-
-                ExporterPdf exporter = new ExporterPdf();
+				ExporterPdf exporter = new ExporterPdf();
                 //TODO los anchos de las columnas
                 float[] widths = new float[]{2.5f, 3.5f, 6f, 6f, 2.5f, 2.5f, 2.5f};
 
-                //Genera el pdf
-                exporter.exportar(response, columnas, obtenerDatos(prueba), widths, ruta);
+				//Genera el pdf
+				exporter.setArchivosRuta(ARCHIVOS_RUTA);
+				exporter.exportar(response, columnas, obtenerDatos(prueba), widths, ruta);
 
                 generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
 /*
@@ -248,14 +250,22 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
             System.out.println("error: " + ex.getMessage());
         }
 
-    }
-
-    //obtener resultados dto por una prueba detalle, y pasarlo a una array de registros
-    public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
-        List<ResultadosPruebasFisicasDatos> datos = repo1.getResultados(prueba);
+	public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
+		List<ResultadosPruebasFisicasDatos> datos = repo1.getResultados(prueba);
         System.out.println("Array de datos para excel" + entityToArrayList(datos));
-        return entityToArrayList(datos);
-    }
+		return entityToArrayList(datos);
+	}
+
+	public static String[] entityToStringArray(ResultadosPruebasFisicasDatos entity) {
+        return new String[]{
+				entity.getIdPostulante().toString(),
+				entity.getCedula(),
+				entity.getNombre(),
+				entity.getApellido(),
+				entity.getResultado().toString(),
+				entity.getResultadoTiempo() != null ? entity.getResultadoTiempo().toString() : "",
+                entity.getNotaPromedioFinal().toString()};
+	}
 
     //pasar a array un registro
     public static String[] entityToStringArray(ResultadosPruebasFisicasDatos entity) {
@@ -269,9 +279,11 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
                 entity.getNotaPromedioFinal().toString()};
     }
 
-    //Para pasar a arrays lista de registros
-    public static ArrayList<ArrayList<String>> entityToArrayList(List<ResultadosPruebasFisicasDatos> datos) {
-        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+		for (ResultadosPruebasFisicasDatos dato : datos) {
+			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
+		}
+		return arrayMulti;
+	}
 
         for (ResultadosPruebasFisicasDatos dato : datos) {
             arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));

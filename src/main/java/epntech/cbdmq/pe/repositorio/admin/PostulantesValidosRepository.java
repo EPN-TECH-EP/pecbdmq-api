@@ -38,6 +38,25 @@ public interface PostulantesValidosRepository extends JpaRepository<PostulantesV
 	String orderByIdPostulante	=	 "order by p.id_postulante";
 	String orderByApellidoPostulante	=	 "order by dp.apellido";
 
+	// string para filtrar por cedula
+	String filtroCedula = " and dp.cedula like '%' || trim(:filtro) || '%' ";
+
+	// string para filtrar por id_postulante
+	String filtroIdPostulante = " and upper(p.id_postulante) = trim(upper(:filtro)) ";
+
+	// string para filtrar por apellido
+	String filtroApellido = " and upper(dp.apellido) like '%' || trim(upper(:filtro)) || '%' ";
+
+	// consulta de postulantes válidos por filtro
+	@Query(value = queryBase + filtroCedula + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getPostulantesValidosFiltroCedula(String filtro);
+
+	@Query(value = queryBase + filtroIdPostulante + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getPostulantesValidosFiltroIdPostulante(String filtro);
+
+	@Query(value = queryBase + filtroApellido + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getPostulantesValidosFiltroApellido(String filtro);
+
 	@Query(value = queryBase  + orderByIdPostulante, nativeQuery=true)
 	List<PostulantesValidos> getAllPostulantesValidos();
 	

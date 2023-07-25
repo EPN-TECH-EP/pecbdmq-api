@@ -10,14 +10,16 @@ public class InstructoresCurso {
 
 	@Id
 	private Long codInstructorCurso;
-	private Long codInstructor;
+	private Integer codInstructor;
 	private String cedula;
 	private String nombre;
 	private String apellido;
 	private Long codCursoEspecializacion;
 	private String nombreCatalogoCurso;
-	private Long codTipoInstructor;
+	private Integer codTipoInstructor;
 	private String nombreTipoInstructor;
-	
+	private String correoPersonal;
+	private String correoInstitucional;
+
 }
 

@@ -14,7 +14,7 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 
 	Optional<Documento> findByNombre(String nombre);
 	
-
+	
 	@Query(value="select d.* \r\n"
 			+ "from \r\n"
 			+ "cbdmq.gen_documento d, \r\n"
