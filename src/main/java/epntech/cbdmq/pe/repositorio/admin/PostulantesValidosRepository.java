@@ -20,6 +20,13 @@ public interface PostulantesValidosRepository extends JpaRepository<PostulantesV
 			+ "and UPPER(p.estado) in ('VALIDO', 'VALIDO MUESTRA') "
 			+ "and cod_periodo_academico = cbdmq.get_pa_activo()", nativeQuery=true)
 	List<PostulantesValidos> getPostulantesValidos();
+	@Query(value = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "
+			+ "from cbdmq.gen_postulante p, cbdmq.gen_dato_personal dp "
+			+ "where p.cod_datos_personales = dp.cod_datos_personales "
+			+ "and UPPER(dp.estado) <> 'INACTIVO' "
+			+ "and UPPER(p.estado) in ('VALIDO', 'VALIDO MUESTRA') "
+			+ "and cod_periodo_academico = cbdmq.get_pa_activo()", nativeQuery=true)
+	List<PostulantesValidos> getPostulantesValidosDiferentBaja();
 
 	
 	String queryBase = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "

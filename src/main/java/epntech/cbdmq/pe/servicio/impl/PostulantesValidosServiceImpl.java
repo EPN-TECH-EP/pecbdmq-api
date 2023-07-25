@@ -45,6 +45,11 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	}
 
 	@Override
+	public List<PostulantesValidos> getPostulantesValidosDiferentBaja() {
+		return repo.getPostulantesValidosDiferentBaja();
+	}
+
+	@Override
 	public List<PostulantesValidos> getAllPostulantesValidos() {
 		return repo.getAllPostulantesValidos();
 	}

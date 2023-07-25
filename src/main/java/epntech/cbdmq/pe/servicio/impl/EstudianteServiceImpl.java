@@ -148,7 +148,7 @@ public class EstudianteServiceImpl implements EstudianteService {
     public List<EstudianteDto> getEstudiantesBaja() {
 
         List<Estudiante> estudiantes = this.getEstudiantesIs("BAJA");
-        List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidos();
+        List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidosDiferentBaja();
         List<Estudiante> estudiantesFiltrados = estudiantes.stream()
                 .filter(estudiante -> postulantes.stream()
                         .anyMatch(postulante -> postulante.getCedula().equals(

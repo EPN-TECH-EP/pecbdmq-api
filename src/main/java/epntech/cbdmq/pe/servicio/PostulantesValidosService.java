@@ -16,6 +16,7 @@ import jakarta.mail.MessagingException;
 public interface PostulantesValidosService {
 	
 	List<PostulantesValidos> getPostulantesValidos();
+	List<PostulantesValidos> getPostulantesValidosDiferentBaja();
 
 	List<PostulantesValidos> getAllPostulantesValidos();
 	
