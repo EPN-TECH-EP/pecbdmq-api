@@ -34,6 +34,7 @@ import lombok.Data;
 				"        left join {h-schema}gen_materia_periodo mpe on mp.cod_materia_periodo = mpe.cod_materia_periodo\n" +
 				"        left join {h-schema}gen_materia m on mpe.cod_materia = m.cod_materia\n" +
 				"        where m.cod_materia = :codMateria\n" +
+				"		 and ge.estado <> 'BAJA'\n"+
 				"        and mpe.cod_periodo_academico = :codPA",resultSetMapping = "EstudianteDatos"
 )
 
@@ -63,6 +64,7 @@ import lombok.Data;
 				"left join cbdmq.gen_materia gm on mp.cod_materia = gm.cod_materia \n" +
 				"where ge.cod_estudiante = :codEstudiante \n" +
 				"and gti.nombre_tipo_instructor = :tipoInstructor \n" +
+				"and ge.estado <> 'BAJA' \n" +
 				"and mp.cod_periodo_academico =  :codPA",resultSetMapping = "NotaMateriaByEstudiante"
 )
 
