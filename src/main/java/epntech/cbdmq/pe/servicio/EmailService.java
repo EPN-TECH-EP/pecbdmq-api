@@ -41,13 +41,13 @@ public class EmailService {
     @Value("${pecb.email.username}")
     private String USERNAME;
 
-	@Value("${pecb.email.password}")
-	private String PASSWORD;
-	
-	@Value("${pecb.email.ruta-plantillas}")
-	private String RUTA_PLANTILLAS;
-	
-	private String FROM_EMAIL = USERNAME;
+    @Value("${pecb.email.password}")
+    private String PASSWORD;
+
+    @Value("${pecb.email.ruta-plantillas}")
+    private String RUTA_PLANTILLAS;
+
+    private String FROM_EMAIL = USERNAME;
 
     public void sendNewPasswordEmail(String firstName, String password, String email) throws MessagingException, IOException {
         /*
@@ -294,72 +294,55 @@ public class EmailService {
         JavaMailSender emailSender = this.getJavaMailSender();
         MimeMessage message = this.sendEmail(destinatarios, subject, texto, emailSender);
 
-	}
-	private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail( String nombrePrueba, String email)
-			throws MessagingException {
+    }
+    private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail( String nombrePrueba, String email)
+            throws MessagingException {
 
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom(USERNAME);
-		message.setTo(email);
-		message.setSubject(EMAIL_SUBJECT2);
-		message.setText("Usted ha aprobado la prueba " + nombrePrueba
-				+ "\n \n Plataforma educativa - CBDMQ");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(USERNAME);
+        message.setTo(email);
+        message.setSubject(EMAIL_SUBJECT2);
+        message.setText("Usted ha aprobado la prueba " + nombrePrueba
+                + "\n \n Plataforma educativa - CBDMQ");
 
-		return message;
-	}
-	public String notificacionAprobadoEmail(String nombrePrueba, String email) throws MessagingException {
-		JavaMailSender emailSender = this.getJavaMailSender();
-		SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, email);
+        return message;
+    }
+    public String notificacionAprobadoEmail(String nombrePrueba, String email) throws MessagingException {
+        JavaMailSender emailSender = this.getJavaMailSender();
+        SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, email);
 
-	}
-	private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail( String nombrePrueba, String email)
-			throws MessagingException {
-
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom(USERNAME);
-		message.setTo(email);
-		message.setSubject(EMAIL_SUBJECT2);
-		message.setText("Usted ha aprobado la prueba " + nombrePrueba
-				+ "\n \n Plataforma educativa - CBDMQ");
-
-		return message;
-	}
-	public String notificacionAprobadoEmail(String nombrePrueba, String email) throws MessagingException {
-		JavaMailSender emailSender = this.getJavaMailSender();
-		SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, email);
-
-		emailSender.send(message);
+        emailSender.send(message);
         return message.getText();
 
-	}
-	
-	public void enviarEmailHtml(String[] destinatarios, String subject, String texto) {
-		try {
-			JavaMailSender emailSender = this.getJavaMailSender();
-			MimeMessage message = this.createEmailHtml(destinatarios, subject, texto);
-			emailSender.send(message);
-		} catch (MessagingException me) {
-			throw new BusinessException("Error al enviar correo");
-		}
-	}
+    }
 
-	private MimeMessage createEmailHtml(String[] destinatarios, String subject, String texto)
-			throws MessagingException {
-		MimeMessage message = this.getJavaMailSender().createMimeMessage();
-		InternetAddress fromAddress = new InternetAddress(USERNAME);
-		message.setFrom(fromAddress);
+    public void enviarEmailHtml(String[] destinatarios, String subject, String texto) {
+        try {
+            JavaMailSender emailSender = this.getJavaMailSender();
+            MimeMessage message = this.createEmailHtml(destinatarios, subject, texto);
+            emailSender.send(message);
+        } catch (MessagingException me) {
+            throw new BusinessException("Error al enviar correo");
+        }
+    }
 
-		List<InternetAddress> recipientList = new ArrayList<>();
-		for (String destinatario : destinatarios) {
-			recipientList.add(new InternetAddress(destinatario));
-		}
+    private MimeMessage createEmailHtml(String[] destinatarios, String subject, String texto)
+            throws MessagingException {
+        MimeMessage message = this.getJavaMailSender().createMimeMessage();
+        InternetAddress fromAddress = new InternetAddress(USERNAME);
+        message.setFrom(fromAddress);
 
-		message.setRecipients(MimeMessage.RecipientType.TO, recipientList.toArray(new InternetAddress[0]));
-		message.setSubject(subject);
+        List<InternetAddress> recipientList = new ArrayList<>();
+        for (String destinatario : destinatarios) {
+            recipientList.add(new InternetAddress(destinatario));
+        }
 
-		message.setContent(texto, "text/html; charset=utf-8");
-		return message;
+        message.setRecipients(MimeMessage.RecipientType.TO, recipientList.toArray(new InternetAddress[0]));
+        message.setSubject(subject);
 
-	}
+        message.setContent(texto, "text/html; charset=utf-8");
+        return message;
+
+    }
 }
 
