@@ -110,64 +110,40 @@ public class AntiguedadesResource {
 			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
 		}
 	}
-	@GetMapping("/descargarAntiguedadesFormacionPDF")
-	public ResponseEntity<?> descargarArchivo( HttpServletRequest request) throws FileNotFoundException {
-		String nombre= ANTIGUEDADESFORMACION+periodoAcademicoRepository.getPAActive().toString()+".pdf";
+	@GetMapping("/descargarArchivo")
+	public ResponseEntity<?> descargarArchivo(@RequestParam String extension, HttpServletRequest request) throws FileNotFoundException {
+		String nombre = ANTIGUEDADESFORMACION + periodoAcademicoRepository.getPAActive().toString() + "." + extension;
+
 		// Buscar el archivo en la base de datos
 		Documento archivo = repository.findByNombre(nombre).orElse(null);
+
 		if (archivo == null) {
 			return response(HttpStatus.BAD_REQUEST, ARCHIVO_NO_EXISTE);
 		}
+
 		// Crear un objeto Resource para el archivo
 		File file = new File(archivo.getRuta());
 		InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-		// Obtener la extensi�n del archivo
-		String contentType = "application/pdf";
+
+		// Determinar el contentType según la extensión
+		String contentType;
+		if ("pdf".equalsIgnoreCase(extension)) {
+			contentType = "application/pdf";
+		} else if ("xlsx".equalsIgnoreCase(extension) || "xls".equalsIgnoreCase(extension)) {
+			contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+		} else {
+			// Extensión de archivo desconocida
+			return response(HttpStatus.BAD_REQUEST, "Extensión de archivo no soportada.");
+		}
+
 		// Devolver una respuesta con el archivo adjunto y la URL de descarga
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
 				.contentType(MediaType.parseMediaType(contentType))
 				.body(resource);
 	}
-	//TODO mirar como optimizar todo
-	@GetMapping("/descargarAntiguedadesFormacionXls")
-	public ResponseEntity<?> descargarArchivoExcel( HttpServletRequest request) throws FileNotFoundException {
-		String nombre = ANTIGUEDADESFORMACION + periodoAcademicoRepository.getPAActive().toString() + ".xlsx";
-		String xlsNombre = ANTIGUEDADESFORMACION + periodoAcademicoRepository.getPAActive().toString() + ".xls";
 
-		// Buscar el archivo en la base de datos
-		Documento archivo = repository.findByNombre(nombre).orElse(null);
-		File file;
-		if (nombre == null) {
-			Documento xlsArchivo = repository.findByNombre(xlsNombre).orElse(null);
-			System.out.println("xlsArchivo: " + xlsArchivo);
-			if (xlsArchivo == null) {
-				return response(HttpStatus.BAD_REQUEST, ARCHIVO_NO_EXISTE);
-			}
-			// Crear un objeto Resource para el archivo
-			file = new File(xlsArchivo.getRuta());
-			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-			// Obtener la extensi�n del archivo
-			String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-			// Devolver una respuesta con el archivo adjunto y la URL de descarga
-			return ResponseEntity.ok()
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
-					.contentType(MediaType.parseMediaType(contentType))
-					.body(resource);
 
-		}
-			// Crear un objeto Resource para el archivo
-			file = new File(archivo.getRuta());
-			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-			// Obtener la extensi�n del archivo
-			String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-			// Devolver una respuesta con el archivo adjunto y la URL de descarga
-			return ResponseEntity.ok()
-					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
-					.contentType(MediaType.parseMediaType(contentType))
-					.body(resource);
-		}
-	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
