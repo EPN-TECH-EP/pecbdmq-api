@@ -16,6 +16,7 @@ public interface ComponenteNotaService {
     ComponenteNota save(ComponenteNota obj) throws DataException;
 
     List<ComponenteNota> getAll();
+    List<ComponenteNota> getAllByCodPA();
 
     Optional<ComponenteNota> getById(int id);
 

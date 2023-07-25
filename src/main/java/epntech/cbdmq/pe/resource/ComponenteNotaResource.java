@@ -47,6 +47,12 @@ public class ComponenteNotaResource {
     public List<ComponenteNota> listar() {
         return objServices.getAll();
     }
+    @GetMapping("/listarPA")
+    public List<ComponenteNota> listarPA() {
+        return objServices.getAllByCodPA();
+    }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ComponenteNota> obtenerDatosPorId(@PathVariable("id") Integer codigo) {

@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
-import epntech.cbdmq.pe.dominio.util.ComponenteTipo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.ComponenteTipoRepository;
 import epntech.cbdmq.pe.repositorio.admin.ComponenteNotaRepository;
 import epntech.cbdmq.pe.servicio.ComponenteNotaService;
 
@@ -60,8 +58,13 @@ public class ComponenteNotaServiceImpl implements ComponenteNotaService {
         return repo.findAll();
     }
 
+	@Override
+	public List<ComponenteNota> getAllByCodPA() {
+		return repo.findComponenteNotaByCodPeriodoAcademico(periodoAcademicoService.getPAActivo());
+	}
 
-    @Override
+
+	@Override
     public Optional<ComponenteNota> getById(int id) {
         return repo.findById(id);
     }
