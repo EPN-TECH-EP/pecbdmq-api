@@ -31,12 +31,8 @@ import epntech.cbdmq.pe.dominio.util.ComponenteTipo;
 import epntech.cbdmq.pe.servicio.impl.ComponenteNotaServiceImpl;
 
 
-/**
- * @author EPN TECH
- * @version $Revision: $
- */
 @RestController
-@RequestMapping("/gen_componente_nota")
+@RequestMapping("/componenteNota")
 public class ComponenteNotaResource {
     @Autowired
     private ComponenteNotaServiceImpl objServices;
@@ -62,6 +58,7 @@ public class ComponenteNotaResource {
         return (ResponseEntity<ComponenteNota>) objServices.getById(codigo).map(datosGuardados -> {
            // datosGuardados.setCod_componente_nota(obj.getCod_componente_nota());
             datosGuardados.setNombre(obj.getNombre());
+            datosGuardados.setPorcentajeComponenteNota(obj.getPorcentajeComponenteNota());
             datosGuardados.setEstado(obj.getEstado());
             ComponenteNota datosActualizados = null;
 			try {
@@ -85,10 +82,7 @@ public class ComponenteNotaResource {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
-    @GetMapping("/listarComponenteTipo")
-	public List<ComponenteTipo> listarTodo() {
-		return objServices.getComponenteTipo();
-    }
+
 
    
 }

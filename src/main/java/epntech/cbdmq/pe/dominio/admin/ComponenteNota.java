@@ -29,8 +29,13 @@ public class ComponenteNota {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cod_componente_nota")
     private Integer codComponenteNota;
-    @Column(name = "tipo_componente_nota")
+    @Column(name = "nombre_componente_nota")
     private String nombre;
     @Column(name = "estado")
-	private String estado;
+    private String estado;
+    @Column(name = "porcentaje_componente_nota")
+    private Double porcentajeComponenteNota;
+    @Column(name = "cod_periodo_academico")
+    private Integer codPeriodoAcademico;
+
 }

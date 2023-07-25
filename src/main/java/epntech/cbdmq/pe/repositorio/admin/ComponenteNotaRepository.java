@@ -9,10 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
 
-/**
- * @author EPN TECH
- * @version $Revision: $
- */
+
 public interface ComponenteNotaRepository extends JpaRepository<ComponenteNota, Integer> {
-    Optional<ComponenteNota> findByNombreIgnoreCase(String Nombre);
+    Optional<ComponenteNota> findByNombreIgnoreCaseAndCodPeriodoAcademico(String Nombre, Integer codPeriodoAcademico);
 }
