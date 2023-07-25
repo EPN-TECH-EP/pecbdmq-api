@@ -67,7 +67,7 @@ public class FaltaPeriodoServiceImpl implements FaltaPeriodoService{
 
 	@Override
 	public List<TipoFaltaPeriodoUtil> getFaltasPeriodo() {
-			return faltaPeriodoRepository.getFaltasPeriodo(periodoAcademicoService.getPAActivo());
+			return faltaPeriodoRepository.getFaltasPeriodo();
 	}
 
 

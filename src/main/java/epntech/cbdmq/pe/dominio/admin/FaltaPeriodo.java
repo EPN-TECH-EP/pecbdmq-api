@@ -22,8 +22,7 @@ import lombok.Data;
 				"from cbdmq.gen_falta_periodo f1_0 \n" +
 				"left join cbdmq.gen_tipo_falta t1_0 \n" +
 				"on f1_0.cod_tipo_falta=t1_0.cod_tipo_falta \n" +
-				"where t1_0.estado <> 'ELIMINADO'\n" +
-				"and f1_0.cod_periodo_academico= :codPA ",resultSetMapping = "TipoFaltaPeriodoUtil"
+				"where t1_0.estado <> 'ELIMINADO'\n",resultSetMapping = "TipoFaltaPeriodoUtil"
 )
 @Data
 @Entity

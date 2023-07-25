@@ -12,5 +12,5 @@ import java.util.List;
 public interface FaltaPeriodoRepository extends JpaRepository<FaltaPeriodo, Integer>{
 
 @Query(name="TipoFaltaPeriodoUtil.get",nativeQuery=true)
-List<TipoFaltaPeriodoUtil> getFaltasPeriodo(@Param("codPA") Integer codPA);
+List<TipoFaltaPeriodoUtil> getFaltasPeriodo();
 }
