@@ -165,13 +165,13 @@ public class BajaServiceImpl implements BajaService {
 			obj.setEstado(ESTADO_BAJA);
 		else
 			throw new DataException(BAJA_EXISTE);
+
+		
+		UsuarioDatoPersonal usuarioDatoPersonal = usuarioDatoPersonalRepository.getByCodDatoPersonal(Long.valueOf(obj.getCodDatosPersonales()));
 		Optional<DatoPersonal> datoPersonal = datoPersonalRepository.findById(obj.getCodDatosPersonales());
 		DatoPersonal dp = new DatoPersonal();
 		dp = datoPersonal.get();
 		dp.setEstado(ESTADO_BAJA);
-		
-		UsuarioDatoPersonal usuarioDatoPersonal = usuarioDatoPersonalRepository.getByCodDatoPersonal(Long.valueOf(obj.getCodDatosPersonales()));
-	
 		Usuario usuario = usuarioRepository.findUsuarioByNombreUsuario(usuarioDatoPersonal.getNombreUsuario());
 		Usuario u = new Usuario();
 		u = usuario;
