@@ -5,6 +5,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +26,15 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.ResultadoPruebaServiceImpl;
 
 @RestController
-@RequestMapping("/resultadoprueba")
+@RequestMapping("/resultadoPrueba")
+@Tag(name = "Resultado Prueba", description = "Servicio para métodos de resultados de pruebas de formación (indistinto si son físicas o no)")
 public class ResultadoPruebaResource {
 
 	@Autowired
 	private ResultadoPruebaServiceImpl objService;
 	
 	
-	@PostMapping("/crear")
+	/*@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestBody ResultadoPrueba obj) throws DataException{
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
@@ -87,7 +89,7 @@ public class ResultadoPruebaResource {
 	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 	                message), httpStatus);
 	    }
-	
+*/
 	
 	
 	
