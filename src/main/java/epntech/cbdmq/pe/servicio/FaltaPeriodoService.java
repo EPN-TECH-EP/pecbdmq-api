@@ -19,4 +19,5 @@ public interface FaltaPeriodoService {
 
 	void delete(int id) throws DataException;
 	List<TipoFaltaPeriodoUtil> getFaltasPeriodo();
+	Integer insertarFaltaPeriodoFormacion();
 }
