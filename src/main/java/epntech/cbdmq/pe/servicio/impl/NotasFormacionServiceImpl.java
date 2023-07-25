@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.FormacionConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.EmailConst.*;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaParalelo;
 import epntech.cbdmq.pe.servicio.formacion.EstudianteMateriaParaleloService;
@@ -32,6 +34,7 @@ import epntech.cbdmq.pe.repositorio.admin.NotasDatosFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import jakarta.mail.MessagingException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class NotasFormacionServiceImpl implements NotasFormacionService {
@@ -87,7 +90,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 				materiaPeriodoData = materiaPeriodoDataRepository.findByCodPeriodoAcademicoAndCodMateria(periodo,
 						objMpe.getCodMateria());
 
-				nn.setEstado("ACTIVO");
+				nn.setEstado(ACTIVO);
 				nn.setNotaMinima(materiaPeriodoData.getNotaMinima());
 				nn.setNumeroHoras(materiaPeriodoData.getNumeroHoras());
 				nn.setPesoMateria(materiaPeriodoData.getPesoMateria());
@@ -133,6 +136,9 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 
 	@Override
 	public NotasFormacion updateII(NotasFormacion objActualizado) throws DataException {
+		LocalDateTime dateTime = LocalDateTime.now();
+		objActualizado.setFechaIngreso(dateTime);
+
 		Optional<NotasFormacion> notasFormacion = this.getById(objActualizado.getCodNotaFormacion());
 		if(notasFormacion.isEmpty()){
 			throw new DataException(NO_ENCUENTRA);
@@ -191,12 +197,24 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	}
 
 	@Override
+	@Transactional
 	public void insertarEstudiantesNotas() {
 		try {
 			notasFormacionRepository.insertar_lista_estudiantes_notas();
 		} catch (Exception ex) {
-			throw new RuntimeException("No se actualizo");
+			ex.printStackTrace(); // Imprimir la traza de la excepción en la consola
+			throw new RuntimeException("Error al intentar ejecutar el procedimiento almacenado");
 		}
 
+	}
+
+	@Override
+	public List<NotaMateriaByEstudiante> getNotaMateriasByEstudiante(Integer codEstudiante, String tipoInstructor) {
+		return notasFormacionRepository.get(codEstudiante, tipoInstructor, periodoAcademicoService.getPAActivo());
+	}
+
+	@Override
+	public List<NotaMateriaByEstudiante> getNotaMateriasCoordinadorByEstudiante(Integer codEstudiante) {
+		return this.getNotaMateriasByEstudiante(codEstudiante,"COORDINADOR");
 	}
 }

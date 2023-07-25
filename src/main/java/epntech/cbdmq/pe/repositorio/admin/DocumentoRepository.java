@@ -14,7 +14,6 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 
 	Optional<Documento> findByNombre(String nombre);
 	
-	List<Documento> findAllByNombre(String nombre);
 	
 	@Query(value="select d.* \r\n"
 			+ "from \r\n"
@@ -24,5 +23,6 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 			+ "and d.cod_documento = pd.cod_documento \r\n"
 			+ "and UPPER(d.estado) = 'ACTIVO';", nativeQuery=true)
 	Set<Documento> getDocumentosPruebaDetalle(@Param("codPruebaDetalle") Integer codPruebaDetalle);
+	List<Documento> findAllByNombre(String nombre);
 
 }

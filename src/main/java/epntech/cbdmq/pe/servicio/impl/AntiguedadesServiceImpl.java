@@ -26,6 +26,8 @@ import epntech.cbdmq.pe.servicio.AntiguedadesService;
 import epntech.cbdmq.pe.util.ExporterPdf;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
+
 @Service
 public class AntiguedadesServiceImpl implements AntiguedadesService {
 
@@ -143,7 +145,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		if(documento2.isPresent()) {
 			documento = documento2.get();
 		}
-		documento.setEstado("ACTIVO");
+		documento.setEstado(ACTIVO);
 		documento.setNombre(nombre);
 		documento.setRuta(ruta);
 

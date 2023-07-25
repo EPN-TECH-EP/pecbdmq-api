@@ -4,17 +4,26 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
+import epntech.cbdmq.pe.dominio.util.TipoFaltaPeriodoUtil;
+import jakarta.persistence.*;
 import lombok.Data;
-
+@SqlResultSetMapping(name = "TipoFaltaPeriodoUtil", classes =
+@ConstructorResult(
+		targetClass = TipoFaltaPeriodoUtil.class,
+		columns = {
+				@ColumnResult(name = "cod_falta_periodo", type= Integer.class),
+				@ColumnResult(name = "cod_tipo_falta", type= Integer.class),
+				@ColumnResult(name = "nombre_falta", type= String.class),
+				@ColumnResult(name = "puntaje", type = BigDecimal.class),
+		}))
+@NamedNativeQuery(name = "TipoFaltaPeriodoUtil.get",
+		query = "select f1_0.cod_falta_periodo,f1_0.cod_tipo_falta,t1_0.nombre_falta,f1_0.puntaje \n" +
+				"from cbdmq.gen_falta_periodo f1_0 \n" +
+				"left join cbdmq.gen_tipo_falta t1_0 \n" +
+				"on f1_0.cod_tipo_falta=t1_0.cod_tipo_falta \n" +
+				"where t1_0.estado <> 'ELIMINADO'\n",resultSetMapping = "TipoFaltaPeriodoUtil"
+)
 @Data
 @Entity
 @Table(name = "gen_falta_periodo")
@@ -23,22 +32,13 @@ public class FaltaPeriodo {
 	
 	@Column(name = "cod_falta_periodo")
 	private Integer codFaltaPeriodo;
-	
-	/*@Column(name = "cod_falta")
-	private Integer cod_falta;*/
-	
+
 	@Column(name = "cod_periodo_academico")
 	private Integer codPeriodoAcademico;
 	
 	@Column(name = "puntaje")
 	private BigDecimal puntaje;
-	
-	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(name = "gen_falta_periodo",
-            joinColumns = @JoinColumn(name = "cod_falta_periodo"),
-            inverseJoinColumns = @JoinColumn(name = "cod_falta")
-    )
-	private List<TipoFalta> falta = new ArrayList<>();
+	@Column(name = "cod_tipo_falta")
+	private Integer codTipoFalta;
 	
 }

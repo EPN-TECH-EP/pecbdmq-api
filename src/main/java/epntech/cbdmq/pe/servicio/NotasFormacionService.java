@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import org.postgresql.util.PSQLException;
 
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
@@ -29,7 +30,8 @@ public interface NotasFormacionService {
 	List<NotasDatosFormacion> getNotasMateria(long codMateria);
 	NotaEstudianteFormacionDto getEstudianteMateriaParalelo(Integer codMateria);
 	void insertarEstudiantesNotas();
-
+	List<NotaMateriaByEstudiante> getNotaMateriasByEstudiante(Integer codEstudiante,String tipoInstructor);
+	List<NotaMateriaByEstudiante> getNotaMateriasCoordinadorByEstudiante(Integer codEstudiante);
 	
 }
 

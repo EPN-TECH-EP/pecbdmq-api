@@ -45,6 +45,11 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	}
 
 	@Override
+	public List<PostulantesValidos> getPostulantesValidosDiferentBaja() {
+		return repo.getPostulantesValidosDiferentBaja();
+	}
+
+	@Override
 	public List<PostulantesValidos> getAllPostulantesValidos() {
 		return repo.getAllPostulantesValidos();
 	}
@@ -115,6 +120,26 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	@Override
 	public List<PostulantesValidos> getPostulantesAprovadosPrueba(Integer prueba) {
 		return repo.get_approved_by_test(prueba);
+	}
+
+	@Override
+	public List<PostulantesValidos> getPostulantesValidosFiltro(String tipoFiltro, String valorFiltro) {
+		List<PostulantesValidos> lista = new ArrayList<>();
+		switch (tipoFiltro) {
+		case "cedula":
+			lista = repo.getPostulantesValidosFiltroCedula(valorFiltro);
+			break;
+		case "idPostulante":
+			lista = repo.getPostulantesValidosFiltroIdPostulante(valorFiltro);
+			break;
+		case "apellido":
+			lista = repo.getPostulantesValidosFiltroApellido(valorFiltro);
+			break;
+		default:
+			lista = repo.getAllPostulantesValidos();
+			break;
+		}
+		return lista;
 	}
 
 }

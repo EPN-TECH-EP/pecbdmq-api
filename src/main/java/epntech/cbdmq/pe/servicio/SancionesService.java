@@ -21,5 +21,6 @@ public interface SancionesService {
     Sanciones update(Sanciones objActualizado, MultipartFile archivo) throws DataException, ArchivoMuyGrandeExcepcion, IOException;
 
     void delete(Integer codigo);
+    List<Sanciones> findAllByCodEstudiante(Integer codEstudiante);
     
 }

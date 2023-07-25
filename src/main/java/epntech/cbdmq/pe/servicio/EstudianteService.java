@@ -33,7 +33,9 @@ public interface EstudianteService {
 	DatoPersonal getDatoPersonalByEstudiante(Integer Estudiante);
 	List<EstudianteDto> getEstudiantesPA(List<Estudiante> estudiantes);
 	List<EstudianteDto> getEstudiantesSinAsignarPA();
+	List<EstudianteDto> getEstudiantesBaja();
 	Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion);
+	List<Estudiante> getEstudiantesIs(String Estado);
 
 
 }

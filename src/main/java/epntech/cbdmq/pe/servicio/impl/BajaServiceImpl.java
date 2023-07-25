@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_BAJAS;
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.FormacionConst.*;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -132,7 +134,7 @@ public class BajaServiceImpl implements BajaService {
 			// LOGGER.info("Archivo guardado: " + resultado +
 			
 			Documento documento = new Documento();
-			documento.setEstado("ACTIVO");
+			documento.setEstado(ACTIVO);
 			documento.setNombre(multipartFile.getOriginalFilename());
 			documento.setRuta(resultado + multipartFile.getOriginalFilename());
 			documento = documentoRepository.save(documento);
@@ -154,21 +156,22 @@ public class BajaServiceImpl implements BajaService {
 	}
 
 	@Override
+	@Transactional
 	public Estudiante darDeBaja(Estudiante obj) throws DataException {
 		Optional<Baja> baja;
-		baja = repo.findByCodEstudianteAndCodPeriodoAcademicoAndEstado(obj.getCodEstudiante(), periodoAcademicoRepository.getPAActive(), "ACTIVO");
+		baja = repo.findByCodEstudianteAndCodPeriodoAcademico(obj.getCodEstudiante(), periodoAcademicoRepository.getPAActive());
 		
 		if(baja.isPresent())
 			obj.setEstado(ESTADO_BAJA);
 		else
 			throw new DataException(BAJA_EXISTE);
+
+		
+		UsuarioDatoPersonal usuarioDatoPersonal = usuarioDatoPersonalRepository.getByCodDatoPersonal(Long.valueOf(obj.getCodDatosPersonales()));
 		Optional<DatoPersonal> datoPersonal = datoPersonalRepository.findById(obj.getCodDatosPersonales());
 		DatoPersonal dp = new DatoPersonal();
 		dp = datoPersonal.get();
 		dp.setEstado(ESTADO_BAJA);
-		
-		UsuarioDatoPersonal usuarioDatoPersonal = usuarioDatoPersonalRepository.getByCodDatoPersonal(Long.valueOf(obj.getCodDatosPersonales()));
-	
 		Usuario usuario = usuarioRepository.findUsuarioByNombreUsuario(usuarioDatoPersonal.getNombreUsuario());
 		Usuario u = new Usuario();
 		u = usuario;

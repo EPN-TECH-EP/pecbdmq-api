@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,9 @@ public interface CursoRequisitoRepository extends JpaRepository<CursoRequisito, 
 	@Modifying
 	@Query("delete from CursoRequisito a where a.codCursoEspecializacion = ?1")
 	void deleteByCodCursoEspecializacion(Long codCursoEspecializacion);
-	
+
+	List<CursoRequisito> findByCodCursoEspecializacion(Long codCursoEspecializacion);
+
 	Optional<CursoRequisito> findFirstByCodCursoEspecializacion(Long codCursoEspecializacion);
 
 }

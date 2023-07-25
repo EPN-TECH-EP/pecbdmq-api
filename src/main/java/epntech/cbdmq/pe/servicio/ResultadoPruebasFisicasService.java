@@ -26,9 +26,9 @@ public interface ResultadoPruebasFisicasService {
 	
 	ByteArrayInputStream downloadFile();
 	
-	void generarExcel(String filePath, String nombre, Integer subtipoPrueba)  throws IOException, DataException;
+	void generarExcel(String nombre, Integer subtipoPrueba)  throws IOException, DataException;
 	
-	void generarPDF(HttpServletResponse response, String nombre, Integer subtipoPrueba, String[] columnas) throws DocumentException, IOException, DataException;
+	void generarPDF(HttpServletResponse response, String nombre, Integer subtipoPrueba) throws DocumentException, IOException, DataException;
 	
 	List<ResultadosPruebasFisicasDatos> getResultados(Integer subtipoPrueba);
 	

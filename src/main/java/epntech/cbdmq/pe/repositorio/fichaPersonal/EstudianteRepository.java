@@ -53,9 +53,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 
 
 
-	@Query("select ge.codEstudiante from NotasFormacion gnf\n"+
+	@Query("select ge from NotasFormacion gnf\n"+
 			"left join EstudianteMateriaParalelo gemp on gnf.codEstudianteMateriaParalelo = gemp.codEstudianteMateriaParalelo\n" +
 			"left join Estudiante ge on ge.codEstudiante = gemp.codEstudiante\n" +
 			"where gnf.codNotaFormacion=:notaFormacion")
 			Estudiante getEstudianteByNotaFormacionFinal(@Param("notaFormacion") Integer notaFormacion);
+
+	List<Estudiante> getAllByEstadoIsIgnoreCase(String estado);
 }

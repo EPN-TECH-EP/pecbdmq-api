@@ -197,6 +197,8 @@ public class InscripcionForRepository {
 			datoPersonal.setPinValidacionCorreo(inscripcion.getPinValidacionCorreo());
 			
 			dpRepository.save(datoPersonal);
+
+			inscripcion.setCodDatoPersonal(codDatoPersonal);
 			
 			
 		} else {

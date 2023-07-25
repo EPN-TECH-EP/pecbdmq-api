@@ -2,6 +2,8 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.FormacionConst.FECHA_APELACION_INVALIDA;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -36,6 +38,11 @@ public class ApelacionServiceImpl implements ApelacionService {
 
 	@Override
 	public Apelacion save(Apelacion obj) throws DataException, ParseException {
+
+		Optional<?> objGuardado = repo.findApelacionByCodNotaFormacion(obj.getCodNotaFormacion());
+		if (objGuardado.isPresent()) {
+			throw new DataException(REGISTRO_YA_EXISTE);
+		}
 		Date fechaActual = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String fechaFormateada = sdf.format(fechaActual);
@@ -44,11 +51,11 @@ public class ApelacionServiceImpl implements ApelacionService {
 		Optional<NotasFormacion> notasFormacion = notasFormacionRepository.findById(obj.getCodNotaFormacion());
 
 		if (notasFormacion.isPresent()) {
-			LocalDateTime dateTime = LocalDateTime.now();
+			LocalDateTime fechaApelacion = LocalDateTime.now();
 			LocalDateTime fechaIngreso = notasFormacion.get().getFechaIngreso();
-			LocalDateTime newDateTime = notasFormacion.get().getFechaIngreso().plusHours(24);
-
-			if (!(dateTime.isAfter(fechaIngreso) && dateTime.isBefore(newDateTime)))
+			LocalDateTime fechaPlazo = notasFormacion.get().getFechaIngreso().plusHours(24);
+			//para apelar tiene 24 horas despues de ingresar la nota
+			if (!(fechaApelacion.isAfter(fechaIngreso) && fechaApelacion.isBefore(fechaPlazo)))
 				throw new DataException(FECHA_APELACION_INVALIDA);
 
 			obj.setEstado("ACTIVO");
@@ -84,7 +91,6 @@ public class ApelacionServiceImpl implements ApelacionService {
 				NotasFormacion notasFormacion = new NotasFormacion();
 				notasFormacion = nn.get();
 				notasFormacion.setNotaMateria(objActualizado.getNotaNueva());
-				System.out.println("notasFormacion.getPesoMateria(): " + notasFormacion.getPesoMateria());
 				notasFormacion.setNotaPonderacion(objActualizado.getNotaNueva() * notasFormacion.getPesoMateria());
 
 				notasFormacionRepository.save(notasFormacion);
@@ -109,8 +115,7 @@ public class ApelacionServiceImpl implements ApelacionService {
 
 	@Override
 	public List<Apelacion> getByInstructor(Integer codigo) {
-		// TODO Auto-generated method stub
-		return repo.getApelacionesByInstructor(codigo);
+		return repo.getApelacionesByInstructor(codigo, "COORDINADOR");
 	}
 
 	@Override

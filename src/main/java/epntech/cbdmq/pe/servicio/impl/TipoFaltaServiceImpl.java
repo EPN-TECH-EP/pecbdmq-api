@@ -72,7 +72,7 @@ public class TipoFaltaServiceImpl implements TipoFaltaService {
     /**
      * {@inheritDoc}
      */
-    @Override
+
     public TipoFalta update(TipoFalta objActualizado) throws DataException {
     	Optional<TipoFalta> objGuardado = repo.findByNombreFaltaIgnoreCase(objActualizado.getNombreFalta());
     	if (objGuardado.isPresent()&& !objGuardado.get().getCodTipoFalta().equals(objActualizado.getCodTipoFalta())) {

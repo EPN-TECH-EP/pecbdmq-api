@@ -3,50 +3,45 @@
  */
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.ComponenteNota;
-import epntech.cbdmq.pe.dominio.util.ComponenteTipo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.repositorio.ComponenteTipoRepository;
 import epntech.cbdmq.pe.repositorio.admin.ComponenteNotaRepository;
 import epntech.cbdmq.pe.servicio.ComponenteNotaService;
 
-/**
- * @author EPN TECH
- * @version $Revision: $
- */
+
 @Service
 public class ComponenteNotaServiceImpl implements ComponenteNotaService {
     @Autowired
     ComponenteNotaRepository repo;
 
     @Autowired
-    ComponenteTipoRepository componentetiporepository;
-    /**
-     * {@inheritDoc}
-     */
+	PeriodoAcademicoService periodoAcademicoService;
+
     @Override
     public ComponenteNota save(ComponenteNota obj) throws DataException {
-    	// TODO Auto-generated method stub
-    	
+		obj.setCodPeriodoAcademico(periodoAcademicoService.getPAActivo());
+		obj.setEstado(ACTIVO);
     	if(obj.getNombre().trim().isEmpty())
 			throw new DataException(REGISTRO_VACIO);
-		Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCase(obj.getNombre());
+		Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCaseAndCodPeriodoAcademico(obj.getNombre(), periodoAcademicoService.getPAActivo());
 		if (objGuardado.isPresent()) {
 
 			// valida si existe eliminado
 			ComponenteNota stp = objGuardado.get();
 			if (stp.getEstado().compareToIgnoreCase(EstadosConst.ELIMINADO) == 0) {
-				stp.setEstado(EstadosConst.ACTIVO);
+				stp.setEstado(ACTIVO);
 				return repo.save(stp);
 			} else {
 			throw new DataException(REGISTRO_YA_EXISTE);
@@ -58,31 +53,27 @@ public class ComponenteNotaServiceImpl implements ComponenteNotaService {
 		return repo.save(obj);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<ComponenteNota> getAll() {
-        // TODO Auto-generated method stub
         return repo.findAll();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+	@Override
+	public List<ComponenteNota> getAllByCodPA() {
+		return repo.findComponenteNotaByCodPeriodoAcademico(periodoAcademicoService.getPAActivo());
+	}
+
+
+	@Override
     public Optional<ComponenteNota> getById(int id) {
-        // TODO Auto-generated method stub
         return repo.findById(id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public ComponenteNota update(ComponenteNota objActualizado) throws DataException {
     	if(objActualizado.getNombre() !=null) {
-    		Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());
+    		Optional<ComponenteNota> objGuardado = repo.findByNombreIgnoreCaseAndCodPeriodoAcademico(objActualizado.getNombre(), periodoAcademicoService.getPAActivo());
     		if (objGuardado.isPresent()&& !objGuardado.get().getCodComponenteNota().equals(objActualizado.getCodComponenteNota())) {
     			throw new DataException(REGISTRO_YA_EXISTE);
     		}
@@ -91,16 +82,11 @@ public class ComponenteNotaServiceImpl implements ComponenteNotaService {
     		return repo.save(objActualizado);
     	}
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void delete(int id) {
         repo.deleteById(id);
     }
 
-	@Override
-	public List<ComponenteTipo> getComponenteTipo() {
-		return componentetiporepository.getComponenteTipo();
-	}
+
 }

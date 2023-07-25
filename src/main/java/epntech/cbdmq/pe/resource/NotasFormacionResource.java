@@ -8,6 +8,7 @@ import java.util.List;
 import epntech.cbdmq.pe.dominio.admin.formacion.*;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -162,6 +163,10 @@ public class NotasFormacionResource {
 	public ResponseEntity<?> registroEstudiantes() {
 		notasFormacionServiceImpl.insertarEstudiantesNotas();
 		return response(HttpStatus.OK, PROCESO_EXITO);
+	}
+	@GetMapping("/listarNotaMateriaCoordinadorByEstudiante")
+	public List<NotaMateriaByEstudiante> listarNotaMateriaCoordinadorByEstudiante(@Param("codEstudiante") Integer codEstudiante) {
+		return notasFormacionServiceImpl.getNotaMateriasCoordinadorByEstudiante(codEstudiante);
 	}
 
 

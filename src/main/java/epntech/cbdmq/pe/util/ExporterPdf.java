@@ -6,24 +6,21 @@ import java.io.File;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import com.lowagie.text.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.lowagie.text.Font;
-
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
 
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -39,6 +36,13 @@ public class ExporterPdf {
 
 	private XSSFWorkbook libro;
 	private XSSFSheet hoja;
+
+
+	private String ARCHIVOS_RUTA;
+
+	public void setArchivosRuta(String archivosRuta) {
+		this.ARCHIVOS_RUTA = archivosRuta;
+	}
 
 	private void escribirCabeceraDeLaTabla(PdfPTable tabla, String[] columna) {
 		PdfPCell celda = new PdfPCell();
@@ -118,11 +122,19 @@ public class ExporterPdf {
 
 		documento.open();
 
-		Font fuente = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-		fuente.setColor(Color.WHITE);
-		fuente.setSize(18);
+		// añade imagen de cabecera
+		Image imagen = Image.getInstance(this.ARCHIVOS_RUTA +"logo-bomberos.png");
+		//imagen.scaleAbsolute(100, 100);
+		imagen.setAlignment(Paragraph.ALIGN_CENTER);
+		documento.add(imagen);
 
-		Paragraph titulo = new Paragraph("Lista", fuente);
+		Font fuente = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+		fuente.setColor(Color.BLACK);
+		fuente.setSize(16);
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String fechaActual = dateFormatter.format(new Date());
+
+		Paragraph titulo = new Paragraph("Resultados prueba generado el: "+ fechaActual, fuente);
 		titulo.setAlignment(Paragraph.ALIGN_CENTER);
 		documento.add(titulo);
 

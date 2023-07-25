@@ -97,7 +97,7 @@ public class ResultadoPruebasFisicasResource {
 
 				return response(HttpStatus.OK, CARGA_EXITOSA);
 			} catch (Exception e) {
-				return response(HttpStatus.EXPECTATION_FAILED, DOCUMENTO_NO_CUMPLE_FORMATO);
+				return response(HttpStatus.EXPECTATION_FAILED, e.getMessage());
 			}
 		}
 
@@ -116,10 +116,9 @@ public class ResultadoPruebasFisicasResource {
 	@PostMapping("/generarExcel")
 	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DataException {
 		try {
-			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
-					+ "/" + nombre;
 
-			resultadoPruebasServiceImpl.generarExcel(ruta, nombre, subTipoPrueba);
+
+			resultadoPruebasServiceImpl.generarExcel(nombre, subTipoPrueba);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("error: " + e.getMessage());
@@ -133,8 +132,8 @@ public class ResultadoPruebasFisicasResource {
 			throws DocumentException, IOException, DataException {
 
 		try {
-			String[] columnas = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo", "Nota Promedio" };
-			resultadoPruebasServiceImpl.generarPDF(response, nombre, subTipoPrueba, columnas);
+
+			resultadoPruebasServiceImpl.generarPDF(response, nombre, subTipoPrueba);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

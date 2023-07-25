@@ -89,7 +89,8 @@ public class EstudianteResource {
 	public List<EstudianteDatos> listarAll() {
 		return objService.findAllEstudiante();
 	}*/
-	
+
+	// crear estudiantes de formación (aprobados de pruebas)
 	@PostMapping("/crearEstudiantes")
 	@ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardarAll() throws DataException {
@@ -128,6 +129,10 @@ public class EstudianteResource {
     @GetMapping("/listarPA")
 	public List<EstudianteDto> obtenerEstudiantesPA() {
 		return objService.getEstudiantesSinAsignarPA();
+	}
+	@GetMapping("/listarBajaPA")
+	public List<EstudianteDto> obtenerEstudiantesPAbAJA() {
+		return objService.getEstudiantesBaja();
 	}
     
 }

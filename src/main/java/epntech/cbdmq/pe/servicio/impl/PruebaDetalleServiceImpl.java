@@ -1,11 +1,15 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EspecializacionConst.NO_SUBTIPO_PRUEBA;
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import epntech.cbdmq.pe.repositorio.admin.SubTipoPruebaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +38,9 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
 
-	// TODO eliminar comentario
+	@Autowired
+	private SubTipoPruebaRepository subTipoPruebaRepository;
+
 	@Override
 	public Optional<PruebaDetalle> getBySubtipoAndPA(Integer subtipo, Integer periodo) {
 
@@ -42,18 +48,17 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	}
 
 	@Override
-	public PruebaDetalle save(PruebaDetalle obj) throws DataException {
+	public PruebaDetalle save(PruebaDetalle obj) {
+		SubTipoPrueba subTipoPrueba = subTipoPruebaRepository.findById(obj.getCodSubtipoPrueba())
+				.orElseThrow(() -> new BusinessException(NO_SUBTIPO_PRUEBA));
 
-		// obtiene el periodo academico activo
-		Integer codPeriodoAcademico = this.periodoAcademicoRepository.getPAActive();
-
-		if (codPeriodoAcademico == null) {
-			throw new DataException(MensajesConst.NO_PERIODO_ACTIVO);
-		} else {
-
+		if (obj.getCodCursoEspecializacion() == null) {
+			// obtiene el periodo academico activo
+			Integer codPeriodoAcademico = Optional.ofNullable(this.periodoAcademicoRepository.getPAActive())
+					.orElseThrow(() -> new BusinessException(MensajesConst.NO_PERIODO_ACTIVO));
 			// busca si existe eliminado y lo reactiva
 			Optional<PruebaDetalle> pruebaDetalleExistenteOpt = this.pruebaDetalleRepository
-					.findByCodSubtipoPruebaAndCodPeriodoAcademico(obj.getCodSubtipoPrueba(), codPeriodoAcademico);
+					.findByCodSubtipoPruebaAndCodPeriodoAcademico(subTipoPrueba.getCodSubtipoPrueba(), codPeriodoAcademico);
 
 			if (pruebaDetalleExistenteOpt.isPresent()) {
 				PruebaDetalle pruebaDetalleExistente = pruebaDetalleExistenteOpt.get();
@@ -64,12 +69,12 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 					obj.setEstado(EstadosConst.ACTIVO);
 					obj.setCodPeriodoAcademico(pruebaDetalleExistente.getCodPeriodoAcademico());
 					obj.setCodCursoEspecializacion(pruebaDetalleExistente.getCodCursoEspecializacion());
-					
+
 					/*
-					 * 
-					 * 
+					 *
+					 *
 					 * obj.setDescripcionPrueba(pruebaDetalleExistente.getDescripcionPrueba());
-					 * 
+					 *
 					 * obj.setFechaFin(pruebaDetalleExistente.getFechaFin());
 					 * obj.setFechaInicio(pruebaDetalleExistente.getFechaInicio());
 					 * obj.setHora(pruebaDetalleExistente.getHora());
@@ -90,19 +95,30 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 
 	@Override
 	public List<PruebaDetalle> getAll() {
-		// TODO Auto-generated method stub
 		return pruebaDetalleRepository.findAll();
 	}
 
 	@Override
-	public Optional<PruebaDetalle> getById(int id) {
-		// TODO Auto-generated method stub
-		return pruebaDetalleRepository.findById(id);
+	public PruebaDetalle getById(int id) {
+		return pruebaDetalleRepository.findById(id)
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 	}
 
 	@Override
-	public PruebaDetalle update(PruebaDetalle objActualizado) throws DataException {
-		return this.save(objActualizado);
+	public PruebaDetalle update(PruebaDetalle objActualizado) {
+		PruebaDetalle pruebaDetalle = pruebaDetalleRepository.findById(objActualizado.getCodPruebaDetalle())
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+		pruebaDetalle.setDescripcionPrueba(objActualizado.getDescripcionPrueba());
+		pruebaDetalle.setFechaInicio(objActualizado.getFechaInicio());
+		pruebaDetalle.setFechaFin(objActualizado.getFechaFin());
+		pruebaDetalle.setHora(objActualizado.getHora());
+		pruebaDetalle.setEstado(objActualizado.getEstado());
+		pruebaDetalle.setPuntajeMinimo(objActualizado.getPuntajeMinimo());
+		pruebaDetalle.setPuntajeMaximo(objActualizado.getPuntajeMaximo());
+		pruebaDetalle.setTienePuntaje(objActualizado.getTienePuntaje());
+
+		return this.save(pruebaDetalle);
 	}
 
 	@Override

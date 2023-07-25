@@ -18,6 +18,19 @@ public class PostulantesValidosResource {
 	
 	@Autowired
 	private PostulantesValidosServiceImpl service;
+
+	// listar postulantes válidos por filtro con GET
+	// implementar public List<PostulantesValidos> getPostulantesValidosFiltro(String tipoFiltro, String valorFiltro)
+	// en PostulantesValidosServiceImpl.java
+
+	@GetMapping("/postulantesValidosFiltro")
+	public ResponseEntity<?> listarAllFiltro(String tipoFiltro, String valorFiltro) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(service.getPostulantesValidosFiltro(tipoFiltro, valorFiltro));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
+	}
 	
 	@GetMapping("/postulantesValidos")
 	public ResponseEntity<?> listarAll() {

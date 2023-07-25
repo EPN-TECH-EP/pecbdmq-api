@@ -83,6 +83,7 @@ public class PostulanteServiceImpl implements PostulanteService {
 
 	@Override
     public List<PostulanteUtil> getMuestraPostulantesPaginado(Integer usuario, Pageable pageable) {
+        repo.getMuestra();
         return postulanteUtilRepository.getPostulantesMuestraPaginado(usuario, pageable);
     }
 

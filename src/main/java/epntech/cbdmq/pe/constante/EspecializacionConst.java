@@ -8,4 +8,10 @@ public class EspecializacionConst {
 	public static final String CURSO_NO_PRUEBAS = "El curso no tiene pruebas asociadas";
 	public static final String FECHA_INVALIDA = "La fecha ingresada es inválida";
 	public static final String CONVOCATORIA_NO_ACTIVA = "No existe una convocatoria activa para el curso.";
+	public static final String NO_SUBTIPO_PRUEBA = "No existe el subtipo prueba";
+	public static final String REQUISITOS_OBLIGATORIO = "Listado de requisitos obligatorio";
+	public static final String REQUISITOS_NO_COINCIDEN = "Todos los requisitos deben pertenecer al curso";
+	public static final String CURSO_NO_VALIDADO = "El curso no tiene todos los documentos validados y aprobados";
+	public static final String CURSO_ESTADO_INICIADO = "INICIADO";
+	public static final String INSCRIPCION_NO_DATOS = "INICIADO";
 }

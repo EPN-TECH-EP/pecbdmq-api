@@ -27,13 +27,11 @@ public class NotificacionPrueba {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_notifica")
 	private Integer codNotifica;
-	@Column(name = "cod_prueba_seleccion")
-	private Integer codPruebaSeleccion;
 	@Column(name = "cod_datos_personales")
 	private Integer codDatosPersonales;
 	@Column(name = "cod_documento")
 	private Integer codDocumento;
-	@Column(name = "cod_prueba")
+	@Column(name = "cod_prueba_detalle")
 	private Integer codPrueba;
 	@Column(name = "mensaje")
 	private String mensaje;
@@ -47,6 +45,8 @@ public class NotificacionPrueba {
 	@Column(name = "hora")
 	@DateTimeFormat(pattern = "HH:mm:ss")
 	private LocalTime  hora;
+	@Column(name = "notificacion_enviada")
+	private Boolean notificacionEnviada;
 	
 	
 	

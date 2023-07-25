@@ -29,11 +29,8 @@ public interface ResultadoPruebasDatosRepository extends JpaRepository<Resultado
 			+ "and pr.cod_periodo_academico = cbdmq.get_pa_activo()", nativeQuery=true)
 	List<ResultadosPruebasDatos> getResultados(Integer prueba);*/
 	
-	@Query(value = "select * from cbdmq.get_approved_applicants(:prueba)", nativeQuery=true)
-	List<ResultadosPruebasDatos> get_approved_applicants(Integer prueba);
-	
-	@Query(value = "select * from cbdmq.get_all_resultados_prueba(:prueba)", nativeQuery=true)
-	Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba);
+
+
 	
 }
 

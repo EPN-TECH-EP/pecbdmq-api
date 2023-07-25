@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_FORMACION;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -111,7 +112,7 @@ public class MateriaDocumentoServiceImpl implements MateriaDocumentoService {
 			lista.add(documentos);
 			
 			Documento documento = new Documento();
-			documento.setEstado("ACTIVO");
+			documento.setEstado(ACTIVO);
 			documento.setNombre(multipartFile.getOriginalFilename());
 			documento.setRuta(resultado + multipartFile.getOriginalFilename());
 			documento = documentoRepository.save(documento);

@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.io.IOException;
@@ -29,71 +30,83 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.SancionesServiceImpl;
 
 
-
 @RestController
 @RequestMapping("/sanciones")
 public class SancionesResource {
 
-	@Autowired
+    @Autowired
     private SancionesServiceImpl objServices;
-	
-	@PostMapping("/crear")
+
+    @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestParam Integer codEstudiante, @RequestParam String observacionSancion, @RequestParam Integer codInstructor, @RequestParam Integer codFaltaPeriodo, @RequestParam MultipartFile archivo) throws DataException, IOException, ArchivoMuyGrandeExcepcion, ParseException {
-		Sanciones obj = new Sanciones();
-		Date fechaActual = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String fechaFormateada = sdf.format(fechaActual);
-		Date date = sdf.parse(fechaFormateada);
-		
-		obj.setCodEstudiante(codEstudiante);
-		obj.setFechaSancion(date);
-		obj.setObservacionSancion(observacionSancion);
-		obj.setEstado("ACTIVO");
-		obj.setCodInstructor(codInstructor);
-		obj.setCodFaltaPeriodo(codFaltaPeriodo);
-		
-		return new ResponseEntity<>(objServices.save(obj, archivo), HttpStatus.OK);
+        Sanciones obj = new Sanciones();
+        Date fechaActual = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaFormateada = sdf.format(fechaActual);
+        Date date = sdf.parse(fechaFormateada);
+
+        obj.setCodEstudiante(codEstudiante);
+        obj.setFechaSancion(date);
+        obj.setObservacionSancion(observacionSancion);
+        obj.setEstado(ACTIVO);
+        obj.setCodInstructor(codInstructor);
+        obj.setCodFaltaPeriodo(codFaltaPeriodo);
+
+        return new ResponseEntity<>(objServices.save(obj, archivo), HttpStatus.OK);
     }
-	
-	 @GetMapping("/listar")
-	    public List<Sanciones> listar() {
-	        return objServices.getAll();
-	    }
-	 
-	 @GetMapping("/{id}")
-	    public ResponseEntity<Sanciones> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
-	        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	    }
-	 
-	 @PutMapping("/{id}")
-	    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestParam Integer codEstudiante, @RequestParam String observacionSancion, @RequestParam Integer codInstructor, @RequestParam Integer codFaltaPeriodo, @RequestParam Integer codDocumento, @RequestParam String estado, @RequestParam MultipartFile archivo) {
-	        return objServices.getById(codigo).map(datosGuardados -> {
-	        	datosGuardados.setCodDocumento(codDocumento);
-	        	datosGuardados.setCodEstudiante(codEstudiante);
-	            datosGuardados.setObservacionSancion(observacionSancion);
-	            datosGuardados.setCodInstructor(codInstructor);
-	            datosGuardados.setCodFaltaPeriodo(codFaltaPeriodo);
-	            datosGuardados.setEstado(estado);
-	            Sanciones datosActualizados;
-				try {
-					datosActualizados = objServices.update(datosGuardados, archivo);
-				} catch (DataException | ArchivoMuyGrandeExcepcion | IOException e) {
-					return response(HttpStatus.BAD_REQUEST, e.getMessage());
-				}
-	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-	        }).orElseGet(() -> ResponseEntity.notFound().build());
-	    }
-	 
-	 
-	 @DeleteMapping("/{id}")
-		public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
-			objServices.delete(codigo);
-			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-		}
-	    
-	    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-	                message), httpStatus);
-	    }
+
+    @GetMapping("/listar")
+    public List<Sanciones> listar() {
+        return objServices.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Sanciones> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
+        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/estudiante/{id}")
+    public List<Sanciones> obtenerDatosPorCodEstduiante(@PathVariable("id") Integer codigo) {
+        return objServices.findAllByCodEstudiante(codigo);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestParam Integer codEstudiante, @RequestParam String observacionSancion, @RequestParam Integer codInstructor, @RequestParam Integer codFaltaPeriodo, @RequestParam String estado, @RequestParam MultipartFile archivo) {
+        return objServices.getById(codigo).map(datosGuardados -> {
+            Date fechaActual = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaFormateada = sdf.format(fechaActual);
+            try {
+                Date date = sdf.parse(fechaFormateada);
+                datosGuardados.setFechaSancion(date);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            datosGuardados.setCodEstudiante(codEstudiante);
+            datosGuardados.setObservacionSancion(observacionSancion);
+            datosGuardados.setCodInstructor(codInstructor);
+            datosGuardados.setCodFaltaPeriodo(codFaltaPeriodo);
+            datosGuardados.setEstado(estado);
+            Sanciones datosActualizados;
+            try {
+                datosActualizados = objServices.update(datosGuardados, archivo);
+            } catch (DataException | ArchivoMuyGrandeExcepcion | IOException e) {
+                return response(HttpStatus.BAD_REQUEST, e.getMessage());
+            }
+            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
+        objServices.delete(codigo);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
+
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+    }
 }

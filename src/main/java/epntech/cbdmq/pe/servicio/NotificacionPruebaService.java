@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ public interface NotificacionPruebaService {
 	    NotificacionPrueba update(NotificacionPrueba objActualizado);
 
 	    void delete(Integer codigo);*/
+		void enviarNotificacion(Integer codSubTipoPrueba) throws MessagingException, DataException, ParseException;
 	
 	
 }

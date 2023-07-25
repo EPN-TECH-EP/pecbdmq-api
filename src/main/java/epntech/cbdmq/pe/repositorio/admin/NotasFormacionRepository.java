@@ -5,8 +5,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dominio.util.AspirantesDatos;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import epntech.cbdmq.pe.dominio.admin.NotasFormacion;
@@ -48,7 +50,11 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 	List<?> listaMateriasHistorico();
 	@Query(nativeQuery = true, name = "EstudianteDatos.getNotasEstudiantesMateria")
 	List<EstudianteDatos> getEstudianteMateriaParalelo(@Param("codMateria") Integer codMateria, @Param("codPA") Integer codPA);
+	@Query(nativeQuery = true, name = "NotaMateriaByEstudiante.get")
+	List<NotaMateriaByEstudiante> get(@Param("codEstudiante") Integer codEstudiante, @Param("tipoInstructor") String tipoInstructor, @Param("codPA") Integer codPA );
 
+	//Digo a Hibernate que no espere un resultado de retorno y que es una operación de modificación
+	@Modifying
 	@Query(value = "CALL cbdmq.insertar_lista_estudiantes_notas()", nativeQuery = true)
 	void insertar_lista_estudiantes_notas();
 }

@@ -24,58 +24,58 @@ import java.util.stream.Collectors;
 @Service
 public class EstudianteServiceImpl implements EstudianteService {
 
-	@Autowired
-	private EstudianteRepository repo;
-	@Autowired
-	private EstudianteForRepository estudianteForRepository;
-	@Autowired
-	private AspirantesRepository aspirantesRepository;
+    @Autowired
+    private EstudianteRepository repo;
+    @Autowired
+    private EstudianteForRepository estudianteForRepository;
+    @Autowired
+    private AspirantesRepository aspirantesRepository;
     @Autowired
     private PostulantesValidosService postulantesValidosService;
     @Autowired
     private DatoPersonalService dpService;
-	
-	
-	@Override
-	public Estudiante save(Estudiante obj) {
-		// TODO Auto-generated method stub
-		return repo.save(obj);
-	}
 
-	@Override
-	public List<Estudiante> getAll() {
-		// TODO Auto-generated method stub
-		return repo.findAll();
-	}
 
-	@Override
+    @Override
+    public Estudiante save(Estudiante obj) {
+        // TODO Auto-generated method stub
+        return repo.save(obj);
+    }
+
+    @Override
+    public List<Estudiante> getAll() {
+        // TODO Auto-generated method stub
+        return repo.findAll();
+    }
+
+    @Override
     public List<Estudiante> getAllWithOutParalelo() {
         return repo.estudiantesWithParalelo();
     }
 
     @Override
-	public Optional<Estudiante> getById(int id) {
-		// TODO Auto-generated method stub
-		return repo.findById(id);
-	}
+    public Optional<Estudiante> getById(int id) {
+        // TODO Auto-generated method stub
+        return repo.findById(id);
+    }
 
-	@Override
-	public Estudiante update(Estudiante objActualizado) {
-		// TODO Auto-generated method stub
-		return repo.save(objActualizado);
-	}
+    @Override
+    public Estudiante update(Estudiante objActualizado) {
+        // TODO Auto-generated method stub
+        return repo.save(objActualizado);
+    }
 
-	@Override
-	public void delete(int id) {
-		// TODO Auto-generated method stub
-		repo.deleteById(id);
-	}
+    @Override
+    public void delete(int id) {
+        // TODO Auto-generated method stub
+        repo.deleteById(id);
+    }
 
-	@Override
-	public Optional<Estudiante> getByIdEstudiante(String id) {
-		// TODO Auto-generated method stub
+    @Override
+    public Optional<Estudiante> getByIdEstudiante(String id) {
+        // TODO Auto-generated method stub
         return repo.findByCodUnicoEstudiante(id);
-	}
+    }
 
 	/*@Override
 	public Page<EstudianteDatos> getAllEstudiante(Pageable pageable) throws Exception {
@@ -89,18 +89,18 @@ public class EstudianteServiceImpl implements EstudianteService {
 		return this.repo.findAllEstudiante();
 	}*/
 
-	@Override
-	public void saveEstudiantes() {
-		// TODO Auto-generated method stub
-		estudianteForRepository.insertEstudiantes();
-	}
+    @Override
+    public void saveEstudiantes() {
+        // TODO Auto-generated method stub
+        estudianteForRepository.insertEstudiantes();
+    }
 
-	@Override
+    @Override
     public Estudiante getEstudianteByUsuario(String codUsuario) {
 
-		return this.repo.getEstudianteByUsuario(codUsuario);
-	}
-	
+        return this.repo.getEstudianteByUsuario(codUsuario);
+    }
+
     @Override
     public Estudiante getEstudianteByCodigoUnico(String codUnico) {
         return this.repo.getEstudianteByCodUnicoEstudiante(codUnico);
@@ -120,12 +120,12 @@ public class EstudianteServiceImpl implements EstudianteService {
                                 this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante()).getCedula()
                         )))
                 .collect(Collectors.toList());
-        List<EstudianteDto> listDto= new ArrayList<EstudianteDto>();
-        for (Estudiante estudiante : estudiantesFiltrados){
-            EstudianteDto objDto= new EstudianteDto();
-            DatoPersonal dp= this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
+        List<EstudianteDto> listDto = new ArrayList<EstudianteDto>();
+        for (Estudiante estudiante : estudiantesFiltrados) {
+            EstudianteDto objDto = new EstudianteDto();
+            DatoPersonal dp = this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
             objDto.setCedula(dp.getCedula());
-            objDto.setNombre(dp.getNombre()+" "+dp.getApellido());
+            objDto.setNombre(dp.getNombre() + " " + dp.getApellido());
             objDto.setTelefono(dp.getNumTelefCelular());
             objDto.setCodUnico(estudiante.getCodUnicoEstudiante());
             listDto.add(objDto);
@@ -137,14 +137,46 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public List<EstudianteDto> getEstudiantesSinAsignarPA() {
         List<Estudiante> estudiantes = this.getAllWithOutParalelo();
-        if(estudiantes.isEmpty()){
+        if (estudiantes.isEmpty()) {
             throw new RuntimeException();
+
         }
         return this.getEstudiantesPA(estudiantes);
     }
-	@Override
-	public Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion) {
-		return repo.getEstudianteByNotaFormacionFinal(codNotaFormacion);
-	}
+
+    @Override
+    public List<EstudianteDto> getEstudiantesBaja() {
+
+        List<Estudiante> estudiantes = this.getEstudiantesIs("BAJA");
+        List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidosDiferentBaja();
+        List<Estudiante> estudiantesFiltrados = estudiantes.stream()
+                .filter(estudiante -> postulantes.stream()
+                        .anyMatch(postulante -> postulante.getCedula().equals(
+                                this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante()).getCedula()
+                        )))
+                .collect(Collectors.toList());
+        List<EstudianteDto> listDto = new ArrayList<EstudianteDto>();
+        for (Estudiante estudiante : estudiantesFiltrados) {
+            EstudianteDto objDto = new EstudianteDto();
+            DatoPersonal dp = this.getDatoPersonalByEstudiante(estudiante.getCodEstudiante());
+            objDto.setCedula(dp.getCedula());
+            objDto.setNombre(dp.getNombre() + " " + dp.getApellido());
+            objDto.setTelefono(dp.getNumTelefCelular());
+            objDto.setCodUnico(estudiante.getCodUnicoEstudiante());
+            listDto.add(objDto);
+        }
+
+        return listDto;
+    }
+
+    @Override
+    public Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion) {
+        return repo.getEstudianteByNotaFormacionFinal(codNotaFormacion);
+    }
+
+    @Override
+    public List<Estudiante> getEstudiantesIs(String Estado) {
+        return repo.getAllByEstadoIsIgnoreCase(Estado);
+    }
 
 }

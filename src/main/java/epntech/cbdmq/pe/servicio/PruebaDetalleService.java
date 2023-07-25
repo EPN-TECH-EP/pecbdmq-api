@@ -1,4 +1,3 @@
-
 package epntech.cbdmq.pe.servicio;
 
 import java.util.List;
@@ -13,19 +12,19 @@ public interface PruebaDetalleService {
 
 	Optional<PruebaDetalle> getBySubtipoAndPA(Integer subtipo, Integer periodo);
 
-	PruebaDetalle update(PruebaDetalle objActualizado) throws DataException;
+	PruebaDetalle update(PruebaDetalle objActualizado);
 
-	PruebaDetalle save(PruebaDetalle obj) throws DataException;
+	PruebaDetalle save(PruebaDetalle obj);
 
 	List<PruebaDetalle> getAll();
 
-	Optional<PruebaDetalle> getById(int id);
+	PruebaDetalle getById(int id);
 
 	void delete(int id) throws DataException;
 
 	public List<PruebaDetalleDatos> listarTodosConDatosSubTipoPrueba();
 	public String getTipoResultado(int codSubtipoPrueba);
-	
+
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException;
 
 }

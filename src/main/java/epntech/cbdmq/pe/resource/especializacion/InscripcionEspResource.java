@@ -112,7 +112,7 @@ public class InscripcionEspResource {
 		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
 	}
 	
-	@GetMapping("/getRequisitosEstudiante")
+	@GetMapping("/requisitosEstudiante")
 	public List<ValidacionRequisitosDatos> getRequisitosEstudiante(@RequestParam("codEstudiante") Long codEstudiante, @RequestParam("codCursoEspecializacion") Long codCursoEspecializacion) throws DataException {
 		return inscripcionEspServiceImpl.getValidacionRequisito(codEstudiante, codCursoEspecializacion);
 	}
