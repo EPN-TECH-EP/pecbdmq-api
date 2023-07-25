@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -155,9 +156,10 @@ public class BajaServiceImpl implements BajaService {
 	}
 
 	@Override
+	@Transactional
 	public Estudiante darDeBaja(Estudiante obj) throws DataException {
 		Optional<Baja> baja;
-		baja = repo.findByCodEstudianteAndCodPeriodoAcademicoAndEstado(obj.getCodEstudiante(), periodoAcademicoRepository.getPAActive(), "ACTIVO");
+		baja = repo.findByCodEstudianteAndCodPeriodoAcademico(obj.getCodEstudiante(), periodoAcademicoRepository.getPAActive());
 		
 		if(baja.isPresent())
 			obj.setEstado(ESTADO_BAJA);
