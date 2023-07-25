@@ -7,11 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -51,125 +47,135 @@ import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 
 @Service
 public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisicasService {
-	
-	private final Logger LOGGER = LoggerFactory.getLogger(getClass());  
 
-	@Autowired
-	private ResultadoPruebasFisicasRepository repo;
-	@Autowired
-	private PruebaRepository pruebaRepository;
-	@Autowired
-	private ResultadoPruebasFisicasDatosRepository repo1;
-	@Autowired
-	private DocumentoRepository documentoRepo;
-	@Autowired
-	private DocumentoPruebaRepository docPruebaRepo;
-	@Autowired
-	private PruebaDetalleRepository pruebaDetalleRepository;
-	@Autowired
-	private PostulanteService postulanteService;
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	@Value("${pecb.archivos.ruta}")
-	private String ARCHIVOS_RUTA;
-	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
+    @Autowired
+    private ResultadoPruebasFisicasRepository repo;
+    @Autowired
+    private PruebaRepository pruebaRepository;
+    @Autowired
+    private ResultadoPruebasFisicasDatosRepository repo1;
+    @Autowired
+    private DocumentoRepository documentoRepo;
+    @Autowired
+    private DocumentoPruebaRepository docPruebaRepo;
+    @Autowired
+    private PruebaDetalleRepository pruebaDetalleRepository;
+    @Autowired
+    private PostulanteService postulanteService;
 
-	@Override
-	public void insertAll(List<ResultadoPruebasFisicas> obj) {
-		repo.saveAll(obj);
+    @Value("${pecb.archivos.ruta}")
+    private String ARCHIVOS_RUTA;
+    @Autowired
+    private PeriodoAcademicoRepository periodoAcademicoRepository;
 
-	}
+    @Override
+    public void insertAll(List<ResultadoPruebasFisicas> obj) {
+        repo.saveAll(obj);
 
-	@Override
-	public ResultadoPruebasFisicas update(ResultadoPruebasFisicas objActualizado) {
-		ResultadoPruebasFisicas resultadoPruebas = new ResultadoPruebasFisicas();
-		Optional<Prueba> prueba = pruebaRepository.findById(objActualizado.getCodPruebaDetalle());
-		if (prueba.isPresent()) {
-			resultadoPruebas = repo.save(objActualizado);
+    }
 
-			Prueba p = new Prueba();
-			p = prueba.get();
-			p.setEstado("REGISTRO");
+    @Override
+    public ResultadoPruebasFisicas update(ResultadoPruebasFisicas objActualizado) {
+        ResultadoPruebasFisicas resultadoPruebas = new ResultadoPruebasFisicas();
+        Optional<Prueba> prueba = pruebaRepository.findById(objActualizado.getCodPruebaDetalle());
+        if (prueba.isPresent()) {
+            resultadoPruebas = repo.save(objActualizado);
 
-			pruebaRepository.save(p);
-		}
+            Prueba p = new Prueba();
+            p = prueba.get();
+            p.setEstado("REGISTRO");
 
-		return resultadoPruebas;
-	}
+            pruebaRepository.save(p);
+        }
 
-	@Override
-	public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException{
-		try {
+        return resultadoPruebas;
+    }
+
+    @Override
+    public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException {
+        try {
 
 
-			List<ResultadoPruebaFisicaUtil> datosUtil = ResultadoPruebasHelper
-					.excelToDatosPruebasFisicasI(file.getInputStream(),tipoResultado);
-			
-			LOGGER.info(tipoResultado);
-			
-			List<ResultadoPruebasFisicas> datos = datosUtil.stream().map(resultadoPruebaFisicaUtil -> {
-				ResultadoPruebasFisicas resultadoPruebasFisicas = new ResultadoPruebasFisicas();
-				Optional<Postulante> postulante = postulanteService.getByIdPostulante(resultadoPruebaFisicaUtil.getIdPostulante());
-				if(postulante.isEmpty()){
-					throw new RuntimeException("El postulante con el id: "+resultadoPruebaFisicaUtil.getIdPostulante()+" no existe");
-				}
-				
-				// busca registro existente
-				Optional<ResultadoPruebasFisicas> resultadoPruebasFisicasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
-				
-				if (resultadoPruebasFisicasOpt.isEmpty()) {
-					resultadoPruebasFisicas = new ResultadoPruebasFisicas();
-				} else {
-					resultadoPruebasFisicas = resultadoPruebasFisicasOpt.get(); 
-				}
-				
-				
-				resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
-				resultadoPruebasFisicas.setResultado(resultadoPruebaFisicaUtil.getResultado());
-				resultadoPruebasFisicas.setResultadoTiempo(resultadoPruebaFisicaUtil.getResultadoTiempo());
-				resultadoPruebasFisicas.setCodPruebaDetalle(codPruebaDetalle);
-				resultadoPruebasFisicas.setCodFuncionario(codFuncionario);
-				resultadoPruebasFisicas.setEstado("ACTIVO");
-				return resultadoPruebasFisicas;
+            List<ResultadoPruebaFisicaUtil> datosUtil = ResultadoPruebasHelper
+                    .excelToDatosPruebasFisicasI(file.getInputStream(), tipoResultado);
+            // Crear el HashMap para almacenar el último registro para cada idPostulante
+            Map<String, ResultadoPruebaFisicaUtil> ultimoResultadoPorPostulante = new HashMap<>();
 
-			}).collect(Collectors.toList());
-			repo.saveAll(datos);
-		} catch (IOException e) {
-			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
-		}
+			// Iterar sobre datosUtil y actualizar el HashMap solo con los últimos registros para cada idPostulante
+            for (ResultadoPruebaFisicaUtil resultadoPruebaFisicaUtil : datosUtil) {
+                ultimoResultadoPorPostulante.put(resultadoPruebaFisicaUtil.getIdPostulante(), resultadoPruebaFisicaUtil);
+            }
+			// Filtrar los valores del HashMap para obtener la lista deseada
+            List<ResultadoPruebaFisicaUtil> datosFiltrados = new ArrayList<>(ultimoResultadoPorPostulante.values());
 
-	}
 
-	@Override
-	public ResultadoPruebasFisicas save(ResultadoPruebasFisicas obj) {
-		// TODO Auto-generated method stub
-		return repo.save(obj);
-	}
+            LOGGER.info(tipoResultado);
 
-	@Override
-	public ByteArrayInputStream downloadFile() {
+            List<ResultadoPruebasFisicas> datos = datosFiltrados.stream().map(resultadoPruebaFisicaUtil -> {
+                ResultadoPruebasFisicas resultadoPruebasFisicas = new ResultadoPruebasFisicas();
+                Optional<Postulante> postulante = postulanteService.getByIdPostulante(resultadoPruebaFisicaUtil.getIdPostulante());
+                if (postulante.isEmpty()) {
+                    throw new RuntimeException("El postulante con el id: " + resultadoPruebaFisicaUtil.getIdPostulante() + " no existe");
+                }
 
-		ByteArrayInputStream in = ResultadoPruebasHelper.datosToExcel(null);
-		return in;
-	}
+                // busca registro existente
+                Optional<ResultadoPruebasFisicas> resultadoPruebasFisicasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
 
-	@Override
-	public void generarExcel(String nombre, Integer prueba) throws IOException, DataException {
-		// Optional<Prueba> pp = pruebaRepository.findById(prueba);
+                if (resultadoPruebasFisicasOpt.isEmpty()) {
+                    resultadoPruebasFisicas = new ResultadoPruebasFisicas();
+                } else {
+                    resultadoPruebasFisicas = resultadoPruebasFisicasOpt.get();
+                }
 
-		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
-				periodoAcademicoRepository.getPAActive());
-		if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
-			throw new DataException(ESTADO_INVALIDO);
-		} else {
-			String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
-					+ "/" + nombre;
-			String[] HEADERs = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo",
-					"Nota Promedio" };
-			try {
-				ExcelHelper.generarExcel(obtenerDatos(prueba), ruta, HEADERs);
 
-				generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
+                resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
+                resultadoPruebasFisicas.setResultado(resultadoPruebaFisicaUtil.getResultado());
+                resultadoPruebasFisicas.setResultadoTiempo(resultadoPruebaFisicaUtil.getResultadoTiempo());
+                resultadoPruebasFisicas.setCodPruebaDetalle(codPruebaDetalle);
+                resultadoPruebasFisicas.setCodFuncionario(codFuncionario);
+                resultadoPruebasFisicas.setEstado("ACTIVO");
+                return resultadoPruebasFisicas;
+
+            }).collect(Collectors.toList());
+            repo.saveAll(datos);
+        } catch (IOException e) {
+            throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
+        }
+
+    }
+
+    @Override
+    public ResultadoPruebasFisicas save(ResultadoPruebasFisicas obj) {
+        // TODO Auto-generated method stub
+        return repo.save(obj);
+    }
+
+    @Override
+    public ByteArrayInputStream downloadFile() {
+
+        ByteArrayInputStream in = ResultadoPruebasHelper.datosToExcel(null);
+        return in;
+    }
+
+    @Override
+    public void generarExcel(String nombre, Integer prueba) throws IOException, DataException {
+        // Optional<Prueba> pp = pruebaRepository.findById(prueba);
+
+        Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
+                periodoAcademicoRepository.getPAActive());
+        if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
+            throw new DataException(ESTADO_INVALIDO);
+        } else {
+            String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS + periodoAcademicoRepository.getPAActive().toString()
+                    + "/" + nombre;
+            String[] HEADERs = {"Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo",
+                    "Nota Promedio"};
+            try {
+                ExcelHelper.generarExcel(obtenerDatos(prueba), ruta, HEADERs);
+
+                generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
 				/*
 
 				PruebaDetalle p = new PruebaDetalle();
@@ -180,54 +186,54 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
 				 */
 
-			} catch (IOException ex) {
-				System.out.println("error: " + ex.getMessage());
-			}
-		}
+            } catch (IOException ex) {
+                System.out.println("error: " + ex.getMessage());
+            }
+        }
 
-	}
+    }
 
-	@Override
-	public List<ResultadosPruebasFisicasDatos> getResultados(Integer prueba) {
-		// TODO Auto-generated method stub
-		return repo1.getResultados(prueba);
-	}
+    @Override
+    public List<ResultadosPruebasFisicasDatos> getResultados(Integer prueba) {
+        // TODO Auto-generated method stub
+        return repo1.getResultados(prueba);
+    }
 
-	@Override
-	public void generarPDF(HttpServletResponse response, String nombre, Integer prueba)
-			throws DocumentException, IOException, DataException {
+    @Override
+    public void generarPDF(HttpServletResponse response, String nombre, Integer prueba)
+            throws DocumentException, IOException, DataException {
 
-		try {
-			Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
-					periodoAcademicoRepository.getPAActive());
+        try {
+            Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(prueba,
+                    periodoAcademicoRepository.getPAActive());
 
-			if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
-				throw new DataException(ESTADO_INVALIDO);
-			} else {
-				String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
-						+ periodoAcademicoRepository.getPAActive().toString()
-						+ "/" + nombre;
-				String[] columnas = { "Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo", "Nota Promedio" };
+            if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
+                throw new DataException(ESTADO_INVALIDO);
+            } else {
+                String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
+                        + periodoAcademicoRepository.getPAActive().toString()
+                        + "/" + nombre;
+                String[] columnas = {"Codigo", "Cedula", "Nombre", "Apellido", "Resultado", "Resultado Tiempo", "Nota Promedio"};
 
-				//TODO el response no tiene ninguna funcionalidad
-				response.setContentType("application/pdf");
+                //TODO el response no tiene ninguna funcionalidad
+                response.setContentType("application/pdf");
 
-				DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-				String fechaActual = dateFormatter.format(new Date());
+                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+                String fechaActual = dateFormatter.format(new Date());
 
-				String cabecera = "Cuerpo-Bomberos";
-				String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+                String cabecera = "Cuerpo-Bomberos";
+                String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
 
-				response.addHeader(cabecera, valor);
+                response.addHeader(cabecera, valor);
 
-				ExporterPdf exporter = new ExporterPdf();
-				//TODO los anchos de las columnas
-				float[] widths = new float[] { 2.5f, 3.5f, 6f, 6f, 2.5f, 2.5f, 2.5f };
+                ExporterPdf exporter = new ExporterPdf();
+                //TODO los anchos de las columnas
+                float[] widths = new float[]{2.5f, 3.5f, 6f, 6f, 2.5f, 2.5f, 2.5f};
 
-				//Genera el pdf
-				exporter.exportar(response, columnas, obtenerDatos(prueba), widths, ruta);
+                //Genera el pdf
+                exporter.exportar(response, columnas, obtenerDatos(prueba), widths, ruta);
 
-				generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
+                generaDocumento(ruta, nombre, pp.get().getCodPruebaDetalle());
 /*
 				PruebaDetalle p = new PruebaDetalle();
 				p = pp.get();
@@ -236,70 +242,73 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 				pruebaDetalleRepository.save(p);
 
  */
-			}
+            }
 
-		} catch (IOException ex) {
-			System.out.println("error: " + ex.getMessage());
-		}
+        } catch (IOException ex) {
+            System.out.println("error: " + ex.getMessage());
+        }
 
-	}
-	//obtener resultados dto por una prueba detalle, y pasarlo a una array de registros
-	public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
-		List<ResultadosPruebasFisicasDatos> datos = repo1.getResultados(prueba);
-		System.out.println("Array de datos para excel"+entityToArrayList(datos));
-		return entityToArrayList(datos);
-	}
-	//pasar a array un registro
-	public static String[] entityToStringArray(ResultadosPruebasFisicasDatos entity) {
-		return new String[] {
-				entity.getIdPostulante().toString(),
-				entity.getCedula(),
-				entity.getNombre(),
-				entity.getApellido(),
-				entity.getResultado().toString(),
-				entity.getResultadoTiempo() != null ? entity.getResultadoTiempo().toString() : "",
-				entity.getNotaPromedioFinal().toString() };
-	}
-	//Para pasar a arrays lista de registros
-	public static ArrayList<ArrayList<String>> entityToArrayList(List<ResultadosPruebasFisicasDatos> datos) {
-		ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+    }
 
-		for (ResultadosPruebasFisicasDatos dato : datos) {
-			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
-		}
-		return arrayMulti;
-	}
+    //obtener resultados dto por una prueba detalle, y pasarlo a una array de registros
+    public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
+        List<ResultadosPruebasFisicasDatos> datos = repo1.getResultados(prueba);
+        System.out.println("Array de datos para excel" + entityToArrayList(datos));
+        return entityToArrayList(datos);
+    }
 
-	private void generaDocumento(String ruta, String nombre, Integer prueba) {
-		Documento documento = new Documento();
-		documento.setEstado("ACTIVO");
-		documento.setNombre(nombre);
-		documento.setRuta(ruta);
+    //pasar a array un registro
+    public static String[] entityToStringArray(ResultadosPruebasFisicasDatos entity) {
+        return new String[]{
+                entity.getIdPostulante().toString(),
+                entity.getCedula(),
+                entity.getNombre(),
+                entity.getApellido(),
+                entity.getResultado().toString(),
+                entity.getResultadoTiempo() != null ? entity.getResultadoTiempo().toString() : "",
+                entity.getNotaPromedioFinal().toString()};
+    }
 
-		documento = documentoRepo.save(documento);
+    //Para pasar a arrays lista de registros
+    public static ArrayList<ArrayList<String>> entityToArrayList(List<ResultadosPruebasFisicasDatos> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
 
-		DocumentoPrueba doc = new DocumentoPrueba();
-		doc.setCodPruebaDetalle(prueba);
-		doc.setCodDocumento(documento.getCodDocumento());
-		// System.out.println("documento.getCodigo(): " + documento.getCodigo());
+        for (ResultadosPruebasFisicasDatos dato : datos) {
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
+        }
+        return arrayMulti;
+    }
 
-		saveDocumentoPrueba(doc);
-	}
+    private void generaDocumento(String ruta, String nombre, Integer prueba) {
+        Documento documento = new Documento();
+        documento.setEstado("ACTIVO");
+        documento.setNombre(nombre);
+        documento.setRuta(ruta);
 
-	private void saveDocumentoPrueba(DocumentoPrueba obj) {
-		docPruebaRepo.save(obj);
-	}
+        documento = documentoRepo.save(documento);
 
-	@Override
-	public void notificar(String mensaje) throws MessagingException {
-		// TODO Auto-generated method stub
+        DocumentoPrueba doc = new DocumentoPrueba();
+        doc.setCodPruebaDetalle(prueba);
+        doc.setCodDocumento(documento.getCodDocumento());
+        // System.out.println("documento.getCodigo(): " + documento.getCodigo());
 
-	}
-	
-	@Override
-	public Optional<ResultadoPruebasFisicas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba) {
-		// TODO Auto-generated method stub
-		return repo.findByCodPostulanteAndCodPruebaDetalle(CodPostulante, codPrueba);
-	}
+        saveDocumentoPrueba(doc);
+    }
+
+    private void saveDocumentoPrueba(DocumentoPrueba obj) {
+        docPruebaRepo.save(obj);
+    }
+
+    @Override
+    public void notificar(String mensaje) throws MessagingException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Optional<ResultadoPruebasFisicas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba) {
+        // TODO Auto-generated method stub
+        return repo.findByCodPostulanteAndCodPruebaDetalle(CodPostulante, codPrueba);
+    }
 
 }

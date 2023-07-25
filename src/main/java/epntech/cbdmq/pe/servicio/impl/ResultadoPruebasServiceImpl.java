@@ -5,14 +5,11 @@ import static epntech.cbdmq.pe.constante.MensajesConst.ESTADO_INVALIDO;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
 import epntech.cbdmq.pe.servicio.PostulanteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +102,16 @@ public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 
 			List<ResultadoPruebasUtil> datosUtil = ResultadoPruebasHelper.excelToDatos(file.getInputStream(),
 					tipoResultado);
-			List<ResultadoPruebas> datos = datosUtil.stream().map(dato -> {
+			// Crear el HashMap para almacenar el último registro para cada idPostulante
+			Map<String, ResultadoPruebasUtil> ultimoResultadoPorPostulante = new HashMap<>();
+
+			// Iterar sobre datosUtil y actualizar el HashMap solo con los últimos registros para cada idPostulante
+			for (ResultadoPruebasUtil resultadoPruebasUtil : datosUtil) {
+				ultimoResultadoPorPostulante.put(resultadoPruebasUtil.getIdPostulante(), resultadoPruebasUtil);
+			}
+			// Filtrar los valores del HashMap para obtener la lista deseada
+			List<ResultadoPruebasUtil> datosFiltrados = new ArrayList<>(ultimoResultadoPorPostulante.values());
+			List<ResultadoPruebas> datos = datosFiltrados.stream().map(dato -> {
 				ResultadoPruebas resultadoPruebas = new ResultadoPruebas();
 				Optional<Postulante> postulante = postulanteService.getByIdPostulante(dato.getIdPostulante());
 				if (postulante.isEmpty()) {
