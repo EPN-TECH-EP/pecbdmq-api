@@ -134,8 +134,6 @@ public class NotasFormacionResource {
 		return response(HttpStatus.OK, PROCESO_EXITO);
 	}
 
-	/*m�todo para saber si realiz� o no la encuesta, true(si realiz�),
-	 * false(no realiz�)*/
 	@GetMapping("/realizoEncuesta/{id}")
 	public ResponseEntity<?> realizoEncuenta(@PathVariable("id") Long codigo) {
 		return response(HttpStatus.OK, Boolean.toString(notasFormacionFinalServiceImpl.realizoEncuesta(codigo)));
