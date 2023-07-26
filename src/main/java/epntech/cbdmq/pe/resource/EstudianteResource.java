@@ -90,10 +90,9 @@ public class EstudianteResource {
 
     }
 	
-    @PostMapping("/ByUser")
+    @GetMapping("/ByUser")
     public Estudiante listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
-        Estudiante estudiante = objService.getEstudianteByUsuario(codUsuario);
-        return estudiante;
+        return objService.getEstudianteByUsuario(codUsuario);
     }
     
     @PostMapping("/asignarMateriaEstudiante")
