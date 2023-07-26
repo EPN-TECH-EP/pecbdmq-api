@@ -39,7 +39,7 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
 
     @Procedure(value = "cbdmq.valida_pa_activo")
     Boolean getActive();
-    
+
     @Query(value = "select pa.* "
             + "	from cbdmq.gen_periodo_academico pa, cbdmq.gen_modulo_estados me, cbdmq.gen_modulo m, "
             + "	cbdmq.gen_convocatoria c "
