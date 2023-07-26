@@ -52,6 +52,20 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
             + "	and UPPER(c.estado) = 'ACTIVO' "
             + "	and UPPER(m.etiqueta) = 'FORMACIÓN' ", nativeQuery = true)
     Optional<PeriodoAcademico> getPeriodoActivo();
+    @Query(value = "select\n" +
+            "\tpa.*\n" +
+            "from\n" +
+            "\tcbdmq.gen_periodo_academico pa,\n" +
+            "\tcbdmq.gen_modulo_estados me,\n" +
+            "\tcbdmq.gen_modulo m,\n" +
+            "\tcbdmq.gen_convocatoria c\n" +
+            "where\n" +
+            "\tpa.cod_modulo_estados = me.cod_modulo_estados\n" +
+            "\tand me.cod_modulo = m.cod_modulo\n" +
+            "\tand c.cod_periodo_academico = pa.cod_periodo_academico\n" +
+            "\tand UPPER(m.etiqueta) = 'FORMACIÓN'\n" +
+            "\tand upper(pa.estado) <> 'ELIMINADO'", nativeQuery = true)
+    List<PeriodoAcademico> getPeriodos();
 
     @Query(value = "select pa.* "
             + "	from cbdmq.gen_periodo_academico pa, cbdmq.gen_modulo_estados me, cbdmq.gen_modulo m, "
@@ -71,8 +85,5 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
     @Modifying
     @Query("UPDATE gen_periodo_academico pa SET pa.estado = 'CIERRE', pa.fechaFin = :fecha WHERE pa.codigo = :pActivo")
     int cerrarPeriodoAndUpdateFecha(@Param("pActivo") Integer codPA, @Param("fecha") Date fecha);
-
-
-
     List<PeriodoAcademico> findAllByEstado(String estado);
 }

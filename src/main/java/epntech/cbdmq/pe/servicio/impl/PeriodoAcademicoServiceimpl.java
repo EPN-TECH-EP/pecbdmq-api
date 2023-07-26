@@ -238,4 +238,9 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		return repo2.getDocumentos(codPA);
 	}
 
+	@Override
+	public List<PeriodoAcademico> getAllPeriodos() {
+		return repo.getPeriodos();
+	}
+
 }
