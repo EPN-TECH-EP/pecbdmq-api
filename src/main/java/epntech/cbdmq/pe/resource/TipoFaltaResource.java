@@ -28,10 +28,10 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author EPN TECH
- * @version $Revision: $
+ * @version $Revision: $    
  */
 @RestController
-@RequestMapping("/gen_tipo_falta")
+@RequestMapping("/tipoFalta")
 public class TipoFaltaResource {
     @Autowired
     private TipoFaltaServiceImpl objServices;
