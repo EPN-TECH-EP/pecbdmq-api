@@ -101,9 +101,9 @@ public class PeriodoAcademicoResource {
 	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
 		return objService.getAllPeriodoAcademico();
 	}
-	@GetMapping("/listarAllPeriodos")
+	@GetMapping("/formacion/listar")
 	public List<PeriodoAcademico> listarPeriodo() {
-		return objService.getAllPeriodos();
+		return objService.getAllPeriodosFormacion();
 	}
 
 	@GetMapping("/validaestado")

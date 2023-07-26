@@ -49,5 +49,5 @@ public interface PeriodoAcademicoService {
 
     Boolean cerrarPeriodoAcademico() throws ParseException;
     public Set<Documento> getDocumentosByPeriodo(Integer codPA);
-    List<PeriodoAcademico> getAllPeriodos();
+    List<PeriodoAcademico> getAllPeriodosFormacion();
 }

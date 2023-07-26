@@ -239,8 +239,8 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	}
 
 	@Override
-	public List<PeriodoAcademico> getAllPeriodos() {
-		return repo.getPeriodos();
+	public List<PeriodoAcademico> getAllPeriodosFormacion() {
+		return repo.getAllPeriodosFormacion();
 	}
 
 }

@@ -65,7 +65,7 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
             "\tand c.cod_periodo_academico = pa.cod_periodo_academico\n" +
             "\tand UPPER(m.etiqueta) = 'FORMACIÓN'\n" +
             "\tand upper(pa.estado) <> 'ELIMINADO'", nativeQuery = true)
-    List<PeriodoAcademico> getPeriodos();
+    List<PeriodoAcademico> getAllPeriodosFormacion();
 
     @Query(value = "select pa.* "
             + "	from cbdmq.gen_periodo_academico pa, cbdmq.gen_modulo_estados me, cbdmq.gen_modulo m, "
