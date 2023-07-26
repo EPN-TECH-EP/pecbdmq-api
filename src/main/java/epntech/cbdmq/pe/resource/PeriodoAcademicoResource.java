@@ -154,6 +154,10 @@ public class PeriodoAcademicoResource {
 	public Set<Documento> listarDocumentos() {
 		return objService.getDocumentos();
 	}
+	@GetMapping("/cerrarPeriodo")
+	public Boolean cerrarPeriodo() throws ParseException {
+		return objService.cerrarPeriodoAcademico();
+	}
 
 	@GetMapping("/")
 	public ResponseEntity<PeriodoAcademico> getPeriodo() {

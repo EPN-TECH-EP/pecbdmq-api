@@ -14,15 +14,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -116,50 +115,42 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico() {
-		// TODO Auto-generated method stub
 		return repo1.getPeriodoAcademico();
 	}
 
 	@Override
 	public String getEstado() {
-		// TODO Auto-generated method stub
 		return repo.getEstado();
 	}
 
 	@Override
 	public Integer updateNextState(Integer id, String proceso) {
-		// TODO Auto-generated method stub
 		return repo.updateNextState(id, proceso);
 	}
 
 	@Override
 	public Integer validState(Integer id, String proceso) {
-		// TODO Auto-generated method stub
 		return repo.validState(id, proceso);
 	}
 
 	@Override
 	public Set<Documento> getDocumentos() {
-		// TODO Auto-generated method stub
 		return repo2.getDocumentos();
 	}
 
 	@Override
 	public Optional<PeriodoAcademico> getActive() {
-		// TODO Auto-generated method stub
 		return repo.getPeriodoActivo();
 	}
 
 	@Override
 	public Integer getPAActivo() {
-		// TODO Auto-generated method stub
 		return repo.getPAActive();
 	}
 
 	@Override
 	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
 
-		// TODO Auto-generated method stub
 		String resultado;
 		Integer periodo = repo.getPAActive();
 		
@@ -223,7 +214,6 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public void eliminar(List<DocsUtil> docs) {
-		// TODO Auto-generated method stub
 		for (DocsUtil docsUtil : docs) {
 			documentoRepository.deleteById(docsUtil.getId());
 			
@@ -232,6 +222,17 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 			pADocumentoRepository.deleteById(docsPA.getCodPeriodoAcademicoDocumento());
 		}
+	}
+
+	@Override
+	@Transactional
+	public Boolean cerrarPeriodoAcademico() throws ParseException {
+		Date fechaActual = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaFormateada = sdf.format(fechaActual);
+		Date date = sdf.parse(fechaFormateada);
+		int rowsUpdated=repo.cerrarPeriodoAndUpdateFecha(this.getPAActivo(),date);
+		return rowsUpdated>0;
 	}
 
 }
