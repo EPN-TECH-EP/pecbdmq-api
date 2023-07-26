@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * @author EPN TECH
- * @version $Revision: $    
+ * @version $Revision: $
  */
 @RestController
 @RequestMapping("/tipoFalta")
