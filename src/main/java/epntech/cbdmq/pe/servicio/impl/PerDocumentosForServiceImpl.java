@@ -53,7 +53,7 @@ public class PerDocumentosForServiceImpl implements PerDocumentosForService {
 
 	@Override
 	public Set<Documento> getDocumentos() {
-		return repo2.getDocumentos();
+		return repo2.getDocumentos(periodoAcademicoRepository.getPAActive());
 	}
 
 	@Override

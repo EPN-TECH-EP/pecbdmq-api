@@ -88,7 +88,6 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public Optional<PeriodoAcademico> getById(int id) {
-		// TODO Auto-generated method stub
 		return repo.findById(id);
 	}
 
@@ -134,8 +133,8 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	}
 
 	@Override
-	public Set<Documento> getDocumentos() {
-		return repo2.getDocumentos();
+	public Set<Documento> getDocumentosPActive() {
+		return repo2.getDocumentos(this.getPAActivo());
 	}
 
 	@Override
@@ -233,6 +232,10 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		Date date = sdf.parse(fechaFormateada);
 		int rowsUpdated=repo.cerrarPeriodoAndUpdateFecha(this.getPAActivo(),date);
 		return rowsUpdated>0;
+	}
+	@Override
+	public Set<Documento> getDocumentosByPeriodo(Integer codPA) {
+		return repo2.getDocumentos(codPA);
 	}
 
 }

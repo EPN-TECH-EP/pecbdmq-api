@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -37,10 +38,10 @@ public interface PeriodoAcademicoDocRepository extends JpaRepository<Documento, 
 			+ "from \r\n"
 			+ "cbdmq.gen_documento d, \r\n"
 			+ "cbdmq.gen_periodo_academico_documento pd \r\n"
-			+ "where pd.cod_periodo_academico =cbdmq.get_pa_activo()\r\n"
+			+ "where pd.cod_periodo_academico =:codPA\r\n"
 			+ "and d.cod_documento = pd.cod_documento \r\n"
 			+ "and UPPER(d.estado) = 'ACTIVO';", nativeQuery=true)
-	Set<Documento> getDocumentos();
+	Set<Documento> getDocumentos(@Param("codPA") Integer codPA);
 	
 	@Transactional
     @Modifying
