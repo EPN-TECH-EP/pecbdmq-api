@@ -52,6 +52,8 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 	List<EstudianteDatos> getEstudianteMateriaParalelo(@Param("codMateria") Integer codMateria, @Param("codPA") Integer codPA);
 	@Query(nativeQuery = true, name = "NotaMateriaByEstudiante.get")
 	List<NotaMateriaByEstudiante> get(@Param("codEstudiante") Integer codEstudiante, @Param("tipoInstructor") String tipoInstructor, @Param("codPA") Integer codPA );
+	@Query(nativeQuery = true, name = "NotaMateriaByEstudianteFormacion.get")
+	NotaMateriaByEstudiante getMateriaByEstudianteNotaFormacion(@Param("codEstudiante") Integer codEstudiante, @Param("tipoInstructor") String tipoInstructor, @Param("codPA") Integer codPA, @Param("notaFormacion") Integer codNotaFormacion );
 
 	//Digo a Hibernate que no espere un resultado de retorno y que es una operación de modificación
 	@Modifying
