@@ -17,35 +17,36 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PeriodoAcademicoService {
 
-    PeriodoAcademico save(PeriodoAcademico obj) throws DataException;
 
-    List<PeriodoAcademico> getAll();
-
-    Optional<PeriodoAcademico> getById(int id);
-
-    PeriodoAcademico update(PeriodoAcademico objActualizado) throws DataException;
-
-    void deleteById(int id) throws DataException;
-
-    List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico();
-
-    String getEstado();
-
-    Integer updateNextState(Integer id, String proceso);
-
-    Integer validState(Integer id, String proceso);
-
+	PeriodoAcademico save(PeriodoAcademico obj) throws DataException;
+	
+	List<PeriodoAcademico> getAll();
+	
+	Optional<PeriodoAcademico> getById(int id);
+	
+	PeriodoAcademico update(PeriodoAcademico objActualizado) throws DataException;
+	
+	void deleteById(int id) throws DataException;
+	
+	List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico();
+	
+	String getEstado();
+	
+	Integer updateNextState(Integer id, String proceso);
+	
+	Integer validState(Integer id, String proceso);
+	
     Set<Documento> getDocumentosPActive();
+	
+	Optional<PeriodoAcademico> getActive();
+	
+	Integer getPAActivo();
+	
 
-    Optional<PeriodoAcademico> getActive();
+	void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion)  throws IOException, ArchivoMuyGrandeExcepcion, DataException;
 
-    Integer getPAActivo();
-
-
-    void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion, DataException;
-
-
-    void eliminar(List<DocsUtil> docs);
+	
+	void eliminar(List<DocsUtil> docs);
 
     Boolean cerrarPeriodoAcademico() throws ParseException;
     public Set<Documento> getDocumentosByPeriodo(Integer codPA);

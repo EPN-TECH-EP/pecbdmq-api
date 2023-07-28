@@ -5,11 +5,21 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.DatosEstudianteParaCrearUsuario;
 import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.PostulantesValidosService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
@@ -18,11 +28,15 @@ import epntech.cbdmq.pe.repositorio.admin.EstudianteForRepository;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.servicio.EstudianteService;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @Service
+@Transactional
 public class EstudianteServiceImpl implements EstudianteService {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private EstudianteRepository repo;
@@ -34,6 +48,14 @@ public class EstudianteServiceImpl implements EstudianteService {
     private PostulantesValidosService postulantesValidosService;
     @Autowired
     private DatoPersonalService dpService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+
 
 
     @Override
@@ -90,9 +112,55 @@ public class EstudianteServiceImpl implements EstudianteService {
 	}*/
 
     @Override
-    public void saveEstudiantes() {
-        // TODO Auto-generated method stub
-        estudianteForRepository.insertEstudiantes();
+    public void saveEstudiantes() throws DataException {
+
+
+        try {
+            String sqlInsertUsuario = "INSERT INTO cbdmq.gen_usuario \n" +
+                    "(clave, cod_modulo, fecha_registro, fecha_ultimo_login, fecha_ultimo_login_mostrar, is_active, is_not_locked, nombre_usuario, cod_datos_personales)\n" +
+                    "VALUES(:clave, 0, current_date, null, null, true, true, :usuario, :cod_dato_personal) returning cod_usuario;";
+
+            String sqlInsertRolUsuario = "insert into cbdmq.gen_rol_usuario (cod_rol, cod_usuario) \n" +
+                    "values ((select cod_rol from cbdmq.gen_rol gr where upper(trim(nombre)) like 'ESTUDIANTE'), :cod_usuario) \n" +
+                    "ON CONFLICT (cod_rol, cod_usuario) do nothing;";
+
+            estudianteForRepository.insertEstudiantes();
+
+            // generar usuarios para los estudiantes registrados
+            Set<DatosEstudianteParaCrearUsuario> listaEstudiantesParaCrearUsuarios = estudianteForRepository
+                    .listaEstudiantesParaCrearUsuarios();
+
+
+            for (DatosEstudianteParaCrearUsuario estudiante : listaEstudiantesParaCrearUsuarios) {
+
+
+
+                try {
+                    // insert en gen_usuario
+                    Query insertUsuario =
+                            entityManager.createNativeQuery(sqlInsertUsuario)
+                            .setParameter("clave", this.encodePassword(estudiante.getCedula()))
+                            .setParameter("usuario", estudiante.getCedula())
+                            .setParameter("cod_dato_personal", estudiante.getCodDatosPersonales());
+
+                    Long codUsuario = (Long) insertUsuario.getSingleResult();
+
+                    Query insertRolUsuario =
+                            entityManager.createNativeQuery(sqlInsertRolUsuario)
+                            .setParameter("cod_usuario", codUsuario);
+
+                    insertRolUsuario.executeUpdate();
+
+                } catch (Exception e) {
+                    LOGGER.error("Error al crear usuario para el estudiante: " + estudiante.getCedula()
+                            + "clave:" + this.encodePassword(estudiante.getCedula())
+                            + "cod_dato_personal: " + estudiante.getCodDatosPersonales() + " - " + e.getMessage());
+                }
+
+            }
+        } catch (Exception e) {
+            throw new DataException(e.getMessage());
+        }
     }
 
     @Override
@@ -180,6 +248,12 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public List<Estudiante> getEstudiantesIs(String Estado) {
         return repo.getAllByEstadoIsIgnoreCase(Estado);
+    }
+
+    private String encodePassword(String password) {
+
+        String encodedPassword = passwordEncoder.encode(password);
+        return encodedPassword;
     }
 
 }

@@ -3,10 +3,13 @@ package epntech.cbdmq.pe.servicio.impl;
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.TIPO_CURSO_NO_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.TipoCursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +23,17 @@ import epntech.cbdmq.pe.servicio.CatalogoCursoService;
 @Service
 public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	@Autowired
-	CatalogoCursoRepository repo;
-	
-	
+	private CatalogoCursoRepository repo;
+
+	@Autowired
+	private TipoCursoRepository tipoCursoRepository;
+
 	@Override
 	public CatalogoCurso save(CatalogoCurso obj) throws DataException {
+		TipoCurso tipoCurso = tipoCursoRepository.findById(obj.getCodTipoCurso().longValue())
+				.orElseThrow(() -> new BusinessException(TIPO_CURSO_NO_EXISTE));
+
+		obj.setCodTipoCurso(tipoCurso.getCodTipoCurso().intValue());
 		obj.setNombreCatalogoCurso(obj.getNombreCatalogoCurso().toUpperCase());
 		
 		Optional<CatalogoCurso> objGuardado = repo.findByNombreCatalogoCursoIgnoreCase(obj.getNombreCatalogoCurso());
@@ -45,13 +54,18 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	}
 	@Override
 	public List<CatalogoCurso> getAll() {
-		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
 
 	@Override
+	public List<CatalogoCurso> getByCodigoTipoCurso(Integer codigoTipoCurso) {
+		TipoCurso tipoCurso = tipoCursoRepository.findById(codigoTipoCurso.longValue())
+				.orElseThrow(() -> new BusinessException(TIPO_CURSO_NO_EXISTE));
+		return repo.findByCodTipoCurso(tipoCurso.getCodTipoCurso().intValue());
+	}
+
+	@Override
 	public Optional<CatalogoCurso> getById(int id) {
-		// TODO Auto-generated method stub
 		return repo.findById(id);
 	}
 
@@ -65,6 +79,7 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 
 		catalogoCurso.setDescripcionCatalogoCurso(objActualizado.getDescripcionCatalogoCurso());
 		catalogoCurso.setNombreCatalogoCurso(objActualizado.getNombreCatalogoCurso());
+		catalogoCurso.setCodTipoCurso(objActualizado.getCodTipoCurso());
 		catalogoCurso.setEstado(objActualizado.getEstado());
 
 		return repo.save(catalogoCurso);

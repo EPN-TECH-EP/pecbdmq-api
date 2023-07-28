@@ -118,7 +118,9 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 		pruebaDetalle.setPuntajeMaximo(objActualizado.getPuntajeMaximo());
 		pruebaDetalle.setTienePuntaje(objActualizado.getTienePuntaje());
 
-		return this.save(pruebaDetalle);
+		return pruebaDetalle.getCodCursoEspecializacion() == null
+				? this.save(pruebaDetalle)
+				: pruebaDetalleRepository.save(pruebaDetalle);
 	}
 
 	@Override

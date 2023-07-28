@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.dominio.admin;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -31,6 +32,9 @@ public class CatalogoCurso {
 	@NotBlank(message = "El atributo 'descripcionCatalogoCurso' es obligatorio")
 	@Column(name = "descripcion_catalogo_curso")
 	private String descripcionCatalogoCurso;
+	@NotNull(message = "El atributo 'codTipoCurso' es obligatorio")
+	@Column(name = "cod_tipo_curso")
+	private Integer codTipoCurso;
 	@NotBlank(message = "El atributo 'estado' es obligatorio")
 	@Column(name = "estado")
 	private String estado;

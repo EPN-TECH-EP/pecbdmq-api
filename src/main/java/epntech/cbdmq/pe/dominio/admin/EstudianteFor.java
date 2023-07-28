@@ -1,16 +1,24 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
+import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.DatosEstudianteParaCrearUsuario;
+import jakarta.persistence.*;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
+
+@SqlResultSetMapping(name = "DatosEstudianteParaCrearUsuario", classes =
+@ConstructorResult(
+		targetClass = DatosEstudianteParaCrearUsuario.class,
+		columns = {
+				@ColumnResult(name = "cod_datos_personales", type= Long.class),
+				@ColumnResult(name = "cedula", type= String.class)
+		}))
+@NamedNativeQuery(name = "cbdmq.listar_estudiantes_formacion_generar_usuarios",
+		query = "select * from cbdmq.listar_estudiantes_formacion_generar_usuarios()",resultSetMapping = "DatosEstudianteParaCrearUsuario"
+)
 
 @Data
 @Entity
