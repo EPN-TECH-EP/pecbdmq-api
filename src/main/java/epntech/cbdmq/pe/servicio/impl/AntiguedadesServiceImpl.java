@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.lowagie.text.DocumentException;
@@ -41,6 +42,9 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	private AntiguedadesFormacionRepository antiguedadesFormacionRepository;
 	@Autowired
 	private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
+
+	@Value("${pecb.archivos.ruta}")
+	private String ARCHIVOS_RUTA;
 
 	@Override
 	public Set<AntiguedadesDatos> getAntiguedadesMasculino() {
@@ -84,6 +88,8 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		String[] columnas = { "Codigo", "id", "Cedula", "Nombre", "Apellido", "Nota" };
 		float[] widths = new float[] { 2f, 3f, 6f, 6f, 2.5f, 2.5f };
 
+		//Genera el pdf
+		exporter.setArchivosRuta(ARCHIVOS_RUTA);
 		exporter.exportar(response, columnas, obtenerDatos(genero), widths, filePath);
 
 		generaDocumento(filePath, nombre);
@@ -197,6 +203,8 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		String[] columnas = { "Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota" };
 		float[] widths = new float[] { 2f, 2f, 6f, 6f, 2.5f, 2f };
 
+		//Genera el pdf
+		exporter.setArchivosRuta(ARCHIVOS_RUTA);
 		exporter.exportar(response, columnas, obtenerDatos(), widths, filePath);
 
 		generaDocumento(filePath, nombre);

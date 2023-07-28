@@ -2,44 +2,26 @@ package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.query.sqm.tree.update.SqmUpdateStatement;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
-import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
-import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.dominio.util.DocsUtil;
-import epntech.cbdmq.pe.dominio.util.PeriodoAcademicoFor;
-import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.DocumentoServiceimpl;
 import epntech.cbdmq.pe.servicio.impl.PeriodoAcademicoServiceimpl;
-import jakarta.mail.MessagingException;
 
 @RestController
 @RequestMapping("/periodoacademico")
@@ -119,6 +101,10 @@ public class PeriodoAcademicoResource {
 	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
 		return objService.getAllPeriodoAcademico();
 	}
+	@GetMapping("/formacion/listar")
+	public List<PeriodoAcademico> listarPeriodo() {
+		return objService.getAllPeriodosFormacion();
+	}
 
 	@GetMapping("/validaestado")
 	public ResponseEntity<HttpResponse> getEstado() {
@@ -152,7 +138,15 @@ public class PeriodoAcademicoResource {
 
 	@GetMapping("/documentos")
 	public Set<Documento> listarDocumentos() {
-		return objService.getDocumentos();
+		return objService.getDocumentosPActive();
+	}
+	@GetMapping("/documentosByPA")
+	public Set<Documento> listarDocumentosByPeriodo(@RequestParam("codigoPeriodo") Integer codPAcademico) {
+		return objService.getDocumentosByPeriodo(codPAcademico);
+	}
+	@GetMapping("/cerrarPeriodo")
+	public Boolean cerrarPeriodo() throws ParseException {
+		return objService.cerrarPeriodoAcademico();
 	}
 
 	@GetMapping("/")

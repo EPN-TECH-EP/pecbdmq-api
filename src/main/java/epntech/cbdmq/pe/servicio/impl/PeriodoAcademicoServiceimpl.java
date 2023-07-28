@@ -14,15 +14,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -139,9 +138,8 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 	}
 
 	@Override
-	public Set<Documento> getDocumentos() {
-		// TODO Auto-generated method stub
-		return repo2.getDocumentos();
+	public Set<Documento> getDocumentosPActive() {
+		return repo2.getDocumentos(this.getPAActivo());
 	}
 
 	@Override
@@ -232,6 +230,26 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 			pADocumentoRepository.deleteById(docsPA.getCodPeriodoAcademicoDocumento());
 		}
+	}
+
+	@Override
+	@Transactional
+	public Boolean cerrarPeriodoAcademico() throws ParseException {
+		Date fechaActual = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String fechaFormateada = sdf.format(fechaActual);
+		Date date = sdf.parse(fechaFormateada);
+		int rowsUpdated=repo.cerrarPeriodoAndUpdateFecha(this.getPAActivo(),date);
+		return rowsUpdated>0;
+	}
+	@Override
+	public Set<Documento> getDocumentosByPeriodo(Integer codPA) {
+		return repo2.getDocumentos(codPA);
+	}
+
+	@Override
+	public List<PeriodoAcademico> getAllPeriodosFormacion() {
+		return repo.getAllPeriodosFormacion();
 	}
 
 }

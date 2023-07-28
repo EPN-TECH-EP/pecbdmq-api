@@ -6,6 +6,7 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.util.EstudianteDto;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface EstudianteService {
 	
@@ -26,7 +27,7 @@ public interface EstudianteService {
 
 	//List<EstudianteDatos> findAllEstudiante();
 	
-	void saveEstudiantes();
+	void saveEstudiantes() throws DataException;
 	
 	Estudiante getEstudianteByUsuario(String codUsuario);
 	Estudiante getEstudianteByCodigoUnico(String codUnico);

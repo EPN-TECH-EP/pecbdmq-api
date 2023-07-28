@@ -39,7 +39,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"on ge.codDatosPersonales = gu.codDatosPersonales.codDatosPersonales\n" +
 			"where gu.isActive =true\n" +
 			"and gu.isNotLocked =true\n" +
-			"and gu.codUsuario=:codUsuario")
+			"and gu.nombreUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
 	Estudiante getEstudianteByCodUnicoEstudiante(String codUnicoEstudiante);
 	@Query(value="SELECT ge.cod_estudiante, ge.cod_datos_personales , ge.codigo_unico_estudiante, ge.estado\n" +

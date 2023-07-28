@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -8,7 +9,6 @@ import java.util.Set;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.PeriodoAcademicoSemestreModulo;
 import epntech.cbdmq.pe.dominio.util.DocsUtil;
@@ -35,7 +35,7 @@ public interface PeriodoAcademicoService {
 	
 	Integer validState(Integer id, String proceso);
 	
-	Set<Documento> getDocumentos();
+    Set<Documento> getDocumentosPActive();
 	
 	Optional<PeriodoAcademico> getActive();
 	
@@ -46,4 +46,8 @@ public interface PeriodoAcademicoService {
 
 	
 	void eliminar(List<DocsUtil> docs);
+
+    Boolean cerrarPeriodoAcademico() throws ParseException;
+    public Set<Documento> getDocumentosByPeriodo(Integer codPA);
+    List<PeriodoAcademico> getAllPeriodosFormacion();
 }

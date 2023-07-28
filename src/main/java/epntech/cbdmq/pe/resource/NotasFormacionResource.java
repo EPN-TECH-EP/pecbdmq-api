@@ -166,7 +166,11 @@ public class NotasFormacionResource {
 	}
 	@GetMapping("/listarNotaMateriaCoordinadorByEstudiante")
 	public List<NotaMateriaByEstudiante> listarNotaMateriaCoordinadorByEstudiante(@Param("codEstudiante") Integer codEstudiante) {
-		return notasFormacionServiceImpl.getNotaMateriasCoordinadorByEstudiante(codEstudiante);
+		return notasFormacionServiceImpl.getNotaMateriasWithCoordinadorByEstudiante(codEstudiante);
+	}
+	@GetMapping("/listarMateriaWithCoordinador")
+	public NotaMateriaByEstudiante listarNotaMateriaCoordinadorByEstudiante(@Param("codEstudiante") Integer codEstudiante, @Param("codNotaFormacion") Integer codNotaFormacion) {
+		return notasFormacionServiceImpl.getMateriaWithCoordinadorByEstudianteNotaFormacion(codEstudiante, codNotaFormacion);
 	}
 
 

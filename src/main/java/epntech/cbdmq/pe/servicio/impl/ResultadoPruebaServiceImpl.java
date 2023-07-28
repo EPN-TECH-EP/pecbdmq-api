@@ -3,10 +3,7 @@ package epntech.cbdmq.pe.servicio.impl;
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.constante.FormacionConst;
-import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
-import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
-import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
+import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasFisicasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -21,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
@@ -52,6 +50,8 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     private String ARCHIVOS_RUTA;
     @Autowired
     private PeriodoAcademicoRepository periodoAcademicoRepository;
+    @Autowired
+    private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
 
 
     @Override
@@ -234,16 +234,15 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         saveDocumentoPrueba(doc);
     }
-
-    private void generaDocumento(String ruta, String nombre, Integer prueba) throws DataException {
+    @Transactional
+    public void generaDocumento(String ruta, String nombre, Integer subTipoPrueba) throws DataException {
 
         // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
         Integer codPruebaDetalle = null;
-        System.out.println("prueba: " + prueba);
 
 
         Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
-                prueba,
+                subTipoPrueba,
                 periodoAcademicoRepository.getPAActive());
 
         if (pruebaDetalleOpt.isPresent()) {
@@ -285,6 +284,12 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                     resultado.stream()
                             .forEach(codDoc -> {
                                 // elimina de documentoPrueba
+
+                                try {
+                                    this.periodoAcademicoDocForRepository.deleteByCodPeriodoAcademicoAndCodDocumento(periodoAcademicoRepository.getPAActive(), codDoc);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 this.docPruebaRepo.deleteByCodPruebaDetalleAndCodDocumento(codPrueba, codDoc);
                                 this.documentoRepo.deleteById(codDoc);
                             });
@@ -307,6 +312,11 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         }
 
         documento = documentoRepo.save(documento);
+
+        PeriodoAcademicoDocumentoFor docPA = new PeriodoAcademicoDocumentoFor();
+        docPA.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());;
+        docPA.setCodDocumento(documento.getCodDocumento());
+        periodoAcademicoDocForRepository.save(docPA);
 
         DocumentoPrueba doc = new DocumentoPrueba();
         doc.setCodPruebaDetalle(codPruebaDetalle);

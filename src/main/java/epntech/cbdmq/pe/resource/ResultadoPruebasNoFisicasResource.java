@@ -69,7 +69,7 @@ public class ResultadoPruebasNoFisicasResource {
 
 		Optional<PruebaDetalle> pp = pruebaDetalleServiceImpl.getBySubtipoAndPA(subTipoPrueba,
 				periodoAcademicoRepository.getPAActive());
-		if (pp.isPresent() && (pp.get().getEstado().equalsIgnoreCase("ACTIVO")
+		if (pp.isPresent() && (pp.get().getEstado().equalsIgnoreCase(ACTIVO)
 				|| pp.get().getEstado().equalsIgnoreCase("INICIO"))) {
 
 			try {

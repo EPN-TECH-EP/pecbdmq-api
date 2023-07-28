@@ -212,9 +212,13 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 	public List<NotaMateriaByEstudiante> getNotaMateriasByEstudiante(Integer codEstudiante, String tipoInstructor) {
 		return notasFormacionRepository.get(codEstudiante, tipoInstructor, periodoAcademicoService.getPAActivo());
 	}
+	@Override
+	public NotaMateriaByEstudiante getMateriaWithCoordinadorByEstudianteNotaFormacion(Integer codEstudiante, Integer codNotaFormacion) {
+		return notasFormacionRepository.getMateriaByEstudianteNotaFormacion(codEstudiante, "COORDINADOR", periodoAcademicoService.getPAActivo(),codNotaFormacion);
+	}
 
 	@Override
-	public List<NotaMateriaByEstudiante> getNotaMateriasCoordinadorByEstudiante(Integer codEstudiante) {
+	public List<NotaMateriaByEstudiante> getNotaMateriasWithCoordinadorByEstudiante(Integer codEstudiante) {
 		return this.getNotaMateriasByEstudiante(codEstudiante,"COORDINADOR");
 	}
 }
