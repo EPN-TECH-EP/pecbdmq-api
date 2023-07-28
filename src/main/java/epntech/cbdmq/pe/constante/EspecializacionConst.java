@@ -14,4 +14,5 @@ public class EspecializacionConst {
 	public static final String CURSO_NO_VALIDADO = "El curso no tiene todos los documentos validados y aprobados";
 	public static final String CURSO_ESTADO_INICIADO = "INICIADO";
 	public static final String INSCRIPCION_NO_DATOS = "INICIADO";
+	public static final String CURSO_NO_EXISTE = "No existe el curso solicitada";
 }
