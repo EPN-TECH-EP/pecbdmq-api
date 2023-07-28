@@ -56,6 +56,11 @@ public class CursoResource {
 		return cursoServiceImpl.listarPorEstado(estado);
 	}
 
+	@GetMapping("/listarPorTipoCurso")
+	public List<Curso> listar(@RequestParam Integer codigoTipoCurso) {
+		return cursoServiceImpl.getByCodigoTipoCurso(codigoTipoCurso);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Curso> getById(@PathVariable("id") Long codigo) throws DataException {
 		return new ResponseEntity<>(cursoServiceImpl.getById(codigo), HttpStatus.OK);

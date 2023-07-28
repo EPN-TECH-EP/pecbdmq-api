@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -25,6 +26,8 @@ public interface CursoService {
 	List<Curso> listarAll();
 
 	List<Curso> listarPorEstado(String estado);
+
+	List<Curso> getByCodigoTipoCurso(Integer codigoTipoCurso);
 
 	Curso getById(Long id);
 

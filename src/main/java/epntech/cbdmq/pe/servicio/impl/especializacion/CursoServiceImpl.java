@@ -56,6 +56,8 @@ public class CursoServiceImpl implements CursoService {
 	private CursoInstructorRepository cursoInstructorRepository;
 	@Autowired
 	private ParametroRepository parametroRepository;
+	@Autowired
+	private TipoCursoRepository tipoCursoRepository;
 
 	@Autowired
 	private EmailService emailService;
@@ -122,6 +124,13 @@ public class CursoServiceImpl implements CursoService {
 	@Override
 	public List<Curso> listarPorEstado(String estado) {
 		return cursoRepository.findByEstado(estado);
+	}
+
+	@Override
+	public List<Curso> getByCodigoTipoCurso(Integer codigoTipoCurso) {
+		TipoCurso tipoCurso = tipoCursoRepository.findById(codigoTipoCurso.longValue())
+				.orElseThrow(() -> new BusinessException(TIPO_CURSO_NO_EXISTE));
+		return cursoRepository.findByCodigoTipoCurso(tipoCurso.getCodTipoCurso().intValue());
 	}
 
 	@Override
