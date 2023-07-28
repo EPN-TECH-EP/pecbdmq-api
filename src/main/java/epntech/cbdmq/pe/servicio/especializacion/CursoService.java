@@ -1,10 +1,12 @@
 package epntech.cbdmq.pe.servicio.especializacion;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -16,29 +18,31 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface CursoService {
 
-	Curso save(Curso obj, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento);
+	Curso save(String datos, List<MultipartFile> documentos, Long codTipoDocumento) throws JsonProcessingException, ParseException;
 
-	Curso update(Curso objActualizado) throws DataException;
+	Curso update(Curso objActualizado);
 
 	List<Curso> listarAll();
 
-	Optional<Curso> getById(Long id) throws DataException;
+	List<Curso> listarPorEstado(String estado);
 
-	CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento)  throws DataException;
+	Curso getById(Long id);
+
+	CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento);
 
 	Curso iniciarCurso(Long codCursoEspecializacion);
 
-	Curso updateEstadoProceso(Long estado, Long codCurso) throws DataException;
+	Curso updateEstadoProceso(Long estado, Long codCurso);
 
-	Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) throws DataException ;
+	Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) ;
 
-	Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException, DataException;
+	Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException;
 
-	Optional<Curso> uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long codTipoDocumento)  throws IOException, ArchivoMuyGrandeExcepcion ;
+	Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long codTipoDocumento)  throws IOException, ArchivoMuyGrandeExcepcion ;
 
-	void delete(Long codCursoEspecializacion) throws DataException ;
+	void delete(Long codCursoEspecializacion) ;
 
-	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) throws DataException ;
+	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) ;
 
-	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException;
+	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento);
 }

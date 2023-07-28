@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.especializacion.TipoCursoServiceImpl;
 
 @RestController
@@ -31,7 +30,7 @@ public class TipoCursoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody TipoCurso obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody TipoCurso obj) {
 		return new ResponseEntity<>(tipoCursoServiceImpl.save(obj), HttpStatus.OK);
 	}
 	
@@ -42,32 +41,18 @@ public class TipoCursoResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<TipoCurso> obtenerPorId(@PathVariable("id") long codigo) {
-		return tipoCursoServiceImpl.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return new ResponseEntity<>(tipoCursoServiceImpl.getById(codigo), HttpStatus.OK);
 	}
 
 	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
-	public ResponseEntity<TipoCurso> actualizarDatos(@PathVariable("id") long codigo, @RequestBody TipoCurso obj) throws DataException{
-		
-	
-		return (ResponseEntity<TipoCurso>) tipoCursoServiceImpl.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombreTipoCurso(obj.getNombreTipoCurso().toUpperCase());
-			datosGuardados.setEstado(obj.getEstado());
-
-			TipoCurso datosActualizados = null;
-			try {
-				datosActualizados = tipoCursoServiceImpl.update(datosGuardados);
-			} catch (DataException e) {
-				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-			}
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<TipoCurso> actualizarDatos(@PathVariable("id") long codigo, @RequestBody TipoCurso obj) {
+		obj.setCodTipoCurso(codigo);
+		return new ResponseEntity<>(tipoCursoServiceImpl.update(obj), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) throws DataException {
-
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) {
 		tipoCursoServiceImpl.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
