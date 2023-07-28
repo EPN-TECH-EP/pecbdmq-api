@@ -35,7 +35,7 @@ import jakarta.persistence.PersistenceContext;
 @Repository
 
 public class CursoEspRepository {
-	
+	//Interfaz principal de JPA; utilizada para la persistencia de las aplicaciones. Esta clase es la encargada de gestionar las entidades
 	@PersistenceContext
 	private EntityManager entityManager;
 	@Value("${pecb.archivos.ruta}")
