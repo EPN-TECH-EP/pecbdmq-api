@@ -12,6 +12,8 @@ public interface CatalogoCursoService {
 	CatalogoCurso save(CatalogoCurso obj) throws DataException;
 	
 	List<CatalogoCurso> getAll();
+
+	List<CatalogoCurso> getByCodigoTipoCurso(Integer codigoTipoCurso);
 	
 	Optional<CatalogoCurso> getById(int id);
 	

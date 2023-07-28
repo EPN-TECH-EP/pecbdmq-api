@@ -1,14 +1,13 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
-import org.springframework.data.repository.query.Param;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.util.CursoDatos;
 
 public interface CursoRepository extends JpaRepository<Curso, Long> {
 
@@ -27,4 +26,12 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 	
 	@Procedure(value = "cbdmq.valida_documentos_curso_especializacion")
     Integer validaDocumentosCursoEspecializacion(Long codCursoEspecializacion);
+
+	List<Curso> findByEstado(String estado);
+
+	@Query(value = "select ec.* from cbdmq.esp_curso ec, cbdmq.esp_catalogo_cursos ecc, cbdmq.esp_tipo_curso etc " +
+			"where ec.cod_catalogo_cursos = ecc.cod_catalogo_cursos " +
+			"and ecc.cod_tipo_curso = etc.cod_tipo_curso " +
+			"and etc.cod_tipo_curso = :codigoTipoCurso", nativeQuery = true)
+	List<Curso> findByCodigoTipoCurso(Integer codigoTipoCurso);
 }

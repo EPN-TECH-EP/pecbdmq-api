@@ -76,9 +76,6 @@ public class Curso {
 	@Column(name = "estado")
 	private String estado;
 	
-	@Column(name = "cod_tipo_curso")
-	private Integer codTipoCurso;
-	
 	@Column(name = "email_notificacion")
 	private String emailNotificacion;
 
