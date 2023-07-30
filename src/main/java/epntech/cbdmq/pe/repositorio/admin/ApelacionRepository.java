@@ -3,10 +3,12 @@ package epntech.cbdmq.pe.repositorio.admin;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.ApelacionEstudiante;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import epntech.cbdmq.pe.dominio.admin.Apelacion;
+import org.springframework.data.repository.query.Param;
 
 public interface ApelacionRepository extends JpaRepository<Apelacion, Integer>{
 	@Query(value = "select a.* \n" +
@@ -40,5 +42,8 @@ public interface ApelacionRepository extends JpaRepository<Apelacion, Integer>{
 			"and gti.nombre_tipo_instructor = :nombreTipoInstructor", nativeQuery=true)
 	List<Apelacion> getApelacionesByInstructor(Integer codInstructor, String nombreTipoInstructor);
 	Optional<Apelacion> findApelacionByCodNotaFormacion(Integer codNotaFormacion);
+
+	@Query(name="ApelacionEstudiante.getApelacionesEstudiantesMateria", nativeQuery=true)
+	List<ApelacionEstudiante> getApelacionesEstudiantesMateria(@Param("codMateria") Integer codMateria, @Param("codPA") Integer codPA);
 	
 }

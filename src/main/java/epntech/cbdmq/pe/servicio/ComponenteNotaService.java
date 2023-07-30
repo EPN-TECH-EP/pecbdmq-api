@@ -11,10 +11,7 @@ import epntech.cbdmq.pe.dominio.admin.PonderacionModulos;
 import epntech.cbdmq.pe.dominio.util.ComponenteTipo;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
-/**
- * @author EPN TECH
- * @version $Revision: $
- */
+
 public interface ComponenteNotaService {
     ComponenteNota save(ComponenteNota obj) throws DataException;
 

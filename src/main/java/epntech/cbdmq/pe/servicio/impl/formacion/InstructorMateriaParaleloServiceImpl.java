@@ -64,6 +64,7 @@ public class InstructorMateriaParaleloServiceImpl implements InstructorMateriaPa
 
     @Override
     @Transactional
+    //TODO no se usa, limpiar o optimizar
     public Boolean asignarInstructorMateriaParaleloAll(Integer codMateria, Integer codCoordinador, Integer codAula, Integer[] codAsistentes, Integer[] codInstructores, Integer codParalelo) throws DataException {
         MateriaPeriodo objMPe = new MateriaPeriodo();
         objMPe.setCodPeriodoAcademico(servicePeriodo.getPAActivo());

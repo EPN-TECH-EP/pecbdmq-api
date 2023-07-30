@@ -20,6 +20,6 @@ public interface DelegadoService {
 	
 	Optional<Delegado> getByIdUsuario(int codUsuario) throws DataException;
 	Boolean isUsuarioDelegado(int codUsuario) throws DataException;
-	
+
 	List<DelegadoUtil> delegado();
 }

@@ -50,5 +50,5 @@ public class Materia {
 	
 	//@ManyToMany(mappedBy = "materias", cascade = CascadeType.ALL)
 	//public Set<Aula> aulas;
-	
+
 }

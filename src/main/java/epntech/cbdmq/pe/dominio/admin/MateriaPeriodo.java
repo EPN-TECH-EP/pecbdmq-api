@@ -13,8 +13,6 @@ import lombok.Data;
 @Table(name = "gen_materia_periodo")
 public class MateriaPeriodo {
 
-	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_materia_periodo")

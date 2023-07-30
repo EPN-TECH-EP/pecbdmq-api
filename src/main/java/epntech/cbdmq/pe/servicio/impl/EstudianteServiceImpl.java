@@ -165,8 +165,11 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public Estudiante getEstudianteByUsuario(String codUsuario) {
-
-        return this.repo.getEstudianteByUsuario(codUsuario);
+        Estudiante estudiante =repo.getEstudianteByUsuario(codUsuario);
+        if(estudiante == null){
+            throw new RuntimeException("No se encontro el estudiante");
+        }
+        return estudiante;
     }
 
     @Override

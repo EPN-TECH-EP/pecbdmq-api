@@ -40,41 +40,26 @@ public class EstudianteResource {
 	public List<Estudiante> listar() {
 		return objService.getAll();
 	}
-	@PostMapping("/crear")
-	@ResponseStatus(HttpStatus.CREATED)
+
+    @PostMapping("/crear")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody Estudiante obj) throws DataException {
-		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
-	}
-	
+        return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
+    }
 
 
-	@GetMapping("/{id}")
-	public ResponseEntity<Estudiante> obtenerPorId(@PathVariable("id") int codigo) {
-		return objService.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
 
-	/*@PutMapping("/{id}")
-	public ResponseEntity<Estudiante> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Estudiante obj) throws DataException{
-		return (ResponseEntity<Estudiante>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setCodDatosPersonales(obj.getCodDatosPersonales());
-			datosGuardados.setCodModulo(obj.getCodModulo());
-			datosGuardados.setGrado(obj.getGrado());
-			datosGuardados.setResultadoEstudiante(obj.getResultadoEstudiante());
-			datosGuardados.setIdEstudiante(obj.getIdEstudiante());
-			datosGuardados.setEstado(obj.getEstado());
+    @GetMapping("/{id}")
+    public ResponseEntity<Estudiante> obtenerPorId(@PathVariable("id") int codigo) {
+        return objService.getById(codigo).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-			Estudiante datosActualizados = null;
-			datosActualizados = objService.update(datosGuardados);
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
-	}*/
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
-			objService.delete(codigo);
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-	}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
+        objService.delete(codigo);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
 	
 	/*@GetMapping("/paginado")
 	public ResponseEntity<?> listarDatos(Pageable pageable) {
@@ -102,6 +87,7 @@ public class EstudianteResource {
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
+
     }
 	
     @GetMapping("/ByUser")
@@ -135,3 +121,5 @@ public class EstudianteResource {
 	}
     
 }
+
+

@@ -21,12 +21,13 @@ public class TipoCurso {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	@Column(name = "cod_tipo_curso")
 	private Long codTipoCurso;
 	
 	@Column(name = "nombre_tipo_curso")
 	private String nombreTipoCurso;
-	
+
 	@Column(name = "estado")
 	private String estado;
 

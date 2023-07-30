@@ -54,7 +54,7 @@ public class Aula {
 	
 	@Column(name = "estado")
 	private String estado;
-	
+
 	@Column(name="cod_tipo_aula")
 	private Long codTipoaula;
 	@Column(name="cod_campus")

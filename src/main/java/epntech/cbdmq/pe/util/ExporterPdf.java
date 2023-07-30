@@ -113,10 +113,10 @@ public class ExporterPdf {
 	
 	public void exportar(HttpServletResponse response, String[] columnas, ArrayList<ArrayList<String>> lista, float[] widths, String filePath)
 			throws DocumentException, IOException {
-		
+
 		File file = new File(filePath);
-        file.getParentFile().mkdirs();
-        
+		file.getParentFile().mkdirs();
+
 		Document documento = new Document(PageSize.A4);
 		PdfWriter.getInstance(documento, new FileOutputStream(filePath));
 
@@ -146,9 +146,10 @@ public class ExporterPdf {
 
 		escribirCabeceraDeLaTabla(tabla, columnas);
 		escribirDatosDeLaTabla(tabla, lista);
-        
-		documento.add(tabla);        
+
+		documento.add(tabla);
 		documento.close();
 	}
+
 
 }

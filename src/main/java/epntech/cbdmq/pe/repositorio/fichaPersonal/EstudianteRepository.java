@@ -16,6 +16,7 @@ import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import org.springframework.data.repository.query.Param;
 
 import javax.swing.text.html.Option;
+
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
 
 	Optional<Estudiante> findByCodUnicoEstudiante(String id);
@@ -41,6 +42,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"and gu.isNotLocked =true\n" +
 			"and gu.nombreUsuario=:codUsuario")
 	Estudiante getEstudianteByUsuario(@Param("codUsuario") String coUsuario);
+
 	Estudiante getEstudianteByCodUnicoEstudiante(String codUnicoEstudiante);
 	@Query(value="SELECT ge.cod_estudiante, ge.cod_datos_personales , ge.codigo_unico_estudiante, ge.estado\n" +
 			"FROM cbdmq.gen_estudiante ge\n" +
@@ -61,3 +63,4 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 
 	List<Estudiante> getAllByEstadoIsIgnoreCase(String estado);
 }
+

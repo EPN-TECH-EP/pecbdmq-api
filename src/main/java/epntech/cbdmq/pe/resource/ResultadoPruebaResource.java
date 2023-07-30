@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.util.List;
 
@@ -18,62 +19,59 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.EspCurso;
+import epntech.cbdmq.pe.dominio.admin.ResultadoPrueba;
+import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
-import epntech.cbdmq.pe.servicio.impl.EspCursoServiceImpl;
+import epntech.cbdmq.pe.servicio.impl.ResultadoPruebaServiceImpl;
 
 @RestController
-@RequestMapping("/espcurso")
-public class EspCursoResource {
+@RequestMapping("/resultadoprueba")
+public class ResultadoPruebaResource {
 
-	
 	@Autowired
-	private EspCursoServiceImpl objService;
+	private ResultadoPruebaServiceImpl objService;
+	
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody EspCurso obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody ResultadoPrueba obj) throws DataException{
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
 	@GetMapping("/listar")
-	public List<EspCurso> listar() {
+	public List<ResultadoPrueba> listar() {
 		return objService.getAll();
 	}
-
 	@GetMapping("/{id}")
-	public ResponseEntity<EspCurso> obtenerPorId(@PathVariable("id") Integer codigo) {
+	public ResponseEntity<ResultadoPrueba> obtenerPorId(@PathVariable("id") Integer codigo) {
 		return objService.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
-
+	
 	@PutMapping("/{id}")
-	public ResponseEntity<EspCurso> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody EspCurso obj) throws DataException{
-		return (ResponseEntity<EspCurso>) objService.getById(codigo).map(datosGuardados -> {
-			//datosGuardados.setCod_estudiante(obj.getCod_curso_especializacion());
-			datosGuardados.setCodInstructor(obj.getCodInstructor());
-			datosGuardados.setCodUnidadGestion(obj.getCodUnidadGestion());
-			//datosGuardados.setCod_estudiante(obj.getCod_estudiante());
-			datosGuardados.setCodAula(obj.getCodAula());
-			datosGuardados.setNumeroCupo(obj.getNumeroCupo());
-			datosGuardados.setFechaInicioCurso(obj.getFechaInicioCurso());
-			datosGuardados.setFechaFinCurso(obj.getFechaFinCurso());
-			datosGuardados.setFechaInicioCargaNota(obj.getFechaInicioCargaNota());
-			datosGuardados.setFechaFinCargaNota(obj.getFechaFinCargaNota());
-			datosGuardados.setNotaMinima(obj.getNotaMinima());
-			datosGuardados.setAprueba(obj.getAprueba());
-			datosGuardados.setEstadoProceso(obj.getEstadoProceso());
-			datosGuardados.setEstado(obj.getEstado());
-			datosGuardados.setCodTipoCurso(obj.getCodTipoCurso());
+	public ResponseEntity<ResultadoPrueba> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody ResultadoPrueba obj) throws DataException{
+		return (ResponseEntity<ResultadoPrueba>) objService.getById(codigo).map(datosGuardados -> {
+			datosGuardados.setCodResulPrueba(obj.getCodResulPrueba());
+			datosGuardados.setCodFuncionario(obj.getCodFuncionario());
+			datosGuardados.setCodEstudiante(obj.getCodEstudiante());
+			datosGuardados.setCodModulo(obj.getCodModulo());
+			datosGuardados.setCodPostulante(obj.getCodPostulante());
+			datosGuardados.setCodPeriodoEvaluacion(obj.getCodPeriodoEvaluacion());
+			datosGuardados.setCodPersonalOpe(obj.getCodPersonalOpe());
+			datosGuardados.setCodPrueba(obj.getCodPrueba());
+			datosGuardados.setCodParametrizaFisica(obj.getCodParametrizaFisica());
+			datosGuardados.setCodTipoPrueba(obj.getCodTipoPrueba());
+			datosGuardados.setResultado(obj.getResultado());
+			datosGuardados.setCumplePrueba(obj.getCumplePrueba());
 			
-			EspCurso datosActualizados = null;
+			datosGuardados.setEstado(obj.getEstado());
+			ResultadoPrueba datosActualizados = null;
 			try {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
 				// TODO Auto-generated catch block
-				
 				//e.printStackTrace();
-				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+				return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
@@ -89,4 +87,8 @@ public class EspCursoResource {
 	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 	                message), httpStatus);
 	    }
+	
+	
+	
+	
 }

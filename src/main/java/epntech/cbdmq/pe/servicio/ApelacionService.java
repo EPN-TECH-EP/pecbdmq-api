@@ -6,7 +6,9 @@ import java.util.Optional;
 import java.text.ParseException;
 
 import epntech.cbdmq.pe.dominio.admin.Apelacion;
+import epntech.cbdmq.pe.dominio.util.ApelacionEstudiante;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import org.springframework.data.repository.query.Param;
 
 public interface ApelacionService {
 
@@ -25,4 +27,5 @@ public interface ApelacionService {
     List<Apelacion> getByInstructor(Integer codigo);
     
     Boolean validaFechaApelacion(Integer codNotaFormacion) throws DataException;
+    List<ApelacionEstudiante> getApelacionesEstudiantesMateria(Integer codMateria);
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
 import epntech.cbdmq.pe.servicio.impl.especializacion.TipoCursoServiceImpl;
 
@@ -46,6 +47,7 @@ public class TipoCursoResource {
 
 	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
+
 	public ResponseEntity<TipoCurso> actualizarDatos(@PathVariable("id") long codigo, @RequestBody TipoCurso obj) {
 		obj.setCodTipoCurso(codigo);
 		return new ResponseEntity<>(tipoCursoServiceImpl.update(obj), HttpStatus.OK);

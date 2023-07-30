@@ -256,6 +256,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
 
+
             // busca si existe un documento con el mismo nombre para la prueba
             List<Documento> docs = this.documentoRepo.findAllByNombre(nombre);
 
@@ -321,7 +322,6 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         DocumentoPrueba doc = new DocumentoPrueba();
         doc.setCodPruebaDetalle(codPruebaDetalle);
         doc.setCodDocumento(documento.getCodDocumento());
-        // System.out.println("documento.getCodigo(): " + documento.getCodigo());
 
         saveDocumentoPrueba(doc);
     }

@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import epntech.cbdmq.pe.dominio.admin.DocumentoPrueba;
 
+import java.util.List;
+
 public interface DocumentoPruebaRepository extends JpaRepository<DocumentoPrueba, Integer> {
     @Transactional
     void deleteByCodPruebaDetalleAndCodDocumento(Integer codPruebaDetallle, Integer codDocumento);

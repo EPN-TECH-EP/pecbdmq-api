@@ -88,7 +88,6 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public Optional<PeriodoAcademico> getById(int id) {
-		// TODO Auto-generated method stub
 		return repo.findById(id);
 	}
 
@@ -115,25 +114,21 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico() {
-		// TODO Auto-generated method stub
 		return repo1.getPeriodoAcademico();
 	}
 
 	@Override
 	public String getEstado() {
-		// TODO Auto-generated method stub
 		return repo.getEstado();
 	}
 
 	@Override
 	public Integer updateNextState(Integer id, String proceso) {
-		// TODO Auto-generated method stub
 		return repo.updateNextState(id, proceso);
 	}
 
 	@Override
 	public Integer validState(Integer id, String proceso) {
-		// TODO Auto-generated method stub
 		return repo.validState(id, proceso);
 	}
 
@@ -144,20 +139,17 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public Optional<PeriodoAcademico> getActive() {
-		// TODO Auto-generated method stub
 		return repo.getPeriodoActivo();
 	}
 
 	@Override
 	public Integer getPAActivo() {
-		// TODO Auto-generated method stub
 		return repo.getPAActive();
 	}
 
 	@Override
 	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
 
-		// TODO Auto-generated method stub
 		String resultado;
 		Integer periodo = repo.getPAActive();
 		
@@ -221,7 +213,6 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
 	@Override
 	public void eliminar(List<DocsUtil> docs) {
-		// TODO Auto-generated method stub
 		for (DocsUtil docsUtil : docs) {
 			documentoRepository.deleteById(docsUtil.getId());
 			

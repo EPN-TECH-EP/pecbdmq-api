@@ -15,4 +15,5 @@ public class EspecializacionConst {
 	public static final String CURSO_ESTADO_INICIADO = "INICIADO";
 	public static final String INSCRIPCION_NO_DATOS = "INICIADO";
 	public static final String TIPO_CURSO_NO_EXISTE = "El tipo de curso no existe";
+	public static final String CURSO_NO_EXISTE = "No existe el curso solicitada";
 }

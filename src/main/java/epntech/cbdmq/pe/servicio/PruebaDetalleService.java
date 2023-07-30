@@ -27,4 +27,5 @@ public interface PruebaDetalleService {
 
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException;
 
+
 }

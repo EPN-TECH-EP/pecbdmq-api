@@ -48,5 +48,5 @@ public class MateriaParalelo {
 	private Integer codParalelo;
 	@Column(name = "estado")
 	private String estado;
-	
+
 }

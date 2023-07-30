@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+
 public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, Long> {
 
 	@Transactional
@@ -25,4 +27,6 @@ public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, 
 	@Modifying
 	@Query("delete from CursoDocumento a where a.codCursoEspecializacion = ?1 and codDocumento = ?2")
 	void deleteByCodCursoEspecializacionAndCodDocumento(Long codCursoEspecializacion, Long codDocumento);
+
+	List<CursoDocumento> findAllByCodCursoEspecializacion(Long codCursoEspecializacion);
 }

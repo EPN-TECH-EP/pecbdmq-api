@@ -41,52 +41,52 @@ public class ResultadoPruebasHelper {
 
 	public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     static String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
-	static String SHEET = "Hoja1";
+    static String SHEET = "Hoja1";
 
-	public static boolean hasExcelFormat(MultipartFile file) {
+    public static boolean hasExcelFormat(MultipartFile file) {
 
-		if (!TYPE.equals(file.getContentType())) {
-			return false;
-		}
+        if (!TYPE.equals(file.getContentType())) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public static ByteArrayInputStream datosToExcel(List<ResultadoPruebas> datos) {
+    public static ByteArrayInputStream datosToExcel(List<ResultadoPruebas> datos) {
 
-		try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-			Sheet sheet = workbook.createSheet(SHEET);
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
+            Sheet sheet = workbook.createSheet(SHEET);
 
-			// Header
-			Row headerRow = sheet.createRow(0);
+            // Header
+            Row headerRow = sheet.createRow(0);
 
-			for (int col = 0; col < HEADERs.length; col++) {
-				Cell cell = headerRow.createCell(col);
-				cell.setCellValue(HEADERs[col]);
-			}
+            for (int col = 0; col < HEADERs.length; col++) {
+                Cell cell = headerRow.createCell(col);
+                cell.setCellValue(HEADERs[col]);
+            }
 
-			int rowIdx = 1;
-			for (ResultadoPruebas dato : datos) {
-				Row row = sheet.createRow(rowIdx++);
+            int rowIdx = 1;
+            for (ResultadoPruebas dato : datos) {
+                Row row = sheet.createRow(rowIdx++);
 
-				row.createCell(0).setCellValue(dato.getCodResulPrueba());
-				row.createCell(1).setCellValue(dato.getCodFuncionario());
-				row.createCell(2).setCellValue(dato.getCodEstudiante());
-				row.createCell(4).setCellValue(dato.getCodPostulante());
-				row.createCell(6).setCellValue(dato.getCodPruebaDetalle());
-				row.createCell(9).setCellValue(dato.getEstado());
-				row.createCell(10).setCellValue(dato.getCumplePrueba());
-				row.createCell(11).setCellValue(dato.getNotaPromedioFinal());
-				row.createCell(12).setCellValue(dato.getSeleccionado());
+                row.createCell(0).setCellValue(dato.getCodResulPrueba());
+                row.createCell(1).setCellValue(dato.getCodFuncionario());
+                row.createCell(2).setCellValue(dato.getCodEstudiante());
+                row.createCell(4).setCellValue(dato.getCodPostulante());
+                row.createCell(6).setCellValue(dato.getCodPruebaDetalle());
+                row.createCell(9).setCellValue(dato.getEstado());
+                row.createCell(10).setCellValue(dato.getCumplePrueba());
+                row.createCell(11).setCellValue(dato.getNotaPromedioFinal());
+                row.createCell(12).setCellValue(dato.getSeleccionado());
 
-			}
+            }
 
-			workbook.write(out);
-			return new ByteArrayInputStream(out.toByteArray());
-		} catch (IOException e) {
-			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
-		}
-	}
+            workbook.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch (IOException e) {
+            throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
+        }
+    }
 
 	private static String getCellValueAsString(Cell cell) throws DataException {
 		if (cell == null) {
@@ -117,26 +117,26 @@ public class ResultadoPruebasHelper {
 		try {
 			Workbook workbook = new XSSFWorkbook(is);
 
-			Sheet sheet = workbook.getSheet(SHEET);
-			Iterator<Row> rows = sheet.iterator();
+            Sheet sheet = workbook.getSheet(SHEET);
+            Iterator<Row> rows = sheet.iterator();
 
 			List<ResultadoPruebasUtil> datos = new ArrayList<ResultadoPruebasUtil>();
 
-			int rowNumber = 0;
-			while (rows.hasNext()) {
-				Row currentRow = rows.next();
-				// skip header
-				if (rowNumber == 0) {
-					rowNumber++;
-					continue;
-				}
+            int rowNumber = 0;
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
+                // skip header
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
 
-				Iterator<Cell> cellsInRow = currentRow.iterator();
+                Iterator<Cell> cellsInRow = currentRow.iterator();
 
 				ResultadoPruebasUtil dato = new ResultadoPruebasUtil();
 
-				int cellIdx = 0;
-				while (cellsInRow.hasNext()) {
+                int cellIdx = 0;
+                while (cellsInRow.hasNext()) {
 
 					Cell currentCell = cellsInRow.next();
 					switch (cellIdx) {
@@ -169,12 +169,12 @@ public class ResultadoPruebasHelper {
 						break;
 					}
 
-					cellIdx++;
-				}
-				datos.add(dato);
-			}
+                    cellIdx++;
+                }
+                datos.add(dato);
+            }
 
-			workbook.close();
+            workbook.close();
 
 			return datos;
 		} catch (IOException e) {
@@ -195,25 +195,25 @@ public class ResultadoPruebasHelper {
 			Sheet sheet = workbook.getSheet(SHEET);
 			int numRows = sheet.getPhysicalNumberOfRows();
 
-			Iterator<Row> rows = sheet.iterator();
+            Iterator<Row> rows = sheet.iterator();
 
 			List<ResultadoPruebaFisicaUtil> datos = new ArrayList<ResultadoPruebaFisicaUtil>();
 
-			int rowNumber = 0;
-			while (rows.hasNext()) {
-				Row currentRow = rows.next();
-				// skip header
-				if (rowNumber == 0) {
-					rowNumber++;
-					continue;
-				}
+            int rowNumber = 0;
+            while (rows.hasNext()) {
+                Row currentRow = rows.next();
+                // skip header
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
 
-				Iterator<Cell> cellsInRow = currentRow.iterator();
+                Iterator<Cell> cellsInRow = currentRow.iterator();
 
 				ResultadoPruebaFisicaUtil dato = new ResultadoPruebaFisicaUtil();
 
-				int cellIdx = 0;
-				while (cellsInRow.hasNext()) {
+                int cellIdx = 0;
+                while (cellsInRow.hasNext()) {
 
 					Cell currentCell = cellsInRow.next();
 
@@ -246,12 +246,12 @@ public class ResultadoPruebasHelper {
 					}
 					System.out.println("datos" + dato.toString());
 
-					cellIdx++;
-				}
-				datos.add(dato);
-			}
+                    cellIdx++;
+                }
+                datos.add(dato);
+            }
 
-			workbook.close();
+            workbook.close();
 
 			return datos;
 		} catch (IOException | DataException e) {
@@ -313,7 +313,7 @@ public class ResultadoPruebasHelper {
 				// System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
 			}
 
-		}
+        }
 
 		File file = new File(filePath);
 		file.getParentFile().mkdirs();

@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,8 +20,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Aula;
+import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
@@ -28,11 +32,10 @@ import epntech.cbdmq.pe.servicio.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
@@ -202,6 +205,8 @@ public class CursoServiceImpl implements CursoService {
 			throw new BusinessException(ESTADO_INCORRECTO);
 	}
 
+
+
 	@Override
 	public Curso updateRequisitos(Long codCursoEspecializacion, List<Requisito> requisitos) {
 		Curso curso = cursoRepository.findById(codCursoEspecializacion)
@@ -267,10 +272,10 @@ public class CursoServiceImpl implements CursoService {
 
 	public void guardarDocumentos(List<MultipartFile> archivos, Long codCursoEspecializacion, Long tipoDocumento)
 			throws IOException, ArchivoMuyGrandeExcepcion {
-		String resultado;
+		String resultadoRuta;
 
-		resultado = ruta(codCursoEspecializacion);
-		Path ruta = Paths.get(resultado);
+		resultadoRuta = ruta(codCursoEspecializacion);
+		Path ruta = Paths.get(resultadoRuta);
 
 		if (!Files.exists(ruta)) {
 			Files.createDirectories(ruta);
@@ -288,7 +293,7 @@ public class CursoServiceImpl implements CursoService {
             documento.setEstado("ACTIVO");
             documento.setTipo(tipoDocumento.intValue());
             documento.setNombre(multipartFile.getOriginalFilename());
-            documento.setRuta(resultado + multipartFile.getOriginalFilename());
+            documento.setRuta(resultadoRuta + multipartFile.getOriginalFilename());
             documento = documentoRepository.save(documento);
 
             CursoDocumento cursoDocumento = new CursoDocumento();
@@ -296,6 +301,85 @@ public class CursoServiceImpl implements CursoService {
             cursoDocumento.setCodDocumento((long) documento.getCodDocumento());
             cursoDocumentoRepository.save(cursoDocumento);
         }
+
+	}
+	@Transactional
+	public void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion) throws DataException {
+
+		// busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
+		Long codCursoEspecial = null;
+
+
+		Optional<Curso> curso = cursoRepository.findById(codCursoEspecial);
+		if (curso.isPresent()) {
+			codCursoEspecial = curso.get().getCodCursoEspecializacion();
+		} else {
+			throw new DataException(CURSO_NO_EXISTE);
+		}
+
+		// busca documentos para el curso
+		List<CursoDocumento> listaDocCurso = cursoDocumentoRepository.findAllByCodCursoEspecializacion(codCursoEspecial);
+
+		if (listaDocCurso != null && listaDocCurso.size() > 0) {
+
+
+			// busca si existe un documento con el mismo nombre
+			List<Documento> docsGeneral = this.documentoRepository.findAllByNombre(nombre);
+
+			// si hay documentos con el mismo nombre, busca el que corresponda a ese curso
+			if (docsGeneral != null && docsGeneral.size() > 0) {
+
+				List<Integer> listaCodCurso = listaDocCurso.stream()
+						.map(p->{
+							return p.getCodDocumento().intValue();
+						})
+						.collect(Collectors.toList());
+
+				List<Integer> listaCodDocumentoGeneral = docsGeneral.stream()
+						.map(Documento::getCodDocumento)
+						.collect(Collectors.toList());
+
+				// intersección de las listas
+				Set<Integer> resultado = listaCodCurso.stream()
+						.distinct()
+						.filter(listaCodDocumentoGeneral::contains)
+						.collect(Collectors.toSet());
+
+				if (resultado != null && resultado.size() > 0) {
+
+					final Long cursoEspecializacion = codCursoEspecial;
+
+					resultado.stream()
+							.forEach(codDoc -> {
+								// elimina de documentoPrueba
+								try {
+									cursoDocumentoRepository.deleteByCodCursoEspecializacionAndCodDocumento(cursoEspecializacion,codDoc.longValue());
+									documentoRepository.deleteById(codDoc);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+
+							});
+
+				}
+
+			}
+
+		}
+
+		// genera documento
+		Documento documento = new Documento();
+		documento.setEstado("ACTIVO");
+		documento.setNombre(nombre);
+		documento.setRuta(ruta);
+
+
+		documento = documentoRepository.save(documento);
+
+		CursoDocumento cursoActivoDocumento = new CursoDocumento();
+		cursoActivoDocumento.setCodCursoEspecializacion(codCursoEspecial);;
+		cursoActivoDocumento.setCodDocumento(documento.getCodDocumento().longValue());
+		cursoDocumentoRepository.save(cursoActivoDocumento);
 
 	}
 

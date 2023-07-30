@@ -11,7 +11,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.ApelacionEstudiante;
 import epntech.cbdmq.pe.servicio.EstudianteService;
+import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,8 @@ public class ApelacionServiceImpl implements ApelacionService {
 	private NotasFormacionFinalRepository notasFormacionFinalRepository;
 	@Autowired
 	private EstudianteService estudianteService;
+	@Autowired
+	private PeriodoAcademicoService periodoAcademicoService;
 
 	@Override
 	public Apelacion save(Apelacion obj) throws DataException, ParseException {
@@ -72,13 +76,11 @@ public class ApelacionServiceImpl implements ApelacionService {
 
 	@Override
 	public List<Apelacion> getAll() {
-		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
 
 	@Override
 	public Optional<Apelacion> getById(Integer codigo) {
-		// TODO Auto-generated method stub
 		return repo.findById(codigo);
 	}
 
@@ -92,10 +94,8 @@ public class ApelacionServiceImpl implements ApelacionService {
 				notasFormacion = nn.get();
 				notasFormacion.setNotaMateria(objActualizado.getNotaNueva());
 				notasFormacion.setNotaPonderacion(objActualizado.getNotaNueva() * notasFormacion.getPesoMateria());
-
 				notasFormacionRepository.save(notasFormacion);
 				Estudiante estudiante= estudianteService.getEstudianteByNotaFormacion(notasFormacion.getCodNotaFormacion());
-
 				notasFormacionFinalRepository.calcular_notafinal_x_estudiante(estudiante.getCodEstudiante());
 			}
 		}
@@ -109,7 +109,6 @@ public class ApelacionServiceImpl implements ApelacionService {
 
 	@Override
 	public List<Apelacion> getByEstudiante(Integer codigo) {
-		// TODO Auto-generated method stub
 		return repo.getApelacionesByEstudiante(codigo);
 	}
 
@@ -136,6 +135,11 @@ public class ApelacionServiceImpl implements ApelacionService {
 			throw new DataException(REGISTRO_NO_EXISTE);
 		
 		return r;
+	}
+
+	@Override
+	public List<ApelacionEstudiante> getApelacionesEstudiantesMateria(Integer codMateria) {
+		return repo.getApelacionesEstudiantesMateria(codMateria, periodoAcademicoService.getPAActivo());
 	}
 
 }

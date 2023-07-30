@@ -16,7 +16,8 @@ import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface PeriodoAcademicoService {
-	
+
+
 	PeriodoAcademico save(PeriodoAcademico obj) throws DataException;
 	
 	List<PeriodoAcademico> getAll();

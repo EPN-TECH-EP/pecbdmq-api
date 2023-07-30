@@ -322,6 +322,7 @@ public class UsuarioResource extends GestorExcepciones {
 		try {
 			return usuarioService.tamañoMáximoArchivo();
 		} catch (Exception e) {
+
 			this.LOGGER.error(e.getMessage());
 			return -1;
 		}

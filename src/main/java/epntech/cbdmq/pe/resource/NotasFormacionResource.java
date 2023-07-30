@@ -46,14 +46,14 @@ public class NotasFormacionResource {
 			notasFormacionServiceImpl.saveAll(lista);
 		} catch (DataException e) {
 			return response(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (MessagingException e) {
+		} catch (MessagingException e) {
 			return response(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (PSQLException e) {
+		} catch (PSQLException e) {
 			return response(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (Exception e) {
+		} catch (Exception e) {
 			return response(HttpStatus.BAD_REQUEST, e.getMessage());
 		}
-		
+
 		return response(HttpStatus.OK, EXITO);
 	}
 
@@ -86,9 +86,9 @@ public class NotasFormacionResource {
 			}
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+	}
 
-    @PutMapping("/notas/{idNotaEstudiante}")
+	@PutMapping("/notas/{idNotaEstudiante}")
 	public ResponseEntity<?> actualizarNotas(@PathVariable("idNotaEstudiante") int id, @RequestBody EstudianteDatos obj)
 			throws DataException {
 		return (ResponseEntity<NotasFormacion>) notasFormacionServiceImpl.getById(id).map(datosGuardados -> {
@@ -119,9 +119,10 @@ public class NotasFormacionResource {
 		notasFormacionFinalServiceImpl.calcularNotas();
 		return response(HttpStatus.OK, PROCESO_EXITO);
 	}
+
 	@PostMapping("/listarEstudiantesByMateria/{id}")
 	public NotaEstudianteFormacionDto listarNotas(@PathVariable("id") Integer codMateria) throws DataException {
-        NotaEstudianteFormacionDto estudianteMateriaParalelo = notasFormacionServiceImpl.getEstudianteMateriaParalelo(codMateria);
+		NotaEstudianteFormacionDto estudianteMateriaParalelo = notasFormacionServiceImpl.getEstudianteMateriaParalelo(codMateria);
 		return estudianteMateriaParalelo;
 	}
 
@@ -133,19 +134,17 @@ public class NotasFormacionResource {
 		return response(HttpStatus.OK, PROCESO_EXITO);
 	}
 
-	/*m�todo para saber si realiz� o no la encuesta, true(si realiz�), 
-	 * false(no realiz�)*/
 	@GetMapping("/realizoEncuesta/{id}")
 	public ResponseEntity<?> realizoEncuenta(@PathVariable("id") Long codigo) {
 		return response(HttpStatus.OK, Boolean.toString(notasFormacionFinalServiceImpl.realizoEncuesta(codigo)));
-		
+
 	}
-	
+
 	@GetMapping("/notasEstudiante/{id}")
 	public List<NotasDatosFormacion> getNotasEstudiante(@PathVariable("id") long codigo) {
 		return notasFormacionServiceImpl.getNotasEstudiante(codigo);
 	}
-	
+
 	@GetMapping("/notasMateria/{id}")
 	public List<NotasDatosFormacion> getNotasMateria(@PathVariable("id") long codigo) {
 		return notasFormacionServiceImpl.getNotasMateria(codigo);

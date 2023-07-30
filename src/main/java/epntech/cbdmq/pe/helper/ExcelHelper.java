@@ -92,24 +92,24 @@ public class ExcelHelper {
 					Cell currentCell = cellsInRow.next();
 
 					switch (cellIdx) {
-					case 0:
-						// dato.setId((int) currentCell.getNumericCellValue());
-						break;
+						case 0:
+							// dato.setId((int) currentCell.getNumericCellValue());
+							break;
 
-					case 1:
-						dato.setNombre(currentCell.getStringCellValue());
-						break;
+						case 1:
+							dato.setNombre(currentCell.getStringCellValue());
+							break;
 
-					case 2:
-						dato.setApellido(currentCell.getStringCellValue());
-						break;
+						case 2:
+							dato.setApellido(currentCell.getStringCellValue());
+							break;
 
-					case 3:
-						dato.setCedula(currentCell.getStringCellValue());
-						break;
+						case 3:
+							dato.setCedula(currentCell.getStringCellValue());
+							break;
 
-					default:
-						break;
+						default:
+							break;
 					}
 
 					cellIdx++;
@@ -121,20 +121,20 @@ public class ExcelHelper {
 
 			workbook.close();
 
-      return datos;
-    } catch (IOException e) {
-      throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
-    }
-  }
-	
-	
+			return datos;
+		} catch (IOException e) {
+			throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
+		}
+	}
+
+
 
 	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera)
 			throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("Datos " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss")));
-		
-				// Header
+
+		// Header
 		Row headerRow = sheet.createRow(1);
 
 		for (int col = 0; col < cabecera.length; col++) {
