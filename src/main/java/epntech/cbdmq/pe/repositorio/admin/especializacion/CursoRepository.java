@@ -34,4 +34,6 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 			"and ecc.cod_tipo_curso = etc.cod_tipo_curso " +
 			"and etc.cod_tipo_curso = :codigoTipoCurso", nativeQuery = true)
 	List<Curso> findByCodigoTipoCurso(Integer codigoTipoCurso);
+
+	List<Curso> findByCodCatalogoCursos(Long codigoCatalogoCurso);
 }
