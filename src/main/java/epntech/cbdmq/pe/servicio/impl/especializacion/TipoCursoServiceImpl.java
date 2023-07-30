@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
+import static epntech.cbdmq.pe.constante.EspecializacionConst.NO_ELIMINAR_TIPO_CURSO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
@@ -7,7 +8,9 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ import epntech.cbdmq.pe.servicio.especializacion.TipoCursoService;
 @Service
 public class TipoCursoServiceImpl implements TipoCursoService {
 
+	@Autowired
+	private CatalogoCursoRepository catalogoCursoRepository;
 	@Autowired
 	private TipoCursoRepository tipoCursoRepository;
 
@@ -69,7 +74,12 @@ public class TipoCursoServiceImpl implements TipoCursoService {
 	public void delete(Long codTipoCurso) {
 		TipoCurso tipoCurso= tipoCursoRepository.findById(codTipoCurso)
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
-		
+
+		List<CatalogoCurso> catalogosActivos = catalogoCursoRepository.findByCodTipoCurso(tipoCurso.getCodTipoCurso().intValue());
+		if (!catalogosActivos.isEmpty()) {
+			throw new BusinessException(NO_ELIMINAR_TIPO_CURSO);
+		}
+
 		tipoCursoRepository.deleteById(tipoCurso.getCodTipoCurso());
 	}
 

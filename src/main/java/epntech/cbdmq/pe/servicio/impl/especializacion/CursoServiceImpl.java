@@ -22,11 +22,13 @@ import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.Requisito;
+import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
+import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +63,8 @@ public class CursoServiceImpl implements CursoService {
 	private ParametroRepository parametroRepository;
 	@Autowired
 	private TipoCursoRepository tipoCursoRepository;
+	@Autowired
+	private CatalogoCursoRepository catalogoCursoRepository;
 
 	@Autowired
 	private EmailService emailService;
@@ -134,6 +138,13 @@ public class CursoServiceImpl implements CursoService {
 		TipoCurso tipoCurso = tipoCursoRepository.findById(codigoTipoCurso.longValue())
 				.orElseThrow(() -> new BusinessException(TIPO_CURSO_NO_EXISTE));
 		return cursoRepository.findByCodigoTipoCurso(tipoCurso.getCodTipoCurso().intValue());
+	}
+
+	@Override
+	public List<Curso> getByCodigoCatalogoCurso(Integer codigoCatalogoCurso) {
+		CatalogoCurso catalogoCurso = catalogoCursoRepository.findById(codigoCatalogoCurso)
+				.orElseThrow(() -> new BusinessException(CATALOGO_CURSO_NO_EXISTE));
+		return cursoRepository.findByCodCatalogoCursos(catalogoCurso.getCodCatalogoCursos().longValue());
 	}
 
 	@Override

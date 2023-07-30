@@ -29,6 +29,8 @@ public interface CursoService {
 
 	List<Curso> getByCodigoTipoCurso(Integer codigoTipoCurso);
 
+	List<Curso> getByCodigoCatalogoCurso(Integer codigoCatalogoCurso);
+
 	Curso getById(Long id);
 
 	CursoDocumento updateEstadoAprobadoValidado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento);

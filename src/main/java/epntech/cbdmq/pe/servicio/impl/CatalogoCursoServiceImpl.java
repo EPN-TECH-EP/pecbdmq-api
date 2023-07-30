@@ -1,14 +1,16 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
-import static epntech.cbdmq.pe.constante.EspecializacionConst.TIPO_CURSO_NO_EXISTE;
 
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.TipoCursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,9 +26,10 @@ import epntech.cbdmq.pe.servicio.CatalogoCursoService;
 public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	@Autowired
 	private CatalogoCursoRepository repo;
-
 	@Autowired
 	private TipoCursoRepository tipoCursoRepository;
+	@Autowired
+	private CursoRepository cursoRepository;
 
 	@Override
 	public CatalogoCurso save(CatalogoCurso obj) throws DataException {
@@ -95,19 +98,16 @@ public class CatalogoCursoServiceImpl implements CatalogoCursoService {
 	}
 
 	@Override
-	public void delete(int id) throws DataException {
-		Optional<?> objGuardado = repo.findById(id);
-		if (objGuardado.isEmpty()) {
-			throw new DataException(REGISTRO_NO_EXISTE);
+	public void delete(int id) {
+		CatalogoCurso catalogoCurso = repo.findById(id)
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+		List<Curso> cursosActivos = cursoRepository.findByCodCatalogoCursos(catalogoCurso.getCodCatalogoCursos().longValue());
+		if (!cursosActivos.isEmpty()) {
+			throw new BusinessException(NO_ELIMINAR_CATALOGO_CURSO);
 		}
-		try {
-			repo.deleteById(id);
-		} catch (Exception e) {
-			if (e.getMessage().contains("constraint")) {
-				throw new DataException(DATOS_RELACIONADOS);
-			}
-		}
-		
+
+		repo.deleteById(catalogoCurso.getCodCatalogoCursos());
 	}
 
 }

@@ -57,8 +57,13 @@ public class CursoResource {
 	}
 
 	@GetMapping("/listarPorTipoCurso")
-	public List<Curso> listar(@RequestParam Integer codigoTipoCurso) {
+	public List<Curso> listarPorTipoCurso(@RequestParam Integer codigoTipoCurso) {
 		return cursoServiceImpl.getByCodigoTipoCurso(codigoTipoCurso);
+	}
+
+	@GetMapping("/listarPorCatalogoCurso")
+	public List<Curso> listarPorCatalogoCurso(@RequestParam Integer codigoCatalogoCurso) {
+		return cursoServiceImpl.getByCodigoCatalogoCurso(codigoCatalogoCurso);
 	}
 
 	@GetMapping("/{id}")

@@ -36,7 +36,7 @@ public class CatalogoCursoResource {
 	}
 
 	@GetMapping("/listarPorTipoCurso")
-	public List<CatalogoCurso> listar(@RequestParam Integer codigoTipoCurso) {
+	public List<CatalogoCurso> listarPorCodigoTipoCurso(@RequestParam Integer codigoTipoCurso) {
 		return objService.getByCodigoTipoCurso(codigoTipoCurso);
 	}
 
