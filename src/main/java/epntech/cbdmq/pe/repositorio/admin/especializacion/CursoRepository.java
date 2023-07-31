@@ -36,4 +36,5 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 	List<Curso> findByCodigoTipoCurso(Integer codigoTipoCurso);
 
 	List<Curso> findByCodCatalogoCursos(Long codigoCatalogoCurso);
+	List<Curso> findAllByEstadoContainsIgnoreCase(String estado);
 }
