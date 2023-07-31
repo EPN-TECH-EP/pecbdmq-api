@@ -27,8 +27,8 @@ public class CursoEstado {
 	@Column(name = "cod_catalogo_estados")
 	private Long codCatalogoEstados;
 	
-	@Column(name = "cod_curso_especializacion")
-	private Long codCursoEspecializacion;
+	@Column(name = "cod_tipo_curso")
+	private Long codTipoCurso;
 	
 	@Column(name = "estado")
 	private String estado;
