@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.servicio.especializacion;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoEstado;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
@@ -13,7 +14,9 @@ public interface CursoEstadoService {
 	CursoEstado update(CursoEstado cursoEstadoActualizado)  throws DataException;
 
 	List<CursoEstado> listarTodo();
-	
+	List<CursoEstado> listarByTipoCurso(Long codTipoCurso) throws DataException;
+	List<Estados> listarEstadosByTipoCurso(Long codTipoCurso) throws DataException;
+
 	Optional<CursoEstado> getById(Long codCursoEstado) throws DataException;
 	
 	void delete(Long codCursoEstado) throws DataException;

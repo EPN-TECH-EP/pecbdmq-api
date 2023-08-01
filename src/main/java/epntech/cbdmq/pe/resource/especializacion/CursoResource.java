@@ -53,8 +53,9 @@ public class CursoResource {
 
 	@GetMapping("/listarPorEstado")
 	public List<Curso> listarPorEstado(@RequestParam("estado") String estado) {
-		return cursoServiceImpl.listarPorEstado(estado);
+		return cursoServiceImpl.listarPorEstadoAll(estado);
 	}
+
 
 	@GetMapping("/listarPorTipoCurso")
 	public List<Curso> listarPorTipoCurso(@RequestParam Integer codigoTipoCurso) {

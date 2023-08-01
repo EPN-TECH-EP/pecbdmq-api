@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +23,6 @@ public interface CursoEstadoRepository extends JpaRepository<CursoEstado, Long> 
 			+ "and a.orden = :orden "
 			+ "and upper(a.estado) = 'ACTIVO'", nativeQuery=true)
 	Optional<CursoEstado> getByCursoYOrden(Long codCursoEspecializacion, Integer orden);
+	List<CursoEstado> findAllByCodTipoCurso(Long codTipoCurso);
 
 }

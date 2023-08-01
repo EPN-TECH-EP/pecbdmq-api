@@ -50,4 +50,5 @@ public interface CursoService {
 	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) ;
 
 	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento);
+	List<Curso> listarPorEstadoAll(String estado);
 }
