@@ -51,4 +51,5 @@ public interface CursoService {
 
 	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento);
 	List<Curso> listarPorEstadoAll(String estado);
+	Curso updateEstado(long codigo, String estado);
 }

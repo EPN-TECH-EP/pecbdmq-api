@@ -122,6 +122,16 @@ public class CursoServiceImpl implements CursoService {
 
         return cursoRepository.save(objActualizado);
     }
+    @Override
+    public Curso updateEstado(long codigo, String estado) {
+        Curso curso = cursoRepository.findById(codigo)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+        curso.setEstado(estado);
+
+        return cursoRepository.save(curso);
+    }
+
 
     @Override
     public List<Curso> listarAll() {
@@ -446,11 +456,11 @@ public class CursoServiceImpl implements CursoService {
         List<Curso> lista;
 
         if (ABIERTOS.equals(estado)) {
-            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCase("CERRADO");
+            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE);
             lista = listarAll();
             lista.removeAll(listaCerrados);
         } else if (CERRADOS.equals(estado)) {
-            lista = cursoRepository.findAllByEstadoContainsIgnoreCase("CERRADO");
+            lista = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE);
         } else if (TODOS.equals(estado)) {
             lista = cursoRepository.findAll();
         } else {
