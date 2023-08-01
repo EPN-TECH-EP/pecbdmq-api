@@ -97,4 +97,13 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
 
     }
 
+    @Override
+    public String getEstadoByCurso(Long codCurso) {
+        return cursoEstadoRepository.getEstadoByCurso(codCurso);
+    }
+    @Override
+    public Integer updateNextState(Integer id) {
+        return cursoEstadoRepository.updateNextState(id);
+    }
+
 }

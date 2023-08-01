@@ -8,15 +8,7 @@ import epntech.cbdmq.pe.dominio.admin.Estados;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoEstado;
@@ -55,6 +47,22 @@ public class CursoEstadoResource {
     public ResponseEntity<CursoEstado> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
         return cursoEstadoServiceImpl.getById(codigo).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/activo/{id}")
+    public ResponseEntity<HttpResponse> getEstado(@PathVariable("id") long codigo) {
+        String result = cursoEstadoServiceImpl.getEstadoByCurso(codigo);
+
+        if (result == null) {
+            result = "SIN ESTADO";
+        }
+
+        return response(HttpStatus.OK, result);
+    }
+    @GetMapping("/siguienteEstado")
+    public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id) {
+        String result = cursoEstadoServiceImpl.updateNextState(id).toString();
+
+        return response(HttpStatus.OK, result);
     }
 
     @PutMapping("/{id}")

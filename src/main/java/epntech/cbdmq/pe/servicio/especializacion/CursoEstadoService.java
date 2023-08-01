@@ -6,6 +6,7 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoEstado;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import org.springframework.data.repository.query.Param;
 
 public interface CursoEstadoService {
 	
@@ -20,4 +21,6 @@ public interface CursoEstadoService {
 	Optional<CursoEstado> getById(Long codCursoEstado) throws DataException;
 	
 	void delete(Long codCursoEstado) throws DataException;
+	String getEstadoByCurso(Long codCurso);
+	public Integer updateNextState(Integer id);
 }
