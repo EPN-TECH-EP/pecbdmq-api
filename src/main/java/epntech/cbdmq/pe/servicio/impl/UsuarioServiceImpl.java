@@ -179,8 +179,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 		String password = generatePassword();
 
-		//emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
-		//		usuario.getCodDatosPersonales().getCorreoPersonal());
+		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
+				usuario.getCodDatosPersonales().getCorreoPersonal());
 
 		// datos de usuario
 		Usuario user = new Usuario();
