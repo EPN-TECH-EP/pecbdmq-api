@@ -74,7 +74,7 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
         List<ModuloEstadosData> listaII= lista.stream().map(cursoEstado ->
         {
             ModuloEstadosData moduloEstadosObj= new ModuloEstadosData();
-            moduloEstadosObj.setCodigo(cursoEstado.getCodCatalogoEstados().intValue());
+            moduloEstadosObj.setCodigo(cursoEstado.getCodCursoEstado().intValue());
             Estados estado= estadoRepository.findById(cursoEstado.getCodCatalogoEstados().intValue()).orElse(null);
             moduloEstadosObj.setEstadoCatalogo(estado.getNombre());
             moduloEstadosObj.setOrden(cursoEstado.getOrden());
