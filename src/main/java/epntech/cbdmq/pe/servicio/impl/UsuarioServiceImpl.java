@@ -179,8 +179,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 		String password = generatePassword();
 
-		emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
-				usuario.getCodDatosPersonales().getCorreoPersonal());
+		//emailService.sendNewPasswordEmail(usuario.getCodDatosPersonales().getNombre(), password,
+		//		usuario.getCodDatosPersonales().getCorreoPersonal());
 
 		// datos de usuario
 		Usuario user = new Usuario();
@@ -192,9 +192,9 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		user.setNotLocked(true);
 
 		// datos personales
-		DatoPersonal datosRecibidos = usuario.getCodDatosPersonales();
-		DatoPersonal datos = new DatoPersonal();
-
+		//DatoPersonal datosRecibidos = usuario.getCodDatosPersonales();
+		DatoPersonal datos = usuario.getCodDatosPersonales();
+		/*
 		datos.setCodDatosPersonales(datosRecibidos.getCodDatosPersonales());
 		datos.setApellido(datosRecibidos.getApellido());
 		datos.setCedula(datosRecibidos.getCedula());
@@ -240,6 +240,8 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		datos.setPaisTituloCuartoNivel(datosRecibidos.getPaisTituloCuartoNivel());
 		datos.setPaisTituloTercerNivel(datosRecibidos.getPaisTituloTercerNivel());
 
+
+		 */
 		// asocia datos personales con usuario
 		user.setCodDatosPersonales(datos);
 
@@ -541,6 +543,11 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
 		return usuarioInfo;
 
+	}
+
+	@Override
+	public Optional<Usuario> getUsuarioByCodDatoPersonal(Integer codDatoPersonal) {
+		return userRepository.findByCodDatosPersonales_CodDatosPersonales(codDatoPersonal);
 	}
 
 }
