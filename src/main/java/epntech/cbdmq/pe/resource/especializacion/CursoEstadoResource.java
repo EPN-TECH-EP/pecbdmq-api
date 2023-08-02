@@ -5,6 +5,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import java.util.List;
 
 import epntech.cbdmq.pe.dominio.admin.Estados;
+import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,10 @@ public class CursoEstadoResource {
     @GetMapping("/listar/{codTipoCurso}")
     public List<CursoEstado> listarByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
         return cursoEstadoServiceImpl.listarByTipoCurso(codTipoCurso);
+    }
+    @GetMapping("/listarModuloEstados/{codTipoCurso}")
+    public List<ModuloEstadosData> listarModuloEstadosByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
+        return cursoEstadoServiceImpl.listarModuloEstadosByTipoCurso(codTipoCurso);
     }
     @GetMapping("/listarEstados/{codTipoCurso}")
     public List<Estados> listarEstadosByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {

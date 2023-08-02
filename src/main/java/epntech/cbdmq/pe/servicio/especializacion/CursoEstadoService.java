@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Estados;
+import epntech.cbdmq.pe.dominio.admin.ModuloEstados;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoEstado;
+import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import org.springframework.data.repository.query.Param;
 
@@ -16,6 +18,7 @@ public interface CursoEstadoService {
 
 	List<CursoEstado> listarTodo();
 	List<CursoEstado> listarByTipoCurso(Long codTipoCurso) throws DataException;
+	List<ModuloEstadosData> listarModuloEstadosByTipoCurso(Long codTipoCurso) throws DataException;
 	List<Estados> listarEstadosByTipoCurso(Long codTipoCurso) throws DataException;
 
 	Optional<CursoEstado> getById(Long codCursoEstado) throws DataException;
