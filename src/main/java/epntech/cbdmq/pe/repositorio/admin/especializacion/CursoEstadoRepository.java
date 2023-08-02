@@ -33,8 +33,8 @@ public interface CursoEstadoRepository extends JpaRepository<CursoEstado, Long> 
 			"where ec.cod_curso_especializacion = :codCurso\n" +
 			"and gce.nombre_catalogo_estados = ec.estado \n", nativeQuery = true)
 	String getEstadoByCurso(@Param("codCurso") Long codCurso);
-	@Query(value = "select * from cbdmq.get_next_state_curso(:id)", nativeQuery=true)
-	Integer updateNextState(@Param("id")Integer id);
+	@Query(value = "select * from cbdmq.get_next_state_curso(:idCurso, :idCursoEstado)", nativeQuery=true)
+	Integer updateNextState(@Param("idCurso")Integer idCurso, @Param("idCursoEstado")Integer idCursoEstado);
 
 
 }

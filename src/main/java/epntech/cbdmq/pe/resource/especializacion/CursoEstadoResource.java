@@ -58,9 +58,11 @@ public class CursoEstadoResource {
 
         return response(HttpStatus.OK, result);
     }
-    @GetMapping("/siguienteEstado")
-    public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id) {
-        String result = cursoEstadoServiceImpl.updateNextState(id).toString();
+    @GetMapping("/actualizarEstado/{idCurso}/{idCursoEstado}")
+    public ResponseEntity<HttpResponse> nextState(
+                                                  @PathVariable("idCurso") Integer idCurso,
+                                                  @PathVariable("idCursoEstado") Integer idCursoEstado) {
+        String result = cursoEstadoServiceImpl.updateNextState(idCurso,idCursoEstado).toString();
 
         return response(HttpStatus.OK, result);
     }

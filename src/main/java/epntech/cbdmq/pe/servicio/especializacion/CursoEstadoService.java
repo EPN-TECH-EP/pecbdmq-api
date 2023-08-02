@@ -22,5 +22,5 @@ public interface CursoEstadoService {
 	
 	void delete(Long codCursoEstado) throws DataException;
 	String getEstadoByCurso(Long codCurso);
-	public Integer updateNextState(Integer id);
+	public Integer updateNextState(Integer id, Integer idCursoEstado);
 }
