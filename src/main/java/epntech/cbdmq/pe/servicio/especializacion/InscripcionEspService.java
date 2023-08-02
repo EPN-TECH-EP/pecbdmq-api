@@ -52,4 +52,5 @@ public interface InscripcionEspService {
 	
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba) throws MessagingException, DataException;
 	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula) throws Exception;
+	DatoPersonalEstudianteDto colocarCorreoCiudadano(String correo, String cedula) throws Exception;
 }

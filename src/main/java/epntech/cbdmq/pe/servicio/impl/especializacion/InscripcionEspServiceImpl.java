@@ -571,18 +571,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     }
 
                     DatoPersonal newDatoPersonal = (DatoPersonal) ciudadanoSinRegistrar.get();
-                    newDatoPersonal=datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
-
-                    Usuario newUser = new Usuario();
-                    newUser.setCodDatosPersonales(newDatoPersonal);
-                    usuarioSvc.registrar(newUser);
-
-                    Estudiante newEstudiante = new Estudiante();
-                    newEstudiante.setCodDatosPersonales(newDatoPersonal.getCodDatosPersonales());
-                    newEstudiante.setEstado(ACTIVO);
-                    newEstudiante=estudianteRepository.save(newEstudiante);
-
-                    datoPersonalEstudianteDto.setEstudiante(newEstudiante);
+                    datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
                 }
             } else {
@@ -623,6 +612,30 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
             throw ex;
         }
 
+        return datoPersonalEstudianteDto;
+    }
+
+    @Override
+    public DatoPersonalEstudianteDto colocarCorreoCiudadano(String correo, String cedula) throws Exception {
+        DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
+        Optional<?> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
+        if (ciudadanoSinRegistrar.isEmpty()) {
+            throw new DataException(REGISTRO_NO_EXISTE);
+        }
+
+        DatoPersonal newDatoPersonal = (DatoPersonal) ciudadanoSinRegistrar.get();
+        newDatoPersonal=datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
+
+        Usuario newUser = new Usuario();
+        newUser.setCodDatosPersonales(newDatoPersonal);
+        usuarioSvc.registrar(newUser);
+
+        Estudiante newEstudiante = new Estudiante();
+        newEstudiante.setCodDatosPersonales(newDatoPersonal.getCodDatosPersonales());
+        newEstudiante.setEstado(ACTIVO);
+        newEstudiante=estudianteRepository.save(newEstudiante);
+        datoPersonalEstudianteDto.setEstudiante(newEstudiante);
+        datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
         return datoPersonalEstudianteDto;
     }
 

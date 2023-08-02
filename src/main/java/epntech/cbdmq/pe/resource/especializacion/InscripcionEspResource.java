@@ -153,4 +153,15 @@ public class InscripcionEspResource {
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
+	@GetMapping("/colocarCorreo/{cedula}/{correo}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getData(@PathVariable("cedula") String cedula,@PathVariable("correo") String correo) throws Exception{
+
+		try {
+			return new ResponseEntity<>(inscripcionEspServiceImpl.colocarCorreoCiudadano(correo,cedula), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
 }
