@@ -84,7 +84,6 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 
 	@Override
 	public List<DatoPersonal> getAllDatosPersonales() {
-		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
 
@@ -100,12 +99,10 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 
 	@Override
 	public Optional<DatoPersonal> getDatosPersonalesById(Integer codigo) {
-		// TODO Auto-generated method stub
 		return repo.findById(codigo);
 	}
-
+	@Override
 	public Optional<DatoPersonal> getByCedula(String cedula) {
-		// TODO Auto-generated method stub
 		return repo.findOneByCedula(cedula);
 	}
 

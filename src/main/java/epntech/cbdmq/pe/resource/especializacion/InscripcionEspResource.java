@@ -141,4 +141,15 @@ public class InscripcionEspResource {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
+	@GetMapping("/informacion/{cedula}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getData(@PathVariable("cedula") String cedula) throws Exception{
+
+		try {
+			return new ResponseEntity<>(inscripcionEspServiceImpl.confirmacionInscripcion(cedula), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
 }

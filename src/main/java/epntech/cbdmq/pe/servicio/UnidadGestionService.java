@@ -15,6 +15,7 @@ public interface UnidadGestionService {
 	List<UnidadGestion> getAllUnidadGestion();
 	
 	Optional<UnidadGestion> getUnidadGestionById(int codigo);
+	Optional<UnidadGestion> getUnidadGestionByNombre(String codigo);
 	
 	UnidadGestion updateUnidadGestion(UnidadGestion objActualizado) throws DataException;
 	

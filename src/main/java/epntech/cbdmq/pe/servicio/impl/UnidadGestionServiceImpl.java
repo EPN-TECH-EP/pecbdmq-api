@@ -56,6 +56,11 @@ public class UnidadGestionServiceImpl implements UnidadGestionService {
 	}
 
 	@Override
+	public Optional<UnidadGestion> getUnidadGestionByNombre(String nombre) {
+		return repo.findByNombreIgnoreCase(nombre);
+	}
+
+	@Override
 	public UnidadGestion updateUnidadGestion(UnidadGestion objActualizado) throws DataException {
 
 		Optional<UnidadGestion> objGuardado = repo.findByNombreIgnoreCase(objActualizado.getNombre());

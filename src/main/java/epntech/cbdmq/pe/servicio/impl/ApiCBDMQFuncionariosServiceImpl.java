@@ -1,6 +1,8 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import epntech.cbdmq.pe.dominio.util.ApiBase;
+import epntech.cbdmq.pe.dominio.util.ApiEducacionMedia;
+import epntech.cbdmq.pe.dominio.util.FuncionarioApiDto;
 import epntech.cbdmq.pe.servicio.ApiCBDMQFuncionariosService;
 import epntech.cbdmq.pe.util.Utilitarios;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +22,15 @@ public class ApiCBDMQFuncionariosServiceImpl implements ApiCBDMQFuncionariosServ
     @Value("${api.cbdmq.funcionarios}")
     private String apiFuncionarios;
     @Override
-    public Optional<?> servicioFuncionarios(String cedula) throws Exception {
+    public Optional<FuncionarioApiDto> servicioFuncionarios(String cedula) throws Exception {
         String url = apiFuncionarios + cedula;
-        Optional<?> result = Optional.empty();
+        Optional<FuncionarioApiDto> result = Optional.empty();
         ApiBase base;
         Boolean isValid = util.validadorDeCedula(cedula);
 
         if (isValid) {
             try {
-                result = restTemplate.getForObject(url, ApiBase.class).getData();
+                result = (Optional<FuncionarioApiDto>) restTemplate.getForObject(url, ApiBase.class).getData();
 
             } catch (Exception ex) {
 
@@ -36,6 +38,6 @@ public class ApiCBDMQFuncionariosServiceImpl implements ApiCBDMQFuncionariosServ
             }
         }
 
-        return result;
+        return  result;
     }
 }
