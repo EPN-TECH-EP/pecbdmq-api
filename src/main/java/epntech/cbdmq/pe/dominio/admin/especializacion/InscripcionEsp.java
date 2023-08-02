@@ -40,7 +40,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
 		+ "and upper(e.estado) = 'ACTIVO' "
 		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(c.estado) <> 'ELIMINADO' "
 		+ "and upper(cc.estado) = 'ACTIVO'", 
 		resultSetMapping = "findInscripciones")
 @SqlResultSetMapping(name = "findInscripciones", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
@@ -155,6 +155,8 @@ public class InscripcionEsp {
 	
 	@Column(name = "estado")
 	private String estado;
+	@Column(name = "cod_datos_personales")
+	private Long codDatosPersonales;
 	
 	@OneToMany(mappedBy = "codInscripcion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InscripcionDocumento> documentos = new ArrayList<>();

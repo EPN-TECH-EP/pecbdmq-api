@@ -55,12 +55,13 @@ public class InscripcionEspResource {
 		
 		return new ResponseEntity<>(inscripcionEspServiceImpl.update(inscripcionEsp), HttpStatus.OK);
 	}
+	//TODO en native query colocar que sea abierto no solo activo
 	
 	@GetMapping("/listar")
 	public List<InscripcionDatosEspecializacion> listar() {
 		return inscripcionEspServiceImpl.getAll();
 	}
-
+	//TODO Problema similar al anterior, colocar que sea abierto no solo activo
 	@GetMapping("/{id}")
 	public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
 		return inscripcionEspServiceImpl.getById(codigo).map(ResponseEntity::ok)

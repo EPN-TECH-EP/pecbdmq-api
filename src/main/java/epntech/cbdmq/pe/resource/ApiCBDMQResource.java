@@ -37,16 +37,16 @@ public class ApiCBDMQResource {
 		}catch(Exception ex) {
 
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-			
+
 			/*Optional<?> data = Optional.empty();
-			
+
 			ApiBase base = new ApiBase();
 			base.setData(data);
 			base.setMessage(ex.getMessage());
 			base.setStatus("error");
-			
+
 			Optional<ApiBase> b = Optional.of(base);
-			
+
 			return b;*/
 		}
 	}
@@ -59,17 +59,6 @@ public class ApiCBDMQResource {
 		}catch(Exception ex) {
 
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-
-			/*Optional<?> data = Optional.empty();
-
-			ApiBase base = new ApiBase();
-			base.setData(data);
-			base.setMessage(ex.getMessage());
-			base.setStatus("error");
-
-			Optional<ApiBase> b = Optional.of(base);
-
-			return b;*/
 		}
 	}
 

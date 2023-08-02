@@ -118,6 +118,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         LocalDate fechaActual = LocalDate.now();
         inscripcionEsp.setFechaInscripcion(fechaActual);
         inscripcionEsp.setEstado("INSCRITO");
+        inscripcionEsp.setCodDatosPersonales(Long.valueOf(estudianteOptional.get().getCodDatosPersonales()));
 
         return inscripcionEspRepository.save(inscripcionEsp);
     }
