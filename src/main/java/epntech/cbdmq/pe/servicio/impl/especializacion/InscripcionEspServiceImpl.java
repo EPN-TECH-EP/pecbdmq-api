@@ -93,6 +93,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     private ApiCBDMQFuncionariosService apiFuncionarioCBDMQSvc;
     @Autowired
     private UnidadGestionService unidadGestionSvc;
+    @Autowired
+    private CargoService cargoSvc;
+    @Autowired
+    private GradoService gradoSvc;
 
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
@@ -549,6 +553,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                 Optional<FuncionarioApiDto> funcionarioSinRegistrar = apiFuncionarioCBDMQSvc.servicioFuncionarios(cedula);
 
                 if (funcionarioSinRegistrar.isPresent()) {
+                    System.out.println(funcionarioSinRegistrar.get().getApellidos());
+                    /*
                     DatoPersonal newDatoPersonal = createDatoPersonalFromFuncionario(funcionarioSinRegistrar.get());
                     newDatoPersonal=datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
 
@@ -563,16 +569,20 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
+
+                     */
                 } else {
                     Optional<?> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
 
                     if (ciudadanoSinRegistrar.isEmpty()) {
                         throw new DataException(REGISTRO_NO_EXISTE);
                     }
-
+                    /*
                     DatoPersonal newDatoPersonal = (DatoPersonal) ciudadanoSinRegistrar.get();
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
+
+                     */
                 }
             } else {
                 Optional<Usuario> usuarioObj = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonalObj.get().getCodDatosPersonales());
@@ -658,6 +668,22 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setCalleSecundariaResidencia(funcionario.getCalleSecundariaResidencia());
         newDatoPersonal.setNumeroCasa(funcionario.getNumeroCasaResidencia());
         newDatoPersonal.setColegio(funcionario.getInstitucionSegundoNivel());
+        newDatoPersonal.setTieneMeritoDeportivo(funcionario.getTieneMeritoDeportivo());
+        newDatoPersonal.setTieneMeritoAcademico(funcionario.getTieneMeritoAcademico());
+        newDatoPersonal.setNombreTituloSegundoNivel(funcionario.getTituloSegundoNivel());
+        newDatoPersonal.setMeritoAcademicoDescripcion(funcionario.getDescripcionMeritoAcademico());
+        newDatoPersonal.setMeritoDeportivoDescripcion(funcionario.getDescripcionMeridoDeportivo());
+        newDatoPersonal.setCorreoInstitucional(funcionario.getCorreoInstitucional());
+        newDatoPersonal.setCodCargo(Long.valueOf(cargoSvc.findByNombre(funcionario.getCargo()).getCodCargo()));
+        newDatoPersonal.setCodCargo(Long.valueOf(cargoSvc.findByNombre(funcionario.getCargo()).getCodCargo()));
+        newDatoPersonal.setCodGrado(Long.valueOf(gradoSvc.findByNombre(funcionario.getGrado()).getCodGrado()));
+        newDatoPersonal.setCodCantonNacimiento(Long.valueOf(funcionario.getCodigoCantonNacimiento()));
+        newDatoPersonal.setCodCantonResidencia(Long.valueOf(funcionario.getCodigoCantonResidencia()));
+        newDatoPersonal.setNombreTituloTercerNivel(funcionario.getTituloTercerNivel());
+        newDatoPersonal.setNombreTituloCuartoNivel(funcionario.getTituloCuartoNivel());
+        newDatoPersonal.setPaisTituloTercerNivel(funcionario.getPaisTercerNivel());
+        newDatoPersonal.setPaisTituloCuartoNivel(funcionario.getPaisCuartoNivel());
+
 
         return newDatoPersonal;
     }

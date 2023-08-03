@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface CargoService {
     List<Cargo> getAll();
+    Cargo findByNombre(String nombre);
 }

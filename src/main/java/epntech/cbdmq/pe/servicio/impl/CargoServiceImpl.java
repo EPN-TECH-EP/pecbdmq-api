@@ -19,4 +19,9 @@ public class CargoServiceImpl implements CargoService {
     public List<Cargo> getAll() {
         return repo.findAll();
     }
+
+    @Override
+    public Cargo findByNombre(String nombre) {
+        return repo.findByNombreIgnoreCase(nombre).orElse(null);
+    }
 }
