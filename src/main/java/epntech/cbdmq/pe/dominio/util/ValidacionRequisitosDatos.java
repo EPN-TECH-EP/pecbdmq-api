@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ValidacionRequisitosDatos {
 
+	private Long codValidacionRequisito;
 	private Long codRequisito;
+	private Long codInscripcion;
 	private String nombreRequisito;
 	private String observacion;
 	private Boolean estado;

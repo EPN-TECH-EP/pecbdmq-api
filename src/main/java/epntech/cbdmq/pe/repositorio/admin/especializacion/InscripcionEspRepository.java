@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.repositorio.admin.especializacion;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -19,6 +20,12 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripciones")
 	List<InscripcionDatosEspecializacion> getAllInscripciones();
+
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripciones")
+	List<InscripcionDatosEspecializacion> getAllInscripciones(Pageable pageable);
+
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionesByUsuario")
+	List<InscripcionDatosEspecializacion> getAllInscripcionesByUsuario(@Param("codUsuario") Long codUsuario, Pageable pageable);
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcion")
 	Optional<InscripcionDatosEspecializacion> getInscripcion(@Param("codInscripcion") Long codInscripcion);

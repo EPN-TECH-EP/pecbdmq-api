@@ -7,8 +7,12 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import java.io.IOException;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.admin.Postulante;
+import epntech.cbdmq.pe.dominio.util.PostulanteUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,6 +65,18 @@ public class InscripcionEspResource {
 		return inscripcionEspServiceImpl.getAll();
 	}
 
+	@GetMapping("/listarPorUsuarioPaginado/{usuario}")
+	public List<InscripcionDatosEspecializacion> listarPaginadoPorUsuario(
+			@PathVariable("usuario") Long usuario,
+			Pageable pageable) {
+		return inscripcionEspServiceImpl.getByUsuarioPaginado(usuario, pageable);
+	}
+
+	@GetMapping("/listarPaginado")
+	public List<InscripcionDatosEspecializacion> listarPaginadoTodo(Pageable pageable) {
+		return inscripcionEspServiceImpl.getAllPaginado(pageable);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
 		return inscripcionEspServiceImpl.getById(codigo).map(ResponseEntity::ok)
@@ -108,19 +124,19 @@ public class InscripcionEspResource {
 	
 	@PostMapping("/validacionRequisitos")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException, MessagingException {
+	public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) {
 		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
 	}
-	
-	@GetMapping("/requisitosEstudiante")
-	public List<ValidacionRequisitosDatos> getRequisitosEstudiante(@RequestParam("codEstudiante") Long codEstudiante, @RequestParam("codCursoEspecializacion") Long codCursoEspecializacion) throws DataException {
-		return inscripcionEspServiceImpl.getValidacionRequisito(codEstudiante, codCursoEspecializacion);
+
+	@GetMapping("/requisitos/{idInscripcion}")
+	public List<ValidacionRequisitosDatos> getRequisitos(@PathVariable("idInscripcion") Long codInscripcion) {
+		return inscripcionEspServiceImpl.getRequisitos(codInscripcion);
 	}
 	
 	@PutMapping("/validacionRequisitos")
-	public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) throws DataException, MessagingException {
-
-		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
+	public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) {
+		inscripcionEspServiceImpl.updateValidacionRequisito(validaRequisitos);
+		return response(HttpStatus.OK, EMAIL_SEND);
 	}
 	
 	@GetMapping("/inscripcionesValidas/{id}")
@@ -129,12 +145,16 @@ public class InscripcionEspResource {
 	}
 	
 	@PostMapping("/notificarPrueba")
-	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("subTipoPrueba") Long subTipoPrueba)
-			throws MessagingException, DataException, PSQLException {
-		
+	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("subTipoPrueba") Long subTipoPrueba) {
 		inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion, subTipoPrueba);
-
 		return response(HttpStatus.OK, EMAIL_SEND);
+	}
+
+	@PutMapping("/{id}/asignarDelegado/{idUsuario}")
+	public ResponseEntity<?> asignarDelegado(
+			@PathVariable("id") long codigo,
+			@PathVariable("idUsuario") long idUsuario) {
+		return new ResponseEntity<>(inscripcionEspServiceImpl.updateDelegado(codigo, idUsuario), HttpStatus.OK);
 	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {

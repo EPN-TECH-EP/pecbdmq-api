@@ -19,5 +19,8 @@ public class EspecializacionConst {
 	public static final String CATALOGO_CURSO_NO_EXISTE = "El catálogo curso no existe";
 	public static final String NO_ELIMINAR_TIPO_CURSO = "No se puede eliminar un tipo que contiene catálogos activos";
 	public static final String NO_ELIMINAR_CATALOGO_CURSO = "No se puede eliminar un catálogo que contiene cursos activos";
+	public static final String ESTADO_INSCRIPCION_ASIGNADO = "ASIGNADO";
+	public static final String ESTADO_INSCRIPCION_VALIDO = "VALIDO";
+	public static final String ESTADO_INSCRIPCION_INVALIDO = "INVALIDO";
 
 }

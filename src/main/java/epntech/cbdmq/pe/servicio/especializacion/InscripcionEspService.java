@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -22,10 +23,16 @@ public interface InscripcionEspService {
 	InscripcionEsp save(InscripcionEsp inscripcionEsp) throws DataException;
 	
 	InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) throws DataException;
+
+	InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario);
 	
 	Optional<InscripcionDatosEsp> getById(Long codInscripcion) throws DataException;
 	
 	List<InscripcionDatosEspecializacion> getAll();
+
+	List<InscripcionDatosEspecializacion> getByUsuarioPaginado(Long codUsuario, Pageable pageable);
+
+	List<InscripcionDatosEspecializacion> getAllPaginado(Pageable pageable);
 	
 	void delete(Long codInscripcion)  throws DataException;
 	
@@ -39,15 +46,15 @@ public interface InscripcionEspService {
 	
 	List<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
 	
-	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos)  throws MessagingException, DataException;
+	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
+
+	List<ValidacionRequisitosDatos> getRequisitos(Long codInscripcion);
 	
-	List<ValidacionRequisitosDatos> getValidacionRequisito(Long codEstudiante, Long codCursoEspecializacion);
-	
-	List<ValidaRequisitos> updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos)  throws MessagingException, DataException;
+	void updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
 	
 	List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion);
 	
-	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba) throws MessagingException, DataException;
+	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	
-	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba) throws MessagingException, DataException;
+	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
 }
