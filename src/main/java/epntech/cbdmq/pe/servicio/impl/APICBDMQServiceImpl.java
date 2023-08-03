@@ -32,6 +32,7 @@ public class APICBDMQServiceImpl implements ApiCBDMQService {
 
     @Override
     public List<CiudadanoApiDto> servicioCiudadanos(String cedula) throws Exception {
+
         String url = apiCiudadanos + cedula;
         ApiBaseCiudadano base;
         Boolean isValid = util.validadorDeCedula(cedula);
@@ -42,6 +43,7 @@ public class APICBDMQServiceImpl implements ApiCBDMQService {
                 List<CiudadanoApiDto> ciudadanos = base.getData();
 
                 return ciudadanos;
+
             } catch (Exception ex) {
                 throw new Exception(ex.getMessage());
             }
@@ -91,4 +93,5 @@ public class APICBDMQServiceImpl implements ApiCBDMQService {
 		
 		return result;
 	}
+
 }

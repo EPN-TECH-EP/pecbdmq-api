@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -554,32 +555,37 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                 if (funcionarioSinRegistrar.isPresent()) {
                     DatoPersonal newDatoPersonal = createDatoPersonalFromFuncionario(funcionarioSinRegistrar.get());
-                    newDatoPersonal=datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
-
+                    newDatoPersonal.setCedula(cedula);
                     Usuario newUser = new Usuario();
                     newUser.setCodDatosPersonales(newDatoPersonal);
-                    usuarioSvc.registrar(newUser);
+                    newUser.setNombreUsuario(newDatoPersonal.getCedula());
+                    newUser=usuarioSvc.registrar(newUser);
 
                     Estudiante newEstudiante = new Estudiante();
-                    newEstudiante.setCodDatosPersonales(newDatoPersonal.getCodDatosPersonales());
+                    newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
-                    newEstudiante=estudianteRepository.save(newEstudiante);
+                    newEstudiante = estudianteRepository.save(newEstudiante);
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-                    datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
+                    datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
 
                 } else {
-                    Optional<?> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
+                    List<CiudadanoApiDto> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
+                    CiudadanoApiDto ciudadanoApiDto = ciudadanoSinRegistrar.get(0);
 
                     if (ciudadanoSinRegistrar.isEmpty()) {
                         throw new DataException(REGISTRO_NO_EXISTE);
                     }
-                    /*
-                    DatoPersonal newDatoPersonal = (DatoPersonal) ciudadanoSinRegistrar.get();
+
+                    //TODO se asimila que solo debe haber uno por que la cedula solo devuelve uno
+                   System.out.println("ciudadanoApiDto: "+ciudadanoApiDto.getCedula());
+                    /* DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
 
-                     */
+                    */
+
+
                 }
             } else {
                 Optional<Usuario> usuarioObj = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonalObj.get().getCodDatosPersonales());
@@ -593,7 +599,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     Estudiante newEstudiante = new Estudiante();
                     newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
-                    newEstudiante=estudianteRepository.save(newEstudiante);
+                    newEstudiante = estudianteRepository.save(newEstudiante);
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
@@ -604,7 +610,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                         Estudiante newEstudiante = new Estudiante();
                         newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                         newEstudiante.setEstado(ACTIVO);
-                        newEstudiante=estudianteRepository.save(newEstudiante);
+                        newEstudiante = estudianteRepository.save(newEstudiante);
 
                         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
@@ -624,39 +630,42 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
     @Override
     public DatoPersonalEstudianteDto colocarCorreoCiudadano(String correo, String cedula) throws Exception {
-        DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
-        Optional<?> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
+        DatoPersonalEstudianteDto datoPersonalEstudianteDto = null;
+        List<CiudadanoApiDto> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
+        CiudadanoApiDto ciudadanoApiDto = ciudadanoSinRegistrar.get(0);
         if (ciudadanoSinRegistrar.isEmpty()) {
             throw new DataException(REGISTRO_NO_EXISTE);
         }
 
-        DatoPersonal newDatoPersonal = (DatoPersonal) ciudadanoSinRegistrar.get();
-        newDatoPersonal=datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
-
+        DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
         Usuario newUser = new Usuario();
         newUser.setCodDatosPersonales(newDatoPersonal);
-        usuarioSvc.registrar(newUser);
+        newUser.setNombreUsuario(newDatoPersonal.getCedula());
+        newUser=usuarioSvc.registrar(newUser);
 
         Estudiante newEstudiante = new Estudiante();
-        newEstudiante.setCodDatosPersonales(newDatoPersonal.getCodDatosPersonales());
+        newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
         newEstudiante.setEstado(ACTIVO);
-        newEstudiante=estudianteRepository.save(newEstudiante);
+        newEstudiante = estudianteRepository.save(newEstudiante);
+
         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-        datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
+        datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
+
         return datoPersonalEstudianteDto;
     }
 
     private DatoPersonal createDatoPersonalFromFuncionario(FuncionarioApiDto funcionario) {
         DatoPersonal newDatoPersonal = new DatoPersonal();
         newDatoPersonal.setApellido(funcionario.getApellidos());
+        //TODO no esta tomando cedula
         newDatoPersonal.setCedula(funcionario.getCedula());
         newDatoPersonal.setCorreoPersonal(funcionario.getCorreoPersonal());
         newDatoPersonal.setEstado(ACTIVO);
         newDatoPersonal.setNombre(funcionario.getNombres());
         newDatoPersonal.setNumTelefConvencional(funcionario.getTelefonoConvencional());
         newDatoPersonal.setTipoSangre(funcionario.getTipoSangre());
-        newDatoPersonal.setCodProvinciaNacimiento(Integer.valueOf(funcionario.getCodigoProvinciaNacimiento()));
-        newDatoPersonal.setCodUnidadGestion(unidadGestionSvc.getUnidadGestionByNombre(funcionario.getCodigoUnidadGestion()).get().getCodigo());
+        Optional<UnidadGestion> unidadGestion= unidadGestionSvc.getUnidadGestionByNombre(funcionario.getCodigoUnidadGestion());
+        newDatoPersonal.setCodUnidadGestion(unidadGestion.isEmpty() ? null : unidadGestion.get().getCodigo());
         newDatoPersonal.setSexo(funcionario.getSexo().toUpperCase());
         newDatoPersonal.setNumTelefCelular(funcionario.getTelefonoCelular());
         newDatoPersonal.setResidePais(funcionario.getPaisResidencia().toUpperCase().equals("ECUADOR"));
@@ -671,9 +680,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setMeritoAcademicoDescripcion(funcionario.getDescripcionMeritoAcademico());
         newDatoPersonal.setMeritoDeportivoDescripcion(funcionario.getDescripcionMeridoDeportivo());
         newDatoPersonal.setCorreoInstitucional(funcionario.getCorreoInstitucional());
-        newDatoPersonal.setCodCargo(Long.valueOf(cargoSvc.findByNombre(funcionario.getCargo()).getCodCargo()));
-        newDatoPersonal.setCodCargo(Long.valueOf(cargoSvc.findByNombre(funcionario.getCargo()).getCodCargo()));
-        newDatoPersonal.setCodGrado(Long.valueOf(gradoSvc.findByNombre(funcionario.getGrado()).getCodGrado()));
+        Cargo cargo=cargoSvc.findByNombre(funcionario.getCargo());
+        Grado grado=gradoSvc.findByNombre(funcionario.getGrado());
+        newDatoPersonal.setCodCargo(cargo==null?null:Long.valueOf(cargo.getCodCargo()));
+        newDatoPersonal.setCodGrado(grado==null?null:Long.valueOf(grado.getCodGrado()));
         newDatoPersonal.setCodCantonNacimiento(Long.valueOf(funcionario.getCodigoCantonNacimiento()));
         newDatoPersonal.setCodCantonResidencia(Long.valueOf(funcionario.getCodigoCantonResidencia()));
         newDatoPersonal.setNombreTituloTercerNivel(funcionario.getTituloTercerNivel());
@@ -683,6 +693,44 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 
         return newDatoPersonal;
+    }
+    private DatoPersonal createDatoPersonalFromCiudadno(CiudadanoApiDto ciudadano) {
+        DatoPersonal newDatoPersonal = new DatoPersonal();
+        String[] nombreApellidos = dividirNombre(ciudadano.getNombre());
+
+        newDatoPersonal.setApellido(nombreApellidos[0]);
+        newDatoPersonal.setNombre(nombreApellidos[1]);
+        newDatoPersonal.setCedula(ciudadano.getCedula());
+        newDatoPersonal.setEstado(ACTIVO);
+        newDatoPersonal.setFechaNacimiento(LocalDateTime.parse(ciudadano.getFechaNacimiento()));
+        return newDatoPersonal;
+    }
+    public static String[] dividirNombre(String nombreCompleto) {
+        String[] palabras = nombreCompleto.split(" ");
+        int indiceSeparacion = 2; // Segunda palabra desde la izquierda
+
+        // Unir las palabras de los apellidos
+        StringBuilder apellidosBuilder = new StringBuilder();
+        for (int i = 0; i < indiceSeparacion; i++) {
+            apellidosBuilder.append(palabras[i]);
+            if (i < indiceSeparacion - 1) {
+                apellidosBuilder.append(" ");
+            }
+        }
+
+        // Unir las palabras de los nombres
+        StringBuilder nombresBuilder = new StringBuilder();
+        for (int i = indiceSeparacion; i < palabras.length; i++) {
+            nombresBuilder.append(palabras[i]);
+            if (i < palabras.length - 1) {
+                nombresBuilder.append(" ");
+            }
+        }
+
+        String[] nombreApellidos = new String[2];
+        nombreApellidos[0] = apellidosBuilder.toString();
+        nombreApellidos[1] = nombresBuilder.toString();
+        return nombreApellidos;
     }
 
 

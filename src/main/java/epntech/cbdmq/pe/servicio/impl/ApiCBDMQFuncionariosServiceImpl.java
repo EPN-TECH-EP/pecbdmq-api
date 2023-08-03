@@ -7,6 +7,8 @@ import epntech.cbdmq.pe.util.Utilitarios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
@@ -29,16 +31,25 @@ public class ApiCBDMQFuncionariosServiceImpl implements ApiCBDMQFuncionariosServ
         if (isValid) {
             try {
                 base = restTemplate.getForObject(url, ApiBaseFuncionario.class);
-                FuncionarioApiDto funcionario = base.getData();
 
-                return Optional.ofNullable(funcionario);
+                if ("error".equals(base.getStatus()) && "cedula incorrecta".equals(base.getMessage())) {
+                    // Si la cédula no es correcta, devolvemos Optional.empty()
+                    return Optional.empty();
+                } else {
+                    FuncionarioApiDto funcionario = base.getData();
+                    return Optional.ofNullable(funcionario);
+                }
+            } catch (HttpClientErrorException | HttpServerErrorException ex) {
+                // Capturamos la excepción y devolvemos Optional.empty() cuando hay un error HTTP
+                return Optional.empty();
             } catch (Exception ex) {
-                throw new Exception(ex.getMessage());
+                return Optional.empty();
             }
         }
 
         return Optional.empty();
     }
+
 
 
 }
