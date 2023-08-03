@@ -1,7 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import epntech.cbdmq.pe.dominio.util.ApiBase;
-import epntech.cbdmq.pe.dominio.util.ApiEducacionMedia;
+import epntech.cbdmq.pe.dominio.util.ApiBaseFuncionario;
 import epntech.cbdmq.pe.dominio.util.FuncionarioApiDto;
 import epntech.cbdmq.pe.servicio.ApiCBDMQFuncionariosService;
 import epntech.cbdmq.pe.util.Utilitarios;
@@ -24,20 +23,22 @@ public class ApiCBDMQFuncionariosServiceImpl implements ApiCBDMQFuncionariosServ
     @Override
     public Optional<FuncionarioApiDto> servicioFuncionarios(String cedula) throws Exception {
         String url = apiFuncionarios + cedula;
-        Optional<FuncionarioApiDto> result = Optional.empty();
-        ApiBase base;
+        ApiBaseFuncionario base;
         Boolean isValid = util.validadorDeCedula(cedula);
 
         if (isValid) {
             try {
-                result = (Optional<FuncionarioApiDto>) restTemplate.getForObject(url, ApiBase.class).getData();
+                base = restTemplate.getForObject(url, ApiBaseFuncionario.class);
+                FuncionarioApiDto funcionario = base.getData();
 
+                return Optional.ofNullable(funcionario);
             } catch (Exception ex) {
-
                 throw new Exception(ex.getMessage());
             }
         }
 
-        return  result;
+        return Optional.empty();
     }
+
+
 }

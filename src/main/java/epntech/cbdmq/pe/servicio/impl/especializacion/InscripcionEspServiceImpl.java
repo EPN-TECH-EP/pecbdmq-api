@@ -553,8 +553,6 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                 Optional<FuncionarioApiDto> funcionarioSinRegistrar = apiFuncionarioCBDMQSvc.servicioFuncionarios(cedula);
 
                 if (funcionarioSinRegistrar.isPresent()) {
-                    System.out.println(funcionarioSinRegistrar.get().getApellidos());
-                    /*
                     DatoPersonal newDatoPersonal = createDatoPersonalFromFuncionario(funcionarioSinRegistrar.get());
                     newDatoPersonal=datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
 
@@ -570,7 +568,6 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
 
-                     */
                 } else {
                     Optional<?> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
 
