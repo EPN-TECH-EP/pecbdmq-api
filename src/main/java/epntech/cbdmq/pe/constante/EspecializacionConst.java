@@ -19,6 +19,15 @@ public class EspecializacionConst {
 	public static final String CATALOGO_CURSO_NO_EXISTE = "El catálogo curso no existe";
 	public static final String NO_ELIMINAR_TIPO_CURSO = "No se puede eliminar un tipo que contiene catálogos activos";
 	public static final String NO_ELIMINAR_CATALOGO_CURSO = "No se puede eliminar un catálogo que contiene cursos activos";
+	public static final String ABIERTOS = "ABIERTOS";
+	public static final String CERRADOS = "CERRADOS";
+	public static final String CERRADO_INSCRITOS = "CERRADO INSCRITOS";
+	public static final String CERRADO_VALIDACION = "CERRADO VALIDACION";
+	public static final String CERRADO_PRUEBAS = "CERRADO PRUEBA";
+	public static final String TODOS = "TODOS";
+	public static final String VALIDACION = "VALIDACION";
+	public static final String INSCRIPCION = "INSCRIPCION";
+	public static final String INICIO = "INICIO";
 	public static final String ESTADO_INSCRIPCION_ASIGNADO = "ASIGNADO";
 	public static final String ESTADO_INSCRIPCION_VALIDO = "VALIDO";
 	public static final String ESTADO_INSCRIPCION_INVALIDO = "INVALIDO";
