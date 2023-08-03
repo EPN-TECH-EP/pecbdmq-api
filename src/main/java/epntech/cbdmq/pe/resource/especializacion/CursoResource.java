@@ -41,9 +41,9 @@ public class CursoResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(
 			@RequestParam("datos") String datos,
-			@RequestParam("documentos") List<MultipartFile> documentos,
-			@RequestParam("codTipoDocumento") Long codTipoDocumento) throws JsonProcessingException, ParseException{
-		return new ResponseEntity<>(cursoServiceImpl.save(datos, documentos, codTipoDocumento), HttpStatus.OK);
+			@RequestParam("documentos") List<MultipartFile> documentos/*,
+			@RequestParam("codTipoDocumento") Long codTipoDocumento*/) throws JsonProcessingException, ParseException{
+		return new ResponseEntity<>(cursoServiceImpl.save(datos, documentos/*, codTipoDocumento*/), HttpStatus.OK);
 	}
 
 	@GetMapping("/listar")

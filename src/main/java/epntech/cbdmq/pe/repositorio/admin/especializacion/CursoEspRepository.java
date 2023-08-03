@@ -44,7 +44,7 @@ public class CursoEspRepository {
 	public DataSize TAMAÑO_MÁXIMO;
 	
 	@Transactional
-	public Curso insertarCursosDocumentosRequisitos(Curso curso, Set<Requisito> requisitos, List<MultipartFile> documentos, Long codTipoDocumento) {
+	public Curso insertarCursosDocumentosRequisitos(Curso curso, Set<Requisito> requisitos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) {
 		curso.setEstado("ACTIVO");
 		curso.setApruebaCreacionCurso(false);
 		entityManager.persist(curso);
@@ -63,7 +63,7 @@ public class CursoEspRepository {
 			for (DatosFile datosFile : archivos) {
 				DocumentoCurso dd = new DocumentoCurso();
 				dd.setEstado("ACTIVO");
-				dd.setCodTipoDocumento(codTipoDocumento);
+				//dd.setCodTipoDocumento(codTipoDocumento);
 				dd.setNombreDocumento(datosFile.getNombre());
 				dd.setRuta(datosFile.getRuta());
 
