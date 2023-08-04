@@ -96,7 +96,7 @@ public class CursoResource {
 		Curso curso = cursoServiceImpl.updateEstado(codigo, estado);
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}
-	@PatchMapping("/validar/{id}")
+	@PutMapping("/validar/{id}")
 	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestBody ParamsValidacion validacion) {
 		Curso curso = cursoServiceImpl.updateEstadoAprobadoObservaciones(codigo, validacion.getAprueba(),validacion.getObservacion(),validacion.getCodUsuarioAprueba());
 		return new ResponseEntity<>(curso, HttpStatus.OK);
