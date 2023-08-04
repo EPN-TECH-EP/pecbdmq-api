@@ -196,7 +196,7 @@ import lombok.Data;
 
 public class Estudiante{
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_estudiante")
 	private Integer codEstudiante;
 
