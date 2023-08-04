@@ -13,7 +13,9 @@ import jakarta.mail.MessagingException;
 
 public interface ConvocatoriaCursoService {
 
-	ConvocatoriaCurso save(ConvocatoriaCurso convocatoriaCurso, List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion;
+	public ConvocatoriaCurso save(ConvocatoriaCurso convocatoriaCurso
+								  //, List<MultipartFile> archivos
+	) throws DataException, IOException, ArchivoMuyGrandeExcepcion;
 	
 	List<ConvocatoriaCurso> listAll();
 	

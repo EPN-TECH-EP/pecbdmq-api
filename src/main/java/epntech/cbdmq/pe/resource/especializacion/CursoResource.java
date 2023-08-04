@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.ParamsValidacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,8 +97,8 @@ public class CursoResource {
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}
 	@PatchMapping("/validar/{id}")
-	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestParam Boolean aprueba, @RequestParam String observaciones, @RequestParam Long codUsuarioAprueba) {
-		Curso curso = cursoServiceImpl.updateEstadoAprobadoObservaciones(codigo, aprueba,observaciones,codUsuarioAprueba);
+	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestBody ParamsValidacion validacion) {
+		Curso curso = cursoServiceImpl.updateEstadoAprobadoObservaciones(codigo, validacion.getAprueba(),validacion.getObservacion(),validacion.getCodUsuarioAprueba());
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}
 

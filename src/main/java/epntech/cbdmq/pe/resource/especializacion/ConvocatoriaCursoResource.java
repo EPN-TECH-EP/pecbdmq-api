@@ -50,19 +50,28 @@ public class ConvocatoriaCursoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestParam(required = true) String datos, @RequestParam(required = true) List<MultipartFile> archivos)
+	public ResponseEntity<?> guardar(@RequestBody(required = true) ConvocatoriaCurso convocatoriaCurso
+			//, @RequestParam(required = true) List<MultipartFile> archivos
+		)
 			throws DataException, IOException, ArchivoMuyGrandeExcepcion, ParseException {
+		/*
 
 		if (archivos.get(0).getSize() == 0)
 			throw new DataException(NO_ADJUNTO);
+
+
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 
 		ConvocatoriaCurso convocatoriaCurso = new ConvocatoriaCurso();
 		convocatoriaCurso = objectMapper.readValue(datos, ConvocatoriaCurso.class);
+
+		 */
 		
-		convocatoriaCurso = convocatoriaCursoServiceImpl.save(convocatoriaCurso, archivos);
+		convocatoriaCurso = convocatoriaCursoServiceImpl.save(convocatoriaCurso
+				//, archivos
+		);
 
 		return new ResponseEntity<>(convocatoriaCurso, HttpStatus.OK);
 	}

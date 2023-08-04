@@ -46,13 +46,15 @@ public class ConvocatoriaCursoEspRepository {
 	public DataSize TAMAÑO_MÁXIMO;
 	
 	@Transactional
-	public ConvocatoriaCurso insertarConvocatoriaDocumentos(ConvocatoriaCurso convocatoriaCurso, List<MultipartFile> archivos) {
+	public ConvocatoriaCurso insertarConvocatoriaDocumentos(ConvocatoriaCurso convocatoriaCurso
+															//,List<MultipartFile> archivos
+															) {
 		
 		LocalDate fecha = LocalDate.now();
 		convocatoriaCurso.setFechaActual(fecha);
 		convocatoriaCurso.setCodigoUnicoConvocatoria(convocatoriaCursoRepository.getId("CE"));
 		entityManager.persist(convocatoriaCurso);
-		
+		/*
 		List<DatosFile> archivosConvocatoria = new ArrayList<>();
 		try {
 			archivosConvocatoria = guardarArchivo(archivos, PATH_PROCESO_ESPECIALIZACION, convocatoriaCurso.getCodCursoEspecializacion().toString());
@@ -85,7 +87,9 @@ public class ConvocatoriaCursoEspRepository {
 			entityManager.persist(convocatoriaDocumentoEsp);
 			entityManager.persist(cursoDocumentoGenerico);
 
-		}		
+		}
+
+		 */
 		
 		return convocatoriaCurso;
 	}

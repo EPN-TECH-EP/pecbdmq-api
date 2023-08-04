@@ -61,7 +61,9 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 	private ParametroRepository parametroRepository;
 
 	@Override
-	public ConvocatoriaCurso save(ConvocatoriaCurso convocatoriaCurso, List<MultipartFile> archivos)
+	public ConvocatoriaCurso save(ConvocatoriaCurso convocatoriaCurso
+								  //, List<MultipartFile> archivos
+								  )
 			throws DataException, IOException, ArchivoMuyGrandeExcepcion {
 
 		Optional<ConvocatoriaCurso> objGuardado = convocatoriaCursoRepository
@@ -81,7 +83,9 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 		if (convocatoriaCursoOptional.isPresent())
 			throw new DataException(CONVOCATORIA_CURSO_EXISTE);
 
-		return convocatoriaCursoEspRepository.insertarConvocatoriaDocumentos(convocatoriaCurso, archivos);
+		return convocatoriaCursoEspRepository.insertarConvocatoriaDocumentos(convocatoriaCurso
+				//, archivos
+				);
 	}
 
 	@Override
