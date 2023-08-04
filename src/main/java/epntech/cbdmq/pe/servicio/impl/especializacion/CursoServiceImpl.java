@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -561,13 +560,13 @@ public class CursoServiceImpl implements CursoService {
         List<Curso> lista;
 
         if (ABIERTOS.equals(estado)) {
-            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE);
+            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCaseOrderByNombre(CIERRE);
             lista = listarAll();
             lista.removeAll(listaCerrados);
         } else if (CERRADOS.equals(estado)) {
-            lista = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE);
+            lista = cursoRepository.findAllByEstadoContainsIgnoreCaseOrderByNombre(CIERRE);
         } else if (TODOS.equals(estado)) {
-            lista = cursoRepository.findAll();
+            lista = cursoRepository.findAllOrderedByName();
         } else {
             lista = listarPorEstado(estado);
         }

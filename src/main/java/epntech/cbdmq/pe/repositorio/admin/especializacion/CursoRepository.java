@@ -36,5 +36,9 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 	List<Curso> findByCodigoTipoCurso(Integer codigoTipoCurso);
 
 	List<Curso> findByCodCatalogoCursos(Long codigoCatalogoCurso);
-	List<Curso> findAllByEstadoContainsIgnoreCase(String estado);
+	List<Curso> findAllByEstadoContainsIgnoreCaseOrderByNombre(String estado);
+	@Query("SELECT c FROM Curso c ORDER BY c.nombre ASC")
+	List<Curso> findAllOrderedByName();
+
+
 }
