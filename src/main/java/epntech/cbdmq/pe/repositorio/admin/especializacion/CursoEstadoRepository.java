@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoEstado;
-import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 public interface CursoEstadoRepository extends JpaRepository<CursoEstado, Long> {
@@ -34,7 +33,10 @@ public interface CursoEstadoRepository extends JpaRepository<CursoEstado, Long> 
 			"and gce.nombre_catalogo_estados = ec.estado \n", nativeQuery = true)
 	String getEstadoByCurso(@Param("codCurso") Long codCurso);
 	@Query(value = "select * from cbdmq.get_next_state_curso(:idCurso, :idCursoEstado)", nativeQuery=true)
-	String updateNextState(@Param("idCurso")Integer idCurso, @Param("idCursoEstado")Integer idCursoEstado);
+	String updateState(@Param("idCurso")Integer idCurso, @Param("idCursoEstado")Integer idCursoEstado);
+		@Query(value = "select * from cbdmq.get_next_state_process_curso(:idCurso)", nativeQuery=true)
+	Integer updateNextState(@Param("idCurso")Integer idCurso);
+
 
 
 }

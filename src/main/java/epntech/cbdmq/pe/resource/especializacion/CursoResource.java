@@ -95,6 +95,11 @@ public class CursoResource {
 		Curso curso = cursoServiceImpl.updateEstado(codigo, estado);
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}
+	@PatchMapping("/validar/{id}")
+	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestParam Boolean aprueba, @RequestParam String observaciones, @RequestParam Long codUsuarioAprueba) {
+		Curso curso = cursoServiceImpl.updateEstadoAprobadoObservaciones(codigo, aprueba,observaciones,codUsuarioAprueba);
+		return new ResponseEntity<>(curso, HttpStatus.OK);
+	}
 
 
 	@PostMapping("/updateRequisitos/{id}")

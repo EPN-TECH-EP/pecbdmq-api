@@ -35,6 +35,7 @@ import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.EmailService;
+import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,8 @@ public class CursoServiceImpl implements CursoService {
     private TipoCursoRepository tipoCursoRepository;
     @Autowired
     private CatalogoCursoRepository catalogoCursoRepository;
+    @Autowired
+    private CursoEstadoService cursoEstadoService;
 
     @Autowired
     private EmailService emailService;
@@ -214,6 +217,20 @@ public class CursoServiceImpl implements CursoService {
                 .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
         curso.setEstado(estado);
+
+        return cursoRepository.save(curso);
+    }
+
+    @Override
+    public Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String observaciones, long codigoUserAprueba) {
+        if(aprobadoCurso) {
+            cursoEstadoService.updateNextState((int) codigo);
+        }
+        Curso curso = cursoRepository.findById(codigo)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+        curso.setApruebaCreacionCurso(aprobadoCurso);
+        curso.setObservacionesValidacion(observaciones);
+        curso.setCodUsuarioValidacion(codigoUserAprueba);
 
         return cursoRepository.save(curso);
     }

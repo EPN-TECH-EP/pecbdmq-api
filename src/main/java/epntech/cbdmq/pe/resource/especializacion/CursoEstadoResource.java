@@ -67,7 +67,7 @@ public class CursoEstadoResource {
     public ResponseEntity<HttpResponse> nextState(
                                                   @PathVariable("idCurso") Integer idCurso,
                                                   @PathVariable("idCursoEstado") Integer idCursoEstado) {
-        String result = cursoEstadoServiceImpl.updateNextState(idCurso,idCursoEstado);
+        String result = cursoEstadoServiceImpl.updateState(idCurso,idCursoEstado);
 
         return response(HttpStatus.OK, result);
     }

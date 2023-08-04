@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Estados;
-import epntech.cbdmq.pe.dominio.admin.ModuloEstados;
 import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import epntech.cbdmq.pe.repositorio.admin.EstadosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,12 +69,12 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
 
     @Override
     public List<ModuloEstadosData> listarModuloEstadosByTipoCurso(Long codTipoCurso) throws DataException {
-        List<CursoEstado> lista =this.listarByTipoCurso(codTipoCurso);
-        List<ModuloEstadosData> listaII= lista.stream().map(cursoEstado ->
+        List<CursoEstado> lista = this.listarByTipoCurso(codTipoCurso);
+        List<ModuloEstadosData> listaII = lista.stream().map(cursoEstado ->
         {
-            ModuloEstadosData moduloEstadosObj= new ModuloEstadosData();
+            ModuloEstadosData moduloEstadosObj = new ModuloEstadosData();
             moduloEstadosObj.setCodigo(cursoEstado.getCodCursoEstado().intValue());
-            Estados estado= estadoRepository.findById(cursoEstado.getCodCatalogoEstados().intValue()).orElse(null);
+            Estados estado = estadoRepository.findById(cursoEstado.getCodCatalogoEstados().intValue()).orElse(null);
             moduloEstadosObj.setEstadoCatalogo(estado.getNombre());
             moduloEstadosObj.setOrden(cursoEstado.getOrden());
             moduloEstadosObj.setEstado(cursoEstado.getEstado());
@@ -120,9 +119,15 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     public String getEstadoByCurso(Long codCurso) {
         return cursoEstadoRepository.getEstadoByCurso(codCurso);
     }
+
     @Override
-    public String updateNextState(Integer idCurso, Integer idCursoEstado) {
-        return cursoEstadoRepository.updateNextState(idCurso, idCursoEstado);
+    public String updateState(Integer idCurso, Integer idCursoEstado) {
+        return cursoEstadoRepository.updateState(idCurso, idCursoEstado);
+    }
+
+    @Override
+    public Integer updateNextState(Integer idCurso) {
+        return cursoEstadoRepository.updateNextState(idCurso);
     }
 
 }
