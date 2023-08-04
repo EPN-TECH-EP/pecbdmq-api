@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import epntech.cbdmq.pe.dominio.util.CursoDocumento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -59,7 +60,7 @@ public class ConvocatoriaForRepository {
     @Value("${server.port}")
     public String SERVER_PORT;
 
-    @Value("${eureka.instance.hostname}")
+    @Value("${hostname}")
     public String HOSTNAME;
     @Value("${url.descarga.archivos}")
     public String URLDESCARGA;
@@ -303,6 +304,203 @@ public class ConvocatoriaForRepository {
         pa.setPeriodoAcademico(periodo.getCodigo());
 
         return pa;
+    }
+    public CursoDocumento insertarConvocatoriaCursoConDocumentos(
+            ConvocatoriaFor convocatoria,
+            Set<RequisitoFor> requisitos,
+            List<MultipartFile> docsPeriodoAcademico,
+            List<MultipartFile> docsConvocatoria)
+            throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, DataException {
+        String sqlConvocatoria = "INSERT INTO cbdmq.gen_convocatoria (cod_periodo_academico, nombre_convocatoria, estado, fecha_inicio_convocatoria, fecha_fin_convocatoria, fecha_actual,hora_inicio_convocatoria, hora_fin_convocatoria, codigo_unico_convocatoria, cupo_hombres, cupo_mujeres, correo) "
+                + "VALUES (:periodo, :nombre, :estado, :fechaInicio, :fechaFin,:fechaActual,:horaInicio, :horaFin, :codigoUnico, :cupoHombres, :cupoMujeres, :correo)";
+        String sqlDocumento = "INSERT INTO cbdmq.gen_documento (autorizacion, cod_tipo_documento, descripcion, estado_validacion, nombre_documento, observaciones, ruta, estado) "
+                + "VALUES (:autorizacion, :tipo, :descripcion, :estadoValidacion, :nombre, :observaciones, :ruta, :estado)";
+        String sqlConvocatoriaDocumento = "INSERT INTO cbdmq.gen_convocatoria_documento (cod_convocatoria, cod_documento) "
+                + "VALUES (:cod_convocatoria, :cod_documento)";
+        String sqlPeriodoAcademicoDocumento = "INSERT INTO cbdmq.gen_periodo_academico_documento (cod_periodo_academico, cod_documento) "
+                + "VALUES (:cod_periodo_academico, :cod_documento)";
+        String sqlConvocatoriaRequisito = "INSERT INTO cbdmq.gen_convocatoria_requisito (cod_convocatoria, cod_requisito) "
+                + "VALUES (:cod_convocatoria, :cod_requisito)";
+
+
+        // PERIODO ACADEMICO
+        String sqlQuery = "INSERT INTO cbdmq.gen_periodo_academico(estado, descripcion) "
+                + "VALUES (:estado, :descripcion)";
+
+        PeriodoAcademico periodo = new PeriodoAcademico();
+        periodo.setEstado("ACTIVO");
+        periodo.setDescripcion("FORMACION");
+
+        entityManager.createNativeQuery(sqlQuery).setParameter("estado", periodo.getEstado())
+                .setParameter("descripcion", periodo.getDescripcion());
+
+        entityManager.persist(periodo);
+
+        // CONVOCATORIA
+        // convocatoria.setDocumentos(docsConvocatoria);
+
+        StoredProcedureQuery query = entityManager.createStoredProcedureQuery("cbdmq.get_id");
+        query.registerStoredProcedureParameter("proceso", String.class, ParameterMode.IN);
+        query.setParameter("proceso", "C");
+        query.execute();
+        Object resultado = query.getSingleResult();
+        convocatoria.setCodigoUnico(resultado.toString());
+
+        convocatoria.setCodPeriodoAcademico(periodo.getCodigo());
+
+        entityManager.createNativeQuery(sqlConvocatoria).setParameter("periodo", convocatoria.getCodPeriodoAcademico())
+                .setParameter("nombre", convocatoria.getNombre()).setParameter("estado", convocatoria.getEstado())
+                .setParameter("fechaInicio", convocatoria.getFechaInicioConvocatoria())
+                .setParameter("fechaFin", convocatoria.getFechaFinConvocatoria())
+                .setParameter("fechaActual", convocatoria.getFechaActual())
+                .setParameter("horaInicio", convocatoria.getHoraInicioConvocatoria())
+                .setParameter("horaFin", convocatoria.getHoraFinConvocatoria())
+                .setParameter("codigoUnico", convocatoria.getCodigoUnico())
+                .setParameter("cupoHombres", convocatoria.getCupoHombres())
+                .setParameter("cupoMujeres", convocatoria.getCupoMujeres())
+                .setParameter("correo", convocatoria.getCorreo());
+
+        entityManager.persist(convocatoria);
+
+        // ARCHIVOS CONVOCATORIA
+        // guardamos archivos de la convocatoria en el servidor
+
+        List<DatosFile> archivosConvocatoria = new ArrayList<>();
+            try {
+                archivosConvocatoria = guardarArchivo(docsConvocatoria, PATH_PROCESO_CONVOCATORIA, convocatoria.getCodConvocatoria().toString());
+            } catch (Exception e) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("errorHeader", e.getMessage());
+            }
+        Set<DocumentoFor> dConvocatoria = new HashSet<>();
+
+        for (DatosFile datosFile : archivosConvocatoria) {
+            DocumentoFor dd = new DocumentoFor();
+            dd.setEstado("ACTIVO");
+            dd.setNombre(datosFile.getNombre());
+            dd.setRuta(datosFile.getRuta());
+
+            dConvocatoria.add(dd);
+        }
+
+        //
+        Set<DocumentoFor> documentos = new HashSet<>();
+        // convocatoria.setDocumentos(dConvocatoria);
+        for (DocumentoFor documento : dConvocatoria) {
+            DocumentoFor documentoFor = new DocumentoFor();
+            entityManager.createNativeQuery(sqlDocumento).setParameter("autorizacion", documento.getAutorizacion())
+                    .setParameter("tipo", documento.getTipo()).setParameter("descripcion", documento.getDescripcion())
+                    .setParameter("estadoValidacion", documento.getEstadoValidacion())
+                    //.setParameter("codigoUnico", documento.getCodigoUnico())
+                    .setParameter("nombre", documento.getNombre())
+                    .setParameter("observaciones", documento.getObservaciones())
+                    .setParameter("ruta", documento.getRuta()).setParameter("estado", documento.getEstado());
+            entityManager.persist(documento);
+            documentoFor = documento;
+            documentos.add(documentoFor);
+        }
+        for (DocumentoFor elemento : documentos) {
+            PeriodoAcademicoDocumentoFor periodoAcademicoDocumentoFor = new PeriodoAcademicoDocumentoFor();
+
+            entityManager.createNativeQuery(sqlPeriodoAcademicoDocumento)
+                    .setParameter("cod_periodo_academico", periodo.getCodigo())
+                    .setParameter("cod_documento", elemento.getCodDocumento());
+
+            periodoAcademicoDocumentoFor.setCodPeriodoAcademico(periodo.getCodigo());
+            periodoAcademicoDocumentoFor.setCodDocumento(elemento.getCodDocumento());
+            entityManager.persist(periodoAcademicoDocumentoFor);
+        }
+
+
+        Integer codConvocatoria = convocatoria.getCodConvocatoria();
+        Integer codigoDocumento = 0;
+
+        for (DocumentoFor elemento : documentos) {
+            ConvocatoriaDocumentoFor convocatoriaDocumentoFor = new ConvocatoriaDocumentoFor();
+
+            entityManager.createNativeQuery(sqlConvocatoriaDocumento).setParameter("cod_convocatoria", codConvocatoria)
+                    .setParameter("cod_documento", elemento.getCodDocumento());
+
+            convocatoriaDocumentoFor.setCodConvocatoria(codConvocatoria);
+            convocatoriaDocumentoFor.setCodDocumento(elemento.getCodDocumento());
+            entityManager.persist(convocatoriaDocumentoFor);
+            codigoDocumento = elemento.getCodDocumento();
+        }
+
+
+        List<DatosFile> archivosPA = new ArrayList<>();
+        if (docsPeriodoAcademico != null) {
+            try {
+                archivosPA = guardarArchivo(docsPeriodoAcademico, PATH_PROCESO_PERIODO_ACADEMICO, periodo.getCodigo().toString());
+            } catch (Exception e) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("errorHeader", e.getMessage());
+            }
+
+            Set<DocumentoFor> dPeriodoAcademico = new HashSet<>();
+
+            for (DatosFile datosFile : archivosPA) {
+                DocumentoFor dd1 = new DocumentoFor();
+
+                dd1.setEstado("ACTIVO");
+                dd1.setNombre(datosFile.getNombre());
+                dd1.setRuta(datosFile.getRuta());
+                dPeriodoAcademico.add(dd1);
+            }
+
+            Set<DocumentoFor> docPA = new HashSet<>();
+            for (DocumentoFor documento : dPeriodoAcademico) {
+
+                DocumentoFor documentoFor = new DocumentoFor();
+
+                entityManager.createNativeQuery(sqlDocumento).setParameter("autorizacion", documento.getAutorizacion())
+                        .setParameter("tipo", documento.getTipo()).setParameter("descripcion", documento.getDescripcion())
+                        .setParameter("estadoValidacion", documento.getEstadoValidacion())
+                        //.setParameter("codigoUnico", documento.getCodigoUnico())
+                        .setParameter("nombre", documento.getNombre())
+                        .setParameter("observaciones", documento.getObservaciones())
+                        .setParameter("ruta", documento.getRuta()).setParameter("estado", documento.getEstado());
+                entityManager.persist(documento);
+                documentoFor = documento;
+                docPA.add(documentoFor);
+            }
+
+            entityManager.persist(periodo);
+
+            for (DocumentoFor elemento : docPA) {
+                PeriodoAcademicoDocumentoFor periodoAcademicoDocumentoFor = new PeriodoAcademicoDocumentoFor();
+
+                entityManager.createNativeQuery(sqlPeriodoAcademicoDocumento)
+                        .setParameter("cod_periodo_academico", periodo.getCodigo())
+                        .setParameter("cod_documento", elemento.getCodDocumento());
+
+                periodoAcademicoDocumentoFor.setCodPeriodoAcademico(periodo.getCodigo());
+                periodoAcademicoDocumentoFor.setCodDocumento(elemento.getCodDocumento());
+                entityManager.persist(periodoAcademicoDocumentoFor);
+            }
+        }
+
+        // REQUISITOS
+
+        for (RequisitoFor elemento : requisitos) {
+            entityManager.createNativeQuery(sqlConvocatoriaRequisito).setParameter("cod_convocatoria", codConvocatoria)
+                    .setParameter("cod_requisito", elemento.getCodigoRequisito());
+        }
+
+
+        String link = URLDESCARGA + "/link/" + codigoDocumento;
+
+        String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
+
+        emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
+
+        PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
+
+        pa.setConvocatoria(codConvocatoria);
+        pa.setPeriodoAcademico(periodo.getCodigo());
+        //return pa
+
+        return null;
     }
 
     public List<DatosFile> guardarArchivo(List<MultipartFile> archivo, String proceso, String id)
