@@ -29,7 +29,7 @@ public interface ConvocatoriaCursoService {
 	
 	void deleteDocumento(Long codConvocatoria, Long codDocumento) throws DataException;
 	
-	void notificar(Long codConvocatoria) throws MessagingException, DataException;
+	void notificar(Long codConvocatoria) throws MessagingException, DataException, IOException;
 	
 	Boolean validaConvocatoriaCursoActiva(Long codConvocatoria);
 }

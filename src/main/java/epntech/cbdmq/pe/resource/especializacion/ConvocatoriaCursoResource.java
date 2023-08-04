@@ -137,7 +137,7 @@ public class ConvocatoriaCursoResource {
 	
 	@PostMapping("/notificar")
 	public ResponseEntity<?> notificar(@RequestParam("codConvocatoria") Long codConvocatoria)
-			throws MessagingException, DataException, PSQLException {
+			throws MessagingException, DataException, PSQLException, IOException {
 		
 		//mensaje = "Estimad@, la convocatoria al curso %s inicia Desde: %tF, %tT Hasta: %tF, %tT ";
 		convocatoriaCursoServiceImpl.notificar(codConvocatoria);
