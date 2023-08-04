@@ -579,11 +579,11 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                     //TODO se asimila que solo debe haber uno por que la cedula solo devuelve uno
                    System.out.println("ciudadanoApiDto: "+ciudadanoApiDto.getCedula());
-                    /* DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
+                     DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
 
-                    */
+
 
 
                 }
@@ -630,7 +630,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
     @Override
     public DatoPersonalEstudianteDto colocarCorreoCiudadano(String correo, String cedula) throws Exception {
-        DatoPersonalEstudianteDto datoPersonalEstudianteDto = null;
+        DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
         List<CiudadanoApiDto> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
         CiudadanoApiDto ciudadanoApiDto = ciudadanoSinRegistrar.get(0);
         if (ciudadanoSinRegistrar.isEmpty()) {
@@ -638,6 +638,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         }
 
         DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
+        newDatoPersonal.setCorreoPersonal(correo);
         Usuario newUser = new Usuario();
         newUser.setCodDatosPersonales(newDatoPersonal);
         newUser.setNombreUsuario(newDatoPersonal.getCedula());
@@ -702,7 +703,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setNombre(nombreApellidos[1]);
         newDatoPersonal.setCedula(ciudadano.getCedula());
         newDatoPersonal.setEstado(ACTIVO);
-        newDatoPersonal.setFechaNacimiento(LocalDateTime.parse(ciudadano.getFechaNacimiento()));
+        //TODO mal parseado
+        // newDatoPersonal.setFechaNacimiento(LocalDateTime.parse(ciudadano.getFechaNacimiento()));
         return newDatoPersonal;
     }
     public static String[] dividirNombre(String nombreCompleto) {
