@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.repositorio;
 
 import java.util.List;
+import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.util.UsuarioDtoRead;
 import org.hibernate.annotations.ResultCheckStyle;
@@ -49,6 +50,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	@Modifying
 	@Query("UPDATE Usuario u SET u.isActive = ?1 WHERE u.nombreUsuario = ?2")
 	int actualizarNotLocked(Boolean noLock, String username);
+
+	Optional<Usuario> findByCodDatosPersonales_CodDatosPersonales(Integer coDatoPersonal);
 
 
 

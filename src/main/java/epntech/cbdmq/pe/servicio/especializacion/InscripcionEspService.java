@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.DatoPersonalEstudianteDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -50,4 +51,6 @@ public interface InscripcionEspService {
 	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba) throws MessagingException, DataException;
 	
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba) throws MessagingException, DataException;
+	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula) throws Exception;
+	DatoPersonalEstudianteDto colocarCorreoCiudadano(String correo, String cedula) throws Exception;
 }

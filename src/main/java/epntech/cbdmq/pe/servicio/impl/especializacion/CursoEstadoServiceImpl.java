@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Estados;
+import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import epntech.cbdmq.pe.repositorio.admin.EstadosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,23 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     }
 
     @Override
+    public List<ModuloEstadosData> listarModuloEstadosByTipoCurso(Long codTipoCurso) throws DataException {
+        List<CursoEstado> lista = this.listarByTipoCurso(codTipoCurso);
+        List<ModuloEstadosData> listaII = lista.stream().map(cursoEstado ->
+        {
+            ModuloEstadosData moduloEstadosObj = new ModuloEstadosData();
+            moduloEstadosObj.setCodigo(cursoEstado.getCodCursoEstado().intValue());
+            Estados estado = estadoRepository.findById(cursoEstado.getCodCatalogoEstados().intValue()).orElse(null);
+            moduloEstadosObj.setEstadoCatalogo(estado.getNombre());
+            moduloEstadosObj.setOrden(cursoEstado.getOrden());
+            moduloEstadosObj.setEstado(cursoEstado.getEstado());
+            return moduloEstadosObj;
+
+        }).toList();
+        return listaII;
+    }
+
+    @Override
     public List<Estados> listarEstadosByTipoCurso(Long codTipoCurso) throws DataException {
         List<Estados> lista = this.listarByTipoCurso(codTipoCurso).stream().map(cursoEstado ->
         {
@@ -95,6 +113,21 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
 
         cursoEstadoRepository.deleteById(codCursoEstado);
 
+    }
+
+    @Override
+    public String getEstadoByCurso(Long codCurso) {
+        return cursoEstadoRepository.getEstadoByCurso(codCurso);
+    }
+
+    @Override
+    public String updateState(Integer idCurso, Integer idCursoEstado) {
+        return cursoEstadoRepository.updateState(idCurso, idCursoEstado);
+    }
+
+    @Override
+    public Integer updateNextState(Integer idCurso) {
+        return cursoEstadoRepository.updateNextState(idCurso);
     }
 
 }

@@ -9,4 +9,5 @@ import java.util.List;
 public interface GradoService {
     List<Grado> getAll();
     List<Rango> getRangoByGrado(Integer codGrado);
+    Grado findByNombre(String nombre);
 }

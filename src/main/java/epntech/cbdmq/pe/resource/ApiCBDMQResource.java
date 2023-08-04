@@ -2,6 +2,8 @@ package epntech.cbdmq.pe.resource;
 
 import java.util.Optional;
 
+import epntech.cbdmq.pe.servicio.ApiCBDMQFuncionariosService;
+import epntech.cbdmq.pe.servicio.ApiCBDMQService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,9 @@ import epntech.cbdmq.pe.servicio.impl.APICBDMQServiceImpl;
 public class ApiCBDMQResource {
 	
 	@Autowired
-	private APICBDMQServiceImpl objService;
+	private ApiCBDMQService objService;
+	@Autowired
+	private ApiCBDMQFuncionariosService objFuncionariosService;
 
 	@GetMapping("/ciudadanos/{cedula}")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -33,20 +37,31 @@ public class ApiCBDMQResource {
 		}catch(Exception ex) {
 
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-			
+
 			/*Optional<?> data = Optional.empty();
-			
+
 			ApiBase base = new ApiBase();
 			base.setData(data);
 			base.setMessage(ex.getMessage());
 			base.setStatus("error");
-			
+
 			Optional<ApiBase> b = Optional.of(base);
-			
+
 			return b;*/
 		}
 	}
-	
+		@GetMapping("/funcionarios/{cedula}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getDataFuncionarios(@PathVariable("cedula") String cedula) throws Exception{
+
+		try {
+			return new ResponseEntity<>(objFuncionariosService.servicioFuncionarios(cedula), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
+
 	@GetMapping("/educacionMedia/{cedula}")
 	public ResponseEntity<?> getEducacionMedia(@PathVariable("cedula") String cedula) throws Exception{
 		try {

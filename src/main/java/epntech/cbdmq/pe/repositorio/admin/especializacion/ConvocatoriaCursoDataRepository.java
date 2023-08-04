@@ -14,7 +14,7 @@ public interface ConvocatoriaCursoDataRepository extends JpaRepository<Convocato
 			+ "from cbdmq.gen_convocatoria c, cbdmq.esp_curso cu, cbdmq.esp_catalogo_cursos ca \r\n"
 			+ "where c.cod_curso_especializacion = cu.cod_curso_especializacion \r\n"
 			+ "and cu.cod_catalogo_cursos = ca.cod_catalogo_cursos " + "and c.cod_convocatoria = :codConvocatoria \r\n"
-			+ "and upper(c.estado) = 'ACTIVO' " + "and upper(cu.estado) = 'ACTIVO' \r\n"
+			+ "and upper(c.estado) = 'ACTIVO' "
 			+ "and upper(ca.estado) = 'ACTIVO'", nativeQuery = true)
 	Optional<ConvocatoriaCursoData> getConvocatoriaCurso(Long codConvocatoria);
 

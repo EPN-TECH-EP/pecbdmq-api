@@ -293,6 +293,7 @@ public class EmailService {
     public void enviarEmail(String[] destinatarios, String subject, String texto) throws MessagingException {
         JavaMailSender emailSender = this.getJavaMailSender();
         MimeMessage message = this.sendEmail(destinatarios, subject, texto, emailSender);
+        emailSender.send(message);
 
     }
     private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail( String nombrePrueba, String email)

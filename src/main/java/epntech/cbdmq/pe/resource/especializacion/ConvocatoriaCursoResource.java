@@ -5,8 +5,16 @@ import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +51,7 @@ public class ConvocatoriaCursoResource {
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> guardar(@RequestParam(required = true) String datos, @RequestParam(required = true) List<MultipartFile> archivos)
-			throws DataException, IOException, ArchivoMuyGrandeExcepcion {
+			throws DataException, IOException, ArchivoMuyGrandeExcepcion, ParseException {
 
 		if (archivos.get(0).getSize() == 0)
 			throw new DataException(NO_ADJUNTO);
@@ -51,11 +59,6 @@ public class ConvocatoriaCursoResource {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
 
-
-		//TODO hacer parsing fechas
-		//JsonNode jsonNode = objectMapper.readTree(datos);
-		//System.out.println("jsonNode: " + jsonNode);
-		
 		ConvocatoriaCurso convocatoriaCurso = new ConvocatoriaCurso();
 		convocatoriaCurso = objectMapper.readValue(datos, ConvocatoriaCurso.class);
 		

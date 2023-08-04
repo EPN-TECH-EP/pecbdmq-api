@@ -36,6 +36,7 @@ public interface DatoPersonalService {
 	
 	void deleteById(int id) throws DataException;
 	DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante);
-	
-	
+	Optional<DatoPersonal> getByCedula(String cedula);
+
+
 }

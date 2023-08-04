@@ -1,16 +1,15 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import epntech.cbdmq.pe.dominio.util.ApiBase;
-import epntech.cbdmq.pe.dominio.util.ApiCiudadanos;
-import epntech.cbdmq.pe.dominio.util.ApiEducacionMedia;
-import epntech.cbdmq.pe.dominio.util.ApiEducacionSuperior;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.ApiCBDMQService;
 import epntech.cbdmq.pe.util.Utilitarios;
@@ -30,35 +29,29 @@ public class APICBDMQServiceImpl implements ApiCBDMQService {
 	@Value("${api.cbdmq.educacion-superior}")
 	private String apiEducacionSuperior;
 
-	public Optional<?> servicioCiudadanos(String cedula) throws Exception, DataException {
-		String url = apiCiudadanos + cedula;
-		Optional<?> result = Optional.empty();
-		ApiBase base;
-		Boolean isValid = util.validadorDeCedula(cedula);
 
-		// System.out.println("isValid: " + isValid);
-		if (isValid) {
-			try {
-				result = restTemplate.getForObject(url, ApiBase.class).getData();
+    @Override
+    public List<CiudadanoApiDto> servicioCiudadanos(String cedula) throws Exception {
 
-			} catch (Exception ex) {
-				// System.out.println("error: " + ex.getLocalizedMessage());
+        String url = apiCiudadanos + cedula;
+        ApiBaseCiudadano base;
+        Boolean isValid = util.validadorDeCedula(cedula);
 
-				throw new Exception(ex.getMessage());
-			}
-		}
+        if (isValid) {
+            try {
+                base = restTemplate.getForObject(url, ApiBaseCiudadano.class);
+                List<CiudadanoApiDto> ciudadanos = base.getData();
 
-		return result;
+                return ciudadanos;
 
-		// System.out.println("base: " + base.getStatus());
+            } catch (Exception ex) {
+                throw new Exception(ex.getMessage());
+            }
+        }
 
-		/*
-		 * if( base.getStatus().equals("error")) { throw new
-		 * Exception(base.getMessage()); } else return (Optional<ApiCiudadanos>)
-		 * base.getData();
-		 */
+        return Collections.emptyList(); // Retorna una lista vacía si no se encontraron ciudadanos
+    }
 
-	}
 
 	@Override
 	public Optional<ApiEducacionMedia> servicioEducacionMedia(String cedula) throws Exception {
@@ -100,4 +93,5 @@ public class APICBDMQServiceImpl implements ApiCBDMQService {
 		
 		return result;
 	}
+
 }
