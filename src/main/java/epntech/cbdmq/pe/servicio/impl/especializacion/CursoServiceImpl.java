@@ -11,6 +11,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -75,7 +79,7 @@ public class CursoServiceImpl implements CursoService {
     public DataSize TAMAÑO_MAXIMO;
 
     @Override
-    public Curso save(String datos, List<MultipartFile> documentos, Long codTipoDocumento) throws JsonProcessingException, ParseException {
+    public Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -83,13 +87,95 @@ public class CursoServiceImpl implements CursoService {
         JsonNode jsonNode = objectMapper.readTree(datos);
         System.out.println("jsonNode: " + jsonNode);
 
-        Curso cursoDatos = objectMapper.readValue(datos, Curso.class);
+        Curso cursoDatos = new Curso();//objectMapper.readValue(datos, Curso.class);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> entry = fields.next();
+            String key = entry.getKey();
+            JsonNode value = entry.getValue();
+
+            if (key.equals("codAula")) {
+                cursoDatos.setCodAula((int) value.asLong());
+            }
+            if (key.equals("numeroCupo")) {
+                cursoDatos.setNumeroCupo((int) value.asLong());
+            }
+            if (key.equals("fechaInicioCurso")) {
+                if (value.asText().compareToIgnoreCase("null") != 0) {
+                    LocalDateTime ldt = LocalDateTime.parse(value.asText().substring(0, 19), formatter);
+                    LocalDate fecha = ldt.toLocalDate();
+                    cursoDatos.setFechaInicioCurso(fecha);
+                } else {
+                    cursoDatos.setFechaInicioCurso(null);
+                }
+            }
+            if (key.equals("fechaFinCurso")) {
+                if (value.asText().compareToIgnoreCase("null") != 0) {
+                    LocalDateTime ldt = LocalDateTime.parse(value.asText().substring(0, 19), formatter);
+                    LocalDate fecha = ldt.toLocalDate();
+                    cursoDatos.setFechaFinCurso(fecha);
+                } else {
+                    cursoDatos.setFechaInicioCurso(null);
+                }
+            }
+            if (key.equals("fechaInicioCargaNota")) {
+                if (value.asText().compareToIgnoreCase("null") != 0) {
+                    LocalDateTime ldt = LocalDateTime.parse(value.asText().substring(0, 19), formatter);
+                    LocalDate fecha = ldt.toLocalDate();
+                    cursoDatos.setFechaInicioCargaNota(fecha);
+                } else {
+                    cursoDatos.setFechaInicioCurso(null);
+                }
+            }
+            if (key.equals("fechaFinCargaNota")) {
+                if (value.asText().compareToIgnoreCase("null") != 0) {
+
+                    LocalDateTime ldt = LocalDateTime.parse(value.asText().substring(0, 19), formatter);
+                    LocalDate fecha = ldt.toLocalDate();
+                    cursoDatos.setFechaFinCargaNota(fecha);
+                } else {
+                    cursoDatos.setFechaInicioCurso(null);
+                }
+            }
+            if (key.equals("notaMinima")) {
+                cursoDatos.setNotaMinima((double) value.asLong());
+            }
+            if (key.equals("apruebaCreacionCurso")) {
+                cursoDatos.setApruebaCreacionCurso(value.asBoolean());
+            }
+            if (key.equals("codCatalogoCursos")) {
+                cursoDatos.setCodCatalogoCursos(value.asLong());
+            }
+            if (key.equals("estado")) {
+                cursoDatos.setEstado(value.asText());
+            }
+            if (key.equals("emailNotificacion")) {
+                cursoDatos.setEmailNotificacion(value.asText());
+            }
+            if (key.equals("tieneModulos")) {
+                cursoDatos.setTieneModulos(value.asBoolean());
+            }
+            if (key.equals("porcentajeAceptacionCurso")) {
+                cursoDatos.setNotaMinima((double) value.asLong());
+            }
+            if (key.equals("codUsuarioCreacion")) {
+                cursoDatos.setCodUsuarioCreacion(value.asLong());
+            }
+            if (key.equals("nombre")) {
+                cursoDatos.setNombre(value.asText());
+            }
+
+            cursoDatos.setCodUsuarioValidacion(null);
+        }
 
         Set<Requisito> requisitos = cursoDatos.getRequisitos();
 
         Set<Requisito> reqs = new HashSet<>();
-        for (Requisito r : requisitos) {
+        for (
+                Requisito r : requisitos) {
             Requisito requisito = new Requisito();
             requisito.setCodigoRequisito(r.getCodigoRequisito());
             reqs.add(requisito);
@@ -100,7 +186,7 @@ public class CursoServiceImpl implements CursoService {
 
         cursoDatos.setCodAula(aula.getCodAula());
         Curso cc;
-        cc = cursoEspRepository.insertarCursosDocumentosRequisitos(cursoDatos, requisitos, documentos, codTipoDocumento);
+        cc = cursoEspRepository.insertarCursosDocumentosRequisitos(cursoDatos, requisitos, documentos/*, codTipoDocumento*/);
 
         return cc;
     }
@@ -190,7 +276,8 @@ public class CursoServiceImpl implements CursoService {
                 });
     }
 
-    private void notificarRechazoInstructor(InstructoresCurso instructoresCurso, Documento documento, String observaciones) {
+    private void notificarRechazoInstructor(InstructoresCurso instructoresCurso, Documento documento, String
+            observaciones) {
         Parametro parametro = parametroRepository.findByNombreParametro("especializacion.rechazo.curso.notificacion.body")
                 .orElseThrow(() -> new BusinessException(NO_PARAMETRO));
         String nombres = instructoresCurso.getNombre() + " " + instructoresCurso.getApellido();
@@ -283,7 +370,8 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long codTipoDocumento) throws IOException, ArchivoMuyGrandeExcepcion {
+    public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, Long
+            codTipoDocumento) throws IOException, ArchivoMuyGrandeExcepcion {
         Curso curso = cursoRepository.findById(codCursoEspecializacion)
                 .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
         guardarDocumentos(archivos, curso.getCodCursoEspecializacion(), codTipoDocumento);

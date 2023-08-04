@@ -82,6 +82,22 @@ public class Curso {
 	@NotNull(message = "El atributo 'tieneModulos' es obligatorio")
 	@Column(name = "tiene_modulos")
 	private Boolean tieneModulos;
+
+	@Column(name = "porcentaje_aceptacion_curso")
+	private Double porcenatajeAceptacion;
+
+	@Column(name = "cod_usuario_creacion")
+	private Long codUsuarioCreacion;
+
+	@Column(name = "cod_usuario_validacion")
+	private Long codUsuarioValidacion;
+
+	@Column(name = "nombre")
+	private String nombre;
+
+	// observaciones_validacion
+	@Column(name = "observaciones_validacion")
+	private String observacionesValidacion;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "esp_curso_documento", joinColumns = @JoinColumn(name = "cod_curso_especializacion"), inverseJoinColumns = @JoinColumn(name = "cod_documento"))

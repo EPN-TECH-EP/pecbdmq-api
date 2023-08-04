@@ -50,7 +50,9 @@ public class ConvocatoriaCursoResource {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.registerModule(new JavaTimeModule());
-		
+
+
+		//TODO hacer parsing fechas
 		//JsonNode jsonNode = objectMapper.readTree(datos);
 		//System.out.println("jsonNode: " + jsonNode);
 		
