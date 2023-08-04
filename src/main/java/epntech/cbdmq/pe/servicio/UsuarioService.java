@@ -69,4 +69,5 @@ public interface UsuarioService {
 
 	public List<Usuario> findUsuariosByCorreo(String correo);
 	public UsuarioInfoDto getUsuarioInfo(String codUser) throws DataException;
+	Optional<Usuario> getUsuarioByCodDatoPersonal(Integer codDatoPersonal);
 }

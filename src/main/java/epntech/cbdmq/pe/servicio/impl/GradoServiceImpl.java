@@ -25,4 +25,9 @@ public class GradoServiceImpl implements GradoService {
     public List<Rango> getRangoByGrado(Integer codGrado) {
         return repoRa.findByGrado(codGrado);
     }
+
+    @Override
+    public Grado findByNombre(String nombre) {
+        return repo.findByNombreIgnoreCase(nombre).orElse(null);
+    }
 }

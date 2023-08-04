@@ -7,24 +7,12 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import java.io.IOException;
 import java.util.List;
 
-import epntech.cbdmq.pe.dominio.admin.Postulante;
-import epntech.cbdmq.pe.dominio.util.PostulanteUtil;
-import io.swagger.v3.oas.annotations.Operation;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
@@ -59,7 +47,8 @@ public class InscripcionEspResource {
 		
 		return new ResponseEntity<>(inscripcionEspServiceImpl.update(inscripcionEsp), HttpStatus.OK);
 	}
-	
+	//TODO en native query colocar que sea abierto no solo activo
+
 	@GetMapping("/listar")
 	public List<InscripcionDatosEspecializacion> listar() {
 		return inscripcionEspServiceImpl.getAll();
@@ -77,6 +66,7 @@ public class InscripcionEspResource {
 		return inscripcionEspServiceImpl.getAllPaginado(pageable);
 	}
 
+	//TODO Problema similar al anterior, colocar que sea abierto no solo activo
 	@GetMapping("/{id}")
 	public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
 		return inscripcionEspServiceImpl.getById(codigo).map(ResponseEntity::ok)
@@ -156,9 +146,31 @@ public class InscripcionEspResource {
 			@PathVariable("idUsuario") long idUsuario) {
 		return new ResponseEntity<>(inscripcionEspServiceImpl.updateDelegado(codigo, idUsuario), HttpStatus.OK);
 	}
-	
+
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
+	@GetMapping("/informacion/{cedula}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getData(@PathVariable("cedula") String cedula) throws Exception{
+
+		try {
+			return new ResponseEntity<>(inscripcionEspServiceImpl.confirmacionInscripcion(cedula), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
+	@PatchMapping("/colocarCorreo/{cedula}/{correo}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getData(@PathVariable("cedula") String cedula,@PathVariable("correo") String correo) throws Exception{
+
+		try {
+			return new ResponseEntity<>(inscripcionEspServiceImpl.colocarCorreoCiudadano(correo,cedula), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
 }

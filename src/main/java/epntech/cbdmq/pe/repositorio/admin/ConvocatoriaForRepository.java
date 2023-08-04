@@ -59,7 +59,7 @@ public class ConvocatoriaForRepository {
     @Value("${server.port}")
     public String SERVER_PORT;
 
-    @Value("${eureka.instance.hostname}")
+    @Value("${hostname}")
     public String HOSTNAME;
     @Value("${url.descarga.archivos}")
     public String URLDESCARGA;

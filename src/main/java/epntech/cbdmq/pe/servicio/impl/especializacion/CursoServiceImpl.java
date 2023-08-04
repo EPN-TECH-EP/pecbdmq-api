@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,8 +34,10 @@ import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.EmailService;
+import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
@@ -69,6 +70,8 @@ public class CursoServiceImpl implements CursoService {
     private TipoCursoRepository tipoCursoRepository;
     @Autowired
     private CatalogoCursoRepository catalogoCursoRepository;
+    @Autowired
+    private CursoEstadoService cursoEstadoService;
 
     @Autowired
     private EmailService emailService;
@@ -208,6 +211,30 @@ public class CursoServiceImpl implements CursoService {
 
         return cursoRepository.save(objActualizado);
     }
+    @Override
+    public Curso updateEstado(long codigo, String estado) {
+        Curso curso = cursoRepository.findById(codigo)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+        curso.setEstado(estado);
+
+        return cursoRepository.save(curso);
+    }
+
+    @Override
+    public Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String observaciones, long codigoUserAprueba) {
+        if(aprobadoCurso) {
+            cursoEstadoService.updateNextState((int) codigo);
+        }
+        Curso curso = cursoRepository.findById(codigo)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+        curso.setApruebaCreacionCurso(aprobadoCurso);
+        curso.setObservacionesValidacion(observaciones);
+        curso.setCodUsuarioValidacion(codigoUserAprueba);
+
+        return cursoRepository.save(curso);
+    }
+
 
     @Override
     public List<Curso> listarAll() {
@@ -532,15 +559,16 @@ public class CursoServiceImpl implements CursoService {
     @Override
     public List<Curso> listarPorEstadoAll(String estado) {
         List<Curso> lista;
+        Sort sort = Sort.by(Sort.Direction.ASC, "nombre");
 
         if (ABIERTOS.equals(estado)) {
-            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCase("CERRADO");
+            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE,sort);
             lista = listarAll();
             lista.removeAll(listaCerrados);
         } else if (CERRADOS.equals(estado)) {
-            lista = cursoRepository.findAllByEstadoContainsIgnoreCase("CERRADO");
+            lista = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE,sort);
         } else if (TODOS.equals(estado)) {
-            lista = cursoRepository.findAll();
+            lista = cursoRepository.findAllOrderedByName();
         } else {
             lista = listarPorEstado(estado);
         }

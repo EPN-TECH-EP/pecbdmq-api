@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
+import epntech.cbdmq.pe.dominio.util.DatoPersonalEstudianteDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -25,7 +26,7 @@ public interface InscripcionEspService {
 	InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) throws DataException;
 
 	InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario);
-	
+
 	Optional<InscripcionDatosEsp> getById(Long codInscripcion) throws DataException;
 	
 	List<InscripcionDatosEspecializacion> getAll();
@@ -33,7 +34,7 @@ public interface InscripcionEspService {
 	List<InscripcionDatosEspecializacion> getByUsuarioPaginado(Long codUsuario, Pageable pageable);
 
 	List<InscripcionDatosEspecializacion> getAllPaginado(Pageable pageable);
-	
+
 	void delete(Long codInscripcion)  throws DataException;
 	
 	List<Documento> uploadFiles(Long codInscripcion, Long tipoDocumento, List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion;
@@ -57,4 +58,6 @@ public interface InscripcionEspService {
 	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
+	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula) throws Exception;
+	DatoPersonalEstudianteDto colocarCorreoCiudadano(String correo, String cedula) throws Exception;
 }

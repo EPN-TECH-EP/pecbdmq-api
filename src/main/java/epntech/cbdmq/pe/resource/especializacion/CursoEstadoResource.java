@@ -5,18 +5,11 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import java.util.List;
 
 import epntech.cbdmq.pe.dominio.admin.Estados;
+import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoEstado;
@@ -45,6 +38,10 @@ public class CursoEstadoResource {
     public List<CursoEstado> listarByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
         return cursoEstadoServiceImpl.listarByTipoCurso(codTipoCurso);
     }
+    @GetMapping("/listarModuloEstados/{codTipoCurso}")
+    public List<ModuloEstadosData> listarModuloEstadosByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
+        return cursoEstadoServiceImpl.listarModuloEstadosByTipoCurso(codTipoCurso);
+    }
     @GetMapping("/listarEstados/{codTipoCurso}")
     public List<Estados> listarEstadosByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
         return cursoEstadoServiceImpl.listarEstadosByTipoCurso(codTipoCurso);
@@ -55,6 +52,24 @@ public class CursoEstadoResource {
     public ResponseEntity<CursoEstado> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
         return cursoEstadoServiceImpl.getById(codigo).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/activo/{id}")
+    public ResponseEntity<HttpResponse> getEstado(@PathVariable("id") long codigo) {
+        String result = cursoEstadoServiceImpl.getEstadoByCurso(codigo);
+
+        if (result == null) {
+            result = "SIN ESTADO";
+        }
+
+        return response(HttpStatus.OK, result);
+    }
+    @GetMapping("/actualizarEstado/{idCurso}/{idCursoEstado}")
+    public ResponseEntity<HttpResponse> nextState(
+                                                  @PathVariable("idCurso") Integer idCurso,
+                                                  @PathVariable("idCursoEstado") Integer idCursoEstado) {
+        String result = cursoEstadoServiceImpl.updateState(idCurso,idCursoEstado);
+
+        return response(HttpStatus.OK, result);
     }
 
     @PutMapping("/{id}")
