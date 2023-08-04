@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION;
+import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -52,8 +53,10 @@ public class ConvocatoriaCursoEspRepository {
 		
 		LocalDate fecha = LocalDate.now();
 		convocatoriaCurso.setFechaActual(fecha);
+		convocatoriaCurso.setEstado(ACTIVO);
 		convocatoriaCurso.setCodigoUnicoConvocatoria(convocatoriaCursoRepository.getId("CE"));
 		entityManager.persist(convocatoriaCurso);
+
 		/*
 		List<DatosFile> archivosConvocatoria = new ArrayList<>();
 		try {
