@@ -86,7 +86,6 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 
 	@Override
 	public List<ConvocatoriaCurso> listAll() {
-		// TODO Auto-generated method stub
 		return convocatoriaCursoRepository.getAll();
 	}
 
@@ -213,7 +212,6 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
 
 	@Override
 	public Boolean validaConvocatoriaCursoActiva(Long codConvocatoria) {
-		// TODO Auto-generated method stub
 		return convocatoriaCursoRepository.validaConvocatoriaCursoActiva(codConvocatoria);
 	}
 

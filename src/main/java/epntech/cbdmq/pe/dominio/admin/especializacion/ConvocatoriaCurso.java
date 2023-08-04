@@ -40,61 +40,63 @@ import lombok.EqualsAndHashCode;
 @SQLDelete(sql = "UPDATE {h-schema}gen_convocatoria SET estado = 'ELIMINADO' WHERE cod_convocatoria = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
 
-@NamedNativeQuery(name = "ConvocatoriaCurso.findRequisitos", 
-query = "select r.nombre_requisito as nombreRequisito\r\n"
-		+ "from cbdmq.esp_curso_requisito cr, cbdmq.gen_requisito r, cbdmq.gen_convocatoria c\r\n"
-		+ "where cr.cod_requisito = r.cod_requisito\r\n"
-		+ "and cr.cod_curso_especializacion = c.cod_curso_especializacion \r\n"
-		+ "and upper(c.estado) = 'ACTIVO' \r\n"
-		+ "and c.cod_convocatoria = :codConvocatoria", 
-		resultSetMapping = "findRequisitos")
+@NamedNativeQuery(name = "ConvocatoriaCurso.findRequisitos",
+        query = "select r.nombre_requisito as nombreRequisito\r\n"
+                + "from cbdmq.esp_curso_requisito cr, cbdmq.gen_requisito r, cbdmq.gen_convocatoria c\r\n"
+                + "where cr.cod_requisito = r.cod_requisito\r\n"
+                + "and cr.cod_curso_especializacion = c.cod_curso_especializacion \r\n"
+                + "and upper(c.estado) = 'ACTIVO' \r\n"
+                + "and c.cod_convocatoria = :codConvocatoria",
+        resultSetMapping = "findRequisitos")
 @SqlResultSetMapping(name = "findRequisitos", classes = @ConstructorResult(targetClass = ListaRequisitos.class, columns = {
-		@ColumnResult(name = "nombreRequisito"), }))
+        @ColumnResult(name = "nombreRequisito"),}))
 
 public class ConvocatoriaCurso {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include()
-	@Column(name = "cod_convocatoria")
-	private Long codConvocatoria;
-	
-	@Column(name = "nombre_convocatoria")
-	private String nombreConvocatoria;
-	
-	@Column(name = "estado")
-	private String estado;
-	
-	@Column(name = "fecha_inicio_convocatoria")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate fechaInicioConvocatoria;
-	
-	@Column(name = "fecha_fin_convocatoria")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate fechaFinConvocatoria;
-	
-	@Column(name = "hora_inicio_convocatoria")
-	@JsonFormat(pattern = "HH:mm")
-	private LocalTime horaInicioConvocatoria;
-	
-	@Column(name = "hora_fin_convocatoria")
-	@JsonFormat(pattern = "HH:mm")
-	private LocalTime horaFinConvocatoria;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include()
+    @Column(name = "cod_convocatoria")
+    private Long codConvocatoria;
 
-	@Column(name = "codigo_unico_convocatoria")
-	private String codigoUnicoConvocatoria;
+    @Column(name = "nombre_convocatoria")
+    private String nombreConvocatoria;
 
-	@Column(name = "cod_curso_especializacion")
-	private Long codCursoEspecializacion;
-	
-	@Column(name = "fecha_actual")
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate fechaActual;
-	
-	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @Column(name = "estado")
+    private String estado;
+
+    @Column(name = "fecha_inicio_convocatoria")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaInicioConvocatoria;
+
+    @Column(name = "fecha_fin_convocatoria")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaFinConvocatoria;
+
+    @Column(name = "hora_inicio_convocatoria")
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime horaInicioConvocatoria;
+
+    @Column(name = "hora_fin_convocatoria")
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime horaFinConvocatoria;
+
+    @Column(name = "codigo_unico_convocatoria")
+    private String codigoUnicoConvocatoria;
+    @Column(name = "correo")
+    private String correo;
+
+    @Column(name = "cod_curso_especializacion")
+    private Long codCursoEspecializacion;
+
+    @Column(name = "fecha_actual")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaActual;
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "gen_convocatoria_documento",
             joinColumns = @JoinColumn(name = "cod_convocatoria"),
             inverseJoinColumns = @JoinColumn(name = "cod_documento")
     )
-	private List<Documento> documentos = new ArrayList<>();
+    private List<Documento> documentos = new ArrayList<>();
 }

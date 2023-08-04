@@ -37,6 +37,7 @@ import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
@@ -558,13 +559,14 @@ public class CursoServiceImpl implements CursoService {
     @Override
     public List<Curso> listarPorEstadoAll(String estado) {
         List<Curso> lista;
+        Sort sort = Sort.by(Sort.Direction.ASC, "nombre");
 
         if (ABIERTOS.equals(estado)) {
-            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCaseOrderByNombre(CIERRE);
+            List<Curso> listaCerrados = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE,sort);
             lista = listarAll();
             lista.removeAll(listaCerrados);
         } else if (CERRADOS.equals(estado)) {
-            lista = cursoRepository.findAllByEstadoContainsIgnoreCaseOrderByNombre(CIERRE);
+            lista = cursoRepository.findAllByEstadoContainsIgnoreCase(CIERRE,sort);
         } else if (TODOS.equals(estado)) {
             lista = cursoRepository.findAllOrderedByName();
         } else {

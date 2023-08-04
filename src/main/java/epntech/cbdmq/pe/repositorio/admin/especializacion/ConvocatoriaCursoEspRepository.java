@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -74,10 +75,16 @@ public class ConvocatoriaCursoEspRepository {
 		
 		for (Documento elemento : documentos) {
 			ConvocatoriaDocumentoEsp convocatoriaDocumentoEsp = new ConvocatoriaDocumentoEsp();
+			CursoDocumento cursoDocumentoGenerico= new  CursoDocumento();
 			
 			convocatoriaDocumentoEsp.setCodConvocatoria(convocatoriaCurso.getCodConvocatoria().intValue());
 			convocatoriaDocumentoEsp.setCodDocumento(elemento.getCodDocumento());
+
+			cursoDocumentoGenerico.setCodDocumento(Long.valueOf(elemento.getCodDocumento()));
+			cursoDocumentoGenerico.setCodCursoEspecializacion(convocatoriaCurso.getCodCursoEspecializacion());
 			entityManager.persist(convocatoriaDocumentoEsp);
+			entityManager.persist(cursoDocumentoGenerico);
+
 		}		
 		
 		return convocatoriaCurso;
