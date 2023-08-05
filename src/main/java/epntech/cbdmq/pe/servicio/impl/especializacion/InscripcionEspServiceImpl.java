@@ -123,7 +123,6 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         LocalDate fechaActual = LocalDate.now();
         inscripcionEsp.setFechaInscripcion(fechaActual);
         inscripcionEsp.setEstado("INSCRITO");
-        inscripcionEsp.setCodDatosPersonales(Long.valueOf(estudianteOptional.get().getCodDatosPersonales()));
 
         return inscripcionEspRepository.save(inscripcionEsp);
     }
@@ -629,19 +628,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     }
 
     @Override
-    public DatoPersonalEstudianteDto colocarCorreoCiudadano(String correo, String cedula) throws Exception {
+    public DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception {
         DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
-        List<CiudadanoApiDto> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
-        CiudadanoApiDto ciudadanoApiDto = ciudadanoSinRegistrar.get(0);
-        if (ciudadanoSinRegistrar.isEmpty()) {
-            throw new DataException(REGISTRO_NO_EXISTE);
-        }
 
-        DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
-        newDatoPersonal.setCorreoPersonal(correo);
         Usuario newUser = new Usuario();
-        newUser.setCodDatosPersonales(newDatoPersonal);
-        newUser.setNombreUsuario(newDatoPersonal.getCedula());
+        newUser.setCodDatosPersonales(datoPersonal);
+        newUser.setNombreUsuario(datoPersonal.getCedula());
         newUser=usuarioSvc.registrar(newUser);
 
         Estudiante newEstudiante = new Estudiante();

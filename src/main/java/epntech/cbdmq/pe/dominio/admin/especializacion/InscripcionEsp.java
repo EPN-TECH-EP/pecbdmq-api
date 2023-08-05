@@ -155,8 +155,8 @@ public class InscripcionEsp {
 	
 	@Column(name = "estado")
 	private String estado;
-	@Column(name = "cod_datos_personales")
-	private Long codDatosPersonales;
+	@Column(name = "cod_usuario")
+	private Long codUsuario;
 	
 	@OneToMany(mappedBy = "codInscripcion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InscripcionDocumento> documentos = new ArrayList<>();
