@@ -18,11 +18,11 @@ public class ValidaRequisitos {
 	@Column(name = "cod_validacion_requisito")
 	private Long codValidacionRequisito;
 	
-	@Column(name = "cod_estudiante")
-	private Long codEstudiante;
-	
 	@Column(name = "cod_requisito")
 	private Long codRequisito;
+
+	@Column(name = "cod_inscripcion")
+	private Long codInscripcion;
 	
 	@Column(name = "observacion")
 	private String observacion;
@@ -30,6 +30,4 @@ public class ValidaRequisitos {
 	@Column(name = "estado")
 	private Boolean estado;
 
-	@Column(name = "cod_curso_especializacion")
-	private Long codCursoEspecializacion;
 }

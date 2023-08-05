@@ -12,12 +12,15 @@ import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 
 public interface ValidaRequisitosRepository extends JpaRepository<ValidaRequisitos, Long> {
 
-	List<ValidaRequisitos> findByCodEstudianteAndCodCursoEspecializacion(Long codEstudiante, Long codCursoEspecializacion);
+	//List<ValidaRequisitos> findByCodEstudianteAndCodCursoEspecializacion(Long codEstudiante, Long codCursoEspecializacion);
 	
-	@Query(nativeQuery = true, name = "Requisito.findRequisitosPorEstudiante")
-	List<ValidacionRequisitosDatos> findRequisitosPorEstudiante(@Param("codEstudiante") Long codEstudiante, @Param("codCursoEspecializacion") Long codCursoEspecializacion);
+//	@Query(nativeQuery = true, name = "Requisito.findRequisitosPorEstudiante")
+//	List<ValidacionRequisitosDatos> findRequisitosPorEstudiante(@Param("codEstudiante") Long codEstudiante, @Param("codCursoEspecializacion") Long codCursoEspecializacion);
+
+	@Query(nativeQuery = true, name = "Requisito.findRequisitosPorInscripcion")
+	List<ValidacionRequisitosDatos> findRequisitosPorInscripcion(@Param("codInscripcion") Long codInscripcion);
 	
 	@Procedure(value = "cbdmq.cumple_requisitos_curso_esp")
-	Boolean cumpleRequisitosCurso(Long codCurso, Long codEstudiante);
+	String cumpleRequisitosCurso(Long codInscripcion);
 }
 
