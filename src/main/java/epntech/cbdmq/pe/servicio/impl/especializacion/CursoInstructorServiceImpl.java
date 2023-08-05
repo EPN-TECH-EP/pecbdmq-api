@@ -6,7 +6,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
+import epntech.cbdmq.pe.dto.CursoInstructorDTO;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
+import epntech.cbdmq.pe.repositorio.fichaPersonal.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,38 +29,56 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	private CursoInstructorRepository cursoInstructorRepository;
 	@Autowired
 	private InstructoresCursoRepository instructoresCursoRepository;
+	@Autowired
+	private InstructorRepository instructorRepository;
+	@Autowired
+	private DatoPersonalRepository datoPersonalRepository;
 
 	@Override
-	public CursoInstructor save(CursoInstructor cursoInstructor) throws DataException {
-		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorRepository
-				.findByCodInstructorAndCodCursoEspecializacion(cursoInstructor.getCodInstructor().intValue(),
-						cursoInstructor.getCodCursoEspecializacion());
+	@Transactional
+	public CursoInstructor save(CursoInstructorDTO cursoInstructorDTO) {
 
-		if (cursoInstructorOptional.isPresent())
-			throw new DataException(REGISTRO_YA_EXISTE);
+		Instructor instructor = instructorRepository.findByCodDatosPersonales(cursoInstructorDTO.getCodDatosPersonales().intValue())
+				.orElseGet(() -> {
+					Instructor newInstructor = new Instructor();
+					newInstructor.setEstado("ACTIVO");
+					newInstructor.setCodEstacion(cursoInstructorDTO.getCodEstacion());
+					newInstructor.setCodTipoProcedencia(cursoInstructorDTO.getCodTipoProcedencia());
+					newInstructor.setCodTipoContrato(cursoInstructorDTO.getCodTipoContrato());
+					newInstructor.setCodDatosPersonales(cursoInstructorDTO.getCodDatosPersonales());
+					newInstructor.setCodUnidadGestion(cursoInstructorDTO.getCodUnidadGestion());
+					return instructorRepository.save(newInstructor);
+				});
 
-		LocalDate fecha = LocalDate.now();
-		cursoInstructor.setFechaActual(fecha);
+		CursoInstructor cursoInstructor = new CursoInstructor();
+		cursoInstructor.setCodInstructor(instructor.getCodInstructor());
+		cursoInstructor.setEstado("ACTIVO");
+		cursoInstructor.setCodTipoInstructor(cursoInstructorDTO.getCodTipoInstructor());
+		cursoInstructor.setCodCursoEspecializacion(cursoInstructorDTO.getCodCursoEspecializacion());
+		cursoInstructor.setFechaActual(LocalDate.now());
+
 		return cursoInstructorRepository.save(cursoInstructor);
+
 	}
 
 	@Override
-	public CursoInstructor update(CursoInstructor cursoInstructorActualizado) {
-		CursoInstructor cursoInstructor = cursoInstructorRepository.findById(cursoInstructorActualizado.getCodInstructorCurso())
+	public CursoInstructor update(CursoInstructorDTO cursoInstructorDTO) {
+		CursoInstructor cursoInstructor = cursoInstructorRepository
+				.findById(cursoInstructorDTO.getCodInstructorCurso())
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		validarCursoInstructor(cursoInstructorActualizado);
+		validarCursoInstructor(cursoInstructorDTO);
 
-		cursoInstructor.setCodCursoEspecializacion(cursoInstructorActualizado.getCodCursoEspecializacion());
-		cursoInstructor.setCodInstructor(cursoInstructorActualizado.getCodInstructor());
-		cursoInstructor.setCodTipoInstructor(cursoInstructorActualizado.getCodTipoInstructor());
-		cursoInstructor.setDescripcion(cursoInstructorActualizado.getDescripcion());
-		cursoInstructor.setEstado(cursoInstructorActualizado.getEstado());
+		cursoInstructor.setCodCursoEspecializacion(cursoInstructorDTO.getCodCursoEspecializacion());
+		cursoInstructor.setCodInstructor(cursoInstructorDTO.getCodInstructor());
+		cursoInstructor.setCodTipoInstructor(cursoInstructorDTO.getCodTipoInstructor());
+		cursoInstructor.setDescripcion(cursoInstructorDTO.getDescripcion());
+		cursoInstructor.setEstado(cursoInstructorDTO.getEstado());
 
 		return cursoInstructorRepository.save(cursoInstructor);
 	}
 
-	private void validarCursoInstructor(CursoInstructor cursoInstructorActualizado) {
+	private void validarCursoInstructor(CursoInstructorDTO cursoInstructorActualizado) {
 		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorRepository
 				.findByCodInstructorAndCodCursoEspecializacion(cursoInstructorActualizado.getCodInstructor().intValue(),
 						cursoInstructorActualizado.getCodCursoEspecializacion());
@@ -72,22 +94,19 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	}
 
 	@Override
-	public Optional<CursoInstructor> getById(Long codInstructorCurso) throws DataException {
-		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorRepository.findById(codInstructorCurso);
+	public Optional<CursoInstructor> getById(Long codInstructorCurso) {
+		CursoInstructor cursoInstructor = cursoInstructorRepository.findById(codInstructorCurso)
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		if (cursoInstructorOptional.isEmpty())
-			throw new DataException(REGISTRO_NO_EXISTE);
-
-		return cursoInstructorRepository.findById(codInstructorCurso);
+		return cursoInstructorRepository.findById(cursoInstructor.getCodInstructorCurso());
 	}
 
 	@Override
-	public void delete(Long codInstructorCurso) throws DataException {
-		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorRepository.findById(codInstructorCurso);
-		if (cursoInstructorOptional.isEmpty())
-			throw new DataException(REGISTRO_NO_EXISTE);
+	public void delete(Long codInstructorCurso) {
+		CursoInstructor cursoInstructor = cursoInstructorRepository.findById(codInstructorCurso)
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		cursoInstructorRepository.deleteById(codInstructorCurso);
+		cursoInstructorRepository.deleteById(cursoInstructor.getCodInstructorCurso());
 
 	}
 

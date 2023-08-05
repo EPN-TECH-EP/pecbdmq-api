@@ -4,6 +4,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
 
+import epntech.cbdmq.pe.dto.CursoInstructorDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class CursoInstructorResource {
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@Valid @RequestBody CursoInstructor obj) throws DataException {
+	public ResponseEntity<?> guardar(@Valid @RequestBody CursoInstructorDTO obj) {
 		return new ResponseEntity<>(cursoInstructorServiceImpl.save(obj), HttpStatus.OK);
 	}
 
@@ -45,20 +46,18 @@ public class CursoInstructorResource {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<?> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
-		return cursoInstructorServiceImpl.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<?> obtenerPorId(@PathVariable("id") long codigo) {
+		return new ResponseEntity<>(cursoInstructorServiceImpl.getById(codigo), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @Valid @RequestBody CursoInstructor obj)
-			throws DataException {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @Valid @RequestBody CursoInstructorDTO obj) {
 		obj.setCodInstructorCurso(codigo);
 		return new ResponseEntity<>(cursoInstructorServiceImpl.update(obj), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) throws DataException {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) {
 		cursoInstructorServiceImpl.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
