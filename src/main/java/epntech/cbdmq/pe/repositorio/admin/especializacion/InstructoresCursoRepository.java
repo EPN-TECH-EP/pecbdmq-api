@@ -10,9 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface InstructoresCursoRepository extends JpaRepository<InstructoresCurso, Long> {
 
-	@Procedure("cbdmq.get_instructores_curso")
-	List<InstructoresCurso> findInstructoresCurso(@Param("p_cod_curso") Long codCurso);
-
 	@Procedure("cbdmq.get_cursos_instructor")
 	List<InstructoresCurso> findCursosInstructor(@Param("p_cod_instructor") Long codInstructor);
 

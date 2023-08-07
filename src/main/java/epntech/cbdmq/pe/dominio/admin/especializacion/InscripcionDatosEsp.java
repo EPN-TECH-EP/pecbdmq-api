@@ -24,7 +24,7 @@ public class InscripcionDatosEsp {
 	private String cantonNacimiento;
 	private String cantonResidencia;
 	private String ciudadTituloSegundoNivel;
-	private String codDatosPersonales;
+	private Integer codDatosPersonales;
 	private String colegio;
 	private String meritoAcademicoDescripcion;
 	private String meritoDeportivoDescripcion;

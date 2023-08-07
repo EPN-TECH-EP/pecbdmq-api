@@ -5,14 +5,14 @@ import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
-import epntech.cbdmq.pe.dto.CursoInstructorDTO;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.dto.CursoInstructorRequest;
+import epntech.cbdmq.pe.dto.CursoInstructorResponse;
 
 public interface CursoInstructorService {
 
-	CursoInstructor save(CursoInstructorDTO cursoInstructorDTO) ;
+	CursoInstructor save(CursoInstructorRequest cursoInstructorRequest) ;
 	
-	CursoInstructor update(CursoInstructorDTO cursoInstructorDTO) ;
+	CursoInstructor update(CursoInstructorRequest cursoInstructorRequest) ;
 	
 	List<CursoInstructor> listAll();
 	
@@ -20,7 +20,7 @@ public interface CursoInstructorService {
 	
 	void delete(Long codInstructorCurso);
 	
-	List<InstructoresCurso> listInstructoresCurso(Long codCurso);
+	List<CursoInstructorResponse> listInstructoresCurso(Long codCurso);
 	
 	List<InstructoresCurso> listCursosInstructor(Long codInstructor);
 	

@@ -12,7 +12,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 @Repository
 public interface InscripcionDatosRepository extends JpaRepository<InscripcionDatosEsp, Long> {
 
-	@Query(value = "select i.cod_inscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso, e.cod_datos_personales, "
+	@Query(value = "select i.cod_inscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso, dp.cod_datos_personales, "
 			+ "i.fecha_inscripcion, c.fecha_inicio_curso, c.fecha_fin_curso, dp.fecha_nacimiento, dp.tipo_sangre, dp.sexo, "
 			+ "(select gc.nombre from cbdmq.gen_canton gc where UPPER(gc.estado) = 'ACTIVO' and gc.cod_canton = dp.cod_canton_nacimiento) canton_nacimiento, "
 			+ "(select gc.nombre from cbdmq.gen_canton gc where UPPER(gc.estado) = 'ACTIVO' and gc.cod_canton = dp.cod_canton_residencia) canton_residencia, "
@@ -32,9 +32,9 @@ public interface InscripcionDatosRepository extends JpaRepository<InscripcionDat
 			+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
 			+ "and upper(e.estado) = 'ACTIVO' "
 			+ "and upper(dp.estado) = 'ACTIVO' "
-			+ "and upper(c.estado) = 'ACTIVO' "
+			+ "and upper(c.estado) <> 'ELIMINADO' "
 			+ "and upper(cc.estado) = 'ACTIVO' "
-			+ "and upper(i.estado) in ('ACTIVO', 'INSCRITO', 'VALIDO', 'APROBADO', 'ASIGNADO') "
+			+ "and upper(i.estado) <> 'ELIMINADO' "
 			+ "and i.cod_inscripcion = :codInscripcion", nativeQuery = true)
 	Optional<InscripcionDatosEsp> findByInscripcion(Long codInscripcion);
 

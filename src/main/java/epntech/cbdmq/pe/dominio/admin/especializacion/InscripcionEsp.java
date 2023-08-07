@@ -50,6 +50,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and upper(dp.estado) = 'ACTIVO' " 
 		+ "and upper(c.estado) <> 'ELIMINADO' "
 		+ "and upper(cc.estado) = 'ACTIVO'"
+		+ "and upper(i.estado) IN('ABIERTO', 'PENDIENTE', 'ASIGNADO') "
 		+ "and datosUsuario.cod_usuario = i.cod_usuario",
 		resultSetMapping = "findInscripciones")
 @SqlResultSetMapping(name = "findInscripciones", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
@@ -71,9 +72,9 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 				+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
 				+ "and upper(e.estado) = 'ACTIVO' "
 				+ "and upper(dp.estado) = 'ACTIVO' "
-				+ "and upper(c.estado) = 'ACTIVO' "
+				+ "and upper(c.estado) <> 'ELIMINADO' "
 				+ "and upper(cc.estado) = 'ACTIVO' "
-				+ "and upper(i.estado) = 'ASIGNADO' "
+				+ "and upper(i.estado) IN('ABIERTO', 'PENDIENTE', 'ASIGNADO') "
 				+ "and i.cod_usuario = :codUsuario "
 				+ "union all "
 				+ "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, i.estado as estado "
@@ -84,9 +85,9 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 				+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
 				+ "and upper(e.estado) = 'ACTIVO' "
 				+ "and upper(dp.estado) = 'ACTIVO' "
-				+ "and upper(c.estado) = 'ACTIVO' "
+				+ "and upper(c.estado) <> 'ELIMINADO' "
 				+ "and upper(cc.estado) = 'ACTIVO' "
-				+ "and upper(i.estado) = 'PENDIENTE'",
+				+ "and upper(i.estado) IN('ABIERTO', 'PENDIENTE', 'ASIGNADO')",
 		resultSetMapping = "findInscripcionesByUsuario")
 @SqlResultSetMapping(name = "findInscripcionesByUsuario", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
 		@ColumnResult(name = "codInscripcion"),
@@ -105,7 +106,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
 		+ "and upper(e.estado) = 'ACTIVO' "
 		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(c.estado) <> 'ELIMINADO' "
 		+ "and upper(cc.estado) = 'ACTIVO' "
 		+ "and i.cod_inscripcion = :codInscripcion", 
 		resultSetMapping = "findInscripcion")
@@ -170,9 +171,9 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
 		+ "and upper(e.estado) = 'ACTIVO' "
 		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(c.estado) <> 'ELIMINADO' "
 		+ "and upper(cc.estado) = 'ACTIVO' "
-		+ "and upper(i.estado) = 'VALIDO' "
+		+ "and upper(i.estado) <> 'ELIMINADO' "
 		+ "and i.cod_curso_especializacion = :codCurso ", 
 		resultSetMapping = "findInscripcionValidaPorCurso")
 @SqlResultSetMapping(name = "findInscripcionValidaPorCurso", classes = @ConstructorResult(targetClass = InscritosEspecializacion.class, columns = {
@@ -204,9 +205,6 @@ public class InscripcionEsp {
 
 	@Column(name = "cod_usuario")
 	private Long codUsuario;
-
-	@Column(name = "cod_datos_personales")
-	private Long codDatosPersonales;
 
 	@OneToMany(mappedBy = "codInscripcion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InscripcionDocumento> documentos = new ArrayList<>();

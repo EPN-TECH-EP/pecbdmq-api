@@ -46,11 +46,9 @@ public class CursoInstructor {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaActual;
 
-	@NotBlank(message = "El atributo 'estado' es obligatorio")
 	@Column(name = "estado")
 	private String estado;
 
-	@NotBlank(message = "El atributo 'descripcion' es obligatorio")
 	@Column(name = "descripcion")
 	private String descripcion;
 }
