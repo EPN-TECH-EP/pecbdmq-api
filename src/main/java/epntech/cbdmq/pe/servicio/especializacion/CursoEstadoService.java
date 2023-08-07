@@ -8,6 +8,7 @@ import epntech.cbdmq.pe.dominio.admin.ModuloEstados;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoEstado;
 import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.repository.query.Param;
 
 public interface CursoEstadoService {
@@ -25,6 +26,6 @@ public interface CursoEstadoService {
 	
 	void delete(Long codCursoEstado) throws DataException;
 	String getEstadoByCurso(Long codCurso);
-	public String updateState(Integer id, Integer idCursoEstado);
+	public String updateState(HttpServletResponse response,Integer id, Integer idCursoEstado);
 	public Integer updateNextState(Integer id);
 }

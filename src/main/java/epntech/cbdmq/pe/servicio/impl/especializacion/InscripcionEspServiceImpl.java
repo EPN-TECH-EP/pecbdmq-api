@@ -1,39 +1,52 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_ESPECIALIZACION_INSCRIPCION;
+import static epntech.cbdmq.pe.constante.ArchivoConst.*;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_ANTIGUEDADES;
 import static epntech.cbdmq.pe.constante.EmailConst.*;
 import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
+import static epntech.cbdmq.pe.constante.EstadosConst.PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
+import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
+import static epntech.cbdmq.pe.constante.ResponseMessage.EXITO_GENERAR_ARCHIVO;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.dominio.util.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.SubTipoPruebaRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.*;
+import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
+import epntech.cbdmq.pe.util.ExporterPdf;
 import epntech.cbdmq.pe.util.Utilitarios;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
@@ -99,6 +112,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     private CargoService cargoSvc;
     @Autowired
     private GradoService gradoSvc;
+    @Autowired
+    private CursoDocumentoService cursoDocumentoSvc;
 
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
@@ -306,7 +321,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return inscripcionEspRepository.getInscripcionByCurso(codCurso);
     }
 
-	@Override
+    @Override
+    public Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException {
+        return inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, Estado);
+    }
+
+    @Override
 	public List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
 		validarRequisitosCursoEspecializacion(validaRequisitos);
 		try {
@@ -379,7 +399,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
     }
 
-	@Override
+    @Override
+    public List<InscripcionEsp> getAll2() {
+        return inscripcionEspRepository.findAll();
+    }
+
+    @Override
     @Async
 	public void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba) {
 		Curso curso = cursoRepository.findById(codCursoEspecializacion)
@@ -651,6 +676,79 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return datoPersonalEstudianteDto;
     }
 
+    @Override
+    public void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException {
+        String[] HEADERs = { "Codigo", "Cedula", "Correo" };
+        try {
+            ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath, HEADERs);
+
+            cursoDocumentoSvc.generaDocumento(filePath, nombre,codCurso);
+
+        } catch (IOException ex) {
+            System.out.println("error: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void generarPDF(HttpServletResponse response, String filePath, String nombre, Long codCurso, String estado) throws DocumentException, IOException, DataException {
+        response.setContentType("application/pdf");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Cuerpo-Bomberos";
+        String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+
+        response.addHeader(cabecera, valor);
+
+        ExporterPdf exporter = new ExporterPdf();
+        String[] columnas = { "Codigo", "Cedula", "Nombre"};
+        float[] widths = new float[] { 2f, 3f, 6f};
+
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        exporter.exportar(response, columnas, obtenerDatos(codCurso,estado), widths, filePath);
+
+        cursoDocumentoSvc.generaDocumento(filePath, nombre,codCurso);
+    }
+
+    @Override
+    public Boolean generarDocListadoGeneral(HttpServletResponse response,Long codCurso, String estado) {
+        try {
+
+            String nombre= LISTADOSESPECIALIZACION;
+            String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/" + nombre;
+
+            this.generarExcel(ruta + ".xlsx", nombre + ".xlsx", codCurso, estado);
+            this.generarPDF(response, ruta + ".pdf", nombre + ".pdf", codCurso, estado);
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("error: " + e.getMessage());
+        } catch (DataException e) {
+            throw new RuntimeException(e);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+    @Override
+    public Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso) {
+        return this.generarDocListadoGeneral(response, codCurso, INSCRIPCION);
+    }
+
+    @Override
+    public Boolean generarDocListadoValidacion(HttpServletResponse response, Long codCurso) {
+        return this.generarDocListadoGeneral(response, codCurso, VALIDACION);
+    }
+
+    @Override
+    public Boolean generarDocListadoPruebas(HttpServletResponse response, Long codCurso) {
+        return this.generarDocListadoGeneral(response, codCurso, PRUEBAS);
+    }
+
+
     private DatoPersonal createDatoPersonalFromFuncionario(FuncionarioApiDto funcionario) {
         DatoPersonal newDatoPersonal = new DatoPersonal();
         newDatoPersonal.setApellido(funcionario.getApellidos());
@@ -729,6 +827,26 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         nombreApellidos[0] = apellidosBuilder.toString();
         nombreApellidos[1] = nombresBuilder.toString();
         return nombreApellidos;
+    }
+    public ArrayList<ArrayList<String>> obtenerDatos(Long codCurso, String estado) {
+        Set<InscripcionDatosEspecializacion> datos = new HashSet<>();
+
+        datos = (Set<InscripcionDatosEspecializacion>) inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, estado);
+
+        return entityToArrayListFormacion(datos);
+    }
+    public static String[] entityToStringArrayFormacion(InscripcionDatosEspecializacion entity) {
+        return new String[] { entity.getCodInscripcion().toString(), entity.getCedula(),
+                entity.getCorreoUsuario() };
+    }
+
+    public static ArrayList<ArrayList<String>> entityToArrayListFormacion(Set<InscripcionDatosEspecializacion> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+        for (InscripcionDatosEspecializacion dato : datos) {
+
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayFormacion(dato))));
+        }
+        return arrayMulti;
     }
 
 

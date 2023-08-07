@@ -6,6 +6,7 @@ import java.util.List;
 
 import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,10 +65,10 @@ public class CursoEstadoResource {
         return response(HttpStatus.OK, result);
     }
     @GetMapping("/actualizarEstado/{idCurso}/{idCursoEstado}")
-    public ResponseEntity<HttpResponse> nextState(
+    public ResponseEntity<HttpResponse> nextState(HttpServletResponse response,
                                                   @PathVariable("idCurso") Integer idCurso,
                                                   @PathVariable("idCursoEstado") Integer idCursoEstado) {
-        String result = cursoEstadoServiceImpl.updateState(idCurso,idCursoEstado);
+        String result = cursoEstadoServiceImpl.updateState(response,idCurso,idCursoEstado);
 
         return response(HttpStatus.OK, result);
     }

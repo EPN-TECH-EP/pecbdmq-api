@@ -134,7 +134,7 @@ public class ExporterPdf {
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
 		String fechaActual = dateFormatter.format(new Date());
 
-		Paragraph titulo = new Paragraph("Resultados prueba generado el: "+ fechaActual, fuente);
+		Paragraph titulo = new Paragraph("Resultados generado el: "+ fechaActual, fuente);
 		titulo.setAlignment(Paragraph.ALIGN_CENTER);
 		documento.add(titulo);
 

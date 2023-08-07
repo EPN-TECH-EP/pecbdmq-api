@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
+import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Optional;
 import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.dominio.util.ModuloEstadosData;
 import epntech.cbdmq.pe.repositorio.admin.EstadosRepository;
+import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,8 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     private CursoEstadoRepository cursoEstadoRepository;
     @Autowired
     private EstadosRepository estadoRepository;
+    @Autowired
+    private InscripcionEspService inscripcionEspSvc;
 
     @Override
     public CursoEstado save(CursoEstado cursoEstado) throws DataException {
@@ -121,8 +126,22 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     }
 
     @Override
-    public String updateState(Integer idCurso, Integer idCursoEstado) {
-        return cursoEstadoRepository.updateState(idCurso, idCursoEstado);
+    public String updateState(HttpServletResponse response,Integer idCurso, Integer idCursoEstado) {
+        String mensaje=cursoEstadoRepository.updateState(idCurso, idCursoEstado);
+        if(mensaje.equals(INSCRIPCION)){
+
+            inscripcionEspSvc.generarDocListadoInscripcion(response, Long.valueOf(idCurso));
+
+
+        } else if (mensaje.equals(VALIDACION)) {
+            inscripcionEspSvc.generarDocListadoValidacion(response, Long.valueOf(idCurso));
+
+        }
+        else if (mensaje.equals(VALIDACION_PRUEBAS)){
+            inscripcionEspSvc.generarDocListadoPruebas(response, Long.valueOf(idCurso));
+        }
+
+        return mensaje;
     }
 
     @Override

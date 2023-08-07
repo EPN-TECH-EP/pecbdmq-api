@@ -3,11 +3,16 @@ package epntech.cbdmq.pe.resource.especializacion;
 import static epntech.cbdmq.pe.constante.ArchivoConst.NO_ADJUNTO;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
+import static epntech.cbdmq.pe.constante.ResponseMessage.EXITO_GENERAR_ARCHIVO;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
+import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import jakarta.servlet.http.HttpServletResponse;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -110,6 +115,10 @@ public class InscripcionEspResource {
 	public List<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
 		return inscripcionEspServiceImpl.getByCurso(codigo);
 	}
+	@GetMapping("/porCurso&Estado")
+	public Set<InscripcionDatosEspecializacion> obtenerPorCursoEstado(@RequestParam("id") long codigo, @RequestParam("estado") String estado) throws DataException {
+		return inscripcionEspServiceImpl.getByCursoEstado(codigo,estado);
+	}
 	
 	@PostMapping("/validacionRequisitos")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -172,4 +181,15 @@ public class InscripcionEspResource {
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
+	@GetMapping("/generarInscritos/{codCurso}")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response,@PathVariable("codCurso" )Long codCurso) throws DataException, DocumentException {
+
+		if(inscripcionEspServiceImpl.generarDocListadoInscripcion(response,codCurso))
+			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+		else
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+
+	}
+
 }

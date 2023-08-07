@@ -54,16 +54,17 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and datosUsuario.cod_usuario = i.cod_usuario",
 		resultSetMapping = "findInscripciones")
 @SqlResultSetMapping(name = "findInscripciones", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
-		@ColumnResult(name = "codInscripcion"), 
-		@ColumnResult(name = "cedula"), 
-		@ColumnResult(name = "nombre"),
-		@ColumnResult(name = "apellido"), 
-		@ColumnResult(name = "nombreCatalogoCurso"),
-		@ColumnResult(name = "codUsuario"),
-		@ColumnResult(name = "nombreUsuario"),
-		@ColumnResult(name = "correoUsuario"), }))
+        @ColumnResult(name = "codInscripcion"),
+        @ColumnResult(name = "cedula"),
+        @ColumnResult(name = "nombre"),
+        @ColumnResult(name = "apellido"),
+        @ColumnResult(name = "nombreCatalogoCurso"),
+        @ColumnResult(name = "codUsuario"),
+        @ColumnResult(name = "nombreUsuario"),
+        @ColumnResult(name = "correoUsuario"),}))
 
 @NamedNativeQuery(name = "InscripcionEsp.findInscripcionesByUsuario",
+
 		query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, i.estado as estado "
 				+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
 				+ "where i.cod_estudiante = e.cod_estudiante "
@@ -89,27 +90,28 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 				+ "and upper(cc.estado) = 'ACTIVO' "
 				+ "and upper(i.estado) IN('ABIERTO', 'PENDIENTE', 'ASIGNADO')",
 		resultSetMapping = "findInscripcionesByUsuario")
-@SqlResultSetMapping(name = "findInscripcionesByUsuario", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
-		@ColumnResult(name = "codInscripcion"),
-		@ColumnResult(name = "cedula"),
-		@ColumnResult(name = "nombre"),
-		@ColumnResult(name = "apellido"),
-		@ColumnResult(name = "nombreCatalogoCurso"),
-		@ColumnResult(name = "estado"), }))
 
-@NamedNativeQuery(name = "InscripcionEsp.findInscripcion", 
-query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso "
-		+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
-		+ "where i.cod_estudiante = e.cod_estudiante " 
-		+ "and e.cod_datos_personales = dp.cod_datos_personales "
-		+ "and i.cod_curso_especializacion = c.cod_curso_especializacion "
-		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
-		+ "and upper(e.estado) = 'ACTIVO' "
-		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) <> 'ELIMINADO' "
-		+ "and upper(cc.estado) = 'ACTIVO' "
-		+ "and i.cod_inscripcion = :codInscripcion", 
-		resultSetMapping = "findInscripcion")
+@SqlResultSetMapping(name = "findInscripcionesByUsuario", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
+        @ColumnResult(name = "codInscripcion"),
+        @ColumnResult(name = "cedula"),
+        @ColumnResult(name = "nombre"),
+        @ColumnResult(name = "apellido"),
+        @ColumnResult(name = "nombreCatalogoCurso"),
+        @ColumnResult(name = "estado"),}))
+
+@NamedNativeQuery(name = "InscripcionEsp.findInscripcion",
+        query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso "
+                + "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
+                + "where i.cod_estudiante = e.cod_estudiante "
+                + "and e.cod_datos_personales = dp.cod_datos_personales "
+                + "and i.cod_curso_especializacion = c.cod_curso_especializacion "
+                + "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
+                + "and upper(e.estado) = 'ACTIVO' "
+                + "and upper(dp.estado) = 'ACTIVO' "
+                + "and upper(c.estado) <> 'ELIMINADO' "
+                + "and upper(cc.estado) = 'ACTIVO' "
+                + "and i.cod_inscripcion = :codInscripcion",
+        resultSetMapping = "findInscripcion")
 @SqlResultSetMapping(name = "findInscripcion", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
 		@ColumnResult(name = "codInscripcion"), 
 		@ColumnResult(name = "cedula"), 
@@ -131,30 +133,31 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and upper(cc.estado) = 'ACTIVO' "
 		+ "and i.cod_inscripcion = :codInscripcion", 
 		resultSetMapping = "findInscripcionDatos")
-@SqlResultSetMapping(name = "findInscripcionDatos", classes = @ConstructorResult(targetClass = InscripcionEstudianteDatosEspecializacion.class, columns = {
-		@ColumnResult(name = "codInscripcion"), 
-		@ColumnResult(name = "cedula"), 
-		@ColumnResult(name = "nombre"),
-		@ColumnResult(name = "apellido"),
-		@ColumnResult(name = "correoPersonal"),
-		@ColumnResult(name = "nombreCatalogoCurso"), 
-		@ColumnResult(name = "fechaInicioCurso", type = LocalDate.class),
-		@ColumnResult(name = "fechaFinCurso", type = LocalDate.class),
-		@ColumnResult(name = "fechaInscripcion", type = LocalDate.class),}))
 
-@NamedNativeQuery(name = "InscripcionEsp.findInscripcionPorCurso", 
-query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso "
-		+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
-		+ "where i.cod_estudiante = e.cod_estudiante " 
-		+ "and e.cod_datos_personales = dp.cod_datos_personales "
-		+ "and i.cod_curso_especializacion = c.cod_curso_especializacion "
-		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
-		+ "and upper(e.estado) = 'ACTIVO' "
-		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) <> 'ELIMINADO' "
-		+ "and upper(cc.estado) = 'ACTIVO' "
-		+ "and i.cod_curso_especializacion = :codCurso", 
-		resultSetMapping = "findInscripcionPorCurso")
+@SqlResultSetMapping(name = "findInscripcionDatos", classes = @ConstructorResult(targetClass = InscripcionEstudianteDatosEspecializacion.class, columns = {
+        @ColumnResult(name = "codInscripcion"),
+        @ColumnResult(name = "cedula"),
+        @ColumnResult(name = "nombre"),
+        @ColumnResult(name = "apellido"),
+        @ColumnResult(name = "correoPersonal"),
+        @ColumnResult(name = "nombreCatalogoCurso"),
+        @ColumnResult(name = "fechaInicioCurso", type = LocalDate.class),
+        @ColumnResult(name = "fechaFinCurso", type = LocalDate.class),
+        @ColumnResult(name = "fechaInscripcion", type = LocalDate.class),}))
+
+@NamedNativeQuery(name = "InscripcionEsp.findInscripcionPorCurso",
+        query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso "
+                + "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
+                + "where i.cod_estudiante = e.cod_estudiante "
+                + "and e.cod_datos_personales = dp.cod_datos_personales "
+                + "and i.cod_curso_especializacion = c.cod_curso_especializacion "
+                + "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
+                + "and upper(e.estado) = 'ACTIVO' "
+                + "and upper(dp.estado) = 'ACTIVO' "
+                + "and upper(c.estado) <> 'ELIMINADO' "
+                + "and upper(cc.estado) = 'ACTIVO' "
+                + "and i.cod_curso_especializacion = :codCurso",
+        resultSetMapping = "findInscripcionPorCurso")
 @SqlResultSetMapping(name = "findInscripcionPorCurso", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
 		@ColumnResult(name = "codInscripcion"), 
 		@ColumnResult(name = "cedula"), 
@@ -184,31 +187,64 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		@ColumnResult(name = "nombreCatalogoCurso"), 
 		@ColumnResult(name = "correoPersonal"),
 		@ColumnResult(name = "codigoUnicoEstudiante"),
+
+
+@NamedNativeQuery(name = "InscripcionEsp.getListasByEstado",
+        query = "SELECT \n" +
+                "    ei.cod_inscripcion, \n" +
+                "    gdp.cedula, \n" +
+                "    gdp.nombre, \n" +
+                "    gdp.apellido, \n" +
+                "    ec.descripcion as catalogoCurso, \n" +
+                "    ei.estado, \n" +
+                "    gu.nombre_usuario, \n" +
+                "    gdp.correo_personal , \n" +
+                "    gu.cod_usuario \n" +
+                "FROM cbdmq.esp_inscripcion ei \n" +
+                "LEFT JOIN cbdmq.gen_estudiante ge ON ge.cod_estudiante = ei.cod_estudiante \n" +
+                "LEFT JOIN cbdmq.gen_dato_personal gdp ON gdp.cod_datos_personales = ge.cod_datos_personales \n" +
+                "LEFT JOIN cbdmq.gen_usuario gu ON gu.cod_datos_personales = gdp.cod_datos_personales\n" +
+                "left join cbdmq.esp_curso ec on ec.cod_curso_especializacion = ei.cod_curso_especializacion \n" +
+                "where ei.estado =:estado\n" +
+                "and ec.cod_curso_especializacion = :codCurso",
+        resultSetMapping = "findInscripcionPorEstadoCurso")
+@SqlResultSetMapping(name = "findInscripcionPorEstadoCurso", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
+        @ColumnResult(name = "cod_inscripcion",type = Long.class),
+        @ColumnResult(name = "cedula"),
+        @ColumnResult(name = "nombre"),
+        @ColumnResult(name = "apellido"),
+        @ColumnResult(name = "catalogoCurso"),
+        @ColumnResult(name = "estado"),
+        @ColumnResult(name = "nombre_usuario"),
+        @ColumnResult(name = "correo_personal"),
+        @ColumnResult(name = "cod_usuario",type = Long.class),
+
 }))
 
 public class InscripcionEsp {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "cod_inscripcion")
-	private Long codInscripcion;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cod_inscripcion")
+    private Long codInscripcion;
 
-	@Column(name = "cod_estudiante")
-	private Long codEstudiante;
+    @Column(name = "cod_estudiante")
+    private Long codEstudiante;
 
-	@Column(name = "cod_curso_especializacion")
-	private Long codCursoEspecializacion;
-	
-	@Column(name = "fecha_inscripcion")
-	private LocalDate fechaInscripcion;
-	
-	@Column(name = "estado")
-	private String estado;
+    @Column(name = "cod_curso_especializacion")
+    private Long codCursoEspecializacion;
 
-	@Column(name = "cod_usuario")
-	private Long codUsuario;
+        @Column(name = "fecha_inscripcion")
+    private LocalDate fechaInscripcion;
 
-	@OneToMany(mappedBy = "codInscripcion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "estado")
+    private String estado;
+
+    @Column(name = "cod_usuario")
+    private Long codUsuario;
+
+
+    @OneToMany(mappedBy = "codInscripcion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<InscripcionDocumento> documentos = new ArrayList<>();
 
 }
