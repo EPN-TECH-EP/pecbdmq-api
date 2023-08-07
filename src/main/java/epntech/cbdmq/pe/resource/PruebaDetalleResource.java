@@ -86,4 +86,11 @@ public class PruebaDetalleResource {
 	public Boolean reordenar(@RequestBody List<PruebaDetalleOrden> listaOrden) throws DataException {
 		return this.objService.reordenar(listaOrden);
 	}
+
+	// especialización
+	@GetMapping("/listarConDatos/{codCurso}")
+	@Operation(summary = "Lista de todas las pruebas configuradas para el curso con id")
+	public List<PruebaDetalleDatos> listarTodosConDatosSubTipoPrueba(@PathVariable("codCurso") Integer codCurso) {
+		return this.objService.listarTodosConDatosSubTipoPrueba(codCurso);
+	}
 }
