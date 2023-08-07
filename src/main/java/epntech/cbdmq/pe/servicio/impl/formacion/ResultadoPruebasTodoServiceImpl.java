@@ -79,7 +79,7 @@ public class ResultadoPruebasTodoServiceImpl implements ResultadoPruebasTodoServ
                 entity.getIdPostulante() != null ? entity.getIdPostulante().toString() : "",
                 // selecciona el valor a reportar
                 entity.getCumplePrueba() != null ? (entity.getCumplePrueba() ? "CUMPLE" : "NO CUMPLE") :
-                        (entity.getResultado() != null || entity.getResultado() != 0) ? entity.getResultado().toString() :
+                        (entity.getResultado() != null && entity.getResultado() != 0) ? entity.getResultado().toString() :
                                 entity.getResultadoTiempo() != null ? entity.getResultadoTiempo().toString() :
                                         entity.getNotaPromedioFinal() != null ? entity.getNotaPromedioFinal().toString() : "Error!",
         };
@@ -101,5 +101,38 @@ public class ResultadoPruebasTodoServiceImpl implements ResultadoPruebasTodoServ
 
     }
 
+    ///////////////////////////////////////////////
+    // métodos para obtener resultados por curso
+    ///////////////////////////////////////////////
+
+    // lista de todos los registros con paginación CURSO
+    @Override
+    public Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba, Integer codCurso) {
+        return resultadoPruebasTodoRepository.getResultadosCurso(pageable, prueba, codCurso);
+    }
+
+    @Override
+    public ByteArrayOutputStream generarExcelCurso(Integer prueba, Integer codCurso) throws IOException {
+        // obtener datos transformados
+        ArrayList<ArrayList<String>> datos = this.obtenerDatosTransformados(prueba, codCurso);
+
+        // generar excel
+        return ExcelHelper.generarExcelFOS(datos, "ResultadosRegistrados.xlsx", this.getHeaders());
+
+    }
+
+    @Override
+    public ArrayList<ArrayList<String>> obtenerDatosTransformados(Integer prueba, Integer codCurso) {
+
+        // lista de resultados por prueba
+        List<ResultadosPruebasDatos> resultados = this.getResultados(prueba, codCurso);
+
+        // lista de resultados transformados
+        return this.entityToArrayList(resultados);
+    }
+
+    private List<ResultadosPruebasDatos> getResultados(Integer prueba, Integer codCurso) {
+        return resultadoPruebasTodoRepository.getResultados(prueba, codCurso);
+    }
 
 }

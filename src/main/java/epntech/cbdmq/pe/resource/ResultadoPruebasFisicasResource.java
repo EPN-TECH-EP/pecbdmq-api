@@ -48,14 +48,14 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/pruebasFisicas")
 public class ResultadoPruebasFisicasResource {
 
-	@Autowired
-	private PostulantesValidosServiceImpl objService;
-	@Autowired
-	private ResultadoPruebasFisicasServiceImpl resultadoPruebasServiceImpl;
-	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
-	@Value("${pecb.archivos.ruta}")
-	private String ARCHIVOS_RUTA;
+    @Autowired
+    private PostulantesValidosServiceImpl objService;
+    @Autowired
+    private ResultadoPruebasFisicasServiceImpl resultadoPruebasServiceImpl;
+    @Autowired
+    private PeriodoAcademicoRepository periodoAcademicoRepository;
+    @Value("${pecb.archivos.ruta}")
+    private String ARCHIVOS_RUTA;
 
 //	@GetMapping("/postulantesValidos")
 //	public List<PostulantesValidos> listar() {
@@ -81,71 +81,73 @@ public class ResultadoPruebasFisicasResource {
 				}).orElseGet(() -> ResponseEntity.notFound().build());
 	}*/
 
-	@PostMapping("/registrar")
-	public ResponseEntity<?> registrar(@RequestBody ResultadoPruebasFisicas obj) {
+    @PostMapping("/registrar")
+    public ResponseEntity<?> registrar(@RequestBody ResultadoPruebasFisicas obj) {
 
-		return new ResponseEntity<>(resultadoPruebasServiceImpl.save(obj), HttpStatus.OK);
+        return new ResponseEntity<>(resultadoPruebasServiceImpl.save(obj), HttpStatus.OK);
 
-	}
+    }
 
-	@PostMapping("/cargarPlantilla")
-	public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo,@RequestParam("codPruebaDetalle") Integer codPruebaDetalle,@RequestParam(required = false) Integer codFuncionario,@RequestParam("tipoResultado") String tipoResultado){
+    @PostMapping("/cargarPlantilla")
+    public ResponseEntity<?> uploadFile(@RequestParam("archivo") MultipartFile archivo, @RequestParam("codPruebaDetalle") Integer codPruebaDetalle, @RequestParam(required = false) Integer codFuncionario, @RequestParam("tipoResultado") String tipoResultado) {
 
-		if (ExcelHelper.hasExcelFormat(archivo)) {
-			try {
-				resultadoPruebasServiceImpl.uploadFile(archivo,codPruebaDetalle,codFuncionario,tipoResultado);
+        if (ExcelHelper.hasExcelFormat(archivo)) {
+            try {
+                resultadoPruebasServiceImpl.uploadFile(archivo, codPruebaDetalle, codFuncionario, tipoResultado);
 
-				return response(HttpStatus.OK, CARGA_EXITOSA);
-			} catch (Exception e) {
-				return response(HttpStatus.EXPECTATION_FAILED, e.getMessage());
-			}
-		}
+                return response(HttpStatus.OK, CARGA_EXITOSA);
+            } catch (Exception e) {
+                return response(HttpStatus.EXPECTATION_FAILED, e.getMessage());
+            }
+        }
 
-		return response(HttpStatus.BAD_REQUEST, CARGA_ARCHIVO_EXCEL);
-	}
+        return response(HttpStatus.BAD_REQUEST, CARGA_ARCHIVO_EXCEL);
+    }
 
-	@GetMapping("/descargar")
-	public ResponseEntity<?> downloadFile() {
-		String filename = "datos.xlsx";
-		InputStreamResource file = new InputStreamResource(resultadoPruebasServiceImpl.downloadFile());
+    @GetMapping("/descargar")
+    public ResponseEntity<?> downloadFile() {
+        String filename = "datos.xlsx";
+        InputStreamResource file = new InputStreamResource(resultadoPruebasServiceImpl.downloadFile());
 
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file);
-	}
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file);
+    }
 
-	@PostMapping("/generarExcel")
-	public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DataException {
-		try {
+    @PostMapping("/generarExcel")
+    public ResponseEntity<?> generarExcel(@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba) throws DataException {
+        try {
 
 
-			resultadoPruebasServiceImpl.generarExcel(nombre, subTipoPrueba);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("error: " + e.getMessage());
-			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
-		}
-		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
-	}
+            resultadoPruebasServiceImpl.generarExcel(nombre, subTipoPrueba);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("error: " + e.getMessage());
+            return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+        }
+        return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+    }
 
-	@PostMapping("/generarPDF")
-	public ResponseEntity<?> generarPDF(HttpServletResponse response ,@RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba)
-			throws DocumentException, IOException, DataException {
+    @PostMapping("/generarPDF")
+    public ResponseEntity<?> generarPDF(HttpServletResponse response, @RequestParam("nombre") String nombre, @RequestParam("subTipoPrueba") Integer subTipoPrueba)
+            throws DocumentException, IOException, DataException {
 
-		try {
+        try {
 
-			resultadoPruebasServiceImpl.generarPDF(response, nombre, subTipoPrueba);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("error: " + e.getMessage());
-			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
-		}
-		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
-	}
+            resultadoPruebasServiceImpl.generarPDF(response, nombre, subTipoPrueba);
 
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-		return new ResponseEntity<>(
-				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
-				httpStatus);
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("error: " + e.getMessage());
+            return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+        }
+        return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+    }
+
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(
+                new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+                httpStatus);
+    }
+
+
 }

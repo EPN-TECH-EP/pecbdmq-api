@@ -20,4 +20,10 @@ public interface ResultadoPruebasTodoRepository extends JpaRepository<Resultados
     @Query(value = "select * from cbdmq.get_all_resultados_prueba(:prueba)", nativeQuery=true)
     List<ResultadosPruebasDatos> getResultados(Integer prueba);
 
+    @Query(value = "select * from cbdmq.get_all_resultados_prueba_curso(:prueba, :codCurso)", nativeQuery=true)
+    Page<ResultadosPruebasDatos> getResultadosCurso(Pageable pageable, Integer prueba, Integer codCurso);
+
+    @Query(value = "select * from cbdmq.get_all_resultados_prueba_curso(:prueba, :codCurso)", nativeQuery=true)
+    List<ResultadosPruebasDatos> getResultados(Integer prueba, Integer codCurso);
+
 }

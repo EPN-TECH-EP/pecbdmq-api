@@ -390,7 +390,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 				.orElseThrow(() -> new BusinessException(NO_SUBTIPO_PRUEBA));
 
 		PruebaDetalle pruebaDetalle = pruebaDetalleRepository
-				.findByCodCursoEspecializacionAndCodSubtipoPrueba(curso.getCodCursoEspecializacion(), subTipoPrueba.getCodSubtipoPrueba().longValue())
+				.findByCodCursoEspecializacionAndCodSubtipoPrueba(curso.getCodCursoEspecializacion().intValue(), subTipoPrueba.getCodSubtipoPrueba())
 				.orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
 
 		List<InscritosEspecializacion> listaInscritos;
@@ -422,9 +422,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		CursoDatos cursoDatos = cursoEntityRepository.getCursoDatos(codCursoEspecializacion)
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		List<InscritosValidos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
+		List<ResultadosPruebasDatos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
 
-		for (InscritosValidos inscritosValidos : listaInscritosValidos) {
+		for (ResultadosPruebasDatos inscritosValidos : listaInscritosValidos) {
 			Parametro parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.resultado.prueba")
 					.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
 

@@ -55,7 +55,7 @@ public class ResultadoPruebaTodoResource {
 	public ResponseEntity<?> generar(HttpServletResponse response, @RequestParam("subTipoPrueba") Integer subTipoPrueba)
 			throws DocumentException, DataException {
 		try {
-			objService.generarArchivoAprobados(response, subTipoPrueba);
+			objService.generarArchivoAprobados(response, subTipoPrueba, null);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("error: " + e.getMessage());
@@ -82,6 +82,49 @@ public class ResultadoPruebaTodoResource {
 	}
 
 
+	//////////////////////
+	// cursos
+	//////////////////////
+
+	// genera los documentos pdf y excel de los aprobados por prueba de formación
+	@PostMapping("/generarParaCurso")
+	public ResponseEntity<?> generar(HttpServletResponse response,
+									 @RequestParam("subTipoPrueba") Integer subTipoPrueba,
+									 @RequestParam("codCurso") Integer codCurso)
+			throws DocumentException, DataException {
+		try {
+			objService.generarArchivoAprobados(response, subTipoPrueba, codCurso);
+		} catch (IOException e) {
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+	}
+
+
+	@GetMapping("/resultadosPaginadoCurso")
+	public ResponseEntity<?> getResultadosCurso(Pageable pageable, @RequestParam("subTipoPrueba") Integer subTipoPrueba, @RequestParam("codCurso") Integer codCurso) {
+
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(resultadoPruebasTodoServiceImpl.getResultados(pageable, subTipoPrueba, codCurso));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
+	}
+
+	@GetMapping("descargarExcelCurso")
+	public ResponseEntity<?> descargarExcelCurso(@RequestParam Integer id, @RequestParam String nombre, @RequestParam Integer codCurso, HttpServletRequest request) throws IOException {
+
+
+		ByteArrayOutputStream fos = this.resultadoPruebasTodoServiceImpl.generarExcelCurso(id, codCurso);
+
+		String contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+		// Devolver una respuesta con el archivo adjunto y la URL de descarga
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nombre + ".xlsx\"")
+				.contentType(MediaType.parseMediaType(contentType))
+				.body(fos.toByteArray());
+	}
 
 	// generaPdf de resultados por prueba
 
