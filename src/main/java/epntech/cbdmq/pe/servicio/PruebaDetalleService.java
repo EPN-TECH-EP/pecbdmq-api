@@ -23,7 +23,10 @@ public interface PruebaDetalleService {
 	void delete(int id) throws DataException;
 
 	public List<PruebaDetalleDatos> listarTodosConDatosSubTipoPrueba();
-	public String getTipoResultado(int codSubtipoPrueba);
+
+    List<PruebaDetalleDatos> listarTodosConDatosSubTipoPrueba(Integer codCurso);
+
+    public String getTipoResultado(int codSubtipoPrueba);
 
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException;
 

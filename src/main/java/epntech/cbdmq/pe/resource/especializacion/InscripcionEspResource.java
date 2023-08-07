@@ -7,6 +7,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import java.io.IOException;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -160,12 +161,12 @@ public class InscripcionEspResource {
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
-	@PatchMapping("/colocarCorreo/{cedula}/{correo}")
+	@PatchMapping("/colocarCorreo")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> getData(@PathVariable("cedula") String cedula,@PathVariable("correo") String correo) throws Exception{
+	public ResponseEntity<?> getData(@RequestBody DatoPersonal datoPersonal) throws Exception{
 
 		try {
-			return new ResponseEntity<>(inscripcionEspServiceImpl.colocarCorreoCiudadano(correo,cedula), HttpStatus.OK);
+			return new ResponseEntity<>(inscripcionEspServiceImpl.colocarCorreoCiudadano(datoPersonal), HttpStatus.OK);
 		}catch(Exception ex) {
 
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());

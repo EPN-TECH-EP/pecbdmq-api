@@ -13,7 +13,9 @@ import jakarta.mail.MessagingException;
 
 public interface ConvocatoriaCursoService {
 
-	ConvocatoriaCurso save(ConvocatoriaCurso convocatoriaCurso, List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion;
+	public ConvocatoriaCurso save(ConvocatoriaCurso convocatoriaCurso
+								  //, List<MultipartFile> archivos
+	) throws DataException, IOException, ArchivoMuyGrandeExcepcion;
 	
 	List<ConvocatoriaCurso> listAll();
 	
@@ -27,7 +29,7 @@ public interface ConvocatoriaCursoService {
 	
 	void deleteDocumento(Long codConvocatoria, Long codDocumento) throws DataException;
 	
-	void notificar(Long codConvocatoria) throws MessagingException, DataException;
+	void notificar(Long codConvocatoria) throws MessagingException, DataException, IOException;
 	
 	Boolean validaConvocatoriaCursoActiva(Long codConvocatoria);
 }

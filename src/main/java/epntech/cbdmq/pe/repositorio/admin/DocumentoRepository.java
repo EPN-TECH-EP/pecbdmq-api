@@ -24,5 +24,11 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 			+ "and UPPER(d.estado) = 'ACTIVO';", nativeQuery=true)
 	Set<Documento> getDocumentosPruebaDetalle(@Param("codPruebaDetalle") Integer codPruebaDetalle);
 	List<Documento> findAllByNombre(String nombre);
+	@Query(value="select d.* \n" +
+			"from cbdmq.esp_curso_documento ec \n" +
+			"left join cbdmq.gen_documento d on ec.cod_documento = d.cod_documento \n" +
+			"where ec.cod_curso_especializacion=:codCurso\n" +
+			"and UPPER(d.estado) = 'ACTIVO'", nativeQuery=true)
+	Set<Documento> getDocumentosEspecializacion(@Param("codCurso") Integer codCurso);
 
 }
