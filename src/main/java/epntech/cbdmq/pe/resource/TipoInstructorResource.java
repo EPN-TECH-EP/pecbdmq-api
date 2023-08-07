@@ -17,64 +17,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.TipoInstructor;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.TipoInstructorServiceImpl;
 
 
 @RestController
-@RequestMapping("/tipoinstructor")
+@RequestMapping("/tipoInstructor")
 public class TipoInstructorResource {
+	@Autowired
+	private TipoInstructorServiceImpl objServices;
 
-	
-	 @Autowired
-	    private TipoInstructorServiceImpl objServices;
-	 
-	 
-	 @PostMapping("/crear")
-	    @ResponseStatus(HttpStatus.CREATED)
-	    public ResponseEntity<?> guardar(@RequestBody TipoInstructor obj) throws DataException {
-		 obj.setNombretipoinstructor(obj.getNombretipoinstructor().toUpperCase());
-	    	return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
-	    }
+	@PostMapping("/crear")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> guardar(@RequestBody TipoInstructor obj) {
+		return new ResponseEntity<>(objServices.save(obj), HttpStatus.OK);
+	}
 
-	    @GetMapping("/listar")
-	    public List<TipoInstructor> listar() {
-	        return objServices.getAll();
-	    }
+	@GetMapping("/listar")
+	public List<TipoInstructor> listar() {
+		return objServices.getAll();
+	}
 
-	    @GetMapping("/{id}")
-	    public ResponseEntity<TipoInstructor> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
-	        return objServices.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	    }
+	@GetMapping("/{id}")
+	public ResponseEntity<TipoInstructor> obtenerDatosPorId(@PathVariable("id") Integer codigo) {
+		return new ResponseEntity<>(objServices.getById(codigo), HttpStatus.OK);
+	}
 
-	    @PutMapping("/{id}")
-	    public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoInstructor obj) throws DataException {
-	        return (ResponseEntity<TipoInstructor>) objServices.getById(codigo).map(datosGuardados -> {
-	            datosGuardados.setNombretipoinstructor(obj.getNombretipoinstructor().toUpperCase());
-	            datosGuardados.setEstado(obj.getEstado());
-	            TipoInstructor datosActualizados = null;
-				try {
-					datosActualizados = objServices.update(datosGuardados);
-				} catch (DataException e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-					return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-				}
-	            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-	        }).orElseGet(() -> ResponseEntity.notFound().build());
-	    }
+	@PutMapping("/{id}")
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody TipoInstructor obj) throws DataException {
+		obj.setCodigo(codigo);
+		return new ResponseEntity<>(objServices.update(obj), HttpStatus.OK);
+	}
 
-	    @DeleteMapping("/{id}")
-		public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") Integer codigo) {
-	    	objServices.delete(codigo);
-			return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-		}
-	    
-	    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-	        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-	                message), httpStatus);
-	    }
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> eliminarDatos(@PathVariable("id") Integer codigo) {
+		objServices.delete(codigo);
+		return ResponseEntity.ok(REGISTRO_ELIMINADO_EXITO);
+	}
 	
 }

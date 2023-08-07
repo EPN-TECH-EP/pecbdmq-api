@@ -4,20 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.TipoInstructor;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface TipoInstructorService {
 
-    TipoInstructor save(TipoInstructor obj) throws DataException;
+    TipoInstructor save(TipoInstructor obj);
 
     List<TipoInstructor> getAll();
 
-    Optional<TipoInstructor> getById(Integer codigo);
+    TipoInstructor getById(Integer codigo);
 
-    TipoInstructor update(TipoInstructor objActualizado) throws DataException;
+    TipoInstructor update(TipoInstructor objActualizado);
 
     void delete(Integer codigo);
-	
-	
-	
+
 }

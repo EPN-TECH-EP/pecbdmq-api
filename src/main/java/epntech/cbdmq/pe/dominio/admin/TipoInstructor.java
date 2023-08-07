@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -22,10 +23,11 @@ public class TipoInstructor {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "cod_tipo_instructor")
-	private Integer codTipoInstructor;
-	
+	private Integer codigo;
+
+	@NotBlank(message = "El atributo 'nombre' es obligatorio")
 	@Column(name = "nombre_tipo_instructor")	
-	private String nombretipoinstructor;
+	private String nombre;
 	
 	@Column(name = "estado")
 	private String estado;

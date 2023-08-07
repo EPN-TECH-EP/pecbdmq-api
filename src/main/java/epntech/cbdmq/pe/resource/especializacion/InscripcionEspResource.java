@@ -38,17 +38,16 @@ public class InscripcionEspResource {
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody InscripcionEsp inscripcionEsp) throws DataException {
+	public ResponseEntity<?> guardar(@RequestBody InscripcionEsp inscripcionEsp) {
 
 		return new ResponseEntity<>(inscripcionEspServiceImpl.save(inscripcionEsp), HttpStatus.OK);
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<InscripcionEsp> actualizarDatos(@RequestBody InscripcionEsp inscripcionEsp) throws DataException{
+	public ResponseEntity<InscripcionEsp> actualizarDatos(@RequestBody InscripcionEsp inscripcionEsp) {
 		
 		return new ResponseEntity<>(inscripcionEspServiceImpl.update(inscripcionEsp), HttpStatus.OK);
 	}
-	//TODO en native query colocar que sea abierto no solo activo
 
 	@GetMapping("/listar")
 	public List<InscripcionDatosEspecializacion> listar() {
@@ -67,15 +66,14 @@ public class InscripcionEspResource {
 		return inscripcionEspServiceImpl.getAllPaginado(pageable);
 	}
 
-	//TODO Problema similar al anterior, colocar que sea abierto no solo activo
 	@GetMapping("/{id}")
-	public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
+	public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) {
 		return inscripcionEspServiceImpl.getById(codigo).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) throws DataException {
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) {
 		inscripcionEspServiceImpl.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
