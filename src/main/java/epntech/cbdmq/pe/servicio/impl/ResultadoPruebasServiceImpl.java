@@ -8,13 +8,17 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
 
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.util.ResultadoPruebaFisicaUtil;
 import epntech.cbdmq.pe.dominio.util.ResultadoPruebasUtil;
+import epntech.cbdmq.pe.servicio.EstudianteService;
 import epntech.cbdmq.pe.servicio.PostulanteService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -48,285 +52,339 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class ResultadoPruebasServiceImpl implements ResultadoPruebasService {
 
-	@Autowired
-	private ResultadoPruebasRepository repo;
-	@Autowired
-	private PruebaDetalleRepository pruebaDetalleRepository;
-	@Autowired
-	private ResultadoPruebasTodoRepository repo1;
-	@Autowired
-	private DocumentoRepository documentoRepo;
-	@Autowired
-	private DocumentoPruebaRepository docPruebaRepo;
 
-	@Value("${pecb.archivos.ruta}")
-	private String ARCHIVOS_RUTA;
-	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
-	@Autowired
-	private PostulanteService postulanteService;
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	@Override
-	public void insertAll(List<ResultadoPruebas> obj) {
-		repo.saveAll(obj);
+    @Autowired
+    private ResultadoPruebasRepository repo;
+    @Autowired
+    private PruebaDetalleRepository pruebaDetalleRepository;
+    @Autowired
+    private ResultadoPruebasTodoRepository repo1;
+    @Autowired
+    private DocumentoRepository documentoRepo;
+    @Autowired
+    private DocumentoPruebaRepository docPruebaRepo;
 
-	}
+    @Value("${pecb.archivos.ruta}")
+    private String ARCHIVOS_RUTA;
+    @Autowired
+    private PeriodoAcademicoRepository periodoAcademicoRepository;
+    @Autowired
+    private PostulanteService postulanteService;
 
-	@Override
-	public ResultadoPruebas update(ResultadoPruebas objActualizado) {
-		ResultadoPruebas resultadoPruebas = new ResultadoPruebas();
-		Optional<PruebaDetalle> prueba = pruebaDetalleRepository.findById(objActualizado.getCodPruebaDetalle());
-		if (prueba.isPresent()) {
-			resultadoPruebas = repo.save(objActualizado);
+    // estudianteService
+    @Autowired
+    private EstudianteService estudianteService;
 
-			PruebaDetalle p = new PruebaDetalle();
-			p = prueba.get();
+    @Override
+    public void insertAll(List<ResultadoPruebas> obj) {
+        repo.saveAll(obj);
 
-			// TODO eliminar comentario
-			/*
-			 * p.setEstado("REGISTRO");
-			 */
+    }
 
-			pruebaDetalleRepository.save(p);
-		}
+    @Override
+    public ResultadoPruebas update(ResultadoPruebas objActualizado) {
+        ResultadoPruebas resultadoPruebas = new ResultadoPruebas();
+        Optional<PruebaDetalle> prueba = pruebaDetalleRepository.findById(objActualizado.getCodPruebaDetalle());
+        if (prueba.isPresent()) {
+            resultadoPruebas = repo.save(objActualizado);
 
-		return resultadoPruebas;
-	}
+            PruebaDetalle p = new PruebaDetalle();
+            p = prueba.get();
 
-	@Override
-	public Optional<ResultadoPruebas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba) {
-		// TODO Auto-generated method stub
-		return repo.findByCodPostulanteAndCodPruebaDetalle(CodPostulante, codPrueba);
-	}
+            // TODO eliminar comentario
+            /*
+             * p.setEstado("REGISTRO");
+             */
 
-	@Override
-	public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) {
-		try {
+            pruebaDetalleRepository.save(p);
+        }
 
-			List<ResultadoPruebasUtil> datosUtil = ResultadoPruebasHelper.excelToDatos(file.getInputStream(),
-					tipoResultado);
-			// Crear el HashMap para almacenar el último registro para cada idPostulante
-			Map<String, ResultadoPruebasUtil> ultimoResultadoPorPostulante = new HashMap<>();
+        return resultadoPruebas;
+    }
 
-			// Iterar sobre datosUtil y actualizar el HashMap solo con los últimos registros para cada idPostulante
-			for (ResultadoPruebasUtil resultadoPruebasUtil : datosUtil) {
-				ultimoResultadoPorPostulante.put(resultadoPruebasUtil.getIdPostulante(), resultadoPruebasUtil);
-			}
-			// Filtrar los valores del HashMap para obtener la lista deseada
-			List<ResultadoPruebasUtil> datosFiltrados = new ArrayList<>(ultimoResultadoPorPostulante.values());
-			List<ResultadoPruebas> datos = datosFiltrados.stream().map(dato -> {
-				ResultadoPruebas resultadoPruebas = new ResultadoPruebas();
-				Optional<Postulante> postulante = postulanteService.getByIdPostulante(dato.getIdPostulante());
-				if (postulante.isEmpty()) {
-					throw new RuntimeException("El postulante con el id: " + dato.getIdPostulante() + " no existe");
-				}
+    @Override
+    public Optional<ResultadoPruebas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba) {
+        return repo.findByCodPostulanteAndCodPruebaDetalle(CodPostulante, codPrueba);
+    }
 
-				// busca registro existente
-				Optional<ResultadoPruebas> resultadoPruebasOpt = this.getByCodPostulanteAndCodPruebaDetalle(
-						Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+    private Optional<ResultadoPruebas> getByCodEstudianteAndCodPruebaDetalle(Integer codEstudiante, Integer codPruebaDetalle) {
+        return repo.findByCodEstudianteAndCodPruebaDetalle(codEstudiante, codPruebaDetalle);
+    }
 
-				if (resultadoPruebasOpt.isEmpty()) {
-					resultadoPruebas = new ResultadoPruebas();
-				} else {
-					resultadoPruebas = resultadoPruebasOpt.get();
-				}
+    @Override
+    public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) {
+        try {
 
-				resultadoPruebas.setCodPostulante(postulante.get().getCodPostulante().intValue());
-				resultadoPruebas.setCumplePrueba(dato.getCumplePrueba());
-				resultadoPruebas.setNotaPromedioFinal(dato.getNotaPromedioFinal());
-				resultadoPruebas.setCodPruebaDetalle(codPruebaDetalle);
-				resultadoPruebas.setCodFuncionario(codFuncionario);
-				resultadoPruebas.setEstado("ACTIVO");
+            Boolean esPruebaCursoTemp = false;
 
-				return resultadoPruebas;
-			}).collect(Collectors.toList());
+            /////// Identifica si es prueba de curso
+            Optional<PruebaDetalle> pruebaDetalle = pruebaDetalleRepository.findById(codPruebaDetalle);
 
-			repo.saveAll(datos);
-		} catch (IOException e) {
-			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
-		}
+            if (pruebaDetalle.isPresent()) {
+                PruebaDetalle pd = pruebaDetalle.get();
+                if (pd.getCodCursoEspecializacion() != null) {
+                    esPruebaCursoTemp = true;
+                }
+            }
 
-	}
+            final Boolean esPruebaCurso = esPruebaCursoTemp;
 
-	@Override
-	public ResultadoPruebas save(ResultadoPruebas obj) {
-		// TODO Auto-generated method stub
-		return repo.save(obj);
-	}
+            /////// EXTRAER DATOS DE EXCEL
 
-	@Override
-	public ByteArrayInputStream downloadFile() {
+            List<ResultadoPruebasUtil> datosUtil = ResultadoPruebasHelper.excelToDatos(file.getInputStream(),
+                    tipoResultado);
+            // Crear el HashMap para almacenar el último registro para cada idPostulante
+            Map<String, ResultadoPruebasUtil> ultimoResultadoPorPostulante = new HashMap<>();
 
-		ByteArrayInputStream in = ResultadoPruebasHelper.datosToExcel(null);
-		return in;
-	}
-
-	@Override
-	public void generarExcel(String filePath, String nombre, Integer subTipoPrueba) throws IOException, DataException {
-
-		Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(subTipoPrueba,
-				periodoAcademicoRepository.getPAActive());
-		if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
-			throw new DataException(ESTADO_INVALIDO);
-		} else {
-			String[] HEADERs = { "Codigo", "id", "Cedula", "Nombre", "Apellido" };
-			try {
-				ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba), filePath, HEADERs);
-
-				generaDocumento(filePath, nombre, pp.get().getCodPruebaDetalle());
-
-			} catch (IOException ex) {
-				System.out.println("error: " + ex.getMessage());
-			}
-		}
-
-	}
+            // Iterar sobre datosUtil y actualizar el HashMap solo con los últimos registros para cada idPostulante
+            for (ResultadoPruebasUtil resultadoPruebasUtil : datosUtil) {
+                ultimoResultadoPorPostulante.put(resultadoPruebasUtil.getIdPostulante(), resultadoPruebasUtil);
+            }
+            // Filtrar los valores del HashMap para obtener la lista deseada
+            List<ResultadoPruebasUtil> datosFiltrados = new ArrayList<>(ultimoResultadoPorPostulante.values());
 
 
+            LOGGER.info(tipoResultado);
 
-	@Override
-	public void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer subTipoPrueba)
-			throws DocumentException, IOException, DataException {
+            /////// PROCESAR DATOS
 
-		// TODO eliminar comentario
-		/*
-		 * 
-		 * 
-		 * try { //Optional<Prueba> prueba; //prueba = pruebaRepository.findById(null);
-		 * 
-		 * Optional<PruebaDetalle> pp =
-		 * pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
-		 * subTipoPrueba, periodoAcademicoRepository.getPAActive());
-		 * 
-		 * 
-		 * 
-		 * if(pp.get().getEstado().equalsIgnoreCase("CIERRE")) { throw new
-		 * DataException(ESTADO_INVALIDO); } else {
-		 * 
-		 * response.setContentType("application/pdf");
-		 * 
-		 * DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		 * String fechaActual = dateFormatter.format(new Date());
-		 * 
-		 * String cabecera = "Cuerpo-Bomberos"; String valor =
-		 * "attachment; filename=Datos" + fechaActual + ".pdf";
-		 * 
-		 * response.addHeader(cabecera, valor);
-		 * 
-		 * ExporterPdf exporter = new ExporterPdf(); String[] columnas = { "Codigo",
-		 * "id", "Cedula", "Nombre", "Apellido" }; float[] widths = new float[] { 2f,
-		 * 3f, 6f, 6f, 2.5f };
-		 * 
-		 * exporter.exportar(response, columnas, obtenerDatos(subTipoPrueba), widths,
-		 * filePath);
-		 * 
-		 * generaDocumento(filePath, nombre, pp.get().getCodPruebaDetalle());
-		 * 
-		 * }
-		 * 
-		 * 
-		 * }catch(IOException ex) { System.out.println("error: " + ex.getMessage()); }
-		 * 
-		 */
+            List<ResultadoPruebas> datos = datosFiltrados.stream().map(dato -> {
+                ResultadoPruebas resultadoPruebas = new ResultadoPruebas();
 
-	}
+                Estudiante estudiante = null;
+                Optional<Postulante> postulante = null;
 
-	public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
-		List<ResultadosPruebasDatos> datos = repo1.get_approved_applicants(prueba);
-		return entityToArrayList(datos);
-	}
+                if (esPruebaCurso) {
+                    // buscar estudiante por codigoUnicoEstudiante
+                    estudiante = estudianteService.getEstudianteByCodigoUnico(dato.getIdPostulante());
+                    if (estudiante == null) {
+                        throw new RuntimeException("El estudiante con el codigoUnico: " + dato.getIdPostulante() + " no existe");
+                    }
+                } else {
+                    postulante = postulanteService.getByIdPostulante(dato.getIdPostulante());
+                    if (postulante.isEmpty()) {
+                        throw new RuntimeException("El postulante con el id: " + dato.getIdPostulante() + " no existe");
+                    }
+                }
 
-	public static String[] entityToStringArray(ResultadosPruebasDatos entity) {
-		return new String[] { entity.getCodPostulante().toString(), entity.getIdPostulante().toString(),
-				entity.getCedula(), entity.getNombre(),
-				entity.getApellido() };
-	}
 
-	public static ArrayList<ArrayList<String>> entityToArrayList(List<ResultadosPruebasDatos> datos) {
-		ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
-		for (ResultadosPruebasDatos dato : datos) {
+                // busca registro existente
+                Optional<ResultadoPruebas> resultadoPruebasOpt = null;
+                if (esPruebaCurso) {
+                    resultadoPruebasOpt = this.getByCodEstudianteAndCodPruebaDetalle(estudiante.getCodEstudiante(), codPruebaDetalle);
+                } else {
+                    resultadoPruebasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+                }
 
-			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
-		}
-		return arrayMulti;
-	}
 
-	private void generaDocumento(String ruta, String nombre, Integer prueba) throws DataException {
+                if (resultadoPruebasOpt.isEmpty()) {
+                    resultadoPruebas = new ResultadoPruebas();
+                } else {
+                    resultadoPruebas = resultadoPruebasOpt.get();
+                }
 
-		// busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
-		Integer codPruebaDetalle = null;
+                // si es estudiante pasa el valor de codEstudiante, si no, el valor de postulante
+                if (esPruebaCurso) {
+                    resultadoPruebas.setCodEstudiante(estudiante.getCodEstudiante());
+                } else {
+                    resultadoPruebas.setCodPostulante(postulante.get().getCodPostulante().intValue());
+                }
+                resultadoPruebas.setCumplePrueba(dato.getCumplePrueba());
+                resultadoPruebas.setNotaPromedioFinal(dato.getNotaPromedioFinal());
+                resultadoPruebas.setCodPruebaDetalle(codPruebaDetalle);
+                resultadoPruebas.setCodFuncionario(codFuncionario);
+                resultadoPruebas.setEstado("ACTIVO");
 
-		Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
-				prueba,
-				periodoAcademicoRepository.getPAActive());
+                return resultadoPruebas;
+            }).collect(Collectors.toList());
 
-		if (pruebaDetalleOpt.isPresent()) {
-			codPruebaDetalle = pruebaDetalleOpt.get().getCodPruebaDetalle();
-		} else {
-			throw new DataException(FormacionConst.PRUEBA_NO_EXISTE);
-		}
+            repo.saveAll(datos);
+        } catch (IOException e) {
+            throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
+        }
 
-		// busca documentos para la prueba
-		List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
+    }
 
-		if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
+    @Override
+    public ResultadoPruebas save(ResultadoPruebas obj) {
+        // TODO Auto-generated method stub
+        return repo.save(obj);
+    }
 
-			// busca si existe un documento con el mismo nombre para la prueba
-			List<Documento> docs = this.documentoRepo.findAllByNombre(nombre);
+    @Override
+    public ByteArrayInputStream downloadFile() {
 
-			// si hay documentos con el mismo nombre, busca el que corresponda a esa prueba
-			// y ese periodo de formación
-			if (docs != null && docs.size() > 0) {
+        ByteArrayInputStream in = ResultadoPruebasHelper.datosToExcel(null);
+        return in;
+    }
 
-				List<Integer> listaCodDocumentoPrueba = listaDocPrueba.stream()
-						.map(DocumentoPrueba::getCodDocumento)
-						.collect(Collectors.toList());
-				
-				List<Integer> listaCodDocumento = docs.stream()
-						.map(Documento::getCodDocumento)
-						.collect(Collectors.toList());
+    @Override
+    public void generarExcel(String filePath, String nombre, Integer subTipoPrueba) throws IOException, DataException {
 
-				// intersección de las listas
-				Set<Integer> resultado = listaCodDocumentoPrueba.stream()
-						.distinct()
-						.filter(listaCodDocumento::contains)
-						.collect(Collectors.toSet());
-				
-				if (resultado != null && resultado.size() > 0) {
-					
-					final Integer codPrueba = codPruebaDetalle;
-					
-					resultado.stream()
-	                .forEach(codDoc -> {
-	                	// elimina de documentoPrueba
-	                	this.docPruebaRepo.deleteByCodPruebaDetalleAndCodDocumento(codPrueba, codDoc);
-	                	this.documentoRepo.deleteById(codPrueba);	                    
-	                });
-					
-				}
+        Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(subTipoPrueba,
+                periodoAcademicoRepository.getPAActive());
+        if (pp.get().getEstado().equalsIgnoreCase("CIERRE")) {
+            throw new DataException(ESTADO_INVALIDO);
+        } else {
+            String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
+            try {
+                ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba), filePath, HEADERs);
 
-			}
+                generaDocumento(filePath, nombre, pp.get().getCodPruebaDetalle());
 
-		}
+            } catch (IOException ex) {
+                System.out.println("error: " + ex.getMessage());
+            }
+        }
 
-		// genera documento
-		Documento documento = new Documento();
-		documento.setEstado("ACTIVO");
-		documento.setNombre(nombre);
-		documento.setRuta(ruta);
+    }
 
-		documento = documentoRepo.save(documento);
 
-		DocumentoPrueba doc = new DocumentoPrueba();
-		doc.setCodPruebaDetalle(prueba);
-		doc.setCodDocumento(documento.getCodDocumento());
-		// System.out.println("documento.getCodigo(): " + documento.getCodigo());
+    @Override
+    public void generarPDF(HttpServletResponse response, String filePath, String nombre, Integer subTipoPrueba)
+            throws DocumentException, IOException, DataException {
 
-		saveDocumentoPrueba(doc);
-	}
+        // TODO eliminar comentario
+        /*
+         *
+         *
+         * try { //Optional<Prueba> prueba; //prueba = pruebaRepository.findById(null);
+         *
+         * Optional<PruebaDetalle> pp =
+         * pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
+         * subTipoPrueba, periodoAcademicoRepository.getPAActive());
+         *
+         *
+         *
+         * if(pp.get().getEstado().equalsIgnoreCase("CIERRE")) { throw new
+         * DataException(ESTADO_INVALIDO); } else {
+         *
+         * response.setContentType("application/pdf");
+         *
+         * DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+         * String fechaActual = dateFormatter.format(new Date());
+         *
+         * String cabecera = "Cuerpo-Bomberos"; String valor =
+         * "attachment; filename=Datos" + fechaActual + ".pdf";
+         *
+         * response.addHeader(cabecera, valor);
+         *
+         * ExporterPdf exporter = new ExporterPdf(); String[] columnas = { "Codigo",
+         * "id", "Cedula", "Nombre", "Apellido" }; float[] widths = new float[] { 2f,
+         * 3f, 6f, 6f, 2.5f };
+         *
+         * exporter.exportar(response, columnas, obtenerDatos(subTipoPrueba), widths,
+         * filePath);
+         *
+         * generaDocumento(filePath, nombre, pp.get().getCodPruebaDetalle());
+         *
+         * }
+         *
+         *
+         * }catch(IOException ex) { System.out.println("error: " + ex.getMessage()); }
+         *
+         */
 
-	private void saveDocumentoPrueba(DocumentoPrueba obj) {
-		docPruebaRepo.save(obj);
-	}
+    }
+
+    public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
+        List<ResultadosPruebasDatos> datos = repo1.get_approved_applicants(prueba);
+        return entityToArrayList(datos);
+    }
+
+    public static String[] entityToStringArray(ResultadosPruebasDatos entity) {
+        return new String[]{entity.getCodPostulante().toString(), entity.getIdPostulante().toString(),
+                entity.getCedula(), entity.getNombre(),
+                entity.getApellido()};
+    }
+
+    public static ArrayList<ArrayList<String>> entityToArrayList(List<ResultadosPruebasDatos> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+        for (ResultadosPruebasDatos dato : datos) {
+
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
+        }
+        return arrayMulti;
+    }
+
+    private void generaDocumento(String ruta, String nombre, Integer prueba) throws DataException {
+
+        // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
+        Integer codPruebaDetalle = null;
+
+        Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
+                prueba,
+                periodoAcademicoRepository.getPAActive());
+
+        if (pruebaDetalleOpt.isPresent()) {
+            codPruebaDetalle = pruebaDetalleOpt.get().getCodPruebaDetalle();
+        } else {
+            throw new DataException(FormacionConst.PRUEBA_NO_EXISTE);
+        }
+
+        // busca documentos para la prueba
+        List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
+
+        if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
+
+            // busca si existe un documento con el mismo nombre para la prueba
+            List<Documento> docs = this.documentoRepo.findAllByNombre(nombre);
+
+            // si hay documentos con el mismo nombre, busca el que corresponda a esa prueba
+            // y ese periodo de formación
+            if (docs != null && docs.size() > 0) {
+
+                List<Integer> listaCodDocumentoPrueba = listaDocPrueba.stream()
+                        .map(DocumentoPrueba::getCodDocumento)
+                        .collect(Collectors.toList());
+
+                List<Integer> listaCodDocumento = docs.stream()
+                        .map(Documento::getCodDocumento)
+                        .collect(Collectors.toList());
+
+                // intersección de las listas
+                Set<Integer> resultado = listaCodDocumentoPrueba.stream()
+                        .distinct()
+                        .filter(listaCodDocumento::contains)
+                        .collect(Collectors.toSet());
+
+                if (resultado != null && resultado.size() > 0) {
+
+                    final Integer codPrueba = codPruebaDetalle;
+
+                    resultado.stream()
+                            .forEach(codDoc -> {
+                                // elimina de documentoPrueba
+                                this.docPruebaRepo.deleteByCodPruebaDetalleAndCodDocumento(codPrueba, codDoc);
+                                this.documentoRepo.deleteById(codPrueba);
+                            });
+
+                }
+
+            }
+
+        }
+
+        // genera documento
+        Documento documento = new Documento();
+        documento.setEstado("ACTIVO");
+        documento.setNombre(nombre);
+        documento.setRuta(ruta);
+
+        documento = documentoRepo.save(documento);
+
+        DocumentoPrueba doc = new DocumentoPrueba();
+        doc.setCodPruebaDetalle(prueba);
+        doc.setCodDocumento(documento.getCodDocumento());
+        // System.out.println("documento.getCodigo(): " + documento.getCodigo());
+
+        saveDocumentoPrueba(doc);
+    }
+
+    private void saveDocumentoPrueba(DocumentoPrueba obj) {
+        docPruebaRepo.save(obj);
+    }
 
 }

@@ -143,7 +143,7 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
         }
         else if (mensaje.equals(VALIDACION_PRUEBAS)){
             inscripcionEspSvc.generarDocListadoPruebas(response, Long.valueOf(idCurso));
-        }
+        }*/
 
          */
 

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public interface ResultadoPruebasTodoService {
 
@@ -17,4 +18,11 @@ public interface ResultadoPruebasTodoService {
 
     // generaPdf de resultados por prueba
     FileOutputStream generarPdf(Integer prueba);
+
+    // lista de todos los registros con paginación CURSO
+    Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba, Integer codCurso);
+
+    ByteArrayOutputStream generarExcelCurso(Integer prueba, Integer codCurso) throws IOException;
+
+    ArrayList<ArrayList<String>> obtenerDatosTransformados(Integer prueba, Integer codCurso);
 }

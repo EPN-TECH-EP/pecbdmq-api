@@ -1,10 +1,13 @@
 package epntech.cbdmq.pe.dto;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data
-public class CursoInstructorDTO {
-
+@Entity
+public class CursoInstructorResponse {
+    @Id
     private Long codInstructorCurso;
     private Long codCursoEspecializacion;
     private Integer codInstructor;
@@ -16,5 +19,15 @@ public class CursoInstructorDTO {
     private Integer codTipoInstructor;
     private String descripcion;
     private String estado;
+    private String tipoProcedencia;
+    private String nombreZona;
+    private String unidadGestion;
+    private String nombreTipoInstructor;
+    private String nombreTipoContrato;
+    private String cedula;
+    private String nombre;
+    private String apellido;
+    private String correoPersonal;
+    private String nombreCatalogoCurso;
 
 }

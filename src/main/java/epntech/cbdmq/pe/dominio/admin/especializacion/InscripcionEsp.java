@@ -50,6 +50,7 @@ import lombok.Data;
                 + "and upper(dp.estado) = 'ACTIVO' "
                 + "and upper(c.estado) <> 'ELIMINADO' "
                 + "and upper(cc.estado) = 'ACTIVO'"
+                + "and upper(i.estado) IN('ABIERTO', 'PENDIENTE', 'ASIGNADO') "
                 + "and datosUsuario.cod_usuario = i.cod_usuario",
         resultSetMapping = "findInscripciones")
 @SqlResultSetMapping(name = "findInscripciones", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
@@ -63,6 +64,7 @@ import lombok.Data;
         @ColumnResult(name = "correoUsuario"),}))
 
 @NamedNativeQuery(name = "InscripcionEsp.findInscripcionesByUsuario",
+
         query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, i.estado as estado "
                 + "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
                 + "where i.cod_estudiante = e.cod_estudiante "
@@ -73,7 +75,7 @@ import lombok.Data;
                 + "and upper(dp.estado) = 'ACTIVO' "
                 + "and upper(c.estado) <> 'ELIMINADO' "
                 + "and upper(cc.estado) = 'ACTIVO' "
-                + "and upper(i.estado) = 'ASIGNADO' "
+                + "and upper(i.estado) IN('ABIERTO', 'PENDIENTE', 'ASIGNADO') "
                 + "and i.cod_usuario = :codUsuario "
                 + "union all "
                 + "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, i.estado as estado "
@@ -86,8 +88,9 @@ import lombok.Data;
                 + "and upper(dp.estado) = 'ACTIVO' "
                 + "and upper(c.estado) <> 'ELIMINADO' "
                 + "and upper(cc.estado) = 'ACTIVO' "
-                + "and upper(i.estado) = 'PENDIENTE'",
+                + "and upper(i.estado) IN('ABIERTO', 'PENDIENTE', 'ASIGNADO')",
         resultSetMapping = "findInscripcionesByUsuario")
+
 @SqlResultSetMapping(name = "findInscripcionesByUsuario", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
         @ColumnResult(name = "codInscripcion"),
         @ColumnResult(name = "cedula"),
@@ -126,10 +129,11 @@ import lombok.Data;
                 + "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
                 + "and upper(e.estado) = 'ACTIVO' "
                 + "and upper(dp.estado) = 'ACTIVO' "
-                + "and upper(c.estado) <> 'ELIMINADO'"
+                + "and upper(c.estado) <> 'ELIMINADO' "
                 + "and upper(cc.estado) = 'ACTIVO' "
                 + "and i.cod_inscripcion = :codInscripcion",
         resultSetMapping = "findInscripcionDatos")
+
 @SqlResultSetMapping(name = "findInscripcionDatos", classes = @ConstructorResult(targetClass = InscripcionEstudianteDatosEspecializacion.class, columns = {
         @ColumnResult(name = "codInscripcion"),
         @ColumnResult(name = "cedula"),
@@ -162,7 +166,7 @@ import lombok.Data;
         @ColumnResult(name = "nombreCatalogoCurso"),}))
 
 @NamedNativeQuery(name = "InscripcionEsp.findInscripcionValidaPorCurso",
-        query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, dp.correo_personal as correoPersonal "
+        query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, dp.correo_personal as correoPersonal, e.codigo_unico_estudiante as codigoUnicoEstudiante "
                 + "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
                 + "where i.cod_estudiante = e.cod_estudiante "
                 + "and e.cod_datos_personales = dp.cod_datos_personales "
@@ -172,7 +176,7 @@ import lombok.Data;
                 + "and upper(dp.estado) = 'ACTIVO' "
                 + "and upper(c.estado) <> 'ELIMINADO' "
                 + "and upper(cc.estado) = 'ACTIVO' "
-                + "and upper(i.estado) = 'VALIDO' "
+                + "and upper(i.estado) <> 'ELIMINADO' "
                 + "and i.cod_curso_especializacion = :codCurso ",
         resultSetMapping = "findInscripcionValidaPorCurso")
 @SqlResultSetMapping(name = "findInscripcionValidaPorCurso", classes = @ConstructorResult(targetClass = InscritosEspecializacion.class, columns = {
@@ -181,7 +185,11 @@ import lombok.Data;
         @ColumnResult(name = "nombre"),
         @ColumnResult(name = "apellido"),
         @ColumnResult(name = "nombreCatalogoCurso"),
-        @ColumnResult(name = "correoPersonal"),}))
+        @ColumnResult(name = "correoPersonal"),
+        @ColumnResult(name = "codigoUnicoEstudiante")
+}
+)
+)
 
 
 @NamedNativeQuery(name = "InscripcionEsp.getListasByEstado",
@@ -204,7 +212,7 @@ import lombok.Data;
                 "and ec.cod_curso_especializacion = :codCurso",
         resultSetMapping = "findInscripcionPorEstadoCurso")
 @SqlResultSetMapping(name = "findInscripcionPorEstadoCurso", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
-        @ColumnResult(name = "cod_inscripcion",type = Long.class),
+        @ColumnResult(name = "cod_inscripcion", type = Long.class),
         @ColumnResult(name = "cedula"),
         @ColumnResult(name = "nombre"),
         @ColumnResult(name = "apellido"),
@@ -212,7 +220,8 @@ import lombok.Data;
         @ColumnResult(name = "estado"),
         @ColumnResult(name = "nombre_usuario"),
         @ColumnResult(name = "correo_personal"),
-        @ColumnResult(name = "cod_usuario",type = Long.class),
+        @ColumnResult(name = "cod_usuario", type = Long.class),
+
 }))
 
 public class InscripcionEsp {

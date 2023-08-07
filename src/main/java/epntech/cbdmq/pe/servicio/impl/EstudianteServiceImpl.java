@@ -66,7 +66,6 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public List<Estudiante> getAll() {
-        // TODO Auto-generated method stub
         return repo.findAll();
     }
 
@@ -77,25 +76,21 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public Optional<Estudiante> getById(int id) {
-        // TODO Auto-generated method stub
         return repo.findById(id);
     }
 
     @Override
     public Estudiante update(Estudiante objActualizado) {
-        // TODO Auto-generated method stub
         return repo.save(objActualizado);
     }
 
     @Override
     public void delete(int id) {
-        // TODO Auto-generated method stub
         repo.deleteById(id);
     }
 
     @Override
     public Optional<Estudiante> getByIdEstudiante(String id) {
-        // TODO Auto-generated method stub
         return repo.findByCodUnicoEstudiante(id);
     }
 
@@ -164,10 +159,10 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
-    public Estudiante getEstudianteByUsuario(String codUsuario) {
+    public Estudiante getEstudianteByUsuario(String codUsuario) throws DataException {
         Estudiante estudiante =repo.getEstudianteByUsuario(codUsuario);
         if(estudiante == null){
-            throw new RuntimeException("No se encontro el estudiante");
+            throw new DataException("No se encontro el estudiante");
         }
         return estudiante;
     }
@@ -217,6 +212,9 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public List<EstudianteDto> getEstudiantesBaja() {
+
+        // para identificar los estudiantes del periodo de formación actual, se cruza postulantes
+        // válidos con estudiantes usando dato personal como referencia
 
         List<Estudiante> estudiantes = this.getEstudiantesIs("BAJA");
         List<PostulantesValidos> postulantes = postulantesValidosService.getPostulantesValidosDiferentBaja();

@@ -29,7 +29,7 @@ public interface EstudianteService {
 	
 	void saveEstudiantes() throws DataException;
 	
-	Estudiante getEstudianteByUsuario(String codUsuario);
+	Estudiante getEstudianteByUsuario(String codUsuario) throws DataException;
 	Estudiante getEstudianteByCodigoUnico(String codUnico);
 	DatoPersonal getDatoPersonalByEstudiante(Integer Estudiante);
 	List<EstudianteDto> getEstudiantesPA(List<Estudiante> estudiantes);

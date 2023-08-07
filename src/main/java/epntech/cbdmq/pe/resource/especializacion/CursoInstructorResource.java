@@ -4,7 +4,8 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
 
-import epntech.cbdmq.pe.dto.CursoInstructorDTO;
+import epntech.cbdmq.pe.dto.CursoInstructorRequest;
+import epntech.cbdmq.pe.dto.CursoInstructorResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.especializacion.CursoInstructorServiceImpl;
 
 @RestController
@@ -36,7 +36,7 @@ public class CursoInstructorResource {
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@Valid @RequestBody CursoInstructorDTO obj) {
+	public ResponseEntity<?> guardar(@Valid @RequestBody CursoInstructorRequest obj) {
 		return new ResponseEntity<>(cursoInstructorServiceImpl.save(obj), HttpStatus.OK);
 	}
 
@@ -51,7 +51,7 @@ public class CursoInstructorResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @Valid @RequestBody CursoInstructorDTO obj) {
+	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @Valid @RequestBody CursoInstructorRequest obj) {
 		obj.setCodInstructorCurso(codigo);
 		return new ResponseEntity<>(cursoInstructorServiceImpl.update(obj), HttpStatus.OK);
 	}
@@ -63,7 +63,7 @@ public class CursoInstructorResource {
 	}
 
 	@GetMapping("/listarInstructoresCurso/{idCurso}")
-	public List<InstructoresCurso> listarInstructoresCurso(@PathVariable("idCurso") long codigo) {
+	public List<CursoInstructorResponse> listarInstructoresCurso(@PathVariable("idCurso") long codigo) {
 		return cursoInstructorServiceImpl.listInstructoresCurso(codigo);
 	}
 

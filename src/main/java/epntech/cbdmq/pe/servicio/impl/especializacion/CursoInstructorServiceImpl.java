@@ -7,16 +7,17 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
-import epntech.cbdmq.pe.dto.CursoInstructorDTO;
+import epntech.cbdmq.pe.dto.CursoInstructorRequest;
+import epntech.cbdmq.pe.dto.CursoInstructorResponse;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.InstructorCursoRepository;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoInstructorRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InstructoresCursoRepository;
 import epntech.cbdmq.pe.servicio.especializacion.CursoInstructorService;
@@ -30,55 +31,76 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	@Autowired
 	private InstructoresCursoRepository instructoresCursoRepository;
 	@Autowired
+	private InstructorCursoRepository instructorCursoRepository;
+	@Autowired
 	private InstructorRepository instructorRepository;
 	@Autowired
 	private DatoPersonalRepository datoPersonalRepository;
 
 	@Override
-	@Transactional
-	public CursoInstructor save(CursoInstructorDTO cursoInstructorDTO) {
+	public CursoInstructor save(CursoInstructorRequest cursoInstructorRequest) {
+		if (cursoInstructorRequest.getCodInstructorCurso() == 0) {
+			return this.guardar(cursoInstructorRequest);
+		} else {
+			return this.actualizar(cursoInstructorRequest);
+		}
+	}
 
-		Instructor instructor = instructorRepository.findByCodDatosPersonales(cursoInstructorDTO.getCodDatosPersonales().intValue())
+	@Transactional
+	private CursoInstructor guardar(CursoInstructorRequest cursoInstructorRequest) {
+		Instructor instructor = instructorRepository.findByCodDatosPersonales(cursoInstructorRequest.getCodDatosPersonales().intValue())
 				.orElseGet(() -> {
 					Instructor newInstructor = new Instructor();
 					newInstructor.setEstado("ACTIVO");
-					newInstructor.setCodEstacion(cursoInstructorDTO.getCodEstacion());
-					newInstructor.setCodTipoProcedencia(cursoInstructorDTO.getCodTipoProcedencia());
-					newInstructor.setCodTipoContrato(cursoInstructorDTO.getCodTipoContrato());
-					newInstructor.setCodDatosPersonales(cursoInstructorDTO.getCodDatosPersonales());
-					newInstructor.setCodUnidadGestion(cursoInstructorDTO.getCodUnidadGestion());
+					newInstructor.setCodEstacion(cursoInstructorRequest.getCodEstacion());
+					newInstructor.setCodTipoProcedencia(cursoInstructorRequest.getCodTipoProcedencia());
+					newInstructor.setCodTipoContrato(cursoInstructorRequest.getCodTipoContrato());
+					newInstructor.setCodDatosPersonales(cursoInstructorRequest.getCodDatosPersonales());
+					newInstructor.setCodUnidadGestion(cursoInstructorRequest.getCodUnidadGestion());
 					return instructorRepository.save(newInstructor);
 				});
 
 		CursoInstructor cursoInstructor = new CursoInstructor();
 		cursoInstructor.setCodInstructor(instructor.getCodInstructor());
 		cursoInstructor.setEstado("ACTIVO");
-		cursoInstructor.setCodTipoInstructor(cursoInstructorDTO.getCodTipoInstructor());
-		cursoInstructor.setCodCursoEspecializacion(cursoInstructorDTO.getCodCursoEspecializacion());
+		cursoInstructor.setCodTipoInstructor(cursoInstructorRequest.getCodTipoInstructor());
+		cursoInstructor.setCodCursoEspecializacion(cursoInstructorRequest.getCodCursoEspecializacion());
+		cursoInstructor.setDescripcion(cursoInstructor.getDescripcion());
 		cursoInstructor.setFechaActual(LocalDate.now());
 
 		return cursoInstructorRepository.save(cursoInstructor);
-
 	}
 
 	@Override
-	public CursoInstructor update(CursoInstructorDTO cursoInstructorDTO) {
-		CursoInstructor cursoInstructor = cursoInstructorRepository
-				.findById(cursoInstructorDTO.getCodInstructorCurso())
+	public CursoInstructor update(CursoInstructorRequest cursoInstructorRequest) {
+		return this.actualizar(cursoInstructorRequest);
+	}
+
+	@Transactional
+	private CursoInstructor actualizar(CursoInstructorRequest cursoInstructorRequest) {
+		Instructor instructor = instructorRepository.findById(cursoInstructorRequest.getCodInstructor())
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		validarCursoInstructor(cursoInstructorDTO);
+		instructor.setCodUnidadGestion(cursoInstructorRequest.getCodUnidadGestion());
+		instructor.setCodTipoContrato(cursoInstructorRequest.getCodTipoContrato());
+		instructor.setCodEstacion(cursoInstructorRequest.getCodEstacion());
+		instructor.setCodTipoProcedencia(cursoInstructorRequest.getCodTipoProcedencia());
 
-		cursoInstructor.setCodCursoEspecializacion(cursoInstructorDTO.getCodCursoEspecializacion());
-		cursoInstructor.setCodInstructor(cursoInstructorDTO.getCodInstructor());
-		cursoInstructor.setCodTipoInstructor(cursoInstructorDTO.getCodTipoInstructor());
-		cursoInstructor.setDescripcion(cursoInstructorDTO.getDescripcion());
-		cursoInstructor.setEstado(cursoInstructorDTO.getEstado());
+		instructorRepository.save(instructor);
+
+		CursoInstructor cursoInstructor = cursoInstructorRepository
+				.findById(cursoInstructorRequest.getCodInstructorCurso())
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+		validarCursoInstructor(cursoInstructorRequest);
+
+		cursoInstructor.setCodTipoInstructor(cursoInstructorRequest.getCodTipoInstructor());
+		cursoInstructor.setDescripcion(cursoInstructorRequest.getDescripcion());
 
 		return cursoInstructorRepository.save(cursoInstructor);
 	}
 
-	private void validarCursoInstructor(CursoInstructorDTO cursoInstructorActualizado) {
+	private void validarCursoInstructor(CursoInstructorRequest cursoInstructorActualizado) {
 		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorRepository
 				.findByCodInstructorAndCodCursoEspecializacion(cursoInstructorActualizado.getCodInstructor().intValue(),
 						cursoInstructorActualizado.getCodCursoEspecializacion());
@@ -112,8 +134,8 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<InstructoresCurso> listInstructoresCurso(Long codCurso) {
-		return instructoresCursoRepository.findInstructoresCurso(codCurso);
+	public List<CursoInstructorResponse> listInstructoresCurso(Long codCurso) {
+		return instructorCursoRepository.findInstructoresCurso(codCurso);
 	}
 
 	@Transactional(readOnly = true)

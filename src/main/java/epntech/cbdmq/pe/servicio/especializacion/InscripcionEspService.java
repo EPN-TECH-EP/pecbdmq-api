@@ -25,13 +25,13 @@ import jakarta.mail.MessagingException;
 
 public interface InscripcionEspService {
 
-	InscripcionEsp save(InscripcionEsp inscripcionEsp) throws DataException;
+	InscripcionEsp save(InscripcionEsp inscripcionEsp);
 	
-	InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) throws DataException;
+	InscripcionEsp update(InscripcionEsp inscripcionEspActualizada);
 
 	InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario);
 
-	Optional<InscripcionDatosEsp> getById(Long codInscripcion) throws DataException;
+	Optional<InscripcionDatosEsp> getById(Long codInscripcion);
 	
 	List<InscripcionDatosEspecializacion> getAll();
 
@@ -39,7 +39,7 @@ public interface InscripcionEspService {
 
 	List<InscripcionDatosEspecializacion> getAllPaginado(Pageable pageable);
 
-	void delete(Long codInscripcion)  throws DataException;
+	void delete(Long codInscripcion);
 	
 	List<Documento> uploadFiles(Long codInscripcion, Long tipoDocumento, List<MultipartFile> archivos) throws DataException, IOException, ArchivoMuyGrandeExcepcion;
 	

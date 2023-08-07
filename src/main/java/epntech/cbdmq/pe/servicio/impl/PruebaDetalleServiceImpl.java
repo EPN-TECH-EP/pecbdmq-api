@@ -48,6 +48,11 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	}
 
 	@Override
+	public Optional<PruebaDetalle> findByCodCursoEspecializacionAndCodSubtipoPrueba(Integer codCursoEspecializacion, Integer subtipo) {
+		return this.pruebaDetalleRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(codCursoEspecializacion, subtipo);
+	}
+
+	@Override
 	public PruebaDetalle save(PruebaDetalle obj) {
 		SubTipoPrueba subTipoPrueba = subTipoPruebaRepository.findById(obj.getCodSubtipoPrueba())
 				.orElseThrow(() -> new BusinessException(NO_SUBTIPO_PRUEBA));

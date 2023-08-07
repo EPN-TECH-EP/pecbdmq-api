@@ -4,11 +4,16 @@ import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.constante.FormacionConst;
 import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
+import epntech.cbdmq.pe.dominio.util.InscritosValidos;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasFisicasDatos;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.*;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.PruebasRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
 import epntech.cbdmq.pe.servicio.ResultadoPruebaService;
 import epntech.cbdmq.pe.util.ExporterPdf;
@@ -25,6 +30,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS_CURSO;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.CURSO_NO_PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 @Service
@@ -52,6 +59,14 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     private PeriodoAcademicoRepository periodoAcademicoRepository;
     @Autowired
     private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
+
+    // cursoDocumento repo
+    @Autowired
+    private CursoDocumentoRepository cursoDocumentoRepository;
+
+    // cursos
+    @Autowired
+    private PruebasRepository pruebasRepository;
 
 
     @Override
@@ -104,33 +119,60 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     }
 
     @Override
-    public Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba) throws DataException, DocumentException, IOException {
+    public Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba,
+                                           Integer codCurso) throws DataException, DocumentException, IOException {
         String[] columnas = {"Id postulante"};
 
-        String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
-                + periodoAcademicoRepository.getPAActive().toString()
-                + "/";
-        String pActive = periodoAcademicoRepository.getPAActive().toString();
+        Optional<PruebaDetalle> pp = null;
+        String ruta = "";
+        String nombreArchivo = "";
+        Integer codPruebaDetalle = null;
+
+        // si recibe curso como parametro, se genera el archivo de aprobados por curso
+        if (codCurso != null) {
+
+            ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS_CURSO
+                    + codCurso.toString()
+                    + "/";
+
+            PruebaDetalle pruebaDetalle = pruebaDetalleRepository
+                    .findByCodCursoEspecializacionAndCodSubtipoPrueba(codCurso, codSubtipoPrueba)
+                    .orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
+
+            codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
+
+            nombreArchivo = "Lista de aprobados " + pruebaDetalle.getDescripcionPrueba() + " " + codCurso;
+        } else {
+
+            ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
+                    + periodoAcademicoRepository.getPAActive().toString()
+                    + "/";
+            String pActive = periodoAcademicoRepository.getPAActive().toString();
 
 
-        Optional<PruebaDetalle> pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(codSubtipoPrueba,
-                periodoAcademicoRepository.getPAActive());
+            pp = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(codSubtipoPrueba,
+                    periodoAcademicoRepository.getPAActive());
+
+            codPruebaDetalle = pp.get().getCodPruebaDetalle();
 
         /*if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
             throw new DataException(ESTADO_INVALIDO);
         } else {*/
-            String nombreArchivo = "Lista de aprobados " + pp.get().getDescripcionPrueba() + " " + pActive;
-            String nombre1 = nombreArchivo + ".pdf";
-            String nombre2 = nombreArchivo + ".xlsx";
+            nombreArchivo = "Lista de aprobados " + pp.get().getDescripcionPrueba() + " " + pActive;
+        }
 
-            this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas);
-            this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas);
+        String nombre1 = nombreArchivo + ".pdf";
+        String nombre2 = nombreArchivo + ".xlsx";
+
+        this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
+        this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
         //}
 
         return true;
     }
 
-    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, String[] headers)
+
+    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle)
             throws DocumentException, IOException, DataException {
 
 
@@ -150,18 +192,18 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        exporter.exportar(response, headers, obtenerDatos(subTipoPrueba), widths, ruta);
-        generaDocumento(ruta, nombre, subTipoPrueba);
+        exporter.exportar(response, headers, obtenerDatos(subTipoPrueba, codCurso), widths, ruta);
+        generaDocumento(ruta, nombre, codPruebaDetalle, codCurso);
 
 
     }
 
-    public void generarExcel(String ruta, String nombre, Integer subTipoPrueba, String[] headers) throws IOException, DataException {
+    public void generarExcel(String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle) throws IOException, DataException {
         // Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 
-        ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba), ruta, headers);
-        generaDocumento(ruta, nombre, subTipoPrueba);
+        ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba, codCurso), ruta, headers);
+        generaDocumento(ruta, nombre, codPruebaDetalle, codCurso);
 
     }
 
@@ -193,8 +235,17 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         return arrayMulti;
     }
 
-    public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba) {
-        List<ResultadosPruebasDatos> datos = repo2.get_approved_applicants(prueba);
+    public ArrayList<ArrayList<String>> obtenerDatos(Integer prueba, Integer codCurso) {
+
+        List<ResultadosPruebasDatos> datos;
+
+        if (codCurso != null) {
+            // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
+            datos = pruebasRepository.get_approved_by_test_esp(prueba.longValue(), codCurso.longValue());
+        } else {
+            datos = repo2.get_approved_applicants(prueba);
+        }
+
         return entityToArrayList(datos);
     }
 
@@ -234,14 +285,12 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         saveDocumentoPrueba(doc);
     }
+
     @Transactional
-    public void generaDocumento(String ruta, String nombre, Integer subTipoPrueba) throws DataException {
-
-        // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
-        Integer codPruebaDetalle = null;
+    public void generaDocumento(String ruta, String nombre, Integer codPruebaDetalle, Integer codCurso) throws DataException {
 
 
-        Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
+        /*Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
                 subTipoPrueba,
                 periodoAcademicoRepository.getPAActive());
 
@@ -249,19 +298,18 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             codPruebaDetalle = pruebaDetalleOpt.get().getCodPruebaDetalle();
         } else {
             throw new DataException(FormacionConst.PRUEBA_NO_EXISTE);
-        }
+        }*/
 
         // busca documentos para la prueba
         List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
 
         if (listaDocPrueba != null && listaDocPrueba.size() > 0) {
 
-
             // busca si existe un documento con el mismo nombre para la prueba
             List<Documento> docs = this.documentoRepo.findAllByNombre(nombre);
 
             // si hay documentos con el mismo nombre, busca el que corresponda a esa prueba
-            // y ese periodo de formación
+            // y ese periodo de formación o curso
             if (docs != null && docs.size() > 0) {
 
                 List<Integer> listaCodDocumentoPrueba = listaDocPrueba.stream()
@@ -287,7 +335,15 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                                 // elimina de documentoPrueba
 
                                 try {
-                                    this.periodoAcademicoDocForRepository.deleteByCodPeriodoAcademicoAndCodDocumento(periodoAcademicoRepository.getPAActive(), codDoc);
+
+                                    // si es curso, elimina del repo del curso, caso contrario elimina del repo de formación
+                                    if (codCurso != null) {
+                                        this.cursoDocumentoRepository.deleteByCodCursoEspecializacionAndCodDocumento(codCurso.longValue(), codDoc.longValue());
+                                    } else {
+                                        this.periodoAcademicoDocForRepository.deleteByCodPeriodoAcademicoAndCodDocumento(periodoAcademicoRepository.getPAActive(), codDoc);
+                                    }
+
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -307,17 +363,27 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         documento.setNombre(nombre);
         documento.setRuta(ruta);
 
-        // si el nombre contiene la plabara aprobados, se coloca APROBADOS en campo descripción de documento
+        // si el nombre contiene la palabara aprobados, se coloca APROBADOS en campo descripción de documento
         if (nombre.toLowerCase().contains("aprobados")) {
             documento.setDescripcion("APROBADOS");
         }
 
         documento = documentoRepo.save(documento);
 
-        PeriodoAcademicoDocumentoFor docPA = new PeriodoAcademicoDocumentoFor();
-        docPA.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());;
-        docPA.setCodDocumento(documento.getCodDocumento());
-        periodoAcademicoDocForRepository.save(docPA);
+        // si es curso, guarda en repo del curso, caso contrario guarda en repo de formación
+        if (codCurso != null) {
+            CursoDocumento cursoDoc = new CursoDocumento();
+            cursoDoc.setCodCursoEspecializacion(codCurso.longValue());
+            cursoDoc.setCodDocumento(documento.getCodDocumento().longValue());
+            cursoDocumentoRepository.save(cursoDoc);
+        } else {
+            PeriodoAcademicoDocumentoFor docPA = new PeriodoAcademicoDocumentoFor();
+            docPA.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
+            ;
+            docPA.setCodDocumento(documento.getCodDocumento());
+            periodoAcademicoDocForRepository.save(docPA);
+        }
+
 
         DocumentoPrueba doc = new DocumentoPrueba();
         doc.setCodPruebaDetalle(codPruebaDetalle);

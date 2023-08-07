@@ -10,16 +10,16 @@ import jakarta.mail.MessagingException;
 
 public interface NotificacionPruebaService {
 
-	 NotificacionPrueba save(NotificacionPrueba obj) throws DataException, MessagingException;
+    NotificacionPrueba save(NotificacionPrueba obj) throws DataException, MessagingException;
 
-	    List<NotificacionPrueba> getAll();
+    List<NotificacionPrueba> getAll();
 
 	    /*Optional<NotificacionPrueba> getById(Integer codigo);
 
 	    NotificacionPrueba update(NotificacionPrueba objActualizado);
 
 	    void delete(Integer codigo);*/
-		void enviarNotificacion(Integer codSubTipoPrueba) throws MessagingException, DataException, ParseException;
-	
-	
+
+
+    void enviarNotificacion(Integer subTipoPrueba, Integer codCurso) throws MessagingException, DataException, ParseException;
 }

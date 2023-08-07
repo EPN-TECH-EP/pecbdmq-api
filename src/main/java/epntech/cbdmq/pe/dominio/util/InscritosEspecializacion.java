@@ -15,5 +15,6 @@ public class InscritosEspecializacion {
 	private String apellido;
 	private String nombreCatalogoCurso;
 	private String correoPersonal;
+	private String codigoUnicoEstudiante;
 	
 }

@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import epntech.cbdmq.pe.servicio.EstudianteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +67,10 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
     @Autowired
     private PostulanteService postulanteService;
 
+    // estudianteService
+    @Autowired
+    private EstudianteService estudianteService;
+
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
     @Autowired
@@ -97,6 +103,21 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
     public void uploadFile(MultipartFile file, Integer codPruebaDetalle, Integer codFuncionario, String tipoResultado) throws DataException {
         try {
 
+            Boolean esPruebaCursoTemp = false;
+
+            /////// Identifica si es prueba de curso
+            Optional<PruebaDetalle> pruebaDetalle = pruebaDetalleRepository.findById(codPruebaDetalle);
+
+            if (pruebaDetalle.isPresent()) {
+                PruebaDetalle pd = pruebaDetalle.get();
+                if (pd.getCodCursoEspecializacion() != null) {
+                    esPruebaCursoTemp = true;
+                }
+            }
+
+            final Boolean esPruebaCurso = esPruebaCursoTemp;
+
+            /////// EXTRAER DATOS DE EXCEL
 
             List<ResultadoPruebaFisicaUtil> datosUtil = ResultadoPruebasHelper
                     .excelToDatosPruebasFisicasI(file.getInputStream(), tipoResultado);
@@ -113,15 +134,34 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
             LOGGER.info(tipoResultado);
 
+            /////// PROCESAR DATOS
+
             List<ResultadoPruebasFisicas> datos = datosFiltrados.stream().map(resultadoPruebaFisicaUtil -> {
                 ResultadoPruebasFisicas resultadoPruebasFisicas = new ResultadoPruebasFisicas();
-                Optional<Postulante> postulante = postulanteService.getByIdPostulante(resultadoPruebaFisicaUtil.getIdPostulante());
-                if (postulante.isEmpty()) {
-                    throw new RuntimeException("El postulante con el id: " + resultadoPruebaFisicaUtil.getIdPostulante() + " no existe");
+
+                Estudiante estudiante = null;
+                Optional<Postulante> postulante = null;
+
+                if (esPruebaCurso) {
+                    // buscar estudiante por codigoUnicoEstudiante
+                    estudiante = estudianteService.getEstudianteByCodigoUnico(resultadoPruebaFisicaUtil.getIdPostulante());
+                    if (estudiante == null) {
+                        throw new RuntimeException("El estudiante con el codigoUnico: " + resultadoPruebaFisicaUtil.getIdPostulante() + " no existe");
+                    }
+                } else {
+                    postulante = postulanteService.getByIdPostulante(resultadoPruebaFisicaUtil.getIdPostulante());
+                    if (postulante.isEmpty()) {
+                        throw new RuntimeException("El postulante con el id: " + resultadoPruebaFisicaUtil.getIdPostulante() + " no existe");
+                    }
                 }
 
                 // busca registro existente
-                Optional<ResultadoPruebasFisicas> resultadoPruebasFisicasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+                Optional<ResultadoPruebasFisicas> resultadoPruebasFisicasOpt = null;
+                if (esPruebaCurso) {
+                    resultadoPruebasFisicasOpt = this.getByCodEstudianteAndCodPruebaDetalle(estudiante.getCodEstudiante(), codPruebaDetalle);
+                } else {
+                    resultadoPruebasFisicasOpt = this.getByCodPostulanteAndCodPruebaDetalle(Integer.valueOf(postulante.get().getCodPostulante().intValue()), codPruebaDetalle);
+                }
 
                 if (resultadoPruebasFisicasOpt.isEmpty()) {
                     resultadoPruebasFisicas = new ResultadoPruebasFisicas();
@@ -130,7 +170,12 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
                 }
 
 
-                resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
+                // si es estudiante pasa el valor de codEstudiante, si no, el valor de postulante
+                if (esPruebaCurso) {
+                    resultadoPruebasFisicas.setCodEstudiante(estudiante.getCodEstudiante());
+                } else {
+                    resultadoPruebasFisicas.setCodPostulante(postulante.get().getCodPostulante().intValue());
+                }
                 resultadoPruebasFisicas.setResultado(resultadoPruebaFisicaUtil.getResultado());
                 resultadoPruebasFisicas.setResultadoTiempo(resultadoPruebaFisicaUtil.getResultadoTiempo());
                 resultadoPruebasFisicas.setCodPruebaDetalle(codPruebaDetalle);
@@ -145,6 +190,7 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
         }
 
     }
+
 
     @Override
     public ResultadoPruebasFisicas save(ResultadoPruebasFisicas obj) {
@@ -294,14 +340,18 @@ public class ResultadoPruebasFisicasServiceImpl implements ResultadoPruebasFisic
 
     @Override
     public void notificar(String mensaje) throws MessagingException {
-        // TODO Auto-generated method stub
+
 
     }
 
     @Override
     public Optional<ResultadoPruebasFisicas> getByCodPostulanteAndCodPruebaDetalle(Integer CodPostulante, Integer codPrueba) {
-        // TODO Auto-generated method stub
+
         return repo.findByCodPostulanteAndCodPruebaDetalle(CodPostulante, codPrueba);
+    }
+
+    private Optional<ResultadoPruebasFisicas> getByCodEstudianteAndCodPruebaDetalle(Integer codEstudiante, Integer codPruebaDetalle) {
+        return repo.findByCodEstudianteAndCodPruebaDetalle(codEstudiante, codPruebaDetalle);
     }
 
 }

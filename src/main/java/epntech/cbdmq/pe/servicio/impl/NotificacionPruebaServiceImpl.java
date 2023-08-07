@@ -1,23 +1,20 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EspecializacionConst.CURSO_NO_PRUEBAS;
 import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
-import epntech.cbdmq.pe.dominio.admin.Postulante;
 import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.admin.*;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.PruebasRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
 import epntech.cbdmq.pe.servicio.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +45,12 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
     @Autowired
     PostulanteService postulanteService;
 
+    // cursos
+    @Autowired
+    private PruebasRepository pruebasRepository;
+    @Autowired
+    private EstudianteService estudianteService;
+
 
     @Override
     public NotificacionPrueba save(NotificacionPrueba obj) throws DataException, MessagingException {
@@ -64,25 +67,54 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
     }
 
     @Override
-    public void enviarNotificacion(Integer subTipoPrueba) throws MessagingException, DataException, ParseException {
-        Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleService.getBySubtipoAndPA(subTipoPrueba, periodoAcademicoService.getPAActivo());
-        if (pruebaDetalleOpt.isEmpty()) {
-            throw new DataException("No existe el subtipo de prueba");
+    public void enviarNotificacion(Integer subTipoPrueba, Integer codCurso) throws MessagingException, DataException, ParseException {
+
+        Optional<PruebaDetalle> pruebaDetalleOpt = Optional.empty();
+
+        // funcionalidad para curso
+        if (codCurso != null) {
+            pruebaDetalleOpt = pruebaDetalleService.findByCodCursoEspecializacionAndCodSubtipoPrueba(codCurso, subTipoPrueba);
+            if (pruebaDetalleOpt.isEmpty()) {
+                throw new DataException("No existe el subtipo de prueba");
+            }
+        } else {
+            pruebaDetalleOpt = pruebaDetalleService.getBySubtipoAndPA(subTipoPrueba, periodoAcademicoService.getPAActivo());
+            if (pruebaDetalleOpt.isEmpty()) {
+                throw new DataException("No existe el subtipo de prueba");
+            }
         }
 
         PruebaDetalle pruebaDetalle = pruebaDetalleOpt.get();
         LocalDateTime fechaActual = LocalDateTime.now();
-        List<ResultadosPruebasDatos> aprobados = repo1.get_approved_applicants(subTipoPrueba);
+
+
+        List<ResultadosPruebasDatos> aprobados;
+        if (codCurso != null) {
+            // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
+            aprobados = pruebasRepository.get_approved_by_test_esp(subTipoPrueba.longValue(), codCurso.longValue());
+        } else {
+            aprobados = repo1.get_approved_applicants(subTipoPrueba);
+        }
 
         StringBuilder errorMessageBuilder = new StringBuilder();
 
         for (ResultadosPruebasDatos resultadosPruebasDatos : aprobados) {
-            DatoPersonal dato = postulanteService.getById(resultadosPruebasDatos.getCodPostulante().longValue())
-                    .map(postulante -> dpSvc.getDatosPersonalesById(postulante.getCodDatoPersonal()).orElse(null))
-                    .orElse(null);
+            DatoPersonal dato;
+
+            // si es curso, obtiene dato personal asociado a estudiante
+            if (codCurso != null) {
+                dato = estudianteService.getByIdEstudiante(resultadosPruebasDatos.getIdPostulante())
+                        .map(estudiante -> dpSvc.getDatosPersonalesById(estudiante.getCodDatosPersonales()).orElse(null))
+                        .orElse(null);
+            } else {
+
+                dato = postulanteService.getById(resultadosPruebasDatos.getCodPostulante().longValue())
+                        .map(postulante -> dpSvc.getDatosPersonalesById(postulante.getCodDatoPersonal()).orElse(null))
+                        .orElse(null);
+            }
 
             if (dato == null) {
-                throw new DataException("No existe un dato personal asociado al postulante");
+                throw new DataException("No existe un dato personal asociado");
             }
 
             NotificacionPrueba noti = new NotificacionPrueba();
@@ -106,7 +138,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
         }
 
         // Enviar el mensaje de error una vez, si es que hay algún error.
-        if (errorMessageBuilder.length() > 0) {
+        if (!errorMessageBuilder.isEmpty()) {
             throw new DataException(errorMessageBuilder.toString());
         }
     }

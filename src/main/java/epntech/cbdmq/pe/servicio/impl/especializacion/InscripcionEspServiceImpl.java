@@ -121,20 +121,20 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     public DataSize TAMAÑO_MAXIMO;
 
     @Override
-    public InscripcionEsp save(InscripcionEsp inscripcionEsp) throws DataException {
+    public InscripcionEsp save(InscripcionEsp inscripcionEsp) {
         Boolean convocatoria = convocatoriaCursoRepository.validaConvocatoriaCursoActiva(inscripcionEsp.getCodCursoEspecializacion());
         if (!convocatoria)
-            throw new DataException(CONVOCATORIA_NO_ACTIVA);
+            throw new BusinessException(CONVOCATORIA_NO_ACTIVA);
 
         Optional<InscripcionEsp> inscripcionEspRepositoryOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(inscripcionEsp.getCodEstudiante(), inscripcionEsp.getCodCursoEspecializacion());
         if (inscripcionEspRepositoryOptional.isPresent())
-            throw new DataException(REGISTRO_YA_EXISTE);
+            throw new BusinessException(REGISTRO_YA_EXISTE);
 
         Optional<Estudiante> estudianteOptional = estudianteRepository.findById(inscripcionEsp.getCodEstudiante().intValue());
         Optional<Curso> cursoOptional = cursoRepository.findById(inscripcionEsp.getCodCursoEspecializacion());
 
         if (estudianteOptional.isEmpty() || cursoOptional.isEmpty())
-            throw new DataException(REGISTRO_NO_EXISTE);
+            throw new BusinessException(REGISTRO_NO_EXISTE);
 
         LocalDate fechaActual = LocalDate.now();
         inscripcionEsp.setFechaInscripcion(fechaActual);
@@ -144,10 +144,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     }
 
     @Override
-    public InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) throws DataException {
+    public InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) {
         Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(inscripcionEspActualizada.getCodEstudiante(), inscripcionEspActualizada.getCodCursoEspecializacion());
         if (inscripcionEspOptional.isPresent() && !inscripcionEspOptional.get().getCodInscripcion().equals(inscripcionEspActualizada.getCodInscripcion()))
-            throw new DataException(REGISTRO_YA_EXISTE);
+            throw new BusinessException(REGISTRO_YA_EXISTE);
 
         return inscripcionEspRepository.save(inscripcionEspActualizada);
     }
@@ -164,7 +164,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	}
 
 	@Override
-	public Optional<InscripcionDatosEsp> getById(Long codInscripcion) throws DataException {
+	public Optional<InscripcionDatosEsp> getById(Long codInscripcion) {
 		InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
@@ -187,12 +187,11 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	}
 
 	@Override
-	public void delete(Long codInscripcion) throws DataException {
-		Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
-		if(inscripcionEspOptional.isEmpty())
-			throw new DataException(REGISTRO_NO_EXISTE);
+	public void delete(Long codInscripcion) {
+		InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-        inscripcionEspRepository.deleteById(codInscripcion);
+        inscripcionEspRepository.deleteById(inscripcionEsp.getCodInscripcion());
     }
 
     @Override
@@ -415,7 +414,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 				.orElseThrow(() -> new BusinessException(NO_SUBTIPO_PRUEBA));
 
 		PruebaDetalle pruebaDetalle = pruebaDetalleRepository
-				.findByCodCursoEspecializacionAndCodSubtipoPrueba(curso.getCodCursoEspecializacion(), subTipoPrueba.getCodSubtipoPrueba().longValue())
+				.findByCodCursoEspecializacionAndCodSubtipoPrueba(curso.getCodCursoEspecializacion().intValue(), subTipoPrueba.getCodSubtipoPrueba())
 				.orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
 
 		List<InscritosEspecializacion> listaInscritos;
@@ -447,9 +446,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		CursoDatos cursoDatos = cursoEntityRepository.getCursoDatos(codCursoEspecializacion)
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		List<InscritosValidos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
+		List<ResultadosPruebasDatos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
 
-		for (InscritosValidos inscritosValidos : listaInscritosValidos) {
+		for (ResultadosPruebasDatos inscritosValidos : listaInscritosValidos) {
 			Parametro parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.resultado.prueba")
 					.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
 

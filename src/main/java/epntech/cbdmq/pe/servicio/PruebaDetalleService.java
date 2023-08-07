@@ -12,6 +12,8 @@ public interface PruebaDetalleService {
 
 	Optional<PruebaDetalle> getBySubtipoAndPA(Integer subtipo, Integer periodo);
 
+	Optional<PruebaDetalle> findByCodCursoEspecializacionAndCodSubtipoPrueba(Integer codCursoEspecializacion, Integer subtipo);
+
 	PruebaDetalle update(PruebaDetalle objActualizado);
 
 	PruebaDetalle save(PruebaDetalle obj);

@@ -44,7 +44,18 @@ public class NotificacionPruebaResource {
 	@GetMapping("/aprobadosPorPrueba")
 	public ResponseEntity<HttpResponse> resetPassword(@RequestParam Integer codSubTipoPrueba)
 			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion, DataException, ParseException {
-		objService.enviarNotificacion(codSubTipoPrueba);
+		objService.enviarNotificacion(codSubTipoPrueba, null);
+		return response(OK, "Notificacion enviada a cada uno de los postulantes aprobados");
+	}
+
+
+	//////////////////////////  CURSOS  //////////////////////////
+	@GetMapping("/aprobadosPorPruebaCurso")
+	public ResponseEntity<HttpResponse> resetPassword(
+			@RequestParam Integer codSubTipoPrueba,
+			@RequestParam Integer codCurso)
+			throws MessagingException, EmailNoEncontradoExcepcion, UsuarioNoEncontradoExcepcion, DataException, ParseException {
+		objService.enviarNotificacion(codSubTipoPrueba, codCurso);
 		return response(OK, "Notificacion enviada a cada uno de los postulantes aprobados");
 	}
 	
