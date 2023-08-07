@@ -3,8 +3,11 @@ package epntech.cbdmq.pe.servicio.especializacion;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Pageable;
 import epntech.cbdmq.pe.dominio.util.DatoPersonalEstudianteDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +50,8 @@ public interface InscripcionEspService {
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
 	
 	List<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
-	
+	Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException;
+
 	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
 
 	List<ValidacionRequisitosDatos> getRequisitos(Long codInscripcion);
@@ -55,10 +59,19 @@ public interface InscripcionEspService {
 	void updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
 	
 	List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion);
-	
+	List<InscripcionEsp> getAll2();
+
 	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula) throws Exception;
 	DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception;
+	void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException;
+
+	void generarPDF(HttpServletResponse response, String filePath, String nombre, Long codCurso, String estado)
+			throws DocumentException, IOException, DataException;
+	Boolean generarDocListadoGeneral(HttpServletResponse response,  Long codCurso, String estado);
+	public Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso);
+	public Boolean generarDocListadoValidacion(HttpServletResponse response,Long codCurso);
+	public Boolean generarDocListadoPruebas(HttpServletResponse response,Long codCurso);
 }

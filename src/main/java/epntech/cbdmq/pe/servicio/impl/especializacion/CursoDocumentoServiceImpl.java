@@ -50,11 +50,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     public DataSize TAMAÑO_MÁXIMO;
 
 
-
     @Override
     public Set<Documento> getDocumentos(Long codCurso) throws IOException {
         return documentoRepository.getDocumentosEspecializacion(codCurso.intValue());
     }
+
     @Override
     public Documento updateDocumento(Long codDocumento, MultipartFile archivo) throws IOException {
         Documento documento = documentoRepository.findById(codDocumento.intValue())
@@ -93,15 +93,16 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Override
     public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
         Curso curso = cursoRepository.getById(codCursoEspecializacion);
-        if(curso==null)
+        if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
         guardarDocumentos(archivos, curso.getCodCursoEspecializacion());
         return curso;
     }
+
     @Override
     public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) {
         Curso curso = cursoRepository.getById(codCursoEspecializacion);
-        if(curso==null)
+        if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
 
         Documento documento = documentoRepository.findById(codDocumento.intValue())
@@ -148,6 +149,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     }
 
+    @Override
     @Transactional
     public void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion) throws DataException {
 
@@ -156,7 +158,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
 
         Curso curso = cursoRepository.getById(codCursoEspecial);
-        if (curso!=null) {
+        if (curso != null) {
             codCursoEspecial = curso.getCodCursoEspecializacion();
         } else {
             throw new DataException(CURSO_NO_EXISTE);
