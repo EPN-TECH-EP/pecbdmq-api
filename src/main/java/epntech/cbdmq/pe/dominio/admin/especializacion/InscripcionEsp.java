@@ -71,7 +71,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 				+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
 				+ "and upper(e.estado) = 'ACTIVO' "
 				+ "and upper(dp.estado) = 'ACTIVO' "
-				+ "and upper(c.estado) = 'ACTIVO' "
+				+ "and upper(c.estado) <> 'ELIMINADO' "
 				+ "and upper(cc.estado) = 'ACTIVO' "
 				+ "and upper(i.estado) = 'ASIGNADO' "
 				+ "and i.cod_usuario = :codUsuario "
@@ -84,7 +84,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 				+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
 				+ "and upper(e.estado) = 'ACTIVO' "
 				+ "and upper(dp.estado) = 'ACTIVO' "
-				+ "and upper(c.estado) = 'ACTIVO' "
+				+ "and upper(c.estado) <> 'ELIMINADO' "
 				+ "and upper(cc.estado) = 'ACTIVO' "
 				+ "and upper(i.estado) = 'PENDIENTE'",
 		resultSetMapping = "findInscripcionesByUsuario")
@@ -105,7 +105,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
 		+ "and upper(e.estado) = 'ACTIVO' "
 		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(c.estado) <> 'ELIMINADO' "
 		+ "and upper(cc.estado) = 'ACTIVO' "
 		+ "and i.cod_inscripcion = :codInscripcion", 
 		resultSetMapping = "findInscripcion")
@@ -126,7 +126,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
 		+ "and upper(e.estado) = 'ACTIVO' "
 		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(c.estado) <> 'ELIMINADO'"
 		+ "and upper(cc.estado) = 'ACTIVO' "
 		+ "and i.cod_inscripcion = :codInscripcion", 
 		resultSetMapping = "findInscripcionDatos")
@@ -150,7 +150,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
 		+ "and upper(e.estado) = 'ACTIVO' "
 		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(c.estado) <> 'ELIMINADO' "
 		+ "and upper(cc.estado) = 'ACTIVO' "
 		+ "and i.cod_curso_especializacion = :codCurso", 
 		resultSetMapping = "findInscripcionPorCurso")
@@ -170,7 +170,7 @@ query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.ap
 		+ "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos " 
 		+ "and upper(e.estado) = 'ACTIVO' "
 		+ "and upper(dp.estado) = 'ACTIVO' " 
-		+ "and upper(c.estado) = 'ACTIVO' "
+		+ "and upper(c.estado) <> 'ELIMINADO' "
 		+ "and upper(cc.estado) = 'ACTIVO' "
 		+ "and upper(i.estado) = 'VALIDO' "
 		+ "and i.cod_curso_especializacion = :codCurso ", 
