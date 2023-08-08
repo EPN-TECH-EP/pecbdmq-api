@@ -66,11 +66,11 @@ public class ConvocatoriaCurso {
     private String estado;
 
     @Column(name = "fecha_inicio_convocatoria")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    //@JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaInicioConvocatoria;
 
     @Column(name = "fecha_fin_convocatoria")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    //@JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaFinConvocatoria;
 
     @Column(name = "hora_inicio_convocatoria")
@@ -90,7 +90,7 @@ public class ConvocatoriaCurso {
     private Long codCursoEspecializacion;
 
     @Column(name = "fecha_actual")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+   //@JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaActual;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
