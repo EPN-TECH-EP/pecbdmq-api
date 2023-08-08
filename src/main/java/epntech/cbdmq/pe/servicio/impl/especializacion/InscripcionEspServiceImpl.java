@@ -787,7 +787,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setApellido(funcionario.getApellidos());
         //TODO no esta tomando cedula
         newDatoPersonal.setCedula(funcionario.getCedula());
-        newDatoPersonal.setCorreoPersonal(funcionario.getCorreoPersonal());
+        newDatoPersonal.setCorreoPersonal(funcionario.getCorreoPersonal()==null?funcionario.getCorreoPersonal():funcionario.getCorreoInstitucional());
         newDatoPersonal.setEstado(ACTIVO);
         newDatoPersonal.setNombre(funcionario.getNombres());
         newDatoPersonal.setNumTelefConvencional(funcionario.getTelefonoConvencional());
