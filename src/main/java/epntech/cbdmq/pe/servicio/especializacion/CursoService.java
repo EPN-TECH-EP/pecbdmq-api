@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
+import jakarta.mail.MessagingException;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -19,7 +20,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface CursoService {
 
-	Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException;
+	Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException, MessagingException;
 
 	Curso update(Curso objActualizado);
 
