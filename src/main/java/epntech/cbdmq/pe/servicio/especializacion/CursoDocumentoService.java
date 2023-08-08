@@ -16,7 +16,7 @@ public interface CursoDocumentoService {
     public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion, DataException;
     void guardarDocumentos(List<MultipartFile> archivos, Long codCursoEspecializacion)
             throws IOException, ArchivoMuyGrandeExcepcion, DataException;
-    void deleteDocumento(Long codCursoEspecializacion, Long codDocumento);
+    void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException;
     void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion)throws DataException ;
 
 

@@ -100,7 +100,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     }
 
     @Override
-    public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) {
+    public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException {
         Curso curso = cursoRepository.getById(codCursoEspecializacion);
         if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
@@ -121,6 +121,9 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
             }
 
+        }
+        else{
+            throw new DataException(ARCHIVO_NO_EXISTE);
         }
 
     }
