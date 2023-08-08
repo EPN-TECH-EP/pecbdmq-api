@@ -9,8 +9,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.validation.annotation.Validated;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import epntech.cbdmq.pe.dominio.admin.Requisito;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,20 +46,20 @@ public class Curso {
 
 	@NotNull(message = "El atributo 'fechaInicioCurso' es obligatorio")
 	@Column(name = "fecha_inicio_curso")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	//@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaInicioCurso;
 
 	@NotNull(message = "El atributo 'fechaFinCurso' es obligatorio")
 	@Column(name = "fecha_fin_curso")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	//@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaFinCurso;
 	
 	@Column(name = "fecha_inicio_carga_nota")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	//@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaInicioCargaNota;
 	
 	@Column(name = "fecha_fin_carga_nota")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	//@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaFinCargaNota;
 	
 	@Column(name = "nota_minima")
@@ -84,7 +82,7 @@ public class Curso {
 	private Boolean tieneModulos;
 
 	@Column(name = "porcentaje_aceptacion_curso")
-	private Double porcenatajeAceptacion;
+	private Double porcentajeAceptacionCurso;
 
 	@Column(name = "cod_usuario_creacion")
 	private Long codUsuarioCreacion;

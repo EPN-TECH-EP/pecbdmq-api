@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource.especializacion;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import static epntech.cbdmq.pe.util.ResponseEntityUtil.response;
@@ -46,5 +48,9 @@ public class CursoDocumentoResource {
             @RequestParam Long codDocumento) throws IOException, DataException {
         cursoDocumentoService.deleteDocumento(codCursoEspecializacion, codDocumento);
         return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
+    @GetMapping("/documentosByCurso/{codigoCurso}")
+    public Set<Documento> listarDocumentosByPeriodo(@PathVariable("codigoCurso") Long codigoCurso) {
+        return cursoDocumentoService.getDocumentosByCurso(codigoCurso);
     }
 }

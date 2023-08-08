@@ -152,6 +152,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     }
 
+
     @Override
     @Transactional
     public void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion) throws DataException {
@@ -231,6 +232,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         cursoActivoDocumento.setCodDocumento(documento.getCodDocumento().longValue());
         cursoDocumentoRepository.save(cursoActivoDocumento);
 
+    }
+
+    @Override
+    public Set<Documento> getDocumentosByCurso(Long codigoCurso) {
+        return documentoRepository.getDocumentosEspecializacion(Math.toIntExact(codigoCurso));
     }
 
     private String ruta(Long codigo) {
