@@ -98,7 +98,7 @@ public class CursoResource {
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}
 	@PatchMapping("/validar/{id}")
-	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestBody ParamsValidacion validacion) {
+	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestBody ParamsValidacion validacion) throws MessagingException {
 		Curso curso = cursoServiceImpl.updateEstadoAprobadoObservaciones(codigo, validacion.getAprueba(),validacion.getObservacion(),validacion.getCodUsuarioAprueba());
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}

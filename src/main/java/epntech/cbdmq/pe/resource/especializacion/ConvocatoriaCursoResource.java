@@ -9,10 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.postgresql.util.PSQLException;
@@ -45,15 +42,15 @@ import jakarta.mail.MessagingException;
 @RequestMapping("/convocatoriaCurso")
 public class ConvocatoriaCursoResource {
 
-	@Autowired
-	private ConvocatoriaCursoServiceImpl convocatoriaCursoServiceImpl;
-	
-	@PostMapping("/crear")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody(required = true) ConvocatoriaCurso convocatoriaCurso
-			//, @RequestParam(required = true) List<MultipartFile> archivos
-		)
-			throws DataException, IOException, ArchivoMuyGrandeExcepcion, ParseException {
+    @Autowired
+    private ConvocatoriaCursoServiceImpl convocatoriaCursoServiceImpl;
+
+    @PostMapping("/crear")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardar(@RequestBody(required = true) ConvocatoriaCurso convocatoriaCurso
+                                     //, @RequestParam(required = true) List<MultipartFile> archivos
+    )
+            throws DataException, IOException, ArchivoMuyGrandeExcepcion, ParseException {
 		/*
 
 		if (archivos.get(0).getSize() == 0)
@@ -68,42 +65,51 @@ public class ConvocatoriaCursoResource {
 		convocatoriaCurso = objectMapper.readValue(datos, ConvocatoriaCurso.class);
 
 		 */
-		
-		convocatoriaCurso = convocatoriaCursoServiceImpl.save(convocatoriaCurso
-				//, archivos
-		);
 
-		return new ResponseEntity<>(convocatoriaCurso, HttpStatus.OK);
-	}
-	
-	@GetMapping("/listar")
-	public List<ConvocatoriaCurso> listar() {
-		return convocatoriaCursoServiceImpl.listAll();
-	}
+        convocatoriaCurso = convocatoriaCursoServiceImpl.save(convocatoriaCurso
+                //, archivos
+        );
 
-	@GetMapping("/{id}")
-	public ResponseEntity<ConvocatoriaCurso> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
-		return convocatoriaCursoServiceImpl.getByID(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
-	
-	@GetMapping("/byCurso/{id}")
-	public ResponseEntity<ConvocatoriaCurso> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
-		return convocatoriaCursoServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) throws DataException {
-		convocatoriaCursoServiceImpl.delete(codigo);
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @RequestBody ConvocatoriaCurso obj) throws DataException{
-				
-		obj.setCodConvocatoria(codigo);
-		return new ResponseEntity<>(convocatoriaCursoServiceImpl.update(obj), HttpStatus.OK);
+        return new ResponseEntity<>(convocatoriaCurso, HttpStatus.OK);
+    }
+
+    @GetMapping("/listar")
+    public List<ConvocatoriaCurso> listar() {
+        return convocatoriaCursoServiceImpl.listAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ConvocatoriaCurso> obtenerPorId(@PathVariable("id") long codigo) throws DataException {
+        return convocatoriaCursoServiceImpl.getByID(codigo).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/byCurso/{id}")
+    public ResponseEntity<ConvocatoriaCurso> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
+        return convocatoriaCursoServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
+                .orElseGet(() -> null);
+    }
+
+    @GetMapping("/validoByCurso/{id}")
+    public ResponseEntity<ConvocatoriaCurso> obtenerValidoPorCurso(@PathVariable("id") long codigo) throws DataException {
+        if (convocatoriaCursoServiceImpl.validaConvocatoriaCursoActiva(codigo))
+            return convocatoriaCursoServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        else
+            return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) throws DataException {
+        convocatoriaCursoServiceImpl.delete(codigo);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarDatos(@PathVariable("id") long codigo, @RequestBody ConvocatoriaCurso obj) throws DataException {
+
+        obj.setCodConvocatoria(codigo);
+        return new ResponseEntity<>(convocatoriaCursoServiceImpl.update(obj), HttpStatus.OK);
 		
 		/*return (ResponseEntity<ConvocatoriaCurso>) convocatoriaCursoServiceImpl.getByID(codigo).map(datosGuardados -> {
 			datosGuardados.setFechaInicioConvocatoria(obj.getFechaInicioConvocatoria());
@@ -124,34 +130,34 @@ public class ConvocatoriaCursoResource {
 			
 			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
 		}).orElseGet(() -> ResponseEntity.notFound().build());*/
-	}
-	
-	@DeleteMapping("/eliminarDocumento")
-	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Long codConvocatoria, @RequestParam Long codDocumento)
-			throws IOException, DataException {
+    }
 
-		convocatoriaCursoServiceImpl.deleteDocumento(codConvocatoria,codDocumento);
-		
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-	}
-	
-	@PostMapping("/notificar")
-	public ResponseEntity<?> notificar(@RequestParam("codConvocatoria") Long codConvocatoria)
-			throws MessagingException, DataException, PSQLException, IOException {
-		
-		//mensaje = "Estimad@, la convocatoria al curso %s inicia Desde: %tF, %tT Hasta: %tF, %tT ";
-		convocatoriaCursoServiceImpl.notificar(codConvocatoria);
-		
-		return response(HttpStatus.OK, EMAIL_SEND);
-	}
-	
-	/*valida si existe una convocatoria de un curso activa en base a la fecha y hora actual*/
-	@GetMapping("/validaConvocatoriaCursoActiva/{id}")
-	public ResponseEntity<?> validaConvocatoriaCursoActiva(@PathVariable("id") long codigo) throws DataException {
-		return response(HttpStatus.OK, convocatoriaCursoServiceImpl.validaConvocatoriaCursoActiva(codigo).toString());
-	}
-	
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+    @DeleteMapping("/eliminarDocumento")
+    public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Long codConvocatoria, @RequestParam Long codDocumento)
+            throws IOException, DataException {
+
+        convocatoriaCursoServiceImpl.deleteDocumento(codConvocatoria, codDocumento);
+
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
+
+    @PostMapping("/notificar")
+    public ResponseEntity<?> notificar(@RequestParam("codConvocatoria") Long codConvocatoria)
+            throws MessagingException, DataException, PSQLException, IOException {
+
+        //mensaje = "Estimad@, la convocatoria al curso %s inicia Desde: %tF, %tT Hasta: %tF, %tT ";
+        convocatoriaCursoServiceImpl.notificar(codConvocatoria);
+
+        return response(HttpStatus.OK, EMAIL_SEND);
+    }
+
+    /*valida si existe una convocatoria de un curso activa en base a la fecha y hora actual*/
+    @GetMapping("/validaConvocatoriaCursoActiva/{id}")
+    public ResponseEntity<?> validaConvocatoriaCursoActiva(@PathVariable("id") long codigo) throws DataException {
+        return response(HttpStatus.OK, convocatoriaCursoServiceImpl.validaConvocatoriaCursoActiva(codigo).toString());
+    }
+
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }

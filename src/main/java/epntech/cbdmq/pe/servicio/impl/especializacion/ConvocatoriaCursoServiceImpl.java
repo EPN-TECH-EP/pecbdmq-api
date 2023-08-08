@@ -109,9 +109,6 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
     public Optional<ConvocatoriaCurso> getByCurso(Long codCursoEspecializacion) throws DataException {
         Optional<ConvocatoriaCurso> convocatoriaCurso = convocatoriaCursoRepository
                 .getConvocatoriaByCodCursoEspecializacion(codCursoEspecializacion);
-        if (convocatoriaCurso.isEmpty())
-            throw new DataException(REGISTRO_NO_EXISTE);
-
         return convocatoriaCurso;
     }
 
