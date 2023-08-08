@@ -9,10 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.postgresql.util.PSQLException;
@@ -90,7 +87,7 @@ public class ConvocatoriaCursoResource {
     @GetMapping("/byCurso/{id}")
     public ResponseEntity<ConvocatoriaCurso> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
         return convocatoriaCursoServiceImpl.getByCurso(codigo).map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> null);
     }
 
     @GetMapping("/validoByCurso/{id}")
