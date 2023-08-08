@@ -31,7 +31,11 @@ public class SeguridadConst {
 			"/apicbdmq/**", 
 			"/swagger-ui/**",
 			"/api-docs/**", 
-			"/periodoacademico/validaestado" };
+			"/periodoacademico/validaestado",
+			"/curso/**",
+			"/cursoEstado/**",
+			"/inscripcionEsp/**",
+	};
 	
 	@Value("${pecb.app-key}")
 	public static String APP_KEY;

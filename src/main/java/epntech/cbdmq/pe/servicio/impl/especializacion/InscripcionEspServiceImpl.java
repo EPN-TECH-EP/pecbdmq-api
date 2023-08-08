@@ -35,6 +35,10 @@ import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
 import epntech.cbdmq.pe.util.ExporterPdf;
 import epntech.cbdmq.pe.util.Utilitarios;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.StoredProcedureQuery;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +47,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
@@ -115,6 +120,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     @Autowired
     private CursoDocumentoService cursoDocumentoSvc;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
     @Value("${spring.servlet.multipart.max-file-size}")
@@ -138,9 +149,23 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         LocalDate fechaActual = LocalDate.now();
         inscripcionEsp.setFechaInscripcion(fechaActual);
-        inscripcionEsp.setEstado("INSCRITO");
+        inscripcionEsp.setEstado("PENDIENTE");
 
-        return inscripcionEspRepository.save(inscripcionEsp);
+        InscripcionEsp nuevaInscripcion = inscripcionEspRepository.save(inscripcionEsp);
+
+        // inserta los requisitos por postulante para la validación
+        // cbdmq.insert_requisitos_curso(p_cod_inscripcion integer, p_cod_curso integer)
+        StoredProcedureQuery sql = entityManager.createStoredProcedureQuery("cbdmq.insert_requisitos_curso");
+        sql.registerStoredProcedureParameter("p_cod_inscripcion", Integer.class, ParameterMode.IN);
+        sql.registerStoredProcedureParameter("p_cod_curso", Integer.class, ParameterMode.IN);
+        sql.setParameter("p_cod_inscripcion", nuevaInscripcion.getCodInscripcion().intValue());
+        sql.setParameter("p_cod_curso", nuevaInscripcion.getCodCursoEspecializacion().intValue());
+        sql.execute();
+        sql.getSingleResult();
+
+
+        return nuevaInscripcion;
+
     }
 
     @Override
@@ -582,13 +607,19 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                 Optional<FuncionarioApiDto> funcionarioSinRegistrar = apiFuncionarioCBDMQSvc.servicioFuncionarios(cedula);
 
                 if (funcionarioSinRegistrar.isPresent()) {
+                    // dato personal
                     DatoPersonal newDatoPersonal = createDatoPersonalFromFuncionario(funcionarioSinRegistrar.get());
                     newDatoPersonal.setCedula(cedula);
+                    newDatoPersonal.setEstado(ACTIVO);
+
+                    // usuario
                     Usuario newUser = new Usuario();
                     newUser.setCodDatosPersonales(newDatoPersonal);
                     newUser.setNombreUsuario(newDatoPersonal.getCedula());
+                    newUser.setClave(this.encodePassword(cedula));
                     newUser=usuarioSvc.registrar(newUser);
 
+                    // estudiante
                     Estudiante newEstudiante = new Estudiante();
                     newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
@@ -605,7 +636,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                         throw new DataException(REGISTRO_NO_EXISTE);
                     }
 
-                    //TODO se asimila que solo debe haber uno por que la cedula solo devuelve uno
+                    //TODO se asume que solo debe haber uno por que la cedula solo devuelve uno
                    System.out.println("ciudadanoApiDto: "+ciudadanoApiDto.getCedula());
                      DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
@@ -622,6 +653,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     Usuario newUser = new Usuario();
                     newUser.setNombreUsuario(datoPersonalObj.get().getCedula());
                     newUser.setCodDatosPersonales(datoPersonalObj.get());
+                    newUser.setClave(this.encodePassword(cedula));
                     usuarioSvc.crear(newUser);
 
                     Estudiante newEstudiante = new Estudiante();
@@ -663,6 +695,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         Usuario newUser = new Usuario();
         newUser.setCodDatosPersonales(datoPersonal);
         newUser.setNombreUsuario(datoPersonal.getCedula());
+        newUser.setClave(this.encodePassword(datoPersonal.getCedula()));
         newUser=usuarioSvc.registrar(newUser);
 
         Estudiante newEstudiante = new Estudiante();
@@ -847,6 +880,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
             arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayFormacion(dato))));
         }
         return arrayMulti;
+    }
+
+    private String encodePassword(String password) {
+
+        String encodedPassword = passwordEncoder.encode(password);
+        return encodedPassword;
     }
 
 
