@@ -26,8 +26,11 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     private CursoEstadoRepository cursoEstadoRepository;
     @Autowired
     private EstadosRepository estadoRepository;
-    //@Autowired
-    //private InscripcionEspService inscripcionEspSvc;
+    /*
+    @Autowired
+    private InscripcionEspService inscripcionEspSvc;
+
+     */
 
     @Override
     public CursoEstado save(CursoEstado cursoEstado) throws DataException {
@@ -128,7 +131,8 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     @Override
     public String updateState(HttpServletResponse response,Integer idCurso, Integer idCursoEstado) {
         String mensaje=cursoEstadoRepository.updateState(idCurso, idCursoEstado);
-        /*if(mensaje.equals(INSCRIPCION)){
+        /*
+        if(mensaje.equals(INSCRIPCION)){
 
             inscripcionEspSvc.generarDocListadoInscripcion(response, Long.valueOf(idCurso));
 
@@ -140,6 +144,8 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
         else if (mensaje.equals(VALIDACION_PRUEBAS)){
             inscripcionEspSvc.generarDocListadoPruebas(response, Long.valueOf(idCurso));
         }*/
+
+         */
 
         return mensaje;
     }
