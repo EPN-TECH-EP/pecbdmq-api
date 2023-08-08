@@ -145,8 +145,6 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
             inscripcionEspSvc.generarDocListadoPruebas(response, Long.valueOf(idCurso));
         }*/
 
-         */
-
         return mensaje;
     }
 

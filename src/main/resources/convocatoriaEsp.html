@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recuperación de contraseña</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 200px;
+        }
+        .message {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .message h2 {
+            margin-top: 0;
+        }
+        .message p {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <img src="https://cem.epn.edu.ec/imagenes/logos_institucionales/big_jpg/EPN_logo_big.jpg" alt="Logo">
+    </div>
+    <div class="message">
+        <h2>Se ha abierto el proceso de convocatoria para el curso ${descripcionCurso}</h2>
+        <p>Estimado(a) funcionario de talento humano</p>
+        <p>Se le informa que a partir de ${fechaInicioConvocatoria} se da el inicio de este proceso de convocatoria</p>
+        <p> Información que debe ser tomada para que pueda tomar las acciones correspondientes</p>
+        <p>A continucación se detalla más información del curso:</p>
+        <p>El curso  ${descripcionCurso}</p>
+        <p>Se tiene previsto que inicie ${fechaInicioCurso}</p>
+        <p>y culmine ${fechaFinCurso}</p>
+        <p>con ${cupos} cupos abiertos en donde es importante cumplir con los siguientes requisitos</p>
+        <p>${requisitos}</p>
+        <p>Además, para que pueda sucitarse el recibimiento de inscripciones se ha habilitado el siguiente link</p>
+        <p>${link}</p>
+        <p>Tenga en cuenta que este link es reservado, asegurese de revisar quienes serán sus destinatarios</p>
+    </div>
+    <div class="footer">
+        <p>Este correo electrónico fue enviado automáticamente. Por favor, no respondas a este correo.</p>
+        <p> Plataforma educativa - CBDMQ</p>
+    </div>
+</div>
+</body>
+</html>

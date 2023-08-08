@@ -84,13 +84,19 @@ public class CursoServiceImpl implements CursoService {
     @Override
     public Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException {
 
+        // valida si no hay documentos y sale con error
+        if (documentos == null || documentos.isEmpty()) {
+            throw new BusinessException("No se ha adjuntado ningún documento");
+        }
+
+
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
         JsonNode jsonNode = objectMapper.readTree(datos);
         System.out.println("jsonNode: " + jsonNode);
 
-        Curso cursoDatos = new Curso();//objectMapper.readValue(datos, Curso.class);
+        Curso cursoDatos = objectMapper.readValue(datos, Curso.class);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -176,13 +182,18 @@ public class CursoServiceImpl implements CursoService {
 
         Set<Requisito> requisitos = cursoDatos.getRequisitos();
 
-        Set<Requisito> reqs = new HashSet<>();
+        // valida si no hay requisitos y sale con error
+        if (requisitos == null || requisitos.isEmpty()) {
+            throw new BusinessException("No se ha establecido ningún requisito");
+        }
+
+        /*Set<Requisito> reqs = new HashSet<>();
         for (
                 Requisito r : requisitos) {
             Requisito requisito = new Requisito();
             requisito.setCodigoRequisito(r.getCodigoRequisito());
             reqs.add(requisito);
-        }
+        }*/
 
         Aula aula = aulaRepository.findById(cursoDatos.getCodAula())
                 .orElseThrow(() -> new BusinessException(AULA_NO_EXISTE));

@@ -45,7 +45,7 @@ public class CursoDocumentoResource {
     @DeleteMapping("/eliminarDocumento")
     public ResponseEntity<HttpResponse> eliminarArchivo(
             @RequestParam Long codCursoEspecializacion,
-            @RequestParam Long codDocumento) throws IOException {
+            @RequestParam Long codDocumento) throws IOException, DataException {
         cursoDocumentoService.deleteDocumento(codCursoEspecializacion, codDocumento);
         return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
     }

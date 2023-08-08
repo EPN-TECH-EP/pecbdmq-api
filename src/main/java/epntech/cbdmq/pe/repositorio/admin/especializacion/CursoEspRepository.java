@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import epntech.cbdmq.pe.dominio.admin.especializacion.CursoRequisito;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Repository;
@@ -45,7 +46,7 @@ public class CursoEspRepository {
 	
 	@Transactional
 	public Curso insertarCursosDocumentosRequisitos(Curso curso, Set<Requisito> requisitos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) {
-		curso.setEstado("ACTIVO");
+		//curso.setEstado("ACTIVO");
 		curso.setApruebaCreacionCurso(false);
 		entityManager.persist(curso);
 		
@@ -80,6 +81,15 @@ public class CursoEspRepository {
 				
 			}
 		}
+
+		// inserta requisitos
+		/*for (Requisito requisito : requisitos) {
+			CursoRequisito cursoRequisito = new CursoRequisito();
+
+			cursoRequisito.setCodCursoEspecializacion(curso.getCodCursoEspecializacion());
+			cursoRequisito.setCodRequisito(Long.valueOf(requisito.getCodigoRequisito()));
+			entityManager.persist(cursoRequisito);
+		}*/
 		
 		return curso;
 	}
