@@ -617,7 +617,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     newUser.setCodDatosPersonales(newDatoPersonal);
                     newUser.setNombreUsuario(newDatoPersonal.getCedula());
                     newUser.setClave(this.encodePassword(cedula));
-                    newUser=usuarioSvc.registrar(newUser);
+                    newUser=usuarioSvc.crear(newUser);
 
                     // estudiante
                     Estudiante newEstudiante = new Estudiante();
@@ -696,7 +696,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newUser.setCodDatosPersonales(datoPersonal);
         newUser.setNombreUsuario(datoPersonal.getCedula());
         newUser.setClave(this.encodePassword(datoPersonal.getCedula()));
-        newUser=usuarioSvc.registrar(newUser);
+        newUser=usuarioSvc.crear(newUser);
 
         Estudiante newEstudiante = new Estudiante();
         newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
@@ -787,7 +787,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setApellido(funcionario.getApellidos());
         //TODO no esta tomando cedula
         newDatoPersonal.setCedula(funcionario.getCedula());
-        newDatoPersonal.setCorreoPersonal(funcionario.getCorreoPersonal()==null?funcionario.getCorreoPersonal():funcionario.getCorreoInstitucional());
+        String correo = funcionario.getCorreoPersonal();
+        String correoInstitucional= funcionario.getCorreoInstitucional();
+        if(correo==null||correo.isEmpty()){
+            correo=correoInstitucional;
+        }
+        newDatoPersonal.setCorreoPersonal(correo);
         newDatoPersonal.setEstado(ACTIVO);
         newDatoPersonal.setNombre(funcionario.getNombres());
         newDatoPersonal.setNumTelefConvencional(funcionario.getTelefonoConvencional());
@@ -812,8 +817,6 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         Grado grado=gradoSvc.findByNombre(funcionario.getGrado());
         newDatoPersonal.setCodCargo(cargo==null?null:Long.valueOf(cargo.getCodCargo()));
         newDatoPersonal.setCodGrado(grado==null?null:Long.valueOf(grado.getCodGrado()));
-        newDatoPersonal.setCodCantonNacimiento(Long.valueOf(funcionario.getCodigoCantonNacimiento()));
-        newDatoPersonal.setCodCantonResidencia(Long.valueOf(funcionario.getCodigoCantonResidencia()));
         newDatoPersonal.setNombreTituloTercerNivel(funcionario.getTituloTercerNivel());
         newDatoPersonal.setNombreTituloCuartoNivel(funcionario.getTituloCuartoNivel());
         newDatoPersonal.setPaisTituloTercerNivel(funcionario.getPaisTercerNivel());
