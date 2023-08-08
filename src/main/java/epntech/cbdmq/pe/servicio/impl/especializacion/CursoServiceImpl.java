@@ -235,7 +235,7 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String observaciones, long codigoUserAprueba) {
+    public Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String observaciones, long codigoUserAprueba) throws MessagingException {
         if(aprobadoCurso) {
             cursoEstadoService.updateNextState((int) codigo);
         }
@@ -244,8 +244,17 @@ public class CursoServiceImpl implements CursoService {
         curso.setApruebaCreacionCurso(aprobadoCurso);
         curso.setObservacionesValidacion(observaciones);
         curso.setCodUsuarioValidacion(codigoUserAprueba);
+        curso= cursoRepository.save(curso);
+        String mensaje=null;
+        if(aprobadoCurso) {
+            mensaje="Se ha aprobado el curso " + curso.getNombre() + " con éxito";
 
-        return cursoRepository.save(curso);
+        }else{
+            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique bien los requisitos para poder volver a enviarlo para su aprobación";
+        }
+        emailService.enviarEmail(curso.getEmailNotificacion(), "Validación de curso",mensaje );
+
+        return curso;
     }
 
 
