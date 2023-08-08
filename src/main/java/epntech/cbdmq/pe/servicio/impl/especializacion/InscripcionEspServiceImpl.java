@@ -800,8 +800,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         Optional<UnidadGestion> unidadGestion= unidadGestionSvc.getUnidadGestionByNombre(funcionario.getCodigoUnidadGestion());
         newDatoPersonal.setCodUnidadGestion(unidadGestion.isEmpty() ? null : unidadGestion.get().getCodigo());
         newDatoPersonal.setSexo(funcionario.getSexo().toUpperCase());
+
         newDatoPersonal.setNumTelefCelular(funcionario.getTelefonoCelular());
-        newDatoPersonal.setResidePais(funcionario.getPaisResidencia().toUpperCase().equals("ECUADOR"));
+        /*newDatoPersonal.setResidePais(funcionario.getPaisResidencia().toUpperCase().equals("ECUADOR"));
         newDatoPersonal.setCodProvinciaResidencia(Long.valueOf(funcionario.getCodigoProvinciaResidencia()));
         newDatoPersonal.setCallePrincipalResidencia(funcionario.getCallePrincipalResidencia());
         newDatoPersonal.setCalleSecundariaResidencia(funcionario.getCalleSecundariaResidencia());
@@ -820,7 +821,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setNombreTituloTercerNivel(funcionario.getTituloTercerNivel());
         newDatoPersonal.setNombreTituloCuartoNivel(funcionario.getTituloCuartoNivel());
         newDatoPersonal.setPaisTituloTercerNivel(funcionario.getPaisTercerNivel());
-        newDatoPersonal.setPaisTituloCuartoNivel(funcionario.getPaisCuartoNivel());
+        newDatoPersonal.setPaisTituloCuartoNivel(funcionario.getPaisCuartoNivel());*/
 
 
         return newDatoPersonal;
