@@ -100,7 +100,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     }
 
     @Override
-    public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException {
+    public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException, IOException {
         Curso curso = cursoRepository.getById(codCursoEspecializacion);
         if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
@@ -108,22 +108,20 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         Documento documento = documentoRepository.findById(codDocumento.intValue())
                 .orElseThrow(() -> new BusinessException(DOCUMENTO_NO_EXISTE));
 
-        Path ruta = Paths.get(documento.getRuta());
 
-        if (Files.exists(ruta)) {
-            try {
-                Files.delete(ruta);
-                cursoDocumentoRepository.deleteByCodCursoEspecializacionAndCodDocumento(curso.getCodCursoEspecializacion(), codDocumento);
-                documentoRepository.deleteById(codDocumento.intValue());
-            } catch (Exception e) {
-                LOGGER.error("No se puede eliminar el archivo: " + ruta + ". ERROR=" + e.getMessage());
-                throw new BusinessException(e.getMessage());
 
-            }
 
-        }
-        else{
-            throw new DataException(ARCHIVO_NO_EXISTE);
+        Path ruta = null;
+
+        ruta = Paths.get(documento.getRuta()).toAbsolutePath().normalize();
+
+        try {
+            Files.delete(ruta);
+            cursoDocumentoRepository.deleteByCodCursoEspecializacionAndCodDocumento(curso.getCodCursoEspecializacion(), codDocumento);
+            documentoRepository.deleteById(codDocumento.intValue());
+
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
         }
 
     }
@@ -144,7 +142,8 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
                 throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
             }
 
-            Files.copy(multipartFile.getInputStream(), ruta.resolve(Objects.requireNonNull(multipartFile.getOriginalFilename())),
+            Files.copy(multipartFile.getInputStream(),
+                    ruta.getParent().resolve(multipartFile.getOriginalFilename()),
                     StandardCopyOption.REPLACE_EXISTING);
             // LOGGER.info("Archivo guardado: " + resultado +
             this.generaDocumento(resultadoRuta, multipartFile.getOriginalFilename(), codCursoEspecializacion);
@@ -156,7 +155,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Override
     @Transactional
     public void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion) throws DataException {
-
+        ruta= ruta + nombre;
         // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
         Long codCursoEspecial = codCursoEspecializacion;
 

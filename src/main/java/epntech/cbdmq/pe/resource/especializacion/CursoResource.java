@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import epntech.cbdmq.pe.dominio.util.ParamsValidacion;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class CursoResource {
 	public ResponseEntity<?> guardar(
 			@RequestParam("datos") String datos,
 			@RequestParam("documentos") List<MultipartFile> documentos/*,
-			@RequestParam("codTipoDocumento") Long codTipoDocumento*/) throws JsonProcessingException, ParseException{
+			@RequestParam("codTipoDocumento") Long codTipoDocumento*/) throws JsonProcessingException, ParseException, MessagingException {
 		return new ResponseEntity<>(cursoServiceImpl.save(datos, documentos/*, codTipoDocumento*/), HttpStatus.OK);
 	}
 
@@ -103,7 +104,7 @@ public class CursoResource {
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}
 	@PatchMapping("/validar/{id}")
-	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestBody ParamsValidacion validacion) {
+	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestBody ParamsValidacion validacion) throws MessagingException {
 		Curso curso = cursoServiceImpl.updateEstadoAprobadoObservaciones(codigo, validacion.getAprueba(),validacion.getObservacion(),validacion.getCodUsuarioAprueba());
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}

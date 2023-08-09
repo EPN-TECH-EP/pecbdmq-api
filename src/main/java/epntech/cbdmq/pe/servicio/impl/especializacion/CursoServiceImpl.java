@@ -35,6 +35,7 @@ import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -82,7 +83,7 @@ public class CursoServiceImpl implements CursoService {
     public DataSize TAMAÑO_MAXIMO;
 
     @Override
-    public Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException {
+    public Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException, MessagingException {
 
         // valida si no hay documentos y sale con error
         if (documentos == null || documentos.isEmpty()) {
@@ -201,6 +202,7 @@ public class CursoServiceImpl implements CursoService {
         cursoDatos.setCodAula(aula.getCodAula());
         Curso cc;
         cc = cursoEspRepository.insertarCursosDocumentosRequisitos(cursoDatos, requisitos, documentos/*, codTipoDocumento*/);
+        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", "Se ha creado el curso " + cc.getNombre() + " con éxito");
 
         return cc;
     }
@@ -233,7 +235,7 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String observaciones, long codigoUserAprueba) {
+    public Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String observaciones, long codigoUserAprueba) throws MessagingException {
         if(aprobadoCurso) {
             cursoEstadoService.updateNextState((int) codigo);
         }
@@ -242,8 +244,17 @@ public class CursoServiceImpl implements CursoService {
         curso.setApruebaCreacionCurso(aprobadoCurso);
         curso.setObservacionesValidacion(observaciones);
         curso.setCodUsuarioValidacion(codigoUserAprueba);
+        curso= cursoRepository.save(curso);
+        String mensaje=null;
+        if(aprobadoCurso) {
+            mensaje="Se ha aprobado el curso " + curso.getNombre() + " con éxito";
 
-        return cursoRepository.save(curso);
+        }else{
+            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique bien los requisitos para poder volver a enviarlo para su aprobación";
+        }
+        emailService.enviarEmail(curso.getEmailNotificacion(), "Validación de curso",mensaje );
+
+        return curso;
     }
 
 
