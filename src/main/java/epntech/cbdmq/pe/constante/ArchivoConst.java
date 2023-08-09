@@ -43,6 +43,7 @@ public class ArchivoConst {
 	public static final String DOCUMENTO_ACTUALIZADO = "El documento ha sido actualizado";
 	public static final String DOCUMENTO_NO_CUMPLE_FORMATO = "El documento no cumple el formato";
 	public static final String ANTIGUEDADESFORMACION = "antiguedadesFormacion";
+	public static final String APROBADOS_ESPECIALIZACION = "antiguedadesEspecializacion";
 	public static final String LISTADOSESPECIALIZACION = "listadoEspecializacion";
 
 

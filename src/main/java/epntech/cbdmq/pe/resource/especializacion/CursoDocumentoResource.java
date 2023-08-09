@@ -56,14 +56,14 @@ public class CursoDocumentoResource {
     public Set<Documento> listarDocumentosByPeriodo(@PathVariable("codigoCurso") Long codigoCurso) {
         return cursoDocumentoService.getDocumentosByCurso(codigoCurso);
     }
-    @GetMapping("/generarDocumentos&Cierre/{codCurso}")
+    @GetMapping("/comprobarMinimo&GenerarDocumento/{codCurso}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response, @PathVariable("codCurso" )Long codCurso) throws DataException {
 
         if(cursoDocumentoService.generarDocumentoInscritos(response,codCurso))
             return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
         else
-            return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+            return response(HttpStatus.OK, "NO CUMPLE CON EL MINIMO DE INSCRITOS PARA GENERAR EL DOCUMENTO, SE HA CERRADO EL CURSO");
 
     }
 }

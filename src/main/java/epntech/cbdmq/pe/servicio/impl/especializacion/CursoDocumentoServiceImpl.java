@@ -253,32 +253,28 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Override
     public boolean generarDocumentoInscritos(HttpServletResponse response, Long codigoCurso) {
         String mensaje = cursoEstadoService.getEstadoByCurso(codigoCurso);
-        Estados estadoCierre = estadosService.findByNombre(CIERRE_PROCESO);
 
         switch (mensaje) {
-            case INSCRIPCION:
+            case VALIDACION_REQUISITOS:
                 if (inscripcionEspRepository.cumplePorcentajeMinimoInscritosCurso(codigoCurso)) {
                     return this.generarDocListadoInscripcion(response, codigoCurso);
                 } else {
-                    cursoEstadoService.updateState(Math.toIntExact(codigoCurso), estadoCierre.getCodigo());
                     cursoService.updateEstado(codigoCurso, CIERRE_INSCRITOS);
                     return false;
                 }
-            case VALIDACION:
+            case VALIDACION_PRUEBAS:
                 if (inscripcionEspRepository.cumplePorcentajeMinimoInscritosCurso(codigoCurso)) {
                     return this.generarDocListadoValidacion(response, codigoCurso);
                 } else {
-                    cursoEstadoService.updateState(Math.toIntExact(codigoCurso), estadoCierre.getCodigo());
                     cursoService.updateEstado(codigoCurso, CIERRE_VALIDACION);
                     return false;
                 }
-            case VALIDACION_PRUEBAS:
+            case CURSO:
                 if (true
                         //inscripcionEspRepository.cumplePorcentajeMinimoAprobadosPruebas(codigoCurso)
                  ) {
                     return this.generarDocListadoPruebas(response, codigoCurso);
                 } else {
-                    cursoEstadoService.updateState(Math.toIntExact(codigoCurso), estadoCierre.getCodigo());
                     cursoService.updateEstado(codigoCurso, CIERRE_PRUEBAS);
                     return false;
                 }
@@ -328,7 +324,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     public Boolean generarDocListadoGeneral(HttpServletResponse response, Long codCurso, String estado) {
         try {
 
-            String nombre = LISTADOSESPECIALIZACION;
+            String nombre = LISTADOSESPECIALIZACION+estado;
             String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/" + nombre;
 
             this.generarExcel(ruta + ".xlsx", nombre + ".xlsx", codCurso, estado);
