@@ -22,10 +22,15 @@ public interface AntiguedadesService {
 			throws DocumentException, IOException, DataException;
 
 	Set<AntiguedadesFormacion> getAntiguedadesFormacion();
+	Set<AntiguedadesFormacion> getAntiguedadesEspecializacion(Long codCurso);
 	
 	void generarExcel(String filePath, String nombre) throws IOException, DataException;
 	
 	void generarPDF(HttpServletResponse response, String filePath, String nombre)
+			throws DocumentException, IOException, DataException;
+	void generarExcelEsp(String filePath, String nombre, Long codCurso) throws IOException, DataException;
+
+	void generarPDFEsp(HttpServletResponse response, String filePath, String nombre, Long codCurso)
 			throws DocumentException, IOException, DataException;
 }
 

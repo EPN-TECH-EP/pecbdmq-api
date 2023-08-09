@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ import epntech.cbdmq.pe.repositorio.admin.AntiguedadesFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.AntiguedadesRepository;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoDocForRepository;
-import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoDocRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.AntiguedadesService;
 import epntech.cbdmq.pe.util.ExporterPdf;
@@ -42,6 +42,8 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	private AntiguedadesFormacionRepository antiguedadesFormacionRepository;
 	@Autowired
 	private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
+	@Autowired
+	private CursoDocumentoService cursoDocumentoSvc;
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -112,7 +114,14 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		
 		datos = antiguedadesFormacionRepository.getAntiguedadesFormacion();
 		
-		return entityToArrayListFormacion(datos);
+		return entityToArrayListAntiguedades(datos);
+	}
+	public ArrayList<ArrayList<String>> obtenerDatosEsp(Long codCurso) {
+		Set<AntiguedadesFormacion> datos = new HashSet<>();
+
+		datos = antiguedadesFormacionRepository.getAntiguedadesEspecializacion(codCurso);
+
+		return entityToArrayListAntiguedades(datos);
 	}
 
 	public static String[] entityToStringArray(AntiguedadesDatos entity) {
@@ -130,17 +139,17 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		return arrayMulti;
 	}
 
-	public static String[] entityToStringArrayFormacion(AntiguedadesFormacion entity) {
+	public static String[] entityToStringArrayAntiguedades(AntiguedadesFormacion entity) {
 		return new String[] { entity.getCodigoUnicoEstudiante(), entity.getCedula(),
 				entity.getNombre(), entity.getApellido(), entity.getCorreoPersonal(), 
 				entity.getNotaFinal().toString() };
 	}
 
-	public static ArrayList<ArrayList<String>> entityToArrayListFormacion(Set<AntiguedadesFormacion> datos) {
+	public static ArrayList<ArrayList<String>> entityToArrayListAntiguedades(Set<AntiguedadesFormacion> datos) {
 		ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
 		for (AntiguedadesFormacion dato : datos) {
 
-			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayFormacion(dato))));
+			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayAntiguedades(dato))));
 		}
 		return arrayMulti;
 	}
@@ -169,6 +178,11 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	public Set<AntiguedadesFormacion> getAntiguedadesFormacion() {
 		// TODO Auto-generated method stub
 		return antiguedadesFormacionRepository.getAntiguedadesFormacion();
+	}
+
+	@Override
+	public Set<AntiguedadesFormacion> getAntiguedadesEspecializacion(Long codCurso) {
+		return antiguedadesFormacionRepository.getAntiguedadesEspecializacion(codCurso);
 	}
 
 	@Override
@@ -208,7 +222,44 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 		exporter.exportar(response, columnas, obtenerDatos(), widths, filePath);
 
 		generaDocumento(filePath, nombre);
+
 		
+	}
+
+	@Override
+	public void generarExcelEsp(String filePath, String nombre, Long codCurso) throws IOException, DataException {
+		String[] HEADERs = { "Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota" };
+		try {
+			ExcelHelper.generarExcel(obtenerDatosEsp(codCurso), filePath, HEADERs);
+
+			cursoDocumentoSvc.generaDocumento(filePath,nombre,codCurso);
+
+		} catch (IOException ex) {
+			System.out.println("error: " + ex.getMessage());
+		}
+	}
+
+	@Override
+	public void generarPDFEsp(HttpServletResponse response, String filePath, String nombre, Long codCurso) throws DocumentException, IOException, DataException {
+		response.setContentType("application/pdf");
+
+		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		String fechaActual = dateFormatter.format(new Date());
+
+		String cabecera = "Cuerpo-Bomberos";
+		String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+
+		response.addHeader(cabecera, valor);
+
+		ExporterPdf exporter = new ExporterPdf();
+		String[] columnas = { "Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota" };
+		float[] widths = new float[] { 2f, 2f, 6f, 6f, 2.5f, 2f };
+
+		//Genera el pdf
+		exporter.setArchivosRuta(ARCHIVOS_RUTA);
+		exporter.exportar(response, columnas, obtenerDatosEsp(codCurso), widths, filePath);
+
+		cursoDocumentoSvc.generaDocumento(filePath,nombre,codCurso);
 	}
 
 }
