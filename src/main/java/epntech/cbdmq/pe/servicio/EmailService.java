@@ -234,7 +234,7 @@ public class EmailService {
         for (String destinatario : destinatarios) {
             message.setRecipients(MimeMessage.RecipientType.TO, destinatario);
         }
-        message.setSubject(EMAIL_SUBJECT);
+        message.setSubject(subject);
         String htmlTemplate = this.getHtmlGeneric("convocatoriaEsp.html");
         htmlTemplate = htmlTemplate.replace("${descripcionCurso}", descripcion);
         htmlTemplate = htmlTemplate.replace("${fechaInicioConvocatoria}", fechaInicioConvocatoria);

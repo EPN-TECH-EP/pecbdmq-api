@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.Requisito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -128,12 +129,12 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
         if (objGuardado.isEmpty())
             throw new DataException(REGISTRO_NO_EXISTE);
 
-        if (convocatoriaCursoActualizado.getFechaInicioConvocatoria().isBefore(fechaActual))
-            throw new DataException(FECHA_INVALIDA);
+        //if (convocatoriaCursoActualizado.getFechaInicioConvocatoria().isBefore(fechaActual))
+        //    throw new DataException(FECHA_INVALIDA);
         if (convocatoriaCursoActualizado.getFechaFinConvocatoria().isBefore(fechaActual))
-            throw new DataException(FECHA_INVALIDA);
+            throw new DataException("La fecha fin no puede ser anterior a la fecha actual");
         if (convocatoriaCursoActualizado.getFechaFinConvocatoria().isBefore(convocatoriaCursoActualizado.getFechaInicioConvocatoria()))
-            throw new DataException(FECHA_INVALIDA);
+            throw new DataException("La fecha fin no puede ser anterior a la fecha de inicio");
 		
 		/*Optional<ConvocatoriaCurso> objGuardado = convocatoriaCursoRepository
 				.findByNombreConvocatoriaIgnoreCase(convocatoriaCursoActualizado.getNombreConvocatoria());
@@ -193,7 +194,14 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
         String[] destinatarios = convocatoriaCurso.getCorreo().split(",");
         String link = URLINCSCRIPCION +curso.getCodCursoEspecializacion();
 
-        emailService.sendEmailHtmlToList(destinatarios, EMAIL_SUBJECT_CONVOCATORIA, curso.getNombre(),convocatoriaCurso.getFechaInicioConvocatoria().toString(),curso.getFechaInicioCurso().toString(),curso.getFechaFinCurso().toString(),curso.getNumeroCupo().toString(),curso.getRequisitos().toString(),link);
+        // texto de requisitos nombre y descripcion en líneas separadas. iterar curso.getRequisitos()
+        String textoRequisitos = "";
+        for (Requisito requisito : curso.getRequisitos()) {
+            textoRequisitos += requisito.getNombre() + ": " + requisito.getDescripcion() + "<br>";
+        }
+
+
+        emailService.sendEmailHtmlToList(destinatarios, EMAIL_SUBJECT_CONVOCATORIA, curso.getNombre(),convocatoriaCurso.getFechaInicioConvocatoria().toString(),curso.getFechaInicioCurso().toString(),curso.getFechaFinCurso().toString(),curso.getNumeroCupo().toString(),textoRequisitos,link);
 
     }
 
