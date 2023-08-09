@@ -263,15 +263,15 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
                     return false;
                 }
             case VALIDACION_PRUEBAS:
-                if (inscripcionEspRepository.cumplePorcentajeMinimoInscritosCurso(codigoCurso)) {
+                if (cursoService.cumpleMinimoAprobadosCurso(codigoCurso)) {
                     return this.generarDocListadoValidacion(response, codigoCurso);
                 } else {
                     cursoService.updateEstado(codigoCurso, CIERRE_VALIDACION);
                     return false;
                 }
             case CURSO:
-                if (true
-                        //inscripcionEspRepository.cumplePorcentajeMinimoAprobadosPruebas(codigoCurso)
+                if (
+                        inscripcionEspRepository.cumplePorcentajeMinimoAprobadosPruebasCurso(codigoCurso)
                  ) {
                     return this.generarDocListadoPruebas(response, codigoCurso);
                 } else {

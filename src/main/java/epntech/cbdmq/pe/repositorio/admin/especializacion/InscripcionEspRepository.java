@@ -37,6 +37,8 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	
 	@Procedure(value = "cbdmq.cumple_porcentaje_min_inscritos_curso_esp")
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
+	@Procedure(value = "cbdmq.cumple_porcentaje_min_aprobados_pruebas_curso_esp")
+	Boolean cumplePorcentajeMinimoAprobadosPruebasCurso(long codCurso);
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionPorCurso")
 	List<InscripcionDatosEspecializacion> getInscripcionByCurso(@Param("codCurso") Long codCurso);
