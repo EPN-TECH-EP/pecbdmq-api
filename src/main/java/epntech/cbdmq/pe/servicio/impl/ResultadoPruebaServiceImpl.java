@@ -5,6 +5,7 @@ import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.constante.FormacionConst;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
+import epntech.cbdmq.pe.dominio.util.DatosInscripcionEsp;
 import epntech.cbdmq.pe.dominio.util.InscritosValidos;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasFisicasDatos;
@@ -16,6 +17,8 @@ import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoReposito
 import epntech.cbdmq.pe.repositorio.admin.especializacion.PruebasRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
 import epntech.cbdmq.pe.servicio.ResultadoPruebaService;
+import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
+import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
 import epntech.cbdmq.pe.util.ExporterPdf;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -67,7 +70,10 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     // cursos
     @Autowired
     private PruebasRepository pruebasRepository;
-
+    @Autowired
+    private InscripcionEspService inscripcionEspService;
+    @Autowired
+    CursoDocumentoService cursoDocumentoSvc;
 
     @Override
     public ResultadoPrueba save(ResultadoPrueba obj) throws DataException {
@@ -96,32 +102,28 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
     @Override
     public List<ResultadoPrueba> getAll() {
-        // TODO Auto-generated method stub
         return repo.findAll();
     }
 
     @Override
     public Optional<ResultadoPrueba> getById(Integer codigo) {
-        // TODO Auto-generated method stub
         return repo.findById(codigo);
     }
 
     @Override
     public ResultadoPrueba update(ResultadoPrueba objActualizado) throws DataException {
-        // TODO Auto-generated method stub
         return repo.save(objActualizado);
     }
 
     @Override
     public void delete(Integer codigo) {
-        // TODO Auto-generated method stub
         repo.deleteById(codigo);
     }
 
     @Override
     public Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba,
                                            Integer codCurso) throws DataException, DocumentException, IOException {
-        String[] columnas = {"Id postulante"};
+        String[] columnas = {"Código Único", "Correo", "Cedula", "Nombre","Apellido"};
 
         Optional<PruebaDetalle> pp = null;
         String ruta = "";
@@ -134,14 +136,18 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS_CURSO
                     + codCurso.toString()
                     + "/";
-
+/*
             PruebaDetalle pruebaDetalle = pruebaDetalleRepository
                     .findByCodCursoEspecializacionAndCodSubtipoPrueba(codCurso, codSubtipoPrueba)
                     .orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
 
             codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
 
-            nombreArchivo = "Lista de aprobados " + pruebaDetalle.getDescripcionPrueba() + " " + codCurso;
+ */
+
+            nombreArchivo = "Lista de aprobados" + //
+            // pruebaDetalle.getDescripcionPrueba() +
+            " " + codCurso;
         } else {
 
             ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
@@ -188,12 +194,12 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
          */
         ExporterPdf exporter = new ExporterPdf();
         //anchos de las columnas
-        float[] widths = new float[]{2.5f};
+        float[] widths = new float[]{2.5f, 2.5f, 2.5f, 2.5f, 2.5f};
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        exporter.exportar(response, headers, obtenerDatos(subTipoPrueba, codCurso), widths, ruta);
-        generaDocumento(ruta, nombre, codPruebaDetalle, codCurso);
+        exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
+        cursoDocumentoSvc.generaDocumento(ruta, nombre, Long.valueOf(codCurso));
 
 
     }
@@ -202,8 +208,8 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         // Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 
-        ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba, codCurso), ruta, headers);
-        generaDocumento(ruta, nombre, codPruebaDetalle, codCurso);
+        ExcelHelper.generarExcel(obtenerDatosEsp(subTipoPrueba, codCurso), ruta, headers);
+        cursoDocumentoSvc.generaDocumento(ruta, nombre, Long.valueOf(codCurso));
 
     }
 
@@ -241,6 +247,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         if (codCurso != null) {
             // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
+            //TODO
             datos = pruebasRepository.get_approved_by_test_esp(prueba.longValue(), codCurso.longValue());
         } else {
             datos = repo2.get_approved_applicants(prueba);
@@ -248,14 +255,29 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         return entityToArrayList(datos);
     }
+    public ArrayList<ArrayList<String>> obtenerDatosEsp(Integer prueba, Integer codCurso) throws DataException {
+
+        List<DatosInscripcionEsp> datos;
+
+        if (prueba == null) {
+            // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
+            //TODO
+            datos = inscripcionEspService.getAprobadosPruebas(codCurso);
+        }
+        else{
+            datos= inscripcionEspService.getAprobadosPruebasSubtipoPrueba(codCurso,prueba);
+        }
+
+        return entityToArrayListEsp(datos);
+    }
 
     public static String[] entityToStringArray(ResultadosPruebasDatos entity) {
         return new String[]{entity.getIdPostulante() != null ? entity.getIdPostulante().toString() : ""
         };
     }
 
-    public static String[] entityToStringArrayII(ResultadosPruebasDatos entity) {
-        return new String[]{entity.getCodPostulante().toString(), entity.getIdPostulante().toString(),
+    public static String[] entityToStringArrayEsp(DatosInscripcionEsp entity) {
+        return new String[]{entity.getCodUnicoEstudiante().toString(), entity.getCorreoPersonal(),
                 entity.getCedula(), entity.getNombre(),
                 entity.getApellido()};
     }
@@ -265,6 +287,14 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         for (ResultadosPruebasDatos dato : datos) {
 
             arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
+        }
+        return arrayMulti;
+    }
+    public static ArrayList<ArrayList<String>> entityToArrayListEsp(List<DatosInscripcionEsp> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+        for (DatosInscripcionEsp dato : datos) {
+
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayEsp(dato))));
         }
         return arrayMulti;
     }

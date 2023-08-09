@@ -89,7 +89,7 @@ public class ResultadoPruebaTodoResource {
 	// genera los documentos pdf y excel de los aprobados por prueba de formación
 	@PostMapping("/generarParaCurso")
 	public ResponseEntity<?> generar(HttpServletResponse response,
-									 @RequestParam("subTipoPrueba") Integer subTipoPrueba,
+									 @RequestParam(value = "subTipoPrueba", required = false) Integer subTipoPrueba,
 									 @RequestParam("codCurso") Integer codCurso)
 			throws DocumentException, DataException {
 		try {
@@ -166,7 +166,6 @@ public class ResultadoPruebaTodoResource {
 			try {
 				datosActualizados = objService.update(datosGuardados);
 			} catch (DataException e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 				return response(HttpStatus.NOT_FOUND, REGISTRO_NO_EXISTE);
 			}
