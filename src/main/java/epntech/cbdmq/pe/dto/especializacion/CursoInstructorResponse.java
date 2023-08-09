@@ -1,4 +1,4 @@
-package epntech.cbdmq.pe.dto;
+package epntech.cbdmq.pe.dto.especializacion;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

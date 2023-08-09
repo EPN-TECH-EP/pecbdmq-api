@@ -16,5 +16,11 @@ public interface CursoInstructorRepository extends JpaRepository<CursoInstructor
 	List<InstructoresCurso> findInstructoresCurso(@Param("codCurso") Long codCurso);
 	
 	Optional<CursoInstructor> findByCodInstructorAndCodCursoEspecializacion(Integer codInstructor, Long codCursoEspecializacion);
+
+	@Query(value = "select eci.* from cbdmq.esp_curso_instructor eci, cbdmq.gen_instructor gi, cbdmq.gen_usuario gu " +
+			"where eci.cod_instructor = gi.cod_instructor " +
+			"and gi.cod_datos_personales = gu.cod_datos_personales " +
+			"and gu.cod_usuario = :codUsuario", nativeQuery = true)
+	Optional<CursoInstructor> findByCodUsuario(Integer codUsuario);
 	
 }

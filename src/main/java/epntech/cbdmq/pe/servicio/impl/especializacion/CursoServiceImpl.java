@@ -250,7 +250,7 @@ public class CursoServiceImpl implements CursoService {
             mensaje="Se ha aprobado el curso " + curso.getNombre() + " con éxito";
 
         }else{
-            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique bien los requisitos para poder volver a enviarlo para su aprobación";
+            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique los datos y documentos registrados";
         }
         emailService.enviarEmail(curso.getEmailNotificacion(), "Validación de curso",mensaje );
 
@@ -596,6 +596,11 @@ public class CursoServiceImpl implements CursoService {
         }
 
         return lista;
+    }
+
+    @Override
+    public List<Curso> listarPorInstructorAndEstado(Integer codigoCursoInstructor, String estado) {
+        return cursoRepository.findByInstructorAndEstado(codigoCursoInstructor, estado);
     }
 
 
