@@ -53,4 +53,5 @@ public class CursoDocumentoResource {
     public Set<Documento> listarDocumentosByPeriodo(@PathVariable("codigoCurso") Long codigoCurso) {
         return cursoDocumentoService.getDocumentosByCurso(codigoCurso);
     }
+    
 }

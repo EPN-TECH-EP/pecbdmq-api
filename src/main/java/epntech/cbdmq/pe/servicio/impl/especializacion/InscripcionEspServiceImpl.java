@@ -709,77 +709,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return datoPersonalEstudianteDto;
     }
 
-    @Override
-    public void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException {
-        String[] HEADERs = { "Codigo", "Cedula", "Correo" };
-        try {
-            ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath, HEADERs);
 
-            cursoDocumentoSvc.generaDocumento(filePath, nombre,codCurso);
 
-        } catch (IOException ex) {
-            System.out.println("error: " + ex.getMessage());
-        }
-    }
-
-    @Override
-    public void generarPDF(HttpServletResponse response, String filePath, String nombre, Long codCurso, String estado) throws DocumentException, IOException, DataException {
-        response.setContentType("application/pdf");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Cuerpo-Bomberos";
-        String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
-
-        response.addHeader(cabecera, valor);
-
-        ExporterPdf exporter = new ExporterPdf();
-        String[] columnas = { "Codigo", "Cedula", "Nombre"};
-        float[] widths = new float[] { 2f, 3f, 6f};
-
-        //Genera el pdf
-        exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        exporter.exportar(response, columnas, obtenerDatos(codCurso,estado), widths, filePath);
-
-        cursoDocumentoSvc.generaDocumento(filePath, nombre,codCurso);
-    }
-
-    @Override
-    public Boolean generarDocListadoGeneral(HttpServletResponse response,Long codCurso, String estado) {
-        try {
-
-            String nombre= LISTADOSESPECIALIZACION;
-            String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/" + nombre;
-
-            this.generarExcel(ruta + ".xlsx", nombre + ".xlsx", codCurso, estado);
-            this.generarPDF(response, ruta + ".pdf", nombre + ".pdf", codCurso, estado);
-            return true;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("error: " + e.getMessage());
-        } catch (DataException e) {
-            throw new RuntimeException(e);
-        } catch (DocumentException e) {
-            throw new RuntimeException(e);
-        }
-        return false;
-    }
-    @Override
-    public Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso) {
-        return this.generarDocListadoGeneral(response, codCurso, INSCRIPCION);
-    }
-
-    @Override
-    public Boolean generarDocListadoValidacion(HttpServletResponse response, Long codCurso) {
-        return this.generarDocListadoGeneral(response, codCurso, VALIDACION);
-    }
-
-    @Override
-    public Boolean generarDocListadoPruebas(HttpServletResponse response, Long codCurso) {
-        return this.generarDocListadoGeneral(response, codCurso, PRUEBAS);
-    }
 
 
     private DatoPersonal createDatoPersonalFromFuncionario(FuncionarioApiDto funcionario) {
@@ -865,26 +796,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         nombreApellidos[1] = nombresBuilder.toString();
         return nombreApellidos;
     }
-    public ArrayList<ArrayList<String>> obtenerDatos(Long codCurso, String estado) {
-        Set<InscripcionDatosEspecializacion> datos = new HashSet<>();
 
-        datos = (Set<InscripcionDatosEspecializacion>) inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, estado);
-
-        return entityToArrayListFormacion(datos);
-    }
-    public static String[] entityToStringArrayFormacion(InscripcionDatosEspecializacion entity) {
-        return new String[] { entity.getCodInscripcion().toString(), entity.getCedula(),
-                entity.getCorreoUsuario() };
-    }
-
-    public static ArrayList<ArrayList<String>> entityToArrayListFormacion(Set<InscripcionDatosEspecializacion> datos) {
-        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
-        for (InscripcionDatosEspecializacion dato : datos) {
-
-            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayFormacion(dato))));
-        }
-        return arrayMulti;
-    }
 
     private String encodePassword(String password) {
 

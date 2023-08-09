@@ -181,15 +181,6 @@ public class InscripcionEspResource {
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
-	@GetMapping("/generarInscritos/{codCurso}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response,@PathVariable("codCurso" )Long codCurso) throws DataException, DocumentException {
 
-		if(inscripcionEspServiceImpl.generarDocListadoInscripcion(response,codCurso))
-			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
-		else
-			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
-
-	}
 
 }

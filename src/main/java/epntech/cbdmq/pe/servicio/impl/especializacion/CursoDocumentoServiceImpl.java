@@ -1,15 +1,22 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
+import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
+import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
+import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
+import epntech.cbdmq.pe.util.ExporterPdf;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,14 +29,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.*;
-import static epntech.cbdmq.pe.constante.EspecializacionConst.CURSO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
+import static epntech.cbdmq.pe.constante.EstadosConst.PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.DOCUMENTO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
@@ -42,6 +49,10 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     private CursoDocumentoRepository cursoDocumentoRepository;
     @Autowired
     private DocumentoRepository documentoRepository;
+    @Autowired
+    private CursoEstadoService cursoEstadoService;
+    @Autowired
+    private InscripcionEspRepository inscripcionEspRepository;
 
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
@@ -236,6 +247,115 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Override
     public Set<Documento> getDocumentosByCurso(Long codigoCurso) {
         return documentoRepository.getDocumentosEspecializacion(Math.toIntExact(codigoCurso));
+    }
+
+    @Override
+    public void generarDocumentoInscritos(HttpServletResponse response,Long codigoCurso) {
+        String mensaje= cursoEstadoService.getEstadoByCurso(codigoCurso);
+
+        if(mensaje.equals(INSCRIPCION)){
+
+            this.generarDocListadoInscripcion(response, codigoCurso);
+
+
+        } else if (mensaje.equals(VALIDACION)) {
+            this.generarDocListadoValidacion(response, codigoCurso);
+
+        }
+        else if (mensaje.equals(VALIDACION_PRUEBAS)){
+            this.generarDocListadoPruebas(response, codigoCurso);
+        }
+    }
+    @Override
+    public void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException {
+        String[] HEADERs = { "Codigo", "Cedula", "Correo" };
+        try {
+            ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath, HEADERs);
+
+            this.generaDocumento(filePath, nombre,codCurso);
+
+        } catch (IOException ex) {
+            System.out.println("error: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void generarPDF(HttpServletResponse response, String filePath, String nombre, Long codCurso, String estado) throws DocumentException, IOException, DataException {
+        response.setContentType("application/pdf");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Cuerpo-Bomberos";
+        String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+
+        response.addHeader(cabecera, valor);
+
+        ExporterPdf exporter = new ExporterPdf();
+        String[] columnas = { "Codigo", "Cedula", "Nombre"};
+        float[] widths = new float[] { 2f, 3f, 6f};
+
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        exporter.exportar(response, columnas, obtenerDatos(codCurso,estado), widths, filePath);
+
+        this.generaDocumento(filePath, nombre,codCurso);
+    }
+
+    @Override
+    public Boolean generarDocListadoGeneral(HttpServletResponse response,Long codCurso, String estado) {
+        try {
+
+            String nombre= LISTADOSESPECIALIZACION;
+            String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/" + nombre;
+
+            this.generarExcel(ruta + ".xlsx", nombre + ".xlsx", codCurso, estado);
+            this.generarPDF(response, ruta + ".pdf", nombre + ".pdf", codCurso, estado);
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("error: " + e.getMessage());
+        } catch (DataException e) {
+            throw new RuntimeException(e);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+    @Override
+    public Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso) {
+        return this.generarDocListadoGeneral(response, codCurso, INSCRIPCION);
+    }
+
+    @Override
+    public Boolean generarDocListadoValidacion(HttpServletResponse response, Long codCurso) {
+        return this.generarDocListadoGeneral(response, codCurso, VALIDACION);
+    }
+
+    @Override
+    public Boolean generarDocListadoPruebas(HttpServletResponse response, Long codCurso) {
+        return this.generarDocListadoGeneral(response, codCurso, PRUEBAS);
+    }
+    public ArrayList<ArrayList<String>> obtenerDatos(Long codCurso, String estado) {
+        Set<InscripcionDatosEspecializacion> datos = new HashSet<>();
+
+        datos = (Set<InscripcionDatosEspecializacion>) inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, estado);
+
+        return entityToArrayListFormacion(datos);
+    }
+    public static String[] entityToStringArrayFormacion(InscripcionDatosEspecializacion entity) {
+        return new String[] { entity.getCodInscripcion().toString(), entity.getCedula(),
+                entity.getCorreoUsuario() };
+    }
+
+    public static ArrayList<ArrayList<String>> entityToArrayListFormacion(Set<InscripcionDatosEspecializacion> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+        for (InscripcionDatosEspecializacion dato : datos) {
+
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayFormacion(dato))));
+        }
+        return arrayMulti;
     }
 
     private String ruta(Long codigo) {

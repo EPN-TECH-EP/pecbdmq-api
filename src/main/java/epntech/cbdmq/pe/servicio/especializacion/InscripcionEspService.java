@@ -66,12 +66,5 @@ public interface InscripcionEspService {
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula) throws Exception;
 	DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception;
-	void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException;
 
-	void generarPDF(HttpServletResponse response, String filePath, String nombre, Long codCurso, String estado)
-			throws DocumentException, IOException, DataException;
-	Boolean generarDocListadoGeneral(HttpServletResponse response,  Long codCurso, String estado);
-	public Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso);
-	public Boolean generarDocListadoValidacion(HttpServletResponse response,Long codCurso);
-	public Boolean generarDocListadoPruebas(HttpServletResponse response,Long codCurso);
 }
