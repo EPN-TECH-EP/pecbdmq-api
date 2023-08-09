@@ -7,18 +7,15 @@ import java.util.Set;
 
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.util.*;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Pageable;
-import epntech.cbdmq.pe.dominio.util.DatoPersonalEstudianteDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionDatosEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InscripcionEsp;
 import epntech.cbdmq.pe.dominio.admin.especializacion.ValidaRequisitos;
-import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
-import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
-import epntech.cbdmq.pe.dominio.util.ValidacionRequisitosDatos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import jakarta.mail.MessagingException;
@@ -26,7 +23,8 @@ import jakarta.mail.MessagingException;
 public interface InscripcionEspService {
 
 	InscripcionEsp save(InscripcionEsp inscripcionEsp);
-	
+	InscripcionEsp saveFully(String inscripcionEsp,List<MultipartFile> archivos ) throws DataException, ArchivoMuyGrandeExcepcion, IOException;
+
 	InscripcionEsp update(InscripcionEsp inscripcionEspActualizada);
 
 	InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario);
@@ -51,7 +49,8 @@ public interface InscripcionEspService {
 	
 	List<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
 	Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException;
-
+	List<DatosInscripcionEsp> getAprobadosPruebas(Integer codCurso) throws DataException;
+	List<DatosInscripcionEsp> getAprobadosPruebasSubtipoPrueba(Integer codCurso, Integer codSubtipoPrueba);
 	List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
 
 	List<ValidacionRequisitosDatos> getRequisitos(Long codInscripcion);

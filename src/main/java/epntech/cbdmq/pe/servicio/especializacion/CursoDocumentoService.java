@@ -27,8 +27,8 @@ public interface CursoDocumentoService {
     void generarPDF(HttpServletResponse response, String filePath, String nombre, Long codCurso, String estado)
             throws DocumentException, IOException, DataException;
     Boolean generarDocListadoGeneral(HttpServletResponse response,  Long codCurso, String estado);
-    public Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso);
-    public Boolean generarDocListadoValidacion(HttpServletResponse response,Long codCurso);
-    public Boolean generarDocListadoPruebas(HttpServletResponse response,Long codCurso);
+    Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso);
+    Boolean generarDocListadoValidacion(HttpServletResponse response,Long codCurso);
+    Boolean generarDocListadoPruebas(HttpServletResponse response,Long codCurso);
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import epntech.cbdmq.pe.dominio.util.DatosInscripcionEsp;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,6 +37,8 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	
 	@Procedure(value = "cbdmq.cumple_porcentaje_min_inscritos_curso_esp")
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
+	@Procedure(value = "cbdmq.cumple_porcentaje_min_aprobados_pruebas_curso_esp")
+	Boolean cumplePorcentajeMinimoAprobadosPruebasCurso(long codCurso);
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionPorCurso")
 	List<InscripcionDatosEspecializacion> getInscripcionByCurso(@Param("codCurso") Long codCurso);
@@ -44,6 +47,10 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	List<InscritosEspecializacion> getInscripcionesValidasByCurso(@Param("codCurso") Long codCurso);
 	@Query(nativeQuery = true, name = "InscripcionEsp.getListasByEstado")
 	Set<InscripcionDatosEspecializacion> getInscripcionesByCursoEstado(@Param("codCurso") Long codCurso, @Param("estado") String estado);
+	@Query(nativeQuery = true, name = "DatosInscripcionEsp.aprobadosPruebas")
+	List<DatosInscripcionEsp> getAprobadosPruebas(@Param("codCurso") Integer codCurso);
+	@Query(nativeQuery = true, name = "DatosInscripcionEsp.aprobadosPruebasBySubtipoPrueba")
+	List<DatosInscripcionEsp> getAprobadosPruebasBySubtipoPrueba(@Param("codCurso") Integer codCurso, @Param("codSubtipoPrueba") Integer codSubtipoPrueba);
 	
 	@Query(value = "select i.* "
 			+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.esp_curso c "

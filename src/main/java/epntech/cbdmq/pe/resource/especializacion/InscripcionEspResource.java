@@ -7,11 +7,14 @@ import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
 import static epntech.cbdmq.pe.constante.ResponseMessage.EXITO_GENERAR_ARCHIVO;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.util.DatosInscripcionEsp;
 import jakarta.servlet.http.HttpServletResponse;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,13 @@ public class InscripcionEspResource {
 	public ResponseEntity<?> guardar(@RequestBody InscripcionEsp inscripcionEsp) {
 
 		return new ResponseEntity<>(inscripcionEspServiceImpl.save(inscripcionEsp), HttpStatus.OK);
+	}
+	@PostMapping("/crearFully")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> guardar(
+			@RequestParam("datos") String datos,
+			@RequestParam("documentos") List<MultipartFile> documentos) throws IOException, ParseException, MessagingException, DataException, ArchivoMuyGrandeExcepcion {
+		return new ResponseEntity<>(inscripcionEspServiceImpl.saveFully(datos, documentos/*, codTipoDocumento*/), HttpStatus.OK);
 	}
 	
 	@PutMapping("/")
@@ -118,6 +128,10 @@ public class InscripcionEspResource {
 	@GetMapping("/porCurso&Estado")
 	public Set<InscripcionDatosEspecializacion> obtenerPorCursoEstado(@RequestParam("id") long codigo, @RequestParam("estado") String estado) throws DataException {
 		return inscripcionEspServiceImpl.getByCursoEstado(codigo,estado);
+	}
+	@GetMapping("/aprobadosPruebasPorCurso")
+	public List<DatosInscripcionEsp> aprobadosPruebasPorCurso(@RequestParam("id") Integer codigo) throws DataException {
+		return inscripcionEspServiceImpl.getAprobadosPruebas(codigo);
 	}
 	
 	@PostMapping("/validacionRequisitos")
