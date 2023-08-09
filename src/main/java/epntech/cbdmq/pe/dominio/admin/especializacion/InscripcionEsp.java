@@ -178,7 +178,7 @@ import lombok.Data;
                 + "and upper(dp.estado) = 'ACTIVO' "
                 + "and upper(c.estado) <> 'ELIMINADO' "
                 + "and upper(cc.estado) = 'ACTIVO' "
-                + "and upper(i.estado) <> 'ELIMINADO' "
+                + "and upper(i.estado) <> 'ELIMINADO' and upper(i.estado) <> 'PENDIENTE' "
                 + "and i.cod_curso_especializacion = :codCurso ",
         resultSetMapping = "findInscripcionValidaPorCurso")
 @SqlResultSetMapping(name = "findInscripcionValidaPorCurso", classes = @ConstructorResult(targetClass = InscritosEspecializacion.class, columns = {

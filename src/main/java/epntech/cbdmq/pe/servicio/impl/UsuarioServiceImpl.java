@@ -461,10 +461,12 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 				throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
 			}
 
+			// TODO: confirmar si es requerida esta validación
 			// sale si ya existe ese email para un usuario registrado
 			if (currentUser.getCodDatosPersonales().getCorreoPersonal().compareToIgnoreCase(newEmail) != 0) {
 				if (userByNewEmail != null /* && !currentUser.getCodUsuario().equals(userByNewEmail.getCodUsuario()) */) {
-					throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
+					//throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
+					LOGGER.info(EMAIL_YA_EXISTE + " " + newEmail + " " + currentUser.getCodDatosPersonales().getCedula());
 				}
 			}
 
@@ -477,9 +479,11 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 				throw new NombreUsuarioExisteExcepcion(NOMBRE_USUARIO_YA_EXISTE);
 			}
 
+			// TODO: confirmar si es requerida esta validación
 			// sale si ya existe ese email para un usuario
 			if (userByNewEmail != null) {
-				throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
+				//throw new EmailExisteExcepcion(EMAIL_YA_EXISTE);
+				LOGGER.info(EMAIL_YA_EXISTE + " " + newEmail + " " + userByNewEmail.getCodDatosPersonales().getCedula());
 			}
 
 			return null;

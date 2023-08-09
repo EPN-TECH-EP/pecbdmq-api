@@ -184,7 +184,7 @@ public class InscripcionEspResource {
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
-	@PatchMapping("/colocarCorreo")
+	@PutMapping("/colocarCorreo")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> getData(@RequestBody DatoPersonal datoPersonal) throws Exception{
 
