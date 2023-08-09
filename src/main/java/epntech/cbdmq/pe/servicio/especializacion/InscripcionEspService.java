@@ -23,7 +23,8 @@ import jakarta.mail.MessagingException;
 public interface InscripcionEspService {
 
 	InscripcionEsp save(InscripcionEsp inscripcionEsp);
-	
+	InscripcionEsp saveFully(String inscripcionEsp,List<MultipartFile> archivos ) throws DataException, ArchivoMuyGrandeExcepcion, IOException;
+
 	InscripcionEsp update(InscripcionEsp inscripcionEspActualizada);
 
 	InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario);

@@ -22,6 +22,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.*;
@@ -169,6 +172,27 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     }
 
     @Override
+    public InscripcionEsp saveFully(String datos, List<MultipartFile> archivos) throws DataException, ArchivoMuyGrandeExcepcion, IOException {
+        if (archivos == null || archivos.isEmpty()) {
+            throw new BusinessException("No se ha adjuntado ningún documento");
+        }
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        JsonNode jsonNode = objectMapper.readTree(datos);
+        System.out.println("jsonNode: " + jsonNode);
+
+        InscripcionEsp inscripcionEsp = objectMapper.readValue(datos, InscripcionEsp.class);
+
+        InscripcionEsp inscripcionEsp1= this.save(inscripcionEsp);
+        this.guardarDocumentos(archivos, inscripcionEsp1.getCodInscripcion());
+
+        return inscripcionEsp1;
+    }
+
+    @Override
     public InscripcionEsp update(InscripcionEsp inscripcionEspActualizada) {
         Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(inscripcionEspActualizada.getCodEstudiante(), inscripcionEspActualizada.getCodCursoEspecializacion());
         if (inscripcionEspOptional.isPresent() && !inscripcionEspOptional.get().getCodInscripcion().equals(inscripcionEspActualizada.getCodInscripcion()))
@@ -225,10 +249,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         if (inscripcionEspOptional.isEmpty())
             throw new DataException(REGISTRO_NO_EXISTE);
 
-        return guardarDocumentos(archivos, codInscripcion, tipoDocumento);
+        return guardarDocumentos(archivos, codInscripcion);
     }
 
-    public List<Documento> guardarDocumentos(List<MultipartFile> archivos, Long codInscripcion, Long tipoDocumento)
+    public List<Documento> guardarDocumentos(List<MultipartFile> archivos, Long codInscripcion)
             throws IOException, ArchivoMuyGrandeExcepcion, DataException {
         Optional<InscripcionEsp> inscripcionEspOptional = inscripcionEspRepository.findById(codInscripcion);
         if (inscripcionEspOptional.isEmpty())
@@ -257,7 +281,6 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
             Documento documento = new Documento();
             documento.setEstado("ACTIVO");
-            documento.setTipo(tipoDocumento.intValue());
             documento.setNombre(multipartFile.getOriginalFilename());
             documento.setRuta(resultado + multipartFile.getOriginalFilename());
             documento = documentoRepository.save(documento);
