@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.util.DatosInscripcionEsp;
 import jakarta.servlet.http.HttpServletResponse;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,10 @@ public class InscripcionEspResource {
 	@GetMapping("/porCurso&Estado")
 	public Set<InscripcionDatosEspecializacion> obtenerPorCursoEstado(@RequestParam("id") long codigo, @RequestParam("estado") String estado) throws DataException {
 		return inscripcionEspServiceImpl.getByCursoEstado(codigo,estado);
+	}
+	@GetMapping("/aprobadosPruebasPorCurso")
+	public Set<DatosInscripcionEsp> aprobadosPruebasPorCurso(@RequestParam("id") Integer codigo) throws DataException {
+		return inscripcionEspServiceImpl.getAprobadosPruebas(codigo);
 	}
 	
 	@PostMapping("/validacionRequisitos")

@@ -349,6 +349,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     @Override
     public Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException {
         return inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, Estado);
+    }    @Override
+    public Set<DatosInscripcionEsp> getAprobadosPruebas(Integer codCurso) throws DataException {
+        return inscripcionEspRepository.getAprobadosPruebas(codCurso);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import epntech.cbdmq.pe.dominio.util.DatosInscripcionEsp;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -44,6 +45,8 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	List<InscritosEspecializacion> getInscripcionesValidasByCurso(@Param("codCurso") Long codCurso);
 	@Query(nativeQuery = true, name = "InscripcionEsp.getListasByEstado")
 	Set<InscripcionDatosEspecializacion> getInscripcionesByCursoEstado(@Param("codCurso") Long codCurso, @Param("estado") String estado);
+	@Query(nativeQuery = true, name = "DatosInscripcionEsp.aprobadosPruebas")
+	Set<DatosInscripcionEsp> getAprobadosPruebas(@Param("codCurso") Integer codCurso);
 	
 	@Query(value = "select i.* "
 			+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.esp_curso c "

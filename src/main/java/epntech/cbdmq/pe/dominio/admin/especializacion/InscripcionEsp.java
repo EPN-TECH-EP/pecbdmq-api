@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.DatosInscripcionEsp;
+import epntech.cbdmq.pe.dto.especializacion.NotasEspecializacionDTO;
 import org.hibernate.annotations.NamedNativeQuery;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
@@ -223,6 +225,17 @@ import lombok.Data;
         @ColumnResult(name = "cod_usuario", type = Long.class),
 
 }))
+@NamedNativeQuery(name = "DatosInscripcionEsp.aprobadosPruebas",
+        query = "select * from cbdmq.get_estudiantes_aprobados_pruebas_curso(:codCurso)",
+        resultSetMapping = "aprobadosPruebas")
+@SqlResultSetMapping(name = "aprobadosPruebas", classes = @ConstructorResult(targetClass = DatosInscripcionEsp.class, columns = {
+        @ColumnResult(name = "cod_estudiante", type = Integer.class),
+        @ColumnResult(name = "codigo_unico_estudiante", type = String.class),
+        @ColumnResult(name = "cedula", type = String.class),
+        @ColumnResult(name = "nombre", type = String.class),
+        @ColumnResult(name = "apellido", type = String.class),
+        @ColumnResult(name = "correo_personal", type = String.class),
+        @ColumnResult(name = "correo_institucional", type = String.class),}))
 
 public class InscripcionEsp {
 
