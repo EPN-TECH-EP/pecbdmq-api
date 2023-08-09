@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
@@ -12,6 +13,7 @@ import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
+import epntech.cbdmq.pe.servicio.EstadosService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
@@ -39,12 +41,11 @@ import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
 import static epntech.cbdmq.pe.constante.EstadosConst.PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.DOCUMENTO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
-import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
 
 @Service
 public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Autowired
-    private CursoService cursoRepository;
+    private CursoService cursoService;
     @Autowired
     private CursoDocumentoRepository cursoDocumentoRepository;
     @Autowired
@@ -53,6 +54,8 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     private CursoEstadoService cursoEstadoService;
     @Autowired
     private InscripcionEspRepository inscripcionEspRepository;
+    @Autowired
+    private EstadosService estadosService;
 
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
@@ -103,7 +106,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     @Override
     public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
-        Curso curso = cursoRepository.getById(codCursoEspecializacion);
+        Curso curso = cursoService.getById(codCursoEspecializacion);
         if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
         guardarDocumentos(archivos, curso.getCodCursoEspecializacion());
@@ -112,14 +115,12 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     @Override
     public void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException, IOException {
-        Curso curso = cursoRepository.getById(codCursoEspecializacion);
+        Curso curso = cursoService.getById(codCursoEspecializacion);
         if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
 
         Documento documento = documentoRepository.findById(codDocumento.intValue())
                 .orElseThrow(() -> new BusinessException(DOCUMENTO_NO_EXISTE));
-
-
 
 
         Path ruta = null;
@@ -166,12 +167,12 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Override
     @Transactional
     public void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion) throws DataException {
-        ruta= ruta + nombre;
+        ruta = ruta + nombre;
         // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
         Long codCursoEspecial = codCursoEspecializacion;
 
 
-        Curso curso = cursoRepository.getById(codCursoEspecial);
+        Curso curso = cursoService.getById(codCursoEspecial);
         if (curso != null) {
             codCursoEspecial = curso.getCodCursoEspecializacion();
         } else {
@@ -250,29 +251,50 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     }
 
     @Override
-    public void generarDocumentoInscritos(HttpServletResponse response,Long codigoCurso) {
-        String mensaje= cursoEstadoService.getEstadoByCurso(codigoCurso);
+    public boolean generarDocumentoInscritos(HttpServletResponse response, Long codigoCurso) {
+        String mensaje = cursoEstadoService.getEstadoByCurso(codigoCurso);
+        Estados estadoCierre = estadosService.findByNombre(CIERRE_PROCESO);
 
-        if(mensaje.equals(INSCRIPCION)){
-
-            this.generarDocListadoInscripcion(response, codigoCurso);
-
-
-        } else if (mensaje.equals(VALIDACION)) {
-            this.generarDocListadoValidacion(response, codigoCurso);
-
-        }
-        else if (mensaje.equals(VALIDACION_PRUEBAS)){
-            this.generarDocListadoPruebas(response, codigoCurso);
+        switch (mensaje) {
+            case INSCRIPCION:
+                if (inscripcionEspRepository.cumplePorcentajeMinimoInscritosCurso(codigoCurso)) {
+                    return this.generarDocListadoInscripcion(response, codigoCurso);
+                } else {
+                    cursoEstadoService.updateState(Math.toIntExact(codigoCurso), estadoCierre.getCodigo());
+                    cursoService.updateEstado(codigoCurso, CIERRE_INSCRITOS);
+                    return false;
+                }
+            case VALIDACION:
+                if (inscripcionEspRepository.cumplePorcentajeMinimoInscritosCurso(codigoCurso)) {
+                    return this.generarDocListadoValidacion(response, codigoCurso);
+                } else {
+                    cursoEstadoService.updateState(Math.toIntExact(codigoCurso), estadoCierre.getCodigo());
+                    cursoService.updateEstado(codigoCurso, CIERRE_VALIDACION);
+                    return false;
+                }
+            case VALIDACION_PRUEBAS:
+                if (true
+                        //inscripcionEspRepository.cumplePorcentajeMinimoAprobadosPruebas(codigoCurso)
+                 ) {
+                    return this.generarDocListadoPruebas(response, codigoCurso);
+                } else {
+                    cursoEstadoService.updateState(Math.toIntExact(codigoCurso), estadoCierre.getCodigo());
+                    cursoService.updateEstado(codigoCurso, CIERRE_PRUEBAS);
+                    return false;
+                }
+            default:
+                return mensaje != null;
         }
     }
+
+
     @Override
     public void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException {
-        String[] HEADERs = { "Codigo", "Cedula", "Correo" };
+        String[] HEADERs = {"Codigo", "Cedula", "Correo"};
         try {
             ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath, HEADERs);
 
-            this.generaDocumento(filePath, nombre,codCurso);
+            this.generaDocumento(filePath, nombre, codCurso);
 
         } catch (IOException ex) {
             System.out.println("error: " + ex.getMessage());
@@ -292,21 +314,21 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         response.addHeader(cabecera, valor);
 
         ExporterPdf exporter = new ExporterPdf();
-        String[] columnas = { "Codigo", "Cedula", "Nombre"};
-        float[] widths = new float[] { 2f, 3f, 6f};
+        String[] columnas = {"Codigo", "Cedula", "Nombre"};
+        float[] widths = new float[]{2f, 3f, 6f};
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        exporter.exportar(response, columnas, obtenerDatos(codCurso,estado), widths, filePath);
+        exporter.exportar(response, columnas, obtenerDatos(codCurso, estado), widths, filePath);
 
-        this.generaDocumento(filePath, nombre,codCurso);
+        this.generaDocumento(filePath, nombre, codCurso);
     }
 
     @Override
-    public Boolean generarDocListadoGeneral(HttpServletResponse response,Long codCurso, String estado) {
+    public Boolean generarDocListadoGeneral(HttpServletResponse response, Long codCurso, String estado) {
         try {
 
-            String nombre= LISTADOSESPECIALIZACION;
+            String nombre = LISTADOSESPECIALIZACION;
             String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/" + nombre;
 
             this.generarExcel(ruta + ".xlsx", nombre + ".xlsx", codCurso, estado);
@@ -323,8 +345,9 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         }
         return false;
     }
+
     @Override
-    public Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso) {
+    public Boolean generarDocListadoInscripcion(HttpServletResponse response, Long codCurso) {
         return this.generarDocListadoGeneral(response, codCurso, INSCRIPCION);
     }
 
@@ -337,6 +360,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     public Boolean generarDocListadoPruebas(HttpServletResponse response, Long codCurso) {
         return this.generarDocListadoGeneral(response, codCurso, PRUEBAS);
     }
+
     public ArrayList<ArrayList<String>> obtenerDatos(Long codCurso, String estado) {
         Set<InscripcionDatosEspecializacion> datos = new HashSet<>();
 
@@ -344,9 +368,10 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
         return entityToArrayListFormacion(datos);
     }
+
     public static String[] entityToStringArrayFormacion(InscripcionDatosEspecializacion entity) {
-        return new String[] { entity.getCodInscripcion().toString(), entity.getCedula(),
-                entity.getCorreoUsuario() };
+        return new String[]{entity.getCodInscripcion().toString(), entity.getCedula(),
+                entity.getCorreoUsuario()};
     }
 
     public static ArrayList<ArrayList<String>> entityToArrayListFormacion(Set<InscripcionDatosEspecializacion> datos) {

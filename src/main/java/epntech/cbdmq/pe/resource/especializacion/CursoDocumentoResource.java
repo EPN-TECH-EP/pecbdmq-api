@@ -6,6 +6,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
+import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
+import static epntech.cbdmq.pe.constante.ResponseMessage.EXITO_GENERAR_ARCHIVO;
 import static epntech.cbdmq.pe.util.ResponseEntityUtil.response;
 
 @RestController
@@ -53,5 +56,14 @@ public class CursoDocumentoResource {
     public Set<Documento> listarDocumentosByPeriodo(@PathVariable("codigoCurso") Long codigoCurso) {
         return cursoDocumentoService.getDocumentosByCurso(codigoCurso);
     }
-    
+    @GetMapping("/generarDocumentos&Cierre/{codCurso}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> generaArchivosAntiguedadesFormacion(HttpServletResponse response, @PathVariable("codCurso" )Long codCurso) throws DataException {
+
+        if(cursoDocumentoService.generarDocumentoInscritos(response,codCurso))
+            return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+        else
+            return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+
+    }
 }

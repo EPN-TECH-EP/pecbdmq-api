@@ -21,7 +21,7 @@ public interface CursoDocumentoService {
     void deleteDocumento(Long codCursoEspecializacion, Long codDocumento) throws DataException, IOException;
     void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion)throws DataException ;
     Set<Documento> getDocumentosByCurso(Long codigoCurso);
-    void generarDocumentoInscritos(HttpServletResponse response,Long codigoCurso);
+    boolean generarDocumentoInscritos(HttpServletResponse response,Long codigoCurso);
     void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException;
 
     void generarPDF(HttpServletResponse response, String filePath, String nombre, Long codCurso, String estado)

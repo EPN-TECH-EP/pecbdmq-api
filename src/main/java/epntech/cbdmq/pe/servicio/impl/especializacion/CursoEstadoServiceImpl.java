@@ -129,7 +129,7 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     }
 
     @Override
-    public String updateState(HttpServletResponse response,Integer idCurso, Integer idCursoEstado) {
+    public String updateState(Integer idCurso, Integer idCursoEstado) {
         String mensaje=cursoEstadoRepository.updateState(idCurso, idCursoEstado);
         /**/
 
@@ -140,5 +140,7 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     public Integer updateNextState(Integer idCurso) {
         return cursoEstadoRepository.updateNextState(idCurso);
     }
+
+
 
 }
