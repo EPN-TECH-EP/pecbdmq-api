@@ -236,6 +236,17 @@ import lombok.Data;
         @ColumnResult(name = "apellido", type = String.class),
         @ColumnResult(name = "correo_personal", type = String.class),
         @ColumnResult(name = "correo_institucional", type = String.class),}))
+@NamedNativeQuery(name = "DatosInscripcionEsp.aprobadosPruebasBySubtipoPrueba",
+        query = "select * from cbdmq.get_estudiantes_aprobados_pruebas_curso(:codCurso,:codSubtipoPrueba)",
+        resultSetMapping = "aprobadosPruebasSubTipoPrueba")
+@SqlResultSetMapping(name = "aprobadosPruebasSubTipoPrueba", classes = @ConstructorResult(targetClass = DatosInscripcionEsp.class, columns = {
+        @ColumnResult(name = "cod_estudiante", type = Integer.class),
+        @ColumnResult(name = "codigo_unico_estudiante", type = String.class),
+        @ColumnResult(name = "cedula", type = String.class),
+        @ColumnResult(name = "nombre", type = String.class),
+        @ColumnResult(name = "apellido", type = String.class),
+        @ColumnResult(name = "correo_personal", type = String.class),
+        @ColumnResult(name = "correo_institucional", type = String.class),}))
 
 public class InscripcionEsp {
 

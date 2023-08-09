@@ -48,7 +48,9 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	@Query(nativeQuery = true, name = "InscripcionEsp.getListasByEstado")
 	Set<InscripcionDatosEspecializacion> getInscripcionesByCursoEstado(@Param("codCurso") Long codCurso, @Param("estado") String estado);
 	@Query(nativeQuery = true, name = "DatosInscripcionEsp.aprobadosPruebas")
-	Set<DatosInscripcionEsp> getAprobadosPruebas(@Param("codCurso") Integer codCurso);
+	List<DatosInscripcionEsp> getAprobadosPruebas(@Param("codCurso") Integer codCurso);
+	@Query(nativeQuery = true, name = "DatosInscripcionEsp.aprobadosPruebasBySubtipoPrueba")
+	List<DatosInscripcionEsp> getAprobadosPruebasBySubtipoPrueba(@Param("codCurso") Integer codCurso, @Param("codSubtipoPrueba") Integer codSubtipoPrueba);
 	
 	@Query(value = "select i.* "
 			+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.esp_curso c "

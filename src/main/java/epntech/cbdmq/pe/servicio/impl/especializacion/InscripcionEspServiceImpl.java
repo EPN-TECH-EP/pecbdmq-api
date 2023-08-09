@@ -373,8 +373,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     public Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException {
         return inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, Estado);
     }    @Override
-    public Set<DatosInscripcionEsp> getAprobadosPruebas(Integer codCurso) throws DataException {
+    public List<DatosInscripcionEsp> getAprobadosPruebas(Integer codCurso) throws DataException {
         return inscripcionEspRepository.getAprobadosPruebas(codCurso);
+    }
+    @Override
+    public List<DatosInscripcionEsp> getAprobadosPruebasSubtipoPrueba(Integer codCurso, Integer codSubtipoPrueba)  {
+        return inscripcionEspRepository.getAprobadosPruebasBySubtipoPrueba(codCurso, codSubtipoPrueba);
     }
 
     @Override

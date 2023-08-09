@@ -130,7 +130,7 @@ public class InscripcionEspResource {
 		return inscripcionEspServiceImpl.getByCursoEstado(codigo,estado);
 	}
 	@GetMapping("/aprobadosPruebasPorCurso")
-	public Set<DatosInscripcionEsp> aprobadosPruebasPorCurso(@RequestParam("id") Integer codigo) throws DataException {
+	public List<DatosInscripcionEsp> aprobadosPruebasPorCurso(@RequestParam("id") Integer codigo) throws DataException {
 		return inscripcionEspServiceImpl.getAprobadosPruebas(codigo);
 	}
 	
