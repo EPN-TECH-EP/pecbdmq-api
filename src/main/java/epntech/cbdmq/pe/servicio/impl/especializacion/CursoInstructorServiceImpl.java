@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Instructor;
-import epntech.cbdmq.pe.dto.CursoInstructorRequest;
-import epntech.cbdmq.pe.dto.CursoInstructorResponse;
+import epntech.cbdmq.pe.dto.especializacion.CursoInstructorRequest;
+import epntech.cbdmq.pe.dto.especializacion.CursoInstructorResponse;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.admin.DatoPersonalRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.InstructorCursoRepository;
@@ -142,6 +142,12 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	@Override
 	public List<InstructoresCurso> listCursosInstructor(Long codInstructor) {
 		return instructoresCursoRepository.findCursosInstructor(codInstructor);
+	}
+
+	@Override
+	public CursoInstructor getByusuario(int codUsuario) {
+		return cursoInstructorRepository.findByCodUsuario(codUsuario)
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 	}
 
 }
