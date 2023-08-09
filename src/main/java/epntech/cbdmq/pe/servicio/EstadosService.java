@@ -18,6 +18,7 @@ public interface EstadosService {
 	Estados update(Estados objActualizado)throws DataException;
 	
 	void delete(int id);
+	Estados findByNombre(String nombre);
 	
 }
 

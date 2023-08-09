@@ -33,6 +33,7 @@ public class EspecializacionConst {
 	public static final String CIERRE_INSCRITOS = "CIERRE INSCRITOS";
 	public static final String CIERRE_VALIDACION = "CIERRE VALIDACIÓN";
 	public static final String CIERRE_PRUEBAS = "CIERRE PRUEBA";
+	public static final String CIERRE_PROCESO = "CIERRE PROCESO";
 	public static final String VALIDACION = "VALIDACION";
 	public static final String INICIO = "INICIO";
 	public static final String ESTADO_INSCRIPCION_ASIGNADO = "ASIGNADO";

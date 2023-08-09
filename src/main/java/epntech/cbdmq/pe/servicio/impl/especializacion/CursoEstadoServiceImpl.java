@@ -129,21 +129,9 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     }
 
     @Override
-    public String updateState(HttpServletResponse response,Integer idCurso, Integer idCursoEstado) {
+    public String updateState(Integer idCurso, Integer idCursoEstado) {
         String mensaje=cursoEstadoRepository.updateState(idCurso, idCursoEstado);
-        /*
-        if(mensaje.equals(INSCRIPCION)){
-
-            inscripcionEspSvc.generarDocListadoInscripcion(response, Long.valueOf(idCurso));
-
-
-        } else if (mensaje.equals(VALIDACION)) {
-            inscripcionEspSvc.generarDocListadoValidacion(response, Long.valueOf(idCurso));
-
-        }
-        else if (mensaje.equals(VALIDACION_PRUEBAS)){
-            inscripcionEspSvc.generarDocListadoPruebas(response, Long.valueOf(idCurso));
-        }*/
+        /**/
 
         return mensaje;
     }
@@ -152,5 +140,7 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     public Integer updateNextState(Integer idCurso) {
         return cursoEstadoRepository.updateNextState(idCurso);
     }
+
+
 
 }

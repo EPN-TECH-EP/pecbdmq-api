@@ -79,5 +79,10 @@ public class EstadosServiceImpl implements EstadosService {
 		repo.deleteById(id);
 	}
 
+	@Override
+	public Estados findByNombre(String nombre) {
+		return repo.findByNombreIgnoreCase(nombre).orElse(null);
+	}
+
 }
 
