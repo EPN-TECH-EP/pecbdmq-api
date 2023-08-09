@@ -98,12 +98,12 @@ public class CursoResource {
 		obj.setCodCursoEspecializacion(codigo);
 		return new ResponseEntity<>(cursoServiceImpl.update(obj), HttpStatus.OK);
 	}
-	@PatchMapping("/{id}/estado")
+	@PutMapping("/{id}/estado")
 	public ResponseEntity<Curso> updateEstado(@PathVariable("id") long codigo, @RequestBody String estado) {
 		Curso curso = cursoServiceImpl.updateEstado(codigo, estado);
 		return new ResponseEntity<>(curso, HttpStatus.OK);
 	}
-	@PatchMapping("/validar/{id}")
+	@PutMapping("/validar/{id}")
 	public ResponseEntity<Curso> updateEstadoAprobadoObservaciones(@PathVariable("id") long codigo,@RequestBody ParamsValidacion validacion) throws MessagingException {
 		Curso curso = cursoServiceImpl.updateEstadoAprobadoObservaciones(codigo, validacion.getAprueba(),validacion.getObservacion(),validacion.getCodUsuarioAprueba());
 		return new ResponseEntity<>(curso, HttpStatus.OK);
