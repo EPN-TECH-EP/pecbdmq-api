@@ -1,6 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
-import epntech.cbdmq.pe.dto.CursoInstructorResponse;
+import epntech.cbdmq.pe.dto.especializacion.CursoInstructorResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;

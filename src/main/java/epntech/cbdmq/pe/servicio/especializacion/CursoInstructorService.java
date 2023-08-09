@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoInstructor;
 import epntech.cbdmq.pe.dominio.admin.especializacion.InstructoresCurso;
-import epntech.cbdmq.pe.dto.CursoInstructorRequest;
-import epntech.cbdmq.pe.dto.CursoInstructorResponse;
+import epntech.cbdmq.pe.dto.especializacion.CursoInstructorRequest;
+import epntech.cbdmq.pe.dto.especializacion.CursoInstructorResponse;
 
 public interface CursoInstructorService {
 
@@ -23,6 +23,9 @@ public interface CursoInstructorService {
 	List<CursoInstructorResponse> listInstructoresCurso(Long codCurso);
 	
 	List<InstructoresCurso> listCursosInstructor(Long codInstructor);
+
+	CursoInstructor getByusuario(int codUsuario);
+
 	
 }
 

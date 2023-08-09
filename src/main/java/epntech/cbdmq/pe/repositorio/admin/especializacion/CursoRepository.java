@@ -35,6 +35,12 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 			"and etc.cod_tipo_curso = :codigoTipoCurso", nativeQuery = true)
 	List<Curso> findByCodigoTipoCurso(Integer codigoTipoCurso);
 
+	@Query(value = "select ec.* from cbdmq.esp_curso ec, cbdmq.esp_curso_instructor eci " +
+			"where ec.cod_curso_especializacion = eci.cod_curso_especializacion " +
+			"and eci.cod_instructor_curso = :codigoCursoInstructor " +
+			"and ec.estado = :estado", nativeQuery = true)
+	List<Curso> findByInstructorAndEstado(Integer codigoCursoInstructor, String estado);
+
 	List<Curso> findByCodCatalogoCursos(Long codigoCatalogoCurso);
 	List<Curso> findAllByEstadoContainsIgnoreCase(String estado, Sort sort);
 	@Query("SELECT c FROM Curso c ORDER BY c.nombre ASC")

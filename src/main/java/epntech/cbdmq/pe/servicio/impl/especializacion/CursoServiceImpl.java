@@ -598,5 +598,10 @@ public class CursoServiceImpl implements CursoService {
         return lista;
     }
 
+    @Override
+    public List<Curso> listarPorInstructorAndEstado(Integer codigoCursoInstructor, String estado) {
+        return cursoRepository.findByInstructorAndEstado(codigoCursoInstructor, estado);
+    }
+
 
 }

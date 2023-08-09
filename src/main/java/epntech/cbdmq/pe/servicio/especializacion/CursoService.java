@@ -20,7 +20,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface CursoService {
 
-	Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException, MessagingException;
+	Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException;
 
 	Curso update(Curso objActualizado);
 
@@ -51,7 +51,12 @@ public interface CursoService {
 	Boolean cumpleMinimoAprobadosCurso(Long codCursoEspecializacion) ;
 
 	void deleteDocumento(Long codCursoEspecializacion, Long codDocumento);
+
 	List<Curso> listarPorEstadoAll(String estado);
+
+	List<Curso> listarPorInstructorAndEstado(Integer codigoCursoInstructor, String estado);
+
 	Curso updateEstado(long codigo, String estado);
-	Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String Observaciones, long codigoUserAprueba) throws MessagingException;
+
+    Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String Observaciones, long codigoUserAprueba) throws MessagingException;
 }
