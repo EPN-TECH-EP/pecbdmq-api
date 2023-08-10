@@ -30,10 +30,12 @@ public interface InscripcionEspService {
 	InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario);
 
 	Optional<InscripcionDatosEsp> getById(Long codInscripcion);
+	
+	List<InscripcionDatosEspecializacion> getAll();
 
-	List<InscripcionDatosEspecializacion> getByCursoAndUsuarioPaginado(Long codCurso, Long codUsuario, Pageable pageable);
+	List<InscripcionDatosEspecializacion> getByUsuarioPaginado(Long codUsuario, Pageable pageable);
 
-	List<InscripcionDatosEspecializacion> getAllByCursoPaginado(Long codCurso, Pageable pageable);
+	List<InscripcionDatosEspecializacion> getAllPaginado(Pageable pageable);
 
 	void delete(Long codInscripcion);
 	

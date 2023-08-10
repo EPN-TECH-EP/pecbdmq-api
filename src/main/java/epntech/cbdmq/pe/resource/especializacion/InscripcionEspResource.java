@@ -64,19 +64,21 @@ public class InscripcionEspResource {
 		return new ResponseEntity<>(inscripcionEspServiceImpl.update(inscripcionEsp), HttpStatus.OK);
 	}
 
-	@GetMapping("/listarPorCurso/{codCurso}/usuario/{codUsuario}")
-	public List<InscripcionDatosEspecializacion> listarPaginadoPorCursoAndUsuario(
-			@PathVariable("codCurso") Long codCurso,
-			@PathVariable("codUsuario") Long codUsuario,
-			Pageable pageable) {
-		return inscripcionEspServiceImpl.getByCursoAndUsuarioPaginado(codCurso, codUsuario, pageable);
+	@GetMapping("/listar")
+	public List<InscripcionDatosEspecializacion> listar() {
+		return inscripcionEspServiceImpl.getAll();
 	}
 
-	@GetMapping("/listarPorCurso/{codCurso}")
-	public List<InscripcionDatosEspecializacion> listarPaginadoPorCurso(
-			@PathVariable("codCurso") Long codCurso,
+	@GetMapping("/listarPorUsuarioPaginado/{usuario}")
+	public List<InscripcionDatosEspecializacion> listarPaginadoPorUsuario(
+			@PathVariable("usuario") Long usuario,
 			Pageable pageable) {
-		return inscripcionEspServiceImpl.getAllByCursoPaginado(codCurso, pageable);
+		return inscripcionEspServiceImpl.getByUsuarioPaginado(usuario, pageable);
+	}
+
+	@GetMapping("/listarPaginado")
+	public List<InscripcionDatosEspecializacion> listarPaginadoTodo(Pageable pageable) {
+		return inscripcionEspServiceImpl.getAllPaginado(pageable);
 	}
 
 	@GetMapping("/{id}")

@@ -18,13 +18,16 @@ import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 
 public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, Long> {
 
-	Optional<InscripcionEsp> findByCodEstudianteAndCodCursoEspecializacion(Long codEstudiante, Long codCursoEspecializacion);
+	Optional<InscripcionEsp> findByCodEstudianteAndCodCursoEspecializacion(Long codEstudiante, Long codCursoEspecializacion); 
+	
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripciones")
+	List<InscripcionDatosEspecializacion> getAllInscripciones();
 
-	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionesByCurso")
-	List<InscripcionDatosEspecializacion> getAllInscripcionesByCurso(@Param("codCurso") Long codCurso, Pageable pageable);
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripciones")
+	List<InscripcionDatosEspecializacion> getAllInscripciones(Pageable pageable);
 
-	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionesByCursoAndUsuario")
-	List<InscripcionDatosEspecializacion> getAllInscripcionesByCursoAndUsuario(@Param("codCurso") Long codCurso, @Param("codUsuario") Long codUsuario, Pageable pageable);
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionesByUsuario")
+	List<InscripcionDatosEspecializacion> getAllInscripcionesByUsuario(@Param("codUsuario") Long codUsuario, Pageable pageable);
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcion")
 	Optional<InscripcionDatosEspecializacion> getInscripcion(@Param("codInscripcion") Long codInscripcion);
