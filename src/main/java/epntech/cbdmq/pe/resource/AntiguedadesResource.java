@@ -115,9 +115,9 @@ public class AntiguedadesResource {
 		try {
 
 			String nombre= APROBADOS_ESPECIALIZACION+codCurso.toString();
-			String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/" + nombre;
+			String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() /*+ "/" + nombre*/;
 
-			objService.generarExcelEsp(ruta + ".xlsx", nombre + ".xlsx", codCurso);
+			objService.generarExcelEsp(ruta, nombre + ".xlsx", codCurso);
 			objService.generarPDFEsp(response, ruta + ".pdf", nombre + ".pdf", codCurso);
 
 			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);

@@ -35,11 +35,20 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 			"and etc.cod_tipo_curso = :codigoTipoCurso", nativeQuery = true)
 	List<Curso> findByCodigoTipoCurso(Integer codigoTipoCurso);
 
-	@Query(value = "select ec.* from cbdmq.esp_curso ec, cbdmq.esp_curso_instructor eci " +
-			"where ec.cod_curso_especializacion = eci.cod_curso_especializacion " +
-			"and eci.cod_instructor_curso = :codigoCursoInstructor " +
-			"and ec.estado = :estado", nativeQuery = true)
-	List<Curso> findByInstructorAndEstado(Integer codigoCursoInstructor, String estado);
+	@Query(value = "select\n" +
+			" ec.*\n" +
+			"from\n" +
+			" cbdmq.esp_curso ec,\n" +
+			" cbdmq.esp_curso_instructor eci,\n" +
+			" cbdmq.gen_instructor gi,\n" +
+			" cbdmq.gen_usuario gu \n" +
+			"where\n" +
+			" gu.cod_usuario = :codUsuario \n" +
+			" and ec.cod_curso_especializacion = eci.cod_curso_especializacion\n" +
+			" and eci.cod_instructor  = gi.cod_instructor \n" +
+			" and gu.cod_datos_personales = gi.cod_datos_personales \n" +
+			" and ec.estado = :estado", nativeQuery = true)
+	List<Curso> findByInstructorAndEstado(Integer codUsuario, String estado);
 
 	List<Curso> findByCodCatalogoCursos(Long codigoCatalogoCurso);
 	List<Curso> findAllByEstadoContainsIgnoreCase(String estado, Sort sort);
