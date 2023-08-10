@@ -324,7 +324,10 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     public Boolean generarDocListadoGeneral(HttpServletResponse response, Long codCurso, String estado) {
         try {
 
-            String nombre = LISTADOSESPECIALIZACION+estado;
+            String nombreEstado = estado.compareToIgnoreCase("%") == 0 ? "Inscritos" : estado;
+
+            String nombre = LISTADOSESPECIALIZACION+nombreEstado ;
+
             String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/";
 
             this.generarExcel(ruta, nombre + ".xlsx", codCurso, estado);
@@ -344,7 +347,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     @Override
     public Boolean generarDocListadoInscripcion(HttpServletResponse response, Long codCurso) {
-        return this.generarDocListadoGeneral(response, codCurso, INSCRIPCION);
+        return this.generarDocListadoGeneral(response, codCurso, "%");
     }
 
     @Override
