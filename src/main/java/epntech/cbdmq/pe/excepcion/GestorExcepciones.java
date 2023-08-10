@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import jakarta.mail.AuthenticationFailedException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -29,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.MailSendException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -278,6 +280,42 @@ public class GestorExcepciones implements ErrorController {
 				.map(err -> "[" + err + "]")
 				.collect(Collectors.joining(""));
 		return createHttpResponse(BAD_REQUEST, str);
+	}
+
+
+	// org.postgresql.util.PSQLException
+	@ExceptionHandler(PSQLException.class)
+	public ResponseEntity<HttpResponse> psqlException(PSQLException exception){
+		LOGGER.error(exception.getMessage());
+		return createHttpResponse(BAD_REQUEST, exception.getMessage());
+	}
+
+	// org.springframework.orm.jpa.JpaSystemException
+	@ExceptionHandler(JpaSystemException.class)
+	public ResponseEntity<HttpResponse> jpaSystemException(JpaSystemException exception){
+
+		// busca en las causas de la excepción una de tipo org.postgresql.util.PSQLException para obtener el mensaje de error
+		Throwable rootCause = exception;
+		while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
+
+			LOGGER.error(rootCause.getMessage());
+
+			rootCause = rootCause.getCause();
+			if (rootCause instanceof PSQLException) {
+
+				// el mensaje de error de la excepción PSQLException es muy largo, se obtiene la primera línea
+				String errorMessage = rootCause.getMessage();
+				int index = errorMessage.indexOf("\n");
+				if (index > 0) {
+					errorMessage = errorMessage.substring(0, index);
+				}
+
+				return createHttpResponse(BAD_REQUEST, errorMessage );
+			}
+		}
+
+
+		return createHttpResponse(BAD_REQUEST, exception.getMessage());
 	}
 	
 	/*

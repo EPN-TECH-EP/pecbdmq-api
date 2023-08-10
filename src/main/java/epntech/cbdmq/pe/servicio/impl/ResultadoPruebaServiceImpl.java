@@ -138,17 +138,15 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS_CURSO
                     + codCurso.toString()
                     + "/";
-/*
+
             PruebaDetalle pruebaDetalle = pruebaDetalleRepository
                     .findByCodCursoEspecializacionAndCodSubtipoPrueba(codCurso, codSubtipoPrueba)
                     .orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
 
             codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
 
- */
-
-            nombreArchivo = "Lista de aprobados" + //
-            // pruebaDetalle.getDescripcionPrueba() +
+            nombreArchivo = "Lista de aprobados " +
+                    (pruebaDetalle.getDescripcionPrueba() != null ? pruebaDetalle.getDescripcionPrueba() : pruebaDetalle.getCodPruebaDetalle()) +
             " " + codCurso;
         } else {
 

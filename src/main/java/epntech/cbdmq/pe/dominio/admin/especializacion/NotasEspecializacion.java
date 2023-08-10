@@ -20,7 +20,7 @@ import java.time.LocalTime;
 				"ene.cod_instructor as codInstructor " +
 				"from cbdmq.get_estudiantes_aprobados_pruebas_curso(:codCurso) eap " +
 				"left join cbdmq.esp_inscripcion ei on eap.cod_estudiante = ei.cod_estudiante " +
-				"left join cbdmq.esp_nota_especializacion ene on ei.cod_inscripcion = ene.cod_inscripcion",
+				"left join cbdmq.esp_nota_especializacion ene on ei.cod_inscripcion = ene.cod_inscripcion where ei.cod_curso_especializacion = :codCurso",
 		resultSetMapping = "findNotasCurso")
 @SqlResultSetMapping(name = "findNotasCurso", classes = @ConstructorResult(targetClass = NotasEspecializacionDTO.class, columns = {
 		@ColumnResult(name = "codEstudiante", type = Integer.class),

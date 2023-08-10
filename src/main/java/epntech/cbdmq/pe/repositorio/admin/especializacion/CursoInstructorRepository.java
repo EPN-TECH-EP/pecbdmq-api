@@ -21,6 +21,6 @@ public interface CursoInstructorRepository extends JpaRepository<CursoInstructor
 			"where eci.cod_instructor = gi.cod_instructor " +
 			"and gi.cod_datos_personales = gu.cod_datos_personales " +
 			"and gu.cod_usuario = :codUsuario", nativeQuery = true)
-	Optional<CursoInstructor> findByCodUsuario(Integer codUsuario);
+	List<CursoInstructor> findByCodUsuario(Integer codUsuario);
 	
 }

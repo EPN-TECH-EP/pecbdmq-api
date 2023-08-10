@@ -65,7 +65,7 @@ public class CursoInstructorResource {
 	}
 
 	@GetMapping("/byUser")
-	public CursoInstructor userEsInstructor(@RequestParam("codUsuario") Integer codUsuario) {
+	public List<CursoInstructor> userEsInstructor(@RequestParam("codUsuario") Integer codUsuario) {
 		return cursoInstructorServiceImpl.getByusuario(codUsuario);
 	}
 

@@ -24,7 +24,7 @@ public interface CursoInstructorService {
 	
 	List<InstructoresCurso> listCursosInstructor(Long codInstructor);
 
-	CursoInstructor getByusuario(int codUsuario);
+	List<CursoInstructor> getByusuario(int codUsuario);
 
 	
 }
