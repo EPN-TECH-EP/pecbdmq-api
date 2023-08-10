@@ -214,7 +214,7 @@ import lombok.Data;
                 "LEFT JOIN cbdmq.gen_dato_personal gdp ON gdp.cod_datos_personales = ge.cod_datos_personales \n" +
                 "LEFT JOIN cbdmq.gen_usuario gu ON gu.cod_datos_personales = gdp.cod_datos_personales\n" +
                 "left join cbdmq.esp_curso ec on ec.cod_curso_especializacion = ei.cod_curso_especializacion \n" +
-                "where ei.estado =:estado\n" +
+                "where ei.estado like :estado\n" +
                 "and ec.cod_curso_especializacion = :codCurso",
         resultSetMapping = "findInscripcionPorEstadoCurso")
 @SqlResultSetMapping(name = "findInscripcionPorEstadoCurso", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {

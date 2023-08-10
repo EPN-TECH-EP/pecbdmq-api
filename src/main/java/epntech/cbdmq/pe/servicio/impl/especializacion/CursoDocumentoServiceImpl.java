@@ -288,7 +288,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     public void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException {
         String[] HEADERs = {"Codigo", "Cedula", "Correo"};
         try {
-            ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath, HEADERs);
+            ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath+"/"+nombre, HEADERs);
 
             this.generaDocumento(filePath, nombre, codCurso);
 
@@ -315,7 +315,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        exporter.exportar(response, columnas, obtenerDatos(codCurso, estado), widths, filePath);
+        exporter.exportar(response, columnas, obtenerDatos(codCurso, estado), widths, filePath+"/"+nombre);
 
         this.generaDocumento(filePath, nombre, codCurso);
     }
@@ -324,11 +324,14 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     public Boolean generarDocListadoGeneral(HttpServletResponse response, Long codCurso, String estado) {
         try {
 
-            String nombre = LISTADOSESPECIALIZACION+estado;
-            String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/" + nombre;
+            String nombreEstado = estado.compareToIgnoreCase("%") == 0 ? "Inscritos" : estado;
 
-            this.generarExcel(ruta + ".xlsx", nombre + ".xlsx", codCurso, estado);
-            this.generarPDF(response, ruta + ".pdf", nombre + ".pdf", codCurso, estado);
+            String nombre = LISTADOSESPECIALIZACION+nombreEstado ;
+
+            String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/";
+
+            this.generarExcel(ruta, nombre + ".xlsx", codCurso, estado);
+            this.generarPDF(response, ruta, nombre + ".pdf", codCurso, estado);
             return true;
 
         } catch (IOException e) {
@@ -344,7 +347,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     @Override
     public Boolean generarDocListadoInscripcion(HttpServletResponse response, Long codCurso) {
-        return this.generarDocListadoGeneral(response, codCurso, INSCRIPCION);
+        return this.generarDocListadoGeneral(response, codCurso, "%");
     }
 
     @Override

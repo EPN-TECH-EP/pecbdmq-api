@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import com.lowagie.text.DocumentException;
+import epntech.cbdmq.pe.constante.EspecializacionConst;
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.constante.FormacionConst;
 import epntech.cbdmq.pe.dominio.admin.*;
@@ -16,6 +17,7 @@ import epntech.cbdmq.pe.repositorio.admin.*;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.CursoDocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.PruebasRepository;
 import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
+import epntech.cbdmq.pe.servicio.PruebaDetalleService;
 import epntech.cbdmq.pe.servicio.ResultadoPruebaService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
@@ -136,17 +138,15 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS_CURSO
                     + codCurso.toString()
                     + "/";
-/*
+
             PruebaDetalle pruebaDetalle = pruebaDetalleRepository
                     .findByCodCursoEspecializacionAndCodSubtipoPrueba(codCurso, codSubtipoPrueba)
                     .orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
 
             codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
 
- */
-
-            nombreArchivo = "Lista de aprobados" + //
-            // pruebaDetalle.getDescripcionPrueba() +
+            nombreArchivo = "Lista de aprobados " +
+                    (pruebaDetalle.getDescripcionPrueba() != null ? pruebaDetalle.getDescripcionPrueba() : pruebaDetalle.getCodPruebaDetalle()) +
             " " + codCurso;
         } else {
 
@@ -199,7 +199,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
         exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
-        cursoDocumentoSvc.generaDocumento(ruta, nombre, Long.valueOf(codCurso));
+        generaDocumento(ruta, nombre,subTipoPrueba,codCurso);
 
 
     }
@@ -209,7 +209,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
 
         ExcelHelper.generarExcel(obtenerDatosEsp(subTipoPrueba, codCurso), ruta, headers);
-        cursoDocumentoSvc.generaDocumento(ruta, nombre, Long.valueOf(codCurso));
+        generaDocumento(ruta, nombre,subTipoPrueba,codCurso);
 
     }
 
@@ -317,20 +317,22 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     }
 
     @Transactional
-    public void generaDocumento(String ruta, String nombre, Integer codPruebaDetalle, Integer codCurso) throws DataException {
+    public void generaDocumento(String ruta, String nombre, Integer codSubtipo, Integer codCurso) throws DataException {
 
 
-        /*Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
-                subTipoPrueba,
-                periodoAcademicoRepository.getPAActive());
+        Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(
+                codCurso,
+                codSubtipo);
+        Integer codPruebaDetalle;
 
         if (pruebaDetalleOpt.isPresent()) {
             codPruebaDetalle = pruebaDetalleOpt.get().getCodPruebaDetalle();
         } else {
-            throw new DataException(FormacionConst.PRUEBA_NO_EXISTE);
-        }*/
+            throw new DataException(EspecializacionConst.CURSO_NO_EXISTE);
+        }
 
         // busca documentos para la prueba
+
         List<DocumentoPrueba> listaDocPrueba = this.docPruebaRepo.findAllByCodPruebaDetalle(codPruebaDetalle);
 
         if (listaDocPrueba != null && listaDocPrueba.size() > 0) {

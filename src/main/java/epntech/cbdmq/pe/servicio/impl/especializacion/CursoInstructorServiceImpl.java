@@ -145,9 +145,13 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	}
 
 	@Override
-	public CursoInstructor getByusuario(int codUsuario) {
-		return cursoInstructorRepository.findByCodUsuario(codUsuario)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+	public List<CursoInstructor> getByusuario(int codUsuario) {
+		List<CursoInstructor> lista = cursoInstructorRepository.findByCodUsuario(codUsuario);
+		if (lista != null && !lista.isEmpty()) {
+			return lista;
+		} else {
+			throw new BusinessException(REGISTRO_NO_EXISTE);
+		}
 	}
 
 }
