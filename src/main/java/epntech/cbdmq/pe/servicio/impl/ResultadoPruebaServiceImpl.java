@@ -125,7 +125,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     @Override
     public Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba,
                                            Integer codCurso) throws DataException, DocumentException, IOException {
-        String[] columnas = {"Código Único", "Correo", "Cedula", "Nombre","Apellido"};
+        String[] columnas = {"Código Único", "Correo", "Cedula", "Nombre", "Apellido"};
 
         Optional<PruebaDetalle> pp = null;
         String ruta = "";
@@ -138,16 +138,20 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS_CURSO
                     + codCurso.toString()
                     + "/";
+            if (codSubtipoPrueba != null) {
 
-            PruebaDetalle pruebaDetalle = pruebaDetalleRepository
-                    .findByCodCursoEspecializacionAndCodSubtipoPrueba(codCurso, codSubtipoPrueba)
-                    .orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
+                PruebaDetalle pruebaDetalle = pruebaDetalleRepository
+                        .findByCodCursoEspecializacionAndCodSubtipoPrueba(codCurso, codSubtipoPrueba)
+                        .orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
 
-            codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
+                codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
 
-            nombreArchivo = "Lista de aprobados " +
-                    (pruebaDetalle.getDescripcionPrueba() != null ? pruebaDetalle.getDescripcionPrueba() : pruebaDetalle.getCodPruebaDetalle()) +
-            " " + codCurso;
+                nombreArchivo = "Lista de aprobados " +
+                        (pruebaDetalle.getDescripcionPrueba() != null ? pruebaDetalle.getDescripcionPrueba() : pruebaDetalle.getCodPruebaDetalle()) +
+                        " " + codCurso;
+            } else {
+                nombreArchivo = "Lista de aprobados " + codCurso;
+            }
         } else {
 
             ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
@@ -199,7 +203,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
         exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
-        generaDocumento(ruta, nombre,subTipoPrueba,codCurso);
+        generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
 
 
     }
@@ -209,7 +213,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
 
         ExcelHelper.generarExcel(obtenerDatosEsp(subTipoPrueba, codCurso), ruta, headers);
-        generaDocumento(ruta, nombre,subTipoPrueba,codCurso);
+        generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
 
     }
 
@@ -255,6 +259,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         return entityToArrayList(datos);
     }
+
     public ArrayList<ArrayList<String>> obtenerDatosEsp(Integer prueba, Integer codCurso) throws DataException {
 
         List<DatosInscripcionEsp> datos;
@@ -263,9 +268,8 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
             //TODO
             datos = inscripcionEspService.getAprobadosPruebas(codCurso);
-        }
-        else{
-            datos= inscripcionEspService.getAprobadosPruebasSubtipoPrueba(codCurso,prueba);
+        } else {
+            datos = inscripcionEspService.getAprobadosPruebasSubtipoPrueba(codCurso, prueba);
         }
 
         return entityToArrayListEsp(datos);
@@ -290,6 +294,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         }
         return arrayMulti;
     }
+
     public static ArrayList<ArrayList<String>> entityToArrayListEsp(List<DatosInscripcionEsp> datos) {
         ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
         for (DatosInscripcionEsp dato : datos) {
@@ -323,12 +328,10 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(
                 codCurso,
                 codSubtipo);
-        Integer codPruebaDetalle;
+        Integer codPruebaDetalle = null;
 
         if (pruebaDetalleOpt.isPresent()) {
             codPruebaDetalle = pruebaDetalleOpt.get().getCodPruebaDetalle();
-        } else {
-            throw new DataException(EspecializacionConst.CURSO_NO_EXISTE);
         }
 
         // busca documentos para la prueba
@@ -415,13 +418,12 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             docPA.setCodDocumento(documento.getCodDocumento());
             periodoAcademicoDocForRepository.save(docPA);
         }
-
-
-        DocumentoPrueba doc = new DocumentoPrueba();
-        doc.setCodPruebaDetalle(codPruebaDetalle);
-        doc.setCodDocumento(documento.getCodDocumento());
-
-        saveDocumentoPrueba(doc);
+        if(codPruebaDetalle != null) {
+            DocumentoPrueba doc = new DocumentoPrueba();
+            doc.setCodPruebaDetalle(codPruebaDetalle);
+            doc.setCodDocumento(documento.getCodDocumento());
+            saveDocumentoPrueba(doc);
+        }
     }
 
     private void saveDocumentoPrueba(DocumentoPrueba obj) {
