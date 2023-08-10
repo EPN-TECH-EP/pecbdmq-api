@@ -46,7 +46,9 @@ public class JwtFiltroAutorizacionFilter extends OncePerRequestFilter {
 		try {
 			String requestURI = request.getRequestURI();
 			String excludedUrlPattern = "/link/\\d+";
-			if (requestURI.matches(excludedUrlPattern)) {
+			String excludedUrlPattern2 = "/swagger-ui/.*";
+			String excludedUrlPattern3 = "/api-docs.*";
+			if (requestURI.matches(excludedUrlPattern)||requestURI.matches(excludedUrlPattern2)||requestURI.matches(excludedUrlPattern3)) {
 				filterChain.doFilter(request, response);
 				return;
 			}

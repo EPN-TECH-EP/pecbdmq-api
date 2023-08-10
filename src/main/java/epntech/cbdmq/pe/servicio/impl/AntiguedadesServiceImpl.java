@@ -230,7 +230,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	public void generarExcelEsp(String filePath, String nombre, Long codCurso) throws IOException, DataException {
 		String[] HEADERs = { "Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota" };
 		try {
-			ExcelHelper.generarExcel(obtenerDatosEsp(codCurso), filePath, HEADERs);
+			ExcelHelper.generarExcel(obtenerDatosEsp(codCurso), filePath+"/"+nombre, HEADERs);
 
 			cursoDocumentoSvc.generaDocumento(filePath,nombre,codCurso);
 
@@ -257,7 +257,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 
 		//Genera el pdf
 		exporter.setArchivosRuta(ARCHIVOS_RUTA);
-		exporter.exportar(response, columnas, obtenerDatosEsp(codCurso), widths, filePath);
+		exporter.exportar(response, columnas, obtenerDatosEsp(codCurso), widths, filePath+"/"+nombre);
 
 		cursoDocumentoSvc.generaDocumento(filePath,nombre,codCurso);
 	}

@@ -115,10 +115,10 @@ public class AntiguedadesResource {
 		try {
 
 			String nombre= APROBADOS_ESPECIALIZACION+codCurso.toString();
-			String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() /*+ "/" + nombre*/;
+			String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString()+"/";
 
-			objService.generarExcelEsp(ruta, nombre + ".xlsx", codCurso);
-			objService.generarPDFEsp(response, ruta + ".pdf", nombre + ".pdf", codCurso);
+			objService.generarExcelEsp(ruta , nombre + ".xlsx", codCurso);
+			objService.generarPDFEsp(response, ruta , nombre + ".pdf", codCurso);
 
 			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 
@@ -133,6 +133,17 @@ public class AntiguedadesResource {
 		String nombre = ANTIGUEDADESFORMACION + periodoAcademicoRepository.getPAActive().toString() + "." + extension;
 
 		// Buscar el archivo en la base de datos
+		return getResponseEntity(extension, nombre);
+	}
+	@GetMapping("/descargarArchivoEspecializacion")
+		public ResponseEntity<?> descargarArchivo(@RequestParam String extension, @RequestParam Long codCurso, HttpServletRequest request) throws FileNotFoundException {
+		String nombre= APROBADOS_ESPECIALIZACION+codCurso.toString()+ "." + extension;;
+
+		// Buscar el archivo en la base de datos
+		return getResponseEntity(extension, nombre);
+	}
+
+	private ResponseEntity<?> getResponseEntity(String extension, String nombre) throws FileNotFoundException {
 		Documento archivo = repository.findByNombre(nombre).orElse(null);
 
 		if (archivo == null) {
