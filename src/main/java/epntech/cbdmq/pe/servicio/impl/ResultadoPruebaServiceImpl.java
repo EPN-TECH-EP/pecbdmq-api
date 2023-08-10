@@ -145,8 +145,8 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
             codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
 
-            nombreArchivo = "Lista de aprobados" + //
-            // pruebaDetalle.getDescripcionPrueba() +
+            nombreArchivo = "Lista de aprobados " +
+                    (pruebaDetalle.getDescripcionPrueba() != null ? pruebaDetalle.getDescripcionPrueba() : pruebaDetalle.getCodPruebaDetalle()) +
             " " + codCurso;
         } else {
 

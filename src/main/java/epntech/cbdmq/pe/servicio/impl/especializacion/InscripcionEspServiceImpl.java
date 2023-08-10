@@ -19,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -763,6 +764,13 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setSexo(funcionario.getSexo().toUpperCase());
 
         newDatoPersonal.setNumTelefCelular(funcionario.getTelefonoCelular());
+
+        // transforma fecha de api "fechaNacimiento":"1993-09-27" a LocalDateTime con time 00:00:00
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fechaNacimiento = LocalDate.parse(funcionario.getFechaNacimiento(), formatter);
+
+        newDatoPersonal.setFechaNacimiento(fechaNacimiento.atStartOfDay());
+
         /*newDatoPersonal.setResidePais(funcionario.getPaisResidencia().toUpperCase().equals("ECUADOR"));
         newDatoPersonal.setCodProvinciaResidencia(Long.valueOf(funcionario.getCodigoProvinciaResidencia()));
         newDatoPersonal.setCallePrincipalResidencia(funcionario.getCallePrincipalResidencia());
@@ -795,8 +803,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setNombre(nombreApellidos[1]);
         newDatoPersonal.setCedula(ciudadano.getCedula());
         newDatoPersonal.setEstado(ACTIVO);
-        //TODO mal parseado
-        // newDatoPersonal.setFechaNacimiento(LocalDateTime.parse(ciudadano.getFechaNacimiento()));
+
+        // transforma fecha de api "fechaNacimiento":"05/01/1980" a LocalDateTime con time 00:00:00
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate fechaNacimiento = LocalDate.parse(ciudadano.getFechaNacimiento(), formatter);
+        newDatoPersonal.setFechaNacimiento(fechaNacimiento.atStartOfDay());
+
         return newDatoPersonal;
     }
     public static String[] dividirNombre(String nombreCompleto) {

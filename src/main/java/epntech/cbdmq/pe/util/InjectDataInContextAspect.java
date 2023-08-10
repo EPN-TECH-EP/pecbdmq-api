@@ -37,8 +37,6 @@ public class InjectDataInContextAspect {
 		if (authentication != null) {
 			String username = authentication.getName();
 			jdbcTemplate.execute("SET SESSION pecbdmq.username = '" + username + "'");
-
-			
 		}
 	}
 	
