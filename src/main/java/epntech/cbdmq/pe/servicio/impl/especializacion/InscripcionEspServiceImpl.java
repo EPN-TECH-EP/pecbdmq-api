@@ -33,7 +33,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.dominio.util.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
-import epntech.cbdmq.pe.repositorio.admin.SubTipoPruebaRepository;
+import epntech.cbdmq.pe.repositorio.admin.*;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
@@ -64,9 +64,6 @@ import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
-import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
-import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleEntityRepository;
-import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
 import jakarta.mail.MessagingException;
 
@@ -123,6 +120,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     private GradoService gradoSvc;
     @Autowired
     private CursoDocumentoService cursoDocumentoSvc;
+
+    // postulante repo
+    @Autowired
+    private PostulanteRepository postulanteRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -649,6 +650,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     Estudiante newEstudiante = new Estudiante();
                     newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
+                    newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
                     newEstudiante = estudianteRepository.save(newEstudiante);
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
@@ -685,6 +687,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     Estudiante newEstudiante = new Estudiante();
                     newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
+                    newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
                     newEstudiante = estudianteRepository.save(newEstudiante);
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
@@ -696,6 +699,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                         Estudiante newEstudiante = new Estudiante();
                         newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                         newEstudiante.setEstado(ACTIVO);
+                        newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
                         newEstudiante = estudianteRepository.save(newEstudiante);
 
                         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
@@ -727,6 +731,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         Estudiante newEstudiante = new Estudiante();
         newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
         newEstudiante.setEstado(ACTIVO);
+        newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
         newEstudiante = estudianteRepository.save(newEstudiante);
 
         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
