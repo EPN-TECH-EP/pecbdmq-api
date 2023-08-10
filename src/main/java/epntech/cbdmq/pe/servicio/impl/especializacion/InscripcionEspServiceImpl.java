@@ -222,18 +222,13 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	}
 
 	@Override
-	public List<InscripcionDatosEspecializacion> getAll() {
-		return inscripcionEspRepository.getAllInscripciones();
+	public List<InscripcionDatosEspecializacion> getByCursoAndUsuarioPaginado(Long codCurso, Long codUsuario, Pageable pageable) {
+		return inscripcionEspRepository.getAllInscripcionesByCursoAndUsuario(codCurso, codUsuario, pageable);
 	}
 
 	@Override
-	public List<InscripcionDatosEspecializacion> getByUsuarioPaginado(Long codUsuario, Pageable pageable) {
-		return inscripcionEspRepository.getAllInscripcionesByUsuario(codUsuario, pageable);
-	}
-
-	@Override
-	public List<InscripcionDatosEspecializacion> getAllPaginado(Pageable pageable) {
-		return inscripcionEspRepository.getAllInscripciones(pageable);
+	public List<InscripcionDatosEspecializacion> getAllByCursoPaginado(Long codCurso, Pageable pageable) {
+		return inscripcionEspRepository.getAllInscripcionesByCurso(codCurso, pageable);
 	}
 
 	@Override
