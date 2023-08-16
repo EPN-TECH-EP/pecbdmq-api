@@ -35,4 +35,19 @@ public interface InstructorDatosRepository extends JpaRepository<InstructorDatos
 			"WHERE imp.cod_materia_paralelo = :codMateriaParalelo " +
 			"AND tins.nombre_tipo_instructor = :tipoInstructor", nativeQuery = true)
 	List<InstructorDatos> getInstructoresMateriaParaleloByTipo(@Param("codMateriaParalelo") Integer codMateriaParalelo, @Param("tipoInstructor") String tipoInstructor);
+
+	@Query(value = "select i.cod_instructor, tp.cod_tipo_procedencia, tp.tipo_procedencia, e.cod_estacion, e.nombre_zona, ug.cod_unidad_gestion, ug.unidad_gestion, tc.cod_tipo_contrato, tc.nombre_tipo_contrato, dp.cedula, dp.nombre, dp.apellido, dp.correo_personal, i.cod_datos_personales " +
+			"from cbdmq.pro_instructor i, cbdmq.gen_dato_personal dp, cbdmq.gen_tipo_procedencia tp, cbdmq.gen_estacion_trabajo e, cbdmq.gen_unidad_gestion ug, cbdmq.gen_tipo_contrato tc " +
+			"where i.cod_datos_personales = dp.cod_datos_personales " +
+			"and i.cod_tipo_procedencia = tp.cod_tipo_procedencia " +
+			"and i.cod_estacion = e.cod_estacion " +
+			"and i.cod_unidad_gestion = ug.cod_unidad_gestion " +
+			"and i.cod_tipo_contrato = tc.cod_tipo_contrato " +
+			"and upper(dp.estado) = 'ACTIVO' " +
+			"and upper(i.estado) = 'ACTIVO' " +
+			"and upper(tp.estado) = 'ACTIVO' " +
+			"and upper(e.estado) = 'ACTIVO' " +
+			"and upper(ug.estado) = 'ACTIVO' " +
+			"and upper(tc.estado) = 'ACTIVO' ", nativeQuery = true)
+	List<InstructorDatos> getAllInstructorDatosProfesionalizacion();
 }
