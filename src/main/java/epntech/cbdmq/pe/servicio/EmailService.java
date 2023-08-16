@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import epntech.cbdmq.pe.dominio.admin.profesionalizacion.ProConvocatoria;
+import epntech.cbdmq.pe.dominio.util.profesionalizacion.ProInscripcionDto;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -64,6 +66,96 @@ public class EmailService {
 
         emailSender.send(message);
 
+    }
+
+    public void sendInscripcionFormacionEmail(String toEmail, ProConvocatoria convocatoria, ProInscripcionDto proInscripcion){
+        try {
+            JavaMailSender emailSender = this.getJavaMailSender();
+            MimeMessage message = this.getJavaMailSender().createMimeMessage();
+            InternetAddress fromAddress = new InternetAddress(USERNAME);
+            message.setFrom(fromAddress);
+            message.setRecipients(MimeMessage.RecipientType.TO, toEmail);
+            message.setSubject(EMAIL_SUBJECT);
+            String Path = RUTA_PLANTILLAS + "templateInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
+            String htmlTemplate = readFile(Path);
+            htmlTemplate = htmlTemplate.replace("${numeroConvocatoria}", convocatoria.getCodigoUnicoConvocatoria());
+            htmlTemplate = htmlTemplate.replace("${usuario}", proInscripcion.getApellido() + " " + proInscripcion.getNombre());
+
+            message.setContent(htmlTemplate, "text/html; charset=utf-8");
+            emailSender.send(message);
+        }
+        catch (Exception ex){
+
+        }
+    }
+
+    public void sendConvocatoriaProfesionalizacionEmail(String toEmail){
+        try {
+            JavaMailSender emailSender = this.getJavaMailSender();
+            MimeMessage message = this.getJavaMailSender().createMimeMessage();
+            InternetAddress fromAddress = new InternetAddress(USERNAME);
+            message.setFrom(fromAddress);
+            message.setRecipients(MimeMessage.RecipientType.TO, toEmail);
+            message.setSubject("Notificacion de convocatoria");
+            String htmlTemplate = htmlTemplateRenderConvocatoriaProfesionalizacion();
+            message.setContent(htmlTemplate, "text/html; charset=utf-8");
+            emailSender.send(message);
+        }
+        catch (Exception ex){
+
+        }
+    }
+
+    public void sendvValidacionAprobadoEmail(String toEmail){
+        try {
+            JavaMailSender emailSender = this.getJavaMailSender();
+            MimeMessage message = this.getJavaMailSender().createMimeMessage();
+            InternetAddress fromAddress = new InternetAddress(USERNAME);
+            message.setFrom(fromAddress);
+            message.setRecipients(MimeMessage.RecipientType.TO, toEmail);
+            message.setSubject("Aprobación de inscripción");
+            String htmlTemplate = htmlTemplateRenderAprobacionInscripcion();
+            message.setContent(htmlTemplate, "text/html; charset=utf-8");
+            emailSender.send(message);
+        }
+        catch (Exception ex){
+
+        }
+    }
+
+    public void sendValidacionRechazadoEmail(String toEmail){
+        try {
+            JavaMailSender emailSender = this.getJavaMailSender();
+            MimeMessage message = this.getJavaMailSender().createMimeMessage();
+            InternetAddress fromAddress = new InternetAddress(USERNAME);
+            message.setFrom(fromAddress);
+            message.setRecipients(MimeMessage.RecipientType.TO, toEmail);
+            message.setSubject("Rechazo de inscripción");
+            String htmlTemplate = htmlTemplateRenderRechazoInscripcion();
+            message.setContent(htmlTemplate, "text/html; charset=utf-8");
+            emailSender.send(message);
+        }
+        catch (Exception ex){
+
+        }
+    }
+
+    public String htmlTemplateRenderConvocatoriaProfesionalizacion() throws IOException {
+        String Path = RUTA_PLANTILLAS + "templateNotificacionConvocatoria.html"; //"src\\main\\resources\\templateCorreo.html";
+        String htmlTemplate = readFile(Path);
+        return htmlTemplate;
+    }
+
+    public String htmlTemplateRenderAprobacionInscripcion() throws IOException {
+        String Path = RUTA_PLANTILLAS + "templateAprobacionInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
+        String htmlTemplate = readFile(Path);
+        return htmlTemplate;
+    }
+
+    public String htmlTemplateRenderRechazoInscripcion() throws IOException {
+        String Path = RUTA_PLANTILLAS + "templateRechazoInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
+        String htmlTemplate = readFile(Path);
+        return htmlTemplate;
     }
 
     private SimpleMailMessage /* Message */ createEmail(String firstName, String password, String email)

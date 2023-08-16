@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio;
 
+import epntech.cbdmq.pe.dominio.profesionalizacion.ProfesionalizacionEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -9,7 +10,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "gen_parametro")
-public class Parametro {
+public class Parametro extends ProfesionalizacionEntity {
 
 	@Id
 	@Column(name = "cod_parametro")

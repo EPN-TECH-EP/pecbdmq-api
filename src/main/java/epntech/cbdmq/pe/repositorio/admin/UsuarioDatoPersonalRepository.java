@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Repository;
@@ -36,5 +37,38 @@ public interface UsuarioDatoPersonalRepository extends JpaRepository<UsuarioDato
 			+ "and u.is_not_locked = true "
 			+ "and dp.cod_datos_personales = :codDatoPersonal", nativeQuery=true)
 	UsuarioDatoPersonal getByCodDatoPersonal(Long codDatoPersonal);
+
+	@Query(value = "select u.cod_usuario, u.nombre_usuario, dp.cod_datos_personales, dp.apellido, dp.nombre, dp.cedula, dp.correo_personal, pc.cod_periodo "
+			+ "from cbdmq.pro_inscripcion pi inner join cbdmq.gen_estudiante ge on ge.cod_estudiante = pi.cod_estudiante " +
+			"inner join cbdmq.gen_usuario u on ge.cod_datos_personales= u.cod_datos_personales " +
+			"inner join cbdmq.gen_dato_personal dp on u.cod_datos_personales = dp.cod_datos_personales " +
+			"inner join cbdmq.pro_convocatoria pc on pi.cod_convocatoria = pc.cod_convocatoria "
+			+ " where u.is_active = true "
+			+ "and u.is_not_locked = true "
+			+ "and dp.estado = 'ACTIVO' "
+			+ "and dp.cedula =:cedula and pi.aceptado=true", nativeQuery = true)
+	UsuarioDatoPersonal getByCedulaProfesionalizacion(String cedula);
+
+	@Query(value = "select u.cod_usuario, u.nombre_usuario, dp.cod_datos_personales, dp.apellido, dp.nombre, dp.cedula, dp.correo_personal, pc.cod_periodo "
+			+ "from cbdmq.pro_inscripcion pi inner join cbdmq.gen_estudiante ge on ge.cod_estudiante = pi.cod_estudiante " +
+			"inner join cbdmq.gen_usuario u on ge.cod_datos_personales= u.cod_datos_personales " +
+			"inner join cbdmq.gen_dato_personal dp on u.cod_datos_personales = dp.cod_datos_personales " +
+			"inner join cbdmq.pro_convocatoria pc on pi.cod_convocatoria = pc.cod_convocatoria "
+			+ " where u.is_active = true "
+			+ "and u.is_not_locked = true "
+			+ "and dp.estado = 'ACTIVO' "
+			+ "and dp.nombre like %:nombre% and dp.apellido like %:apellido% and pi.aceptado=true", nativeQuery = true)
+	List<UsuarioDatoPersonal> getByCedulaProfesionalizacionNombreApellido(String nombre, String apellido);
+
+	@Query(value = "select u.cod_usuario, u.nombre_usuario, dp.cod_datos_personales, dp.apellido, dp.nombre, dp.cedula, dp.correo_personal, pc.cod_periodo "
+			+ "from cbdmq.pro_inscripcion pi inner join cbdmq.gen_estudiante ge on ge.cod_estudiante = pi.cod_estudiante " +
+			"inner join cbdmq.gen_usuario u on ge.cod_datos_personales= u.cod_datos_personales " +
+			"inner join cbdmq.gen_dato_personal dp on u.cod_datos_personales = dp.cod_datos_personales " +
+			"inner join cbdmq.pro_convocatoria pc on pi.cod_convocatoria = pc.cod_convocatoria"
+			+ " where u.is_active = true "
+			+ "and u.is_not_locked = true "
+			+ "and dp.estado = 'ACTIVO' "
+			+ "and dp.correo_personal like %:email% and pi.aceptado=true", nativeQuery = true)
+	List<UsuarioDatoPersonal> getByCedulaProfesionalizacionEmail(String email);
 	
 }

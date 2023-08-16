@@ -10,6 +10,7 @@ public class MensajesConst {
 	public static final String REGISTRO_YA_EXISTE = "El registro con esa información ya existe";
 	public static final String REGISTRO_VACIO = "El registro no permite campos vacíos";
 	public static final String REGISTRO_NO_EXISTE = "No existe información con el id ingresado";
+	public static final String REGISTRO_YA_EXISTE_PARALELO = "El registro con esa información ya existe en otro nivel";
 	public static final String EXITO = "Información almacenada con éxito!";
 	public static final String CEDULA_YA_EXISTE = "Cédula ya existe";
 	public static final String CEDULA_NO_EXISTE = "No existe información con la Cédula";
@@ -36,6 +37,7 @@ public class MensajesConst {
 	public static final String DATOS_REGISTRADOS = "Datos registrados exitosamente";
 	public static final String PROCESO_EXITO = "Proceso ejecutado con éxito!";
 	public static final String NO_PERIODO_ACTIVO = "No existe Período Academico activo";
+	public static final String CONVOCATORIA_YA_EXISTE = "La convocatoria no puede vincularse a un periodo con una convocatoria ya vinculada";
 	public static final String CONVOCATORIA_NO_EXISTE = "No existe convocatoria ";
 
 	public static final String FECHA_INSCRIPCION_INVALIDA = "La fecha de inscripción fuera del rango permitido ";
