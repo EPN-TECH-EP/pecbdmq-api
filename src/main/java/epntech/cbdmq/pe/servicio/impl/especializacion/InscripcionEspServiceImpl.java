@@ -693,7 +693,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
                 } else {
-                    Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getNombreUsuario());
+                    Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getCodUsuario().toString());
 
                     if (estudianteObj == null) {
                         Estudiante newEstudiante = new Estudiante();

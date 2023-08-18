@@ -90,7 +90,7 @@ public class EstudianteResource {
 
     }
 	
-    @GetMapping("/ByUser")
+    @GetMapping("/byUser")
     public Estudiante listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
         return objService.getEstudianteByUsuario(codUsuario);
     }
