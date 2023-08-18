@@ -51,20 +51,8 @@ public class SemestreResource {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Semestre obj)  throws DataException {
-		return (ResponseEntity<Semestre>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setSemestre(obj.getSemestre().toUpperCase());
-			datosGuardados.setEstado(obj.getEstado());
-
-			Semestre datosActualizados = null;
-			try {
-				datosActualizados = objService.update(datosGuardados);
-			} catch (DataException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-			}
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+		obj.setCodSemestre(codigo);
+		return new ResponseEntity<>(objService.update(obj), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

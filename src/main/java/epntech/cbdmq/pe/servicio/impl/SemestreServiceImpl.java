@@ -8,7 +8,10 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
@@ -46,23 +49,26 @@ public class SemestreServiceImpl implements SemestreService {
 
 	@Override
 	public List<Semestre> getAll() {
-		// TODO Auto-generated method stub
 		return repo.findAll();
 	}
 
 	@Override
 	public Optional<Semestre> getById(int id) {
-		// TODO Auto-generated method stub
 		return repo.findById(id);
 	}
 
 	@Override
 	public Semestre update(Semestre objActualizado) throws DataException  {
-		Optional<Semestre> objGuardado = repo.findBySemestreIgnoreCase(objActualizado.getSemestre());
-		if (objGuardado.isPresent()&& !objGuardado.get().getCodSemestre().equals(objActualizado.getCodSemestre())) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-		return repo.save(objActualizado);
+		Semestre semestre = repo.findById(objActualizado.getCodSemestre())
+				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+		semestre.setSemestre(objActualizado.getSemestre().toUpperCase());
+		semestre.setEstado(objActualizado.getEstado());
+		semestre.setDescripcion(objActualizado.getDescripcion());
+		semestre.setFechaFinSemestre(objActualizado.getFechaFinSemestre());
+		semestre.setFechaInicioSemestre(objActualizado.getFechaInicioSemestre());
+
+		return repo.save(semestre);
 	}
 
 	@Override
