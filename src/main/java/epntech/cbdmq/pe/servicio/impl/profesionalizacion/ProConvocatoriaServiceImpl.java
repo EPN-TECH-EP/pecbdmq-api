@@ -67,4 +67,9 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
             throw new DataException(REGISTRO_NO_EXISTE);
         }
     }
+
+    @Override
+    public String getEstado() {
+        return repository.getEstado();
+    }
 }

@@ -18,4 +18,10 @@ public interface ProConvocatoriaRepository extends ProfesionalizacionRepository<
     String findNextLastCodigo();
 
     Optional<ProConvocatoria> findByCodPeriodo(Integer id);
+
+    @Query(value = "SELECT pc.estado "
+            + "FROM cbdmq.pro_convocatoria pc, cbdmq.pro_periodo pp "
+            + "WHERE pc.cod_periodo = pp.cod_periodo "
+            + "AND UPPER(pp.estado) = 'ACTIVO'", nativeQuery = true)
+    String getEstado();
 }

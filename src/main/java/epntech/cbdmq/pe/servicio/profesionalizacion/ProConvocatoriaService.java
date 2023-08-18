@@ -8,5 +8,6 @@ public interface ProConvocatoriaService extends ProfesionalizacionService<ProCon
 
     Optional<ProConvocatoria> getByCodigoUnicoConvocatoria (String CodigoUnicoConvocatoria);
     public String getCodConvocatoriaCreacion();
+    public String getEstado();
 
 }
