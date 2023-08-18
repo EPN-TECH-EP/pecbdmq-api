@@ -1,9 +1,11 @@
 package epntech.cbdmq.pe.resource.profesionalizacion;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.profesionalizacion.ProPeriodos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.profesionalizacion.ProPeriodosRepository;
 import epntech.cbdmq.pe.servicio.impl.profesionalizacion.ProPeriodoServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,4 +32,5 @@ public class ProPeriodosResource extends ProfesionalizacionResource<ProPeriodos,
     public List<ProPeriodos> findByEstado(@PathVariable("estado") String estado){
         return service.findByEstado(estado);
     }
+
 }

@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.resource.profesionalizacion;
 
+import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.profesionalizacion.ProConvocatoria;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRepository;
@@ -76,5 +77,16 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
     @PostMapping("{id}/actualizaEstado")
     public ProConvocatoria updateEstadoConvocatoria(@PathVariable("id") Integer id, @RequestBody String estado) throws DataException {
         return service.updateEstadoConvocatoria(id, estado);
+    }
+
+    @GetMapping("/validaEstado")
+    public ResponseEntity<HttpResponse> getEstado() {
+        String result = service.getEstado();
+
+        if (result == null) {
+            result = "SIN PERIODO";
+        }
+
+        return response(HttpStatus.OK, result);
     }
 }
