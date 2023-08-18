@@ -6,13 +6,18 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.impl.profesionalizacion.ProConvocatoriaServiceImpl;
+import jakarta.mail.MessagingException;
+import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 
 @RestController
 @RequestMapping("/proConvocatoria")
@@ -88,5 +93,12 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
         }
 
         return response(HttpStatus.OK, result);
+    }
+
+    @PostMapping("/{id}/notificar")
+    public ResponseEntity<HttpResponse> notificar(@PathVariable("id") Integer codConvocatoria)
+            throws MessagingException, DataException, PSQLException, IOException {
+        service.notificar(codConvocatoria);
+        return response(HttpStatus.OK, EMAIL_SEND);
     }
 }

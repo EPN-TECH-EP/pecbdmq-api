@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ProConvocatoriaRequisitosDatosRepository extends JpaRepository<ProConvocatoriaRequisitoDto, Integer> {
-    @Query(value = "select pcr.cod_convocatoria_requisitos codigo, pcr.cod_requisito codigo_requisito,pcr.cod_convocatoria codigo_convocatoria, gr.nombre_requisito, pc.nombre nombre_convocatoria  " +
+    @Query(value = "select pcr.cod_convocatoria_requisitos codigo, pcr.cod_requisito codigo_requisito, " +
+            "pcr.cod_convocatoria codigo_convocatoria, gr.nombre_requisito, gr.descripcion_requisito, " +
+            "pc.nombre nombre_convocatoria  " +
             "from cbdmq.pro_convocatoria_requisito pcr " +
             "inner join cbdmq.gen_requisito gr on pcr.cod_requisito = gr.cod_requisito " +
             "inner join cbdmq.pro_convocatoria pc on pcr.cod_convocatoria = pc.cod_convocatoria " +

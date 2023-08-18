@@ -12,5 +12,6 @@ public class ProConvocatoriaRequisitoDto {
     private Integer codigoRequisito;
     private Integer codigoConvocatoria;
     private String nombreRequisito;
+    private String descripcionRequisito;
     private String nombreConvocatoria;
 }
