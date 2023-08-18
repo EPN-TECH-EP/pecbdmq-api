@@ -380,6 +380,29 @@ public class EmailService {
         return message;
     }
 
+    public MimeMessage sendEmailHtmlToListPro(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicio, String fechaFin, String requisitos, String link)
+            throws MessagingException, IOException {
+        JavaMailSender emailSender = this.getJavaMailSender();
+        MimeMessage message = this.getJavaMailSender().createMimeMessage();
+        InternetAddress fromAddress = new InternetAddress(USERNAME);
+        message.setFrom(fromAddress);
+        message.setSubject(subject);
+        for (String destinatario : destinatarios) {
+            message.setRecipients(MimeMessage.RecipientType.TO, destinatario);
+        }
+        message.setSubject(subject);
+        String htmlTemplate = this.getHtmlGeneric("convocatoriaPro.html");
+        htmlTemplate = htmlTemplate.replace("${descripcion}", descripcion);
+        htmlTemplate = htmlTemplate.replace("${fechaInicioConvocatoria}", fechaInicioConvocatoria);
+        htmlTemplate = htmlTemplate.replace("${fechaInicio}", fechaInicio);
+        htmlTemplate = htmlTemplate.replace("${fechaFin}", fechaFin);
+        htmlTemplate = htmlTemplate.replace("${requisitos}", requisitos);
+        htmlTemplate = htmlTemplate.replace("${link}", link);
+        message.setContent(htmlTemplate, "text/html; charset=utf-8");
+        emailSender.send(message);
+        return message;
+    }
+
     public void enviarEmail(String[] destinatarios, String subject, String texto) throws MessagingException {
         JavaMailSender emailSender = this.getJavaMailSender();
         MimeMessage message = this.sendEmail(destinatarios, subject, texto, emailSender);

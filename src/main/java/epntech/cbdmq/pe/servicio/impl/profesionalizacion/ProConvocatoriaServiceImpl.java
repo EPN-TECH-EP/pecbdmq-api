@@ -1,22 +1,44 @@
 package epntech.cbdmq.pe.servicio.impl.profesionalizacion;
 
 import epntech.cbdmq.pe.dominio.admin.profesionalizacion.ProConvocatoria;
+import epntech.cbdmq.pe.dominio.util.profesionalizacion.ProConvocatoriaRequisitoDto;
+import epntech.cbdmq.pe.dominio.util.profesionalizacion.repository.ProConvocatoriaRequisitosDatosRepository;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRepository;
+import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.profesionalizacion.ProConvocatoriaService;
+import jakarta.mail.MessagingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA_PRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 @Service
 public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<ProConvocatoria, Integer, ProConvocatoriaRepository> implements ProConvocatoriaService {
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private ProConvocatoriaRequisitosDatosRepository convocatoriaRequisitoDatosRepository;
+
     public ProConvocatoriaServiceImpl(ProConvocatoriaRepository repository) {
         super(repository);
     }
+
+    @Value("${url.profesionalizacion.inscripcion}")
+    public String URL_INSCRIPCION;
 
     @Override
     public Optional<ProConvocatoria> getByCodigoUnicoConvocatoria(String codigoUnicoConvocatoria) {
@@ -72,4 +94,31 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
     public String getEstado() {
         return repository.getEstado();
     }
+
+    @Override
+    @Async
+    public void notificar(Integer codConvocatoria) throws MessagingException, DataException, IOException {
+        ProConvocatoria proConvocatoria = repository.findById(codConvocatoria)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+        List<ProConvocatoriaRequisitoDto> requisitos = convocatoriaRequisitoDatosRepository
+                .findByProConvocatoria(codConvocatoria);
+
+        String[] destinatarios = proConvocatoria.getCorreo().split(",");
+
+        String textoRequisitos = "";
+        for (ProConvocatoriaRequisitoDto requisito : requisitos) {
+            textoRequisitos += requisito.getNombreRequisito() + ": " + requisito.getDescripcionRequisito() + "<br>";
+        }
+
+        emailService.sendEmailHtmlToListPro(destinatarios, EMAIL_SUBJECT_CONVOCATORIA_PRO, proConvocatoria.getNombre(),
+                formatDate(proConvocatoria.getFechaActual()), formatDate(proConvocatoria.getFechaInicio()),
+                formatDate(proConvocatoria.getFechaFin()), textoRequisitos, URL_INSCRIPCION);
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date);
+    }
+
 }

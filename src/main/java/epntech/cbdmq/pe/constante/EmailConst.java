@@ -38,6 +38,7 @@ public class EmailConst {
     public static final String EMAIL_SUBJECT1 = "Plataforma Educativa CBDMQ - Código de confirmación";
     public static final String EMAIL_SUBJECT2 = "Plataforma Educativa CBDMQ - Notificación de Rendición de pruebas";
     public static final String EMAIL_SUBJECT_CONVOCATORIA = "Plataforma Educativa CBDMQ - Documento Convocatoria";
+    public static final String EMAIL_SUBJECT_CONVOCATORIA_PRO = "Plataforma Educativa CBDMQ - Documento Convocatoria Profesionalización";
     public static final String EMAIL_SUBJECT_PRUEBAS = "Plataforma Educativa CBDMQ - Notificación de pruebas";
     public static final String EMAIL_SUBJECT_REG_NOTA = "Plataforma Educativa CBDMQ - Registro de Notas";
     public static final String EMAIL_SUBJECT_INSCRIPCION = "Plataforma Educativa CBDMQ - Registro de Inscripción";
