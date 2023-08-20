@@ -42,7 +42,7 @@ public class ProInscripcionResource extends ProfesionalizacionResource<ProInscri
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/crearcondocumentos")
+    @PostMapping("/crearConDocumentos")
     public ResponseEntity<?> crear(@RequestParam("datosInscripcion") String datosInscripcion, @RequestParam("docsInscripcion") List<MultipartFile> docsInscripcion) throws IOException, ArchivoMuyGrandeExcepcion, MessagingException, ParseException, DataException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());

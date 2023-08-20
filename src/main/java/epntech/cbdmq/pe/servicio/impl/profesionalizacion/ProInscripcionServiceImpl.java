@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio.impl.profesionalizacion;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
 import epntech.cbdmq.pe.dominio.profesionalizacion.ProInscripcion;
 import epntech.cbdmq.pe.dominio.profesionalizacion.ProInscripcionDocumento;
 import epntech.cbdmq.pe.dominio.util.DatosFile;
@@ -15,6 +16,7 @@ import epntech.cbdmq.pe.dominio.util.profesionalizacion.repository.ProValidaCump
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRequisitoRepository;
+import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.profesionalizacion.ProDocumentosRepository;
 import epntech.cbdmq.pe.repositorio.profesionalizacion.ProInscripcionRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
@@ -39,8 +41,9 @@ public class ProInscripcionServiceImpl extends ProfesionalizacionServiceImpl<Pro
     private final ProDocumentoForRepository proDocumentoForRepository;
     private final EmailService emailService;
     private final ProConvocatoriaRepository proConvocatoriaRepository;
+    private final EstudianteRepository estudianteRepository;
 
-    public ProInscripcionServiceImpl(ProInscripcionRepository repository, ProInscripcionDatosRepository datosRepository, ProConvocatoriaRequisitoRepository convocatoriaRequisitoRepository, ProValidaCumpleRequisitoRepository validaCumpleRequisitoRepository, ProConvocatoriaRequisitosDatosRepository requisitosDatosRepository, ProDocumentosRepository proDocumentosRepository, ProDocumentoForRepository proDocumentoForRepository, EmailService emailService, ProConvocatoriaRepository proConvocatoriaRepository) {
+    public ProInscripcionServiceImpl(ProInscripcionRepository repository, ProInscripcionDatosRepository datosRepository, ProConvocatoriaRequisitoRepository convocatoriaRequisitoRepository, ProValidaCumpleRequisitoRepository validaCumpleRequisitoRepository, ProConvocatoriaRequisitosDatosRepository requisitosDatosRepository, ProDocumentosRepository proDocumentosRepository, ProDocumentoForRepository proDocumentoForRepository, EmailService emailService, ProConvocatoriaRepository proConvocatoriaRepository, EstudianteRepository estudianteRepository) {
         super(repository);
         this.datosRepository = datosRepository;
         this.convocatoriaRequisitoRepository = convocatoriaRequisitoRepository;
@@ -50,6 +53,7 @@ public class ProInscripcionServiceImpl extends ProfesionalizacionServiceImpl<Pro
         this.proDocumentoForRepository = proDocumentoForRepository;
         this.emailService = emailService;
         this.proConvocatoriaRepository = proConvocatoriaRepository;
+        this.estudianteRepository = estudianteRepository;
     }
 
     @Override
@@ -101,6 +105,11 @@ public class ProInscripcionServiceImpl extends ProfesionalizacionServiceImpl<Pro
     }
 
     public ProInscripcion insertarInscripcionConDocumentos(ProInscripcion proInscripcion, List<MultipartFile> docsInscripcion) throws DataException {
+        //Si no existe codigo estudiante se debe crear
+        if(proInscripcion.getCodEstudiante() == null) {
+            setEstudiante(proInscripcion);
+        }
+
         proInscripcion.setEstado("ACTIVO");
         Optional<ProInscripcion> byCodEstudianteAndCodConvocatoria = repository.findByCodEstudianteAndCodConvocatoria(proInscripcion.getCodEstudiante(), proInscripcion.getCodConvocatoria());
         if (byCodEstudianteAndCodConvocatoria.isPresent()) {
@@ -141,5 +150,23 @@ public class ProInscripcionServiceImpl extends ProfesionalizacionServiceImpl<Pro
 
         emailService.sendInscripcionFormacionEmail(proInscripcion.getEmail(), con, insp);
         return proInscripcion1;
+    }
+
+    private void setEstudiante(ProInscripcion proInscripcion) {
+        Estudiante estudiante = new Estudiante();
+        estudiante.setCodUnicoEstudiante("");
+        estudiante.setCodDatosPersonales(proInscripcion.getCodDatosPersonales());
+        estudiante.setEstado("ACTIVO");
+        estudianteRepository.save(estudiante);
+        setCodigoUnicoEstudiante(estudiante);
+        proInscripcion.setCodEstudiante(estudiante.getCodEstudiante());
+
+    }
+
+    private void setCodigoUnicoEstudiante(Estudiante estudiante) {
+        String numeroComoCadena = String.format("%06d", estudiante.getCodEstudiante());
+        String codigo = "P" + numeroComoCadena;
+        estudiante.setCodUnicoEstudiante(codigo);
+        estudianteRepository.save(estudiante);
     }
 }
