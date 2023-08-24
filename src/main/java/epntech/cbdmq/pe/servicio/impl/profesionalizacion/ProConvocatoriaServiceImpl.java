@@ -1,11 +1,13 @@
 package epntech.cbdmq.pe.servicio.impl.profesionalizacion;
 
+import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.profesionalizacion.ProConvocatoria;
 import epntech.cbdmq.pe.dominio.profesionalizacion.ProPeriodos;
 import epntech.cbdmq.pe.dominio.util.profesionalizacion.ProConvocatoriaRequisitoDto;
 import epntech.cbdmq.pe.dominio.util.profesionalizacion.repository.ProConvocatoriaRequisitosDatosRepository;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRepository;
 import epntech.cbdmq.pe.repositorio.profesionalizacion.ProPeriodosRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
@@ -36,6 +38,9 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
 
     @Autowired
     private ProPeriodosRepository proPeriodosRepository;
+
+    @Autowired
+    private ParametroRepository parametroRepository;
 
     @Autowired
     private ProConvocatoriaRequisitosDatosRepository convocatoriaRequisitoDatosRepository;
@@ -137,9 +142,15 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
             textoRequisitos += requisito.getNombreRequisito() + ": " + requisito.getDescripcionRequisito() + "<br>";
         }
 
+        String mensajes = "";
+        Parametro parametro1 = parametroRepository.findById(proConvocatoria.getCodigoParametro().longValue()).orElseThrow(() -> new BusinessException(""));
+        mensajes += parametro1.getNombreParametro() + ": " + parametro1.getValor() + "<br>";
+        Parametro parametro2 = parametroRepository.findById(proConvocatoria.getCodigoParametro2().longValue()).orElseThrow(() -> new BusinessException(""));
+        mensajes += parametro2.getNombreParametro() + ": " + parametro2.getValor() + "<br>";
+
         emailService.sendEmailHtmlToListPro(destinatarios, EMAIL_SUBJECT_CONVOCATORIA_PRO, proConvocatoria.getNombre(),
                 formatDate(proConvocatoria.getFechaActual()), formatDate(proConvocatoria.getFechaInicio()),
-                formatDate(proConvocatoria.getFechaFin()), textoRequisitos, URL_INSCRIPCION);
+                formatDate(proConvocatoria.getFechaFin()), textoRequisitos, mensajes, URL_INSCRIPCION);
     }
 
     private String formatDate(Date date) {

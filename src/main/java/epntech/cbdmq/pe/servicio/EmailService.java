@@ -380,7 +380,7 @@ public class EmailService {
         return message;
     }
 
-    public MimeMessage sendEmailHtmlToListPro(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicio, String fechaFin, String requisitos, String link)
+    public MimeMessage sendEmailHtmlToListPro(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicio, String fechaFin, String requisitos, String mensajes, String link)
             throws MessagingException, IOException {
         JavaMailSender emailSender = this.getJavaMailSender();
         MimeMessage message = this.getJavaMailSender().createMimeMessage();
@@ -397,6 +397,7 @@ public class EmailService {
         htmlTemplate = htmlTemplate.replace("${fechaInicio}", fechaInicio);
         htmlTemplate = htmlTemplate.replace("${fechaFin}", fechaFin);
         htmlTemplate = htmlTemplate.replace("${requisitos}", requisitos);
+        htmlTemplate = htmlTemplate.replace("${mensajes}", mensajes);
         htmlTemplate = htmlTemplate.replace("${link}", link);
         message.setContent(htmlTemplate, "text/html; charset=utf-8");
         emailSender.send(message);
