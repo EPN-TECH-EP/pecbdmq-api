@@ -24,7 +24,7 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.EstacionTrabajoServiceImpl;
 
 @RestController
-@RequestMapping("/estaciontrabajo")
+@RequestMapping("/estacionTrabajo")
 public class EstacionTrabajoResource {
 
 	@Autowired

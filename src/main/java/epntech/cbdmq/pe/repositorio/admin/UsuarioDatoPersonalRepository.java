@@ -46,6 +46,7 @@ public interface UsuarioDatoPersonalRepository extends JpaRepository<UsuarioDato
 			+ "where u.is_active = true "
 			+ "and u.is_not_locked = true "
 			+ "and dp.estado = 'ACTIVO' "
+			+ "and pc.estado <> 'FINALIZADO' "
 			+ "and dp.cedula =:cedula and pi.aceptado=true", nativeQuery = true)
 	UsuarioDatoPersonal getByCedulaProfesionalizacion(String cedula);
 
