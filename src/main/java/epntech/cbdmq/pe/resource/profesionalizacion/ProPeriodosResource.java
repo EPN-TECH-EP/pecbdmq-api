@@ -32,4 +32,5 @@ public class ProPeriodosResource extends ProfesionalizacionResource<ProPeriodos,
     public List<ProPeriodos> findByEstado(@PathVariable("estado") String estado){
         return service.findByEstado(estado);
     }
+
 }

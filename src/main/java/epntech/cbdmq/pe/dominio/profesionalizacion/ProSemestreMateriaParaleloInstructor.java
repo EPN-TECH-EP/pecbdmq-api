@@ -10,7 +10,7 @@ import org.hibernate.annotations.Where;
 @Data
 @Entity(name = "pro_periodo_semestre_materia_paralelo_instructor")
 @Table(name = "pro_periodo_semestre_materia_paralelo_instructor")
-@SQLDelete(sql = "UPDATE {h-schema}pro_periodo_semestre_materia_paralelo_instructor SET estado = 'ELIMINADO' WHERE cod_semestre_materia_paralelo_instructor = ?", check = ResultCheckStyle.COUNT)
+@SQLDelete(sql = "UPDATE {h-schema}pro_periodo_semestre_materia_paralelo_instructor SET estado = 'ELIMINADO' WHERE cod_periodo_semestre_materia_paralelo_instructor = ?", check = ResultCheckStyle.COUNT)
 @Where(clause = "estado <> 'ELIMINADO'")
 public class ProSemestreMateriaParaleloInstructor extends ProfesionalizacionEntity {
 

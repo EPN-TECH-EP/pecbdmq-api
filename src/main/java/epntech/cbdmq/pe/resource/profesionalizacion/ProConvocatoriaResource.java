@@ -31,11 +31,11 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
 
     @GetMapping("/listarActiva")
     public List<ProConvocatoria> listarActiva() {
-        List<ProConvocatoria> listar = super.listar();
-        List<ProConvocatoria> listarResponse;
+        return super.listar();
+        /*List<ProConvocatoria> listarResponse;
         listarResponse = listar.stream().filter(x -> x.getFechaInicio().getTime() <= Calendar.getInstance().getTime().getTime() &&
                 x.getFechaFin().getTime() >= Calendar.getInstance().getTime().getTime()).toList();
-        return listarResponse;
+        return listarResponse;*/
     }
 
     @PostMapping("/crear")
@@ -87,11 +87,9 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
     @GetMapping("/validaEstado")
     public ResponseEntity<HttpResponse> getEstado() {
         String result = service.getEstado();
-
         if (result == null) {
             result = "SIN PERIODO";
         }
-
         return response(HttpStatus.OK, result);
     }
 

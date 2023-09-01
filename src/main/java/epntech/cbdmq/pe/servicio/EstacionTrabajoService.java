@@ -1,20 +1,19 @@
 package epntech.cbdmq.pe.servicio;
 
 import java.util.List;
-import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.EstacionTrabajo;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.dominio.util.EstacionTrabajoDto;
 
 public interface EstacionTrabajoService {
 
-	EstacionTrabajo save(EstacionTrabajo obj) throws DataException;
+	EstacionTrabajoDto save(EstacionTrabajo obj);
 	
-	List<EstacionTrabajo> getAll();
-	
-	Optional<EstacionTrabajo> getById(int id);
-	
-	EstacionTrabajo update(EstacionTrabajo objActualizado) throws DataException;
+	List<EstacionTrabajoDto> getAll();
 
-	void delete(int id) throws DataException;
+	EstacionTrabajoDto getById(int id);
+
+	EstacionTrabajoDto update(EstacionTrabajo objActualizado);
+
+	void delete(int id);
 }

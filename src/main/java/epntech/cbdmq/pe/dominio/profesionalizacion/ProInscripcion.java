@@ -58,5 +58,6 @@ public class ProInscripcion extends ProfesionalizacionEntity {
     )
     private List<Documento> documentos = new ArrayList<>();
 
-
+    @Transient
+    private Integer codDatosPersonales;
 }

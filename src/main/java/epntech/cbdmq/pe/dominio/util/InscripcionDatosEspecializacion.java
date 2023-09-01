@@ -18,5 +18,8 @@ public class InscripcionDatosEspecializacion {
 	private String nombreUsuario;
 	private String correoUsuario;
 	private Long codUsuario;
+
+	//codigo_unico_estudiante
+	private String codigoUnicoEstudiante;
 	
 }

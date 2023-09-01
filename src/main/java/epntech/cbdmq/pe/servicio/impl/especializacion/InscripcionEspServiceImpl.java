@@ -617,7 +617,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return datoPersonalEstudianteDto;
 
     }*/
-    public DatoPersonalEstudianteDto confirmacionInscripcion(String cedula) throws Exception {
+    public DatoPersonalEstudianteDto confirmacionInscripcion(String cedula, Long codCurso) throws Exception {
         DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
         Boolean isValid = util.validadorDeCedula(cedula);
 
@@ -705,6 +705,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
                     } else {
+
+                        // verifica si el estudiante ya esta inscrito en el curso
+                        Optional<InscripcionEsp> inscripcionEspRepositoryOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(estudianteObj.getCodEstudiante().longValue(), codCurso);
+                        if (inscripcionEspRepositoryOptional.isPresent())
+                            throw new BusinessException(REGISTRO_YA_EXISTE);
+
                         datoPersonalEstudianteDto.setEstudiante(estudianteObj);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
                     }
