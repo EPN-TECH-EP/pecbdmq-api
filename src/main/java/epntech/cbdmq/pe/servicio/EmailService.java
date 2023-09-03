@@ -18,10 +18,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.profesionalizacion.ProConvocatoria;
 import epntech.cbdmq.pe.dominio.util.profesionalizacion.ProInscripcionDto;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
@@ -411,8 +413,15 @@ public class EmailService {
 
     }
 
-    private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail(String nombrePrueba, String email)
+    private SimpleMailMessage /* Message */ notificacionAprobadoSendEmail(String nombrePrueba, DatoPersonal datoPersonal /*String email*/)
             throws MessagingException {
+
+        String email = datoPersonal.getCorreoPersonal();
+        String datoSaludos = datoPersonal.getNombre() + " " + datoPersonal.getApellido();
+        //cadena de fecha actual en formato año mes día
+        LocalDateTime fechaActual = LocalDateTime.now();
+        String fecha = fechaActual.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(USERNAME);
@@ -427,15 +436,15 @@ public class EmailService {
         }
 
         message.setSubject(EMAIL_SUBJECT2);
-        message.setText("Usted ha aprobado la prueba " + nombrePrueba
-                + "\n \n Plataforma educativa - CBDMQ");
+        message.setText("Saludos " + datoSaludos + " \n Usted ha aprobado la prueba " + nombrePrueba
+                + "\n Fecha: " + fecha + " \n Plataforma educativa - CBDMQ");
 
         return message;
     }
 
-    public String notificacionAprobadoEmail(String nombrePrueba, String email) throws MessagingException {
+    public String notificacionAprobadoEmail(String nombrePrueba, DatoPersonal datoPersonal/*String email*/) throws MessagingException {
         JavaMailSender emailSender = this.getJavaMailSender();
-        SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, email);
+        SimpleMailMessage message = this.notificacionAprobadoSendEmail(nombrePrueba, datoPersonal);
 
         emailSender.send(message);
         return message.getText();

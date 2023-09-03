@@ -169,7 +169,7 @@ public class CursoServiceImpl implements CursoService {
                 cursoDatos.setTieneModulos(value.asBoolean());
             }
             if (key.equals("porcentajeAceptacionCurso")) {
-                cursoDatos.setNotaMinima((double) value.asLong());
+                cursoDatos.setPorcentajeAceptacionCurso((double) value.asLong());
             }
             if (key.equals("codUsuarioCreacion")) {
                 cursoDatos.setCodUsuarioCreacion(value.asLong());
@@ -247,10 +247,10 @@ public class CursoServiceImpl implements CursoService {
         curso= cursoRepository.save(curso);
         String mensaje=null;
         if(aprobadoCurso) {
-            mensaje="Se ha aprobado el curso " + curso.getNombre() + " con éxito";
+            mensaje="Se ha aprobado el curso " + curso.getNombre() + " con éxito." + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
 
         }else{
-            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique los datos y documentos registrados";
+            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
         }
         emailService.enviarEmail(curso.getEmailNotificacion(), "Validación de curso",mensaje );
 

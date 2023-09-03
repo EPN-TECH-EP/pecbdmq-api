@@ -61,7 +61,7 @@ public interface InscripcionEspService {
 	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
-	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula) throws Exception;
+	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula, Long codCurso) throws Exception;
 	DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception;
 
 }

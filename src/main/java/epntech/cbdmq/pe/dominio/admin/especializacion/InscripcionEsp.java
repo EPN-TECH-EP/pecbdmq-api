@@ -208,7 +208,7 @@ import lombok.Data;
                 "    ei.estado, \n" +
                 "    gu.nombre_usuario, \n" +
                 "    gdp.correo_personal , \n" +
-                "    gu.cod_usuario \n" +
+                "    gu.cod_usuario, ge.codigo_unico_estudiante \n" +
                 "FROM cbdmq.esp_inscripcion ei \n" +
                 "LEFT JOIN cbdmq.gen_estudiante ge ON ge.cod_estudiante = ei.cod_estudiante \n" +
                 "LEFT JOIN cbdmq.gen_dato_personal gdp ON gdp.cod_datos_personales = ge.cod_datos_personales \n" +
@@ -227,6 +227,7 @@ import lombok.Data;
         @ColumnResult(name = "nombre_usuario"),
         @ColumnResult(name = "correo_personal"),
         @ColumnResult(name = "cod_usuario", type = Long.class),
+        @ColumnResult(name = "codigo_unico_estudiante"),
 
 }))
 @NamedNativeQuery(name = "DatosInscripcionEsp.aprobadosPruebas",
