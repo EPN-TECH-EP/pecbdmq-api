@@ -27,6 +27,7 @@ public class ProMateriaSemestreResource extends ProfesionalizacionResource<ProMa
             datosGuardados.setNumeroHoras(obj.getNumeroHoras());
             datosGuardados.setNotaMinima(obj.getNotaMinima());
             datosGuardados.setNotaMaxima(obj.getNotaMaxima());
+            datosGuardados.setAsistenciaMinima(obj.getAsistenciaMinima());
             return super.actualizarDatos(datosGuardados);
         }).orElseGet(()->ResponseEntity.notFound().build());
     }
