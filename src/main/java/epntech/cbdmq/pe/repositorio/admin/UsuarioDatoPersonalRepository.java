@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.repositorio.admin;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -58,7 +59,7 @@ public interface UsuarioDatoPersonalRepository extends JpaRepository<UsuarioDato
 			+ "where u.is_active = true "
 			+ "and u.is_not_locked = true "
 			+ "and dp.estado = 'ACTIVO' "
-			+ "and dp.nombre like %:nombre% and dp.apellido like %:apellido% and pi.aceptado=true", nativeQuery = true)
+			+ "and (LOWER(dp.nombre) like %:nombre% or LOWER(dp.apellido) like %:apellido%) and pi.aceptado=true", nativeQuery = true)
 	List<UsuarioDatoPersonal> getByCedulaProfesionalizacionNombreApellido(String nombre, String apellido);
 
 	@Query(value = "select pi.cod_inscripcion, u.cod_usuario, u.nombre_usuario, dp.cod_datos_personales, " +
@@ -71,7 +72,7 @@ public interface UsuarioDatoPersonalRepository extends JpaRepository<UsuarioDato
 			"where u.is_active = true " +
 			"and u.is_not_locked = true " +
 			"and dp.estado = 'ACTIVO' " +
-			"and dp.correo_personal like %:email% and pi.aceptado=true", nativeQuery = true)
+			"and (dp.correo_personal like %:email% or dp.correo_institucional like %:email%) and pi.aceptado=true", nativeQuery = true)
 	List<UsuarioDatoPersonal> getByCedulaProfesionalizacionEmail(String email);
 	
 }
