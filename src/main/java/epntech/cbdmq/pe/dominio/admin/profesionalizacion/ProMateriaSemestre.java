@@ -38,6 +38,9 @@ public class ProMateriaSemestre extends ProfesionalizacionEntity {
     @Column(name = "nota_maxima")
     private Integer notaMaxima;
 
+    @Column(name = "asistencia_minima")
+    private Integer asistenciaMinima;
+
     @Column(name = "estado")
     private String estado;
 }

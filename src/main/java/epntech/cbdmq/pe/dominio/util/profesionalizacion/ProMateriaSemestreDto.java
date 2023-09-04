@@ -22,5 +22,6 @@ public class ProMateriaSemestreDto {
     private double NumeroHoras;
     private double NotaMinima;
     private double NotaMaxima;
+    private double AsistenciaMinima;
     private Boolean esProyecto;
 }

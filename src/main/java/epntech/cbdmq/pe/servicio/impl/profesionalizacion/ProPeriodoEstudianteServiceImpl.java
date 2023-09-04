@@ -62,7 +62,7 @@ public class ProPeriodoEstudianteServiceImpl extends ProfesionalizacionServiceIm
     }
 
     public List<UsuarioDatoPersonal> findByNombreApellido(String nombre, String apellido){
-        return usuarioDatoPersonalRepository.getByCedulaProfesionalizacionNombreApellido(nombre, apellido);
+        return usuarioDatoPersonalRepository.getByCedulaProfesionalizacionNombreApellido(nombre.toLowerCase(), apellido.toLowerCase());
     }
 
     public List<UsuarioDatoPersonal> findByCorreo(String email){

@@ -36,6 +36,7 @@ public class ProNotaProfesionalizacionResource extends ProfesionalizacionResourc
             datosGuardados.setNotaPonderacion(obj.getNotaPonderacion());
             datosGuardados.setNotaDisciplina(obj.getNotaDisciplina());
             datosGuardados.setNotaSupletorio(obj.getNotaSupletorio());
+            datosGuardados.setAprobado(obj.getNotaAsistencia() >= obj.getAsistenciaMinima() && obj.getNotaParcial1() >= obj.getNotaMinima());
             return super.actualizarDatos(datosGuardados);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }

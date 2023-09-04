@@ -68,6 +68,12 @@ public class ProNotaProfesionalizacion extends ProfesionalizacionEntity {
     @Column(name = "nota_supletorio")
     private Double notaSupletorio;
 
+    @Column(name = "aprobado")
+    private Boolean aprobado;
+
     @Column(name = "estado")
     private String estado;
+
+    @Transient
+    private Double asistenciaMinima;
 }
