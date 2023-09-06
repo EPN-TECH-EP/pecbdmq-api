@@ -61,7 +61,7 @@ public class DescargarDocumentoResourse {
 		} else if ("doc".equalsIgnoreCase(extension) || "docx".equalsIgnoreCase(extension)) {
 			contentType = "application/msword";
 		} else {
-			// Tipo de archivo desconocido
+			//TODO esta recayendo en este error
 			return response(HttpStatus.BAD_REQUEST, "Tipo de archivo no compatible");
 		}
 	     // Construir la URL completa de descarga del archivo
