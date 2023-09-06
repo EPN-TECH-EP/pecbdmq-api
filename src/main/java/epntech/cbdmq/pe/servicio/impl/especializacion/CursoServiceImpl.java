@@ -202,7 +202,10 @@ public class CursoServiceImpl implements CursoService {
         cursoDatos.setCodAula(aula.getCodAula());
         Curso cc;
         cc = cursoEspRepository.insertarCursosDocumentosRequisitos(cursoDatos, requisitos, documentos/*, codTipoDocumento*/);
-        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", "Se ha creado el curso " + cc.getNombre() + " con éxito");
+        CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(cc.getCodCatalogoCursos().intValue()).get();
+        TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
+
+        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", "Se ha creado el curso " + cc.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito");
 
         return cc;
     }
@@ -246,11 +249,13 @@ public class CursoServiceImpl implements CursoService {
         curso.setCodUsuarioValidacion(codigoUserAprueba);
         curso= cursoRepository.save(curso);
         String mensaje=null;
+        CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(curso.getCodCatalogoCursos().intValue()).get();
+        TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
         if(aprobadoCurso) {
-            mensaje="Se ha aprobado el curso " + curso.getNombre() + " con éxito." + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
+            mensaje="Se ha aprobado el curso " + curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+" con éxito." + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
 
         }else{
-            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
+            mensaje="Se ha rechazado el curso " +curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
         }
         emailService.enviarEmail(curso.getEmailNotificacion(), "Validación de curso",mensaje );
 
