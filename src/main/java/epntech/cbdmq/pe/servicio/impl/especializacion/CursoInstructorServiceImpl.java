@@ -60,13 +60,30 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 					return instructorRepository.save(newInstructor);
 				});
 
-		CursoInstructor cursoInstructor = new CursoInstructor();
-		cursoInstructor.setCodInstructor(instructor.getCodInstructor());
-		cursoInstructor.setEstado("ACTIVO");
-		cursoInstructor.setCodTipoInstructor(cursoInstructorRequest.getCodTipoInstructor());
-		cursoInstructor.setCodCursoEspecializacion(cursoInstructorRequest.getCodCursoEspecializacion());
-		cursoInstructor.setDescripcion(cursoInstructor.getDescripcion());
-		cursoInstructor.setFechaActual(LocalDate.now());
+		// busca cursoInstructor por cursoInstructorRequest.getCodInstructor() y cursoInstructorRequest.getCodCursoEspecializacion()
+		Optional<CursoInstructor> cursoInstructorOptional = cursoInstructorRepository
+				.findByCodInstructorAndCodCursoEspecializacion(instructor.getCodInstructor().intValue(),
+						cursoInstructorRequest.getCodCursoEspecializacion());
+
+		CursoInstructor cursoInstructor;
+
+		// si el instructor ya estaba registrado en el curso, se actualiza el estado a ACTIVO
+		if (cursoInstructorOptional.isPresent()) {
+			cursoInstructor = cursoInstructorOptional.get();
+
+			cursoInstructor.setEstado("ACTIVO");
+			cursoInstructor.setFechaActual(LocalDate.now());
+		}
+		// si no estaba registrado, se crea un nuevo registro
+		else {
+			cursoInstructor = new CursoInstructor();
+			cursoInstructor.setCodInstructor(instructor.getCodInstructor());
+			cursoInstructor.setEstado("ACTIVO");
+			cursoInstructor.setCodTipoInstructor(cursoInstructorRequest.getCodTipoInstructor());
+			cursoInstructor.setCodCursoEspecializacion(cursoInstructorRequest.getCodCursoEspecializacion());
+			cursoInstructor.setDescripcion(cursoInstructor.getDescripcion());
+			cursoInstructor.setFechaActual(LocalDate.now());
+		}
 
 		return cursoInstructorRepository.save(cursoInstructor);
 	}

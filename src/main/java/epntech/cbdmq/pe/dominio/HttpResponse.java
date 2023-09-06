@@ -17,6 +17,8 @@ public class HttpResponse {
     private String razon;
     private String mensaje;
 
+
+    // Constructor
     public HttpResponse(int httpStatusCode, HttpStatus httpStatus, String reason, String message) {
         this.timeStamp = new Date();
         this.httpStatusCode = httpStatusCode;

@@ -41,160 +41,166 @@ import jakarta.mail.MessagingException;
 @RequestMapping("/inscripcionEsp")
 public class InscripcionEspResource {
 
-	@Autowired
-	private InscripcionEspServiceImpl inscripcionEspServiceImpl;
+    @Autowired
+    private InscripcionEspServiceImpl inscripcionEspServiceImpl;
 
-	@PostMapping("/crear")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody InscripcionEsp inscripcionEsp) {
+    @PostMapping("/crear")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardar(@RequestBody InscripcionEsp inscripcionEsp) {
 
-		return new ResponseEntity<>(inscripcionEspServiceImpl.save(inscripcionEsp), HttpStatus.OK);
-	}
-	@PostMapping("/crearFully")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(
-			@RequestParam("datos") String datos,
-			@RequestParam("documentos") List<MultipartFile> documentos) throws IOException, ParseException, MessagingException, DataException, ArchivoMuyGrandeExcepcion {
-		return new ResponseEntity<>(inscripcionEspServiceImpl.saveFully(datos, documentos/*, codTipoDocumento*/), HttpStatus.OK);
-	}
-	
-	@PutMapping("/")
-	public ResponseEntity<InscripcionEsp> actualizarDatos(@RequestBody InscripcionEsp inscripcionEsp) {
-		
-		return new ResponseEntity<>(inscripcionEspServiceImpl.update(inscripcionEsp), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(inscripcionEspServiceImpl.save(inscripcionEsp), HttpStatus.OK);
+    }
 
-	@GetMapping("/listar")
-	public List<InscripcionDatosEspecializacion> listar() {
-		return inscripcionEspServiceImpl.getAll();
-	}
+    @PostMapping("/crearFully")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardar(
+            @RequestParam("datos") String datos,
+            @RequestParam("documentos") List<MultipartFile> documentos) throws IOException, ParseException, MessagingException, DataException, ArchivoMuyGrandeExcepcion {
+        return new ResponseEntity<>(inscripcionEspServiceImpl.saveFully(datos, documentos/*, codTipoDocumento*/), HttpStatus.OK);
+    }
 
-	@GetMapping("/listarPorUsuarioPaginado/{usuario}")
-	public List<InscripcionDatosEspecializacion> listarPaginadoPorUsuario(
-			@PathVariable("usuario") Long usuario,
-			Pageable pageable) {
-		return inscripcionEspServiceImpl.getByUsuarioPaginado(usuario, pageable);
-	}
+    @PutMapping("/")
+    public ResponseEntity<InscripcionEsp> actualizarDatos(@RequestBody InscripcionEsp inscripcionEsp) {
 
-	@GetMapping("/listarPaginado")
-	public List<InscripcionDatosEspecializacion> listarPaginadoTodo(Pageable pageable) {
-		return inscripcionEspServiceImpl.getAllPaginado(pageable);
-	}
+        return new ResponseEntity<>(inscripcionEspServiceImpl.update(inscripcionEsp), HttpStatus.OK);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) {
-		return inscripcionEspServiceImpl.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) {
-		inscripcionEspServiceImpl.delete(codigo);
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-	}
-	
-	@PostMapping("/uploadDocumentos")
-	public ResponseEntity<List<Documento>> uploadFiles(@RequestParam("codInscripcion") Long codInscripcion, @RequestParam("codTipoDocumento") Long codTipoDocumento, @RequestParam("archivos") List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
-		
-		if(archivos.get(0).getSize() == 0)
-			throw new DataException(NO_ADJUNTO);
-		
-		return new ResponseEntity<>(inscripcionEspServiceImpl.uploadFiles(codInscripcion, codTipoDocumento, archivos), HttpStatus.OK);
-	}
-	
-	@DeleteMapping("/eliminarDocumento")
-	public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Long codInscripcion, @RequestParam Long codDocumento)
-			throws IOException, DataException {
-		inscripcionEspServiceImpl.deleteDocumento(codInscripcion, codDocumento);
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-	}
-	
-	@PostMapping("/notificar")
-	public ResponseEntity<?> notificar(@RequestParam("codInscripcion") Long codInscripcion)
-			throws MessagingException, DataException, PSQLException {
-		inscripcionEspServiceImpl.notificarInscripcion(codInscripcion);
-		return response(HttpStatus.OK, EMAIL_SEND);
-	}
+    @GetMapping("/listarPorCurso/{codCurso}/usuario/{codUsuario}")
+    public List<InscripcionDatosEspecializacion> listarPaginadoPorCursoAndUsuario(
+            @PathVariable("codCurso") Long codCurso,
+            @PathVariable("codUsuario") Long codUsuario,
+            Pageable pageable) {
+        return inscripcionEspServiceImpl.getByCursoAndUsuarioPaginado(codCurso, codUsuario, pageable);
+    }
 
-	@GetMapping("/cumpleMinimoInscritosCurso/{id}")
-	public ResponseEntity<?> cumpleMinimoInscritos(@PathVariable("id") long codigo) {
-		return response(HttpStatus.OK, inscripcionEspServiceImpl.cumplePorcentajeMinimoInscritosCurso(codigo).toString());
-	}
+    @GetMapping("/listarPorCurso/{codCurso}")
+    public List<InscripcionDatosEspecializacion> listarPaginadoPorCurso(
+            @PathVariable("codCurso") Long codCurso,
+            Pageable pageable) {
+        return inscripcionEspServiceImpl.getAllByCursoPaginado(codCurso, pageable);
+    }
 
-	@GetMapping("/porCurso/{id}")
-	public List<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
-		return inscripcionEspServiceImpl.getByCurso(codigo);
-	}
-	@GetMapping("/porCurso&Estado")
-	public Set<InscripcionDatosEspecializacion> obtenerPorCursoEstado(@RequestParam("id") long codigo, @RequestParam("estado") String estado) throws DataException {
-		return inscripcionEspServiceImpl.getByCursoEstado(codigo,estado);
-	}
-	@GetMapping("/aprobadosPruebasPorCurso")
-	public List<DatosInscripcionEsp> aprobadosPruebasPorCurso(@RequestParam("id") Integer codigo) throws DataException {
-		return inscripcionEspServiceImpl.getAprobadosPruebas(codigo);
-	}
-	
-	@PostMapping("/validacionRequisitos")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) {
-		return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<InscripcionDatosEsp> obtenerPorId(@PathVariable("id") long codigo) {
+        return inscripcionEspServiceImpl.getById(codigo).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@GetMapping("/requisitos/{idInscripcion}")
-	public List<ValidacionRequisitosDatos> getRequisitos(@PathVariable("idInscripcion") Long codInscripcion) {
-		return inscripcionEspServiceImpl.getRequisitos(codInscripcion);
-	}
-	
-	@PutMapping("/validacionRequisitos")
-	public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) {
-		inscripcionEspServiceImpl.updateValidacionRequisito(validaRequisitos);
-		return response(HttpStatus.OK, EMAIL_SEND);
-	}
-	
-	@GetMapping("/inscripcionesValidas/{id}")
-	public List<InscritosEspecializacion> listarInscripcionesValidas(@PathVariable("id") long codigo) {
-		return inscripcionEspServiceImpl.getInscritosValidosCurso(codigo);
-	}
-	
-	@PostMapping("/notificarPrueba")
-	public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("subTipoPrueba") Long subTipoPrueba) {
-		inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion, subTipoPrueba);
-		return response(HttpStatus.OK, EMAIL_SEND);
-	}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") long codigo) {
+        inscripcionEspServiceImpl.delete(codigo);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
 
-	@PutMapping("/{id}/asignarDelegado/{idUsuario}")
-	public ResponseEntity<?> asignarDelegado(
-			@PathVariable("id") long codigo,
-			@PathVariable("idUsuario") long idUsuario) {
-		return new ResponseEntity<>(inscripcionEspServiceImpl.updateDelegado(codigo, idUsuario), HttpStatus.OK);
-	}
+    @PostMapping("/uploadDocumentos")
+    public ResponseEntity<List<Documento>> uploadFiles(@RequestParam("codInscripcion") Long codInscripcion, @RequestParam("codTipoDocumento") Long codTipoDocumento, @RequestParam("archivos") List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
 
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        if (archivos.get(0).getSize() == 0)
+            throw new DataException(NO_ADJUNTO);
+
+        return new ResponseEntity<>(inscripcionEspServiceImpl.uploadFiles(codInscripcion, codTipoDocumento, archivos), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/eliminarDocumento")
+    public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Long codInscripcion, @RequestParam Long codDocumento)
+            throws IOException, DataException {
+        inscripcionEspServiceImpl.deleteDocumento(codInscripcion, codDocumento);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
+
+    @PostMapping("/notificar")
+    public ResponseEntity<?> notificar(@RequestParam("codInscripcion") Long codInscripcion)
+            throws MessagingException, DataException, PSQLException {
+        inscripcionEspServiceImpl.notificarInscripcion(codInscripcion);
+        return response(HttpStatus.OK, EMAIL_SEND);
+    }
+
+    @GetMapping("/cumpleMinimoInscritosCurso/{id}")
+    public ResponseEntity<?> cumpleMinimoInscritos(@PathVariable("id") long codigo) {
+        return response(HttpStatus.OK, inscripcionEspServiceImpl.cumplePorcentajeMinimoInscritosCurso(codigo).toString());
+    }
+
+    @GetMapping("/porCurso/{id}")
+    public List<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
+        return inscripcionEspServiceImpl.getByCurso(codigo);
+    }
+
+    @GetMapping("/porCurso&Estado")
+    public Set<InscripcionDatosEspecializacion> obtenerPorCursoEstado(@RequestParam("id") long codigo, @RequestParam("estado") String estado) throws DataException {
+        return inscripcionEspServiceImpl.getByCursoEstado(codigo, estado);
+    }
+
+    @GetMapping("/aprobadosPruebasPorCurso")
+    public List<DatosInscripcionEsp> aprobadosPruebasPorCurso(@RequestParam("id") Integer codigo) throws DataException {
+        return inscripcionEspServiceImpl.getAprobadosPruebas(codigo);
+    }
+
+    @PostMapping("/validacionRequisitos")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> validacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) {
+        return new ResponseEntity<>(inscripcionEspServiceImpl.saveValidacionRequisito(validaRequisitos), HttpStatus.OK);
+    }
+
+    @GetMapping("/requisitos/{idInscripcion}")
+    public List<ValidacionRequisitosDatos> getRequisitos(@PathVariable("idInscripcion") Long codInscripcion) {
+        return inscripcionEspServiceImpl.getRequisitos(codInscripcion);
+    }
+
+    @PutMapping("/validacionRequisitos")
+    public ResponseEntity<?> updateValidacionRequisitos(@RequestBody List<ValidaRequisitos> validaRequisitos) {
+        inscripcionEspServiceImpl.updateValidacionRequisito(validaRequisitos);
+        return response(HttpStatus.OK, EMAIL_SEND);
+    }
+
+    @GetMapping("/inscripcionesValidas/{id}")
+    public List<InscritosEspecializacion> listarInscripcionesValidas(@PathVariable("id") long codigo) {
+        return inscripcionEspServiceImpl.getInscritosValidosCurso(codigo);
+    }
+
+    @PostMapping("/notificarPrueba")
+    public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("subTipoPrueba") Long subTipoPrueba) {
+        inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion, subTipoPrueba);
+        return response(HttpStatus.OK, EMAIL_SEND);
+    }
+
+    @PutMapping("/{id}/asignarDelegado/{idUsuario}")
+    public ResponseEntity<?> asignarDelegado(
+            @PathVariable("id") long codigo,
+            @PathVariable("idUsuario") long idUsuario) {
+        return new ResponseEntity<>(inscripcionEspServiceImpl.updateDelegado(codigo, idUsuario), HttpStatus.OK);
+    }
+
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
     }
-	@GetMapping("/informacion/{cedula}")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> getData(@PathVariable("cedula") String cedula) throws Exception{
 
-		try {
-			return new ResponseEntity<>(inscripcionEspServiceImpl.confirmacionInscripcion(cedula), HttpStatus.OK);
-		}catch(Exception ex) {
+    @GetMapping("/informacion/{cedula}/curso/{codCurso}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> getData(
+            @PathVariable("cedula") String cedula,
+            @PathVariable("codCurso") Long codCurso
+    ) throws Exception {
 
-			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-		}
-	}
-	@PutMapping("/colocarCorreo")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> getData(@RequestBody DatoPersonal datoPersonal) throws Exception{
+        try {
+            return new ResponseEntity<>(inscripcionEspServiceImpl.confirmacionInscripcion(cedula, codCurso), HttpStatus.OK);
+        } catch (Exception ex) {
 
-		try {
-			return new ResponseEntity<>(inscripcionEspServiceImpl.colocarCorreoCiudadano(datoPersonal), HttpStatus.OK);
-		}catch(Exception ex) {
+            return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
+    }
 
-			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-		}
-	}
+    @PutMapping("/colocarCorreo")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> getData(@RequestBody DatoPersonal datoPersonal) throws Exception {
+
+        try {
+            return new ResponseEntity<>(inscripcionEspServiceImpl.colocarCorreoCiudadano(datoPersonal), HttpStatus.OK);
+        } catch (Exception ex) {
+
+            return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
+    }
 
 
 }

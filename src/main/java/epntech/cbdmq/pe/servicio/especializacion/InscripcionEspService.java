@@ -30,12 +30,10 @@ public interface InscripcionEspService {
 	InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario);
 
 	Optional<InscripcionDatosEsp> getById(Long codInscripcion);
-	
-	List<InscripcionDatosEspecializacion> getAll();
 
-	List<InscripcionDatosEspecializacion> getByUsuarioPaginado(Long codUsuario, Pageable pageable);
+	List<InscripcionDatosEspecializacion> getByCursoAndUsuarioPaginado(Long codCurso, Long codUsuario, Pageable pageable);
 
-	List<InscripcionDatosEspecializacion> getAllPaginado(Pageable pageable);
+	List<InscripcionDatosEspecializacion> getAllByCursoPaginado(Long codCurso, Pageable pageable);
 
 	void delete(Long codInscripcion);
 	
@@ -63,7 +61,7 @@ public interface InscripcionEspService {
 	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
-	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula) throws Exception;
+	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula, Long codCurso) throws Exception;
 	DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception;
 
 }

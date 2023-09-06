@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.fichaPersonal;
 
+import epntech.cbdmq.pe.dominio.admin.UsuarioEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
@@ -18,6 +19,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -191,6 +194,33 @@ import lombok.Data;
 		@ColumnResult(name = "numero_horas"),
 		@ColumnResult(name = "nota_materia"),
 		@ColumnResult(name = "nota_disciplina"),
+
+}))
+
+@NamedNativeQuery(name = "Estudiante.findByCodUsuario",
+		query = "select gu.cod_usuario codUsuario, gu.nombre_usuario nombreUsuario, " +
+				"gdp.cod_datos_personales codDatosPersonales, gdp.nombre, gdp.apellido, " +
+				"gdp.correo_personal correoPersonal, gdp.cedula, gdp.fecha_nacimiento fechaNacimiento, " +
+				"ge.cod_estudiante codEstudiante, ge.codigo_unico_estudiante codigoUnicoEstudiante " +
+				"from cbdmq.gen_usuario gu " +
+				"inner join cbdmq.gen_dato_personal gdp on gu.cod_datos_personales = gdp.cod_datos_personales " +
+				"left join cbdmq.gen_estudiante ge on gdp.cod_datos_personales = ge.cod_datos_personales " +
+				"where gu.cod_usuario = :codUsuario"
+		,
+		resultSetMapping = "UsuarioEstudiante"
+)
+
+@SqlResultSetMapping(name = "UsuarioEstudiante", classes = @ConstructorResult(targetClass = UsuarioEstudiante.class, columns = {
+		@ColumnResult(name = "codUsuario", type = Integer.class),
+		@ColumnResult(name = "nombreUsuario", type = String.class),
+		@ColumnResult(name = "codDatosPersonales", type = Integer.class),
+		@ColumnResult(name = "nombre", type = String.class),
+		@ColumnResult(name = "apellido", type = String.class),
+		@ColumnResult(name = "correoPersonal", type = String.class),
+		@ColumnResult(name = "cedula", type = String.class),
+		@ColumnResult(name = "fechaNacimiento", type = LocalDate.class),
+		@ColumnResult(name = "codEstudiante", type = Integer.class),
+		@ColumnResult(name = "codigoUnicoEstudiante", type = String.class),
 
 }))
 

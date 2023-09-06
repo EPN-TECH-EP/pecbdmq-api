@@ -9,6 +9,7 @@ import lombok.Data;
 public class UsuarioDatoPersonal {
 	
 	@Id
+	private Integer codInscripcion;
 	private Integer codUsuario;
 	private String nombreUsuario;
 	private Integer codDatosPersonales;
@@ -16,5 +17,6 @@ public class UsuarioDatoPersonal {
 	private String nombre;
 	private String cedula;
 	private String correoPersonal;
+	private Integer codPeriodo;
 
 }

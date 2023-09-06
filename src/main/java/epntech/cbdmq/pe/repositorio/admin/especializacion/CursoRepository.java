@@ -47,7 +47,7 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 			" and ec.cod_curso_especializacion = eci.cod_curso_especializacion\n" +
 			" and eci.cod_instructor  = gi.cod_instructor \n" +
 			" and gu.cod_datos_personales = gi.cod_datos_personales \n" +
-			" and ec.estado = :estado", nativeQuery = true)
+			" and ec.estado = :estado and eci.estado <> 'ELIMINADO'", nativeQuery = true)
 	List<Curso> findByInstructorAndEstado(Integer codUsuario, String estado);
 
 	List<Curso> findByCodCatalogoCursos(Long codigoCatalogoCurso);

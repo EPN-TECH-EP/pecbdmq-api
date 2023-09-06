@@ -124,7 +124,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             noti.setEstado(ACTIVO);
 
             try {
-                String mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato.getCorreoPersonal());
+                String mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                 noti.setMensaje("mensaje");
                 noti.setNotificacionEnviada(true);
                 repo.save(noti);

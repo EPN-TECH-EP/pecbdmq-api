@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.admin.UsuarioEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.especializacion.EspecializacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.FormacionEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.profesionalizacion.ProfesionalizacionEstudiante;
@@ -40,8 +41,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Integer>
 			"on ge.codDatosPersonales = gu.codDatosPersonales.codDatosPersonales\n" +
 			"where gu.isActive =true\n" +
 			"and gu.isNotLocked =true\n" +
-			"and gu.nombreUsuario=:codUsuario")
-	Estudiante getEstudianteByUsuario(@Param("codUsuario") String nombreUsuario);
+			"and gu.codUsuario=:codUsuario")
+	Estudiante getEstudianteByUsuario(@Param("codUsuario") String codUsuario);
+
+	@Query(name = "Estudiante.findByCodUsuario", nativeQuery = true)
+	Optional<UsuarioEstudiante> getEstudianteByCodUsuario(@Param("codUsuario") Integer codUsuario);
 
 	Estudiante getEstudianteByCodUnicoEstudiante(String codUnicoEstudiante);
 	@Query(value="SELECT ge.cod_estudiante, ge.cod_datos_personales , ge.codigo_unico_estudiante, ge.estado\n" +

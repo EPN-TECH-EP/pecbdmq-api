@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.admin.UsuarioEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.DatosEstudianteParaCrearUsuario;
 import epntech.cbdmq.pe.dominio.util.EstudianteDto;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.PostulantesValidosService;
@@ -165,6 +167,12 @@ public class EstudianteServiceImpl implements EstudianteService {
             throw new DataException("No se encontro el estudiante");
         }
         return estudiante;
+    }
+
+    @Override
+    public UsuarioEstudiante getEstudianteByCodUsuario(Integer codUsuario) {
+        return repo.getEstudianteByCodUsuario(codUsuario)
+                .orElseThrow(() -> new BusinessException("No se encontro el estudiante"));
     }
 
     @Override

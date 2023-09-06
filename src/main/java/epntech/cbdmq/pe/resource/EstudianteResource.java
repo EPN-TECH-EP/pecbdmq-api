@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.resource;
 import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_REGISTRADOS;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
+import epntech.cbdmq.pe.dominio.admin.UsuarioEstudiante;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,10 +91,15 @@ public class EstudianteResource {
 
     }
 	
-    @GetMapping("/ByUser")
+    @GetMapping("/byUser")
     public Estudiante listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
         return objService.getEstudianteByUsuario(codUsuario);
     }
+
+	@GetMapping("/byCodUsuario")
+	public UsuarioEstudiante listarEstudianteByCodUsuario(@RequestParam("codUsuario") Integer codUsuario) {
+		return objService.getEstudianteByCodUsuario(codUsuario);
+	}
     
     @PostMapping("/asignarMateriaEstudiante")
 	@ResponseStatus(HttpStatus.CREATED)

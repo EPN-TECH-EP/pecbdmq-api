@@ -4,6 +4,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.util.EstacionTrabajoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.admin.Aula;
 import epntech.cbdmq.pe.dominio.admin.EstacionTrabajo;
-import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.EstacionTrabajoServiceImpl;
 
 @RestController
-@RequestMapping("/estaciontrabajo")
+@RequestMapping("/estacionTrabajo")
 public class EstacionTrabajoResource {
 
 	@Autowired
@@ -32,42 +31,29 @@ public class EstacionTrabajoResource {
 	
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody EstacionTrabajo obj) throws DataException{
+	public ResponseEntity<?> guardar(@RequestBody EstacionTrabajo obj) {
 		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 	}
 	
 	@GetMapping("/listar")
-	public List<EstacionTrabajo> listar() {
+	public List<EstacionTrabajoDto> listar() {
 		return objService.getAll();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<EstacionTrabajo> obtenerPorId(@PathVariable("id") int codigo) {
-		return objService.getById(codigo).map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<EstacionTrabajoDto> obtenerPorId(@PathVariable("id") int codigo) {
+		return new ResponseEntity<>(objService.getById(codigo), HttpStatus.OK);
 	}
 
-	@SuppressWarnings("unchecked")
 	@PutMapping("/{id}")
-	public ResponseEntity<EstacionTrabajo> actualizarDatos(@PathVariable("id") int codigo, @RequestBody EstacionTrabajo obj) throws DataException{
-		return (ResponseEntity<EstacionTrabajo>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setNombre(obj.getNombre());
-			datosGuardados.setCanton(obj.getCanton());
-			datosGuardados.setEstado(obj.getEstado());
-
-			EstacionTrabajo datosActualizados = null;
-			try {
-				datosActualizados = objService.update(datosGuardados);
-			} catch (DataException e) {
-				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-			}
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
+	public ResponseEntity<EstacionTrabajoDto> actualizarDatos(@PathVariable("id") int codigo, @RequestBody EstacionTrabajo obj) {
+		obj.setCodigo(codigo);
+		return new ResponseEntity<>(objService.update(obj), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
-			objService.delete(codigo);
+	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) {
+		objService.delete(codigo);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	

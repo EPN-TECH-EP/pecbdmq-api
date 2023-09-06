@@ -369,7 +369,9 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     }
 
     public static String[] entityToStringArrayFormacion(InscripcionDatosEspecializacion entity) {
-        return new String[]{entity.getCodInscripcion().toString(), entity.getCedula(),
+        return new String[]{entity.getCodigoUnicoEstudiante().toString()
+                /* getCodInscripcion().toString()*/,
+                entity.getCedula(),
                 entity.getCorreoUsuario()};
     }
 

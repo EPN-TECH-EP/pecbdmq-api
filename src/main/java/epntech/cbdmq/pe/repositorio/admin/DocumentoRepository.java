@@ -28,7 +28,7 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 			"from cbdmq.esp_curso_documento ec \n" +
 			"left join cbdmq.gen_documento d on ec.cod_documento = d.cod_documento \n" +
 			"where ec.cod_curso_especializacion=:codCurso\n" +
-			"and UPPER(d.estado) = 'ACTIVO'", nativeQuery=true)
+			"and UPPER(d.estado) = 'ACTIVO' order by d.cod_documento ", nativeQuery=true)
 	Set<Documento> getDocumentosEspecializacion(@Param("codCurso") Integer codCurso);
 
 }

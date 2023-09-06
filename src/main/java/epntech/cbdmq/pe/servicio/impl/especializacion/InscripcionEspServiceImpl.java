@@ -33,7 +33,7 @@ import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.dominio.util.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
-import epntech.cbdmq.pe.repositorio.admin.SubTipoPruebaRepository;
+import epntech.cbdmq.pe.repositorio.admin.*;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
@@ -64,9 +64,6 @@ import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.fichaPersonal.EstudianteRepository;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
-import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
-import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleEntityRepository;
-import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
 import jakarta.mail.MessagingException;
 
@@ -123,6 +120,10 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     private GradoService gradoSvc;
     @Autowired
     private CursoDocumentoService cursoDocumentoSvc;
+
+    // postulante repo
+    @Autowired
+    private PostulanteRepository postulanteRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -222,18 +223,13 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 	}
 
 	@Override
-	public List<InscripcionDatosEspecializacion> getAll() {
-		return inscripcionEspRepository.getAllInscripciones();
+	public List<InscripcionDatosEspecializacion> getByCursoAndUsuarioPaginado(Long codCurso, Long codUsuario, Pageable pageable) {
+		return inscripcionEspRepository.getAllInscripcionesByCursoAndUsuario(codCurso, codUsuario, pageable);
 	}
 
 	@Override
-	public List<InscripcionDatosEspecializacion> getByUsuarioPaginado(Long codUsuario, Pageable pageable) {
-		return inscripcionEspRepository.getAllInscripcionesByUsuario(codUsuario, pageable);
-	}
-
-	@Override
-	public List<InscripcionDatosEspecializacion> getAllPaginado(Pageable pageable) {
-		return inscripcionEspRepository.getAllInscripciones(pageable);
+	public List<InscripcionDatosEspecializacion> getAllByCursoPaginado(Long codCurso, Pageable pageable) {
+		return inscripcionEspRepository.getAllInscripcionesByCurso(codCurso, pageable);
 	}
 
 	@Override
@@ -621,7 +617,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return datoPersonalEstudianteDto;
 
     }*/
-    public DatoPersonalEstudianteDto confirmacionInscripcion(String cedula) throws Exception {
+    public DatoPersonalEstudianteDto confirmacionInscripcion(String cedula, Long codCurso) throws Exception {
         DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
         Boolean isValid = util.validadorDeCedula(cedula);
 
@@ -654,6 +650,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     Estudiante newEstudiante = new Estudiante();
                     newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
+                    newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
                     newEstudiante = estudianteRepository.save(newEstudiante);
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
@@ -690,22 +687,30 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     Estudiante newEstudiante = new Estudiante();
                     newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
+                    newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
                     newEstudiante = estudianteRepository.save(newEstudiante);
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
                 } else {
-                    Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getNombreUsuario());
+                    Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getCodUsuario().toString());
 
                     if (estudianteObj == null) {
                         Estudiante newEstudiante = new Estudiante();
                         newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                         newEstudiante.setEstado(ACTIVO);
+                        newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
                         newEstudiante = estudianteRepository.save(newEstudiante);
 
                         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
                     } else {
+
+                        // verifica si el estudiante ya esta inscrito en el curso
+                        Optional<InscripcionEsp> inscripcionEspRepositoryOptional = inscripcionEspRepository.findByCodEstudianteAndCodCursoEspecializacion(estudianteObj.getCodEstudiante().longValue(), codCurso);
+                        if (inscripcionEspRepositoryOptional.isPresent())
+                            throw new BusinessException(REGISTRO_YA_EXISTE);
+
                         datoPersonalEstudianteDto.setEstudiante(estudianteObj);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
                     }
@@ -732,6 +737,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         Estudiante newEstudiante = new Estudiante();
         newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
         newEstudiante.setEstado(ACTIVO);
+        newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
         newEstudiante = estudianteRepository.save(newEstudiante);
 
         datoPersonalEstudianteDto.setEstudiante(newEstudiante);

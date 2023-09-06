@@ -1,16 +1,15 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
+import jakarta.persistence.*;
 import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.Set;
 
 @Data
 
@@ -30,4 +29,18 @@ public class Semestre {
 	
 	@Column(name = "estado")
 	private String estado;
+
+	@Column(name = "fecha_inicio_semestre")
+	private Date fechaInicioSemestre;
+
+	@Column(name = "fecha_fin_semestre")
+	private Date fechaFinSemestre;
+
+	@Column(name = "descripcion")
+	private String descripcion;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "pro_estudiante_semestre", joinColumns = @JoinColumn(name = "cod_semestre"), inverseJoinColumns = @JoinColumn(name = "cod_estudiante"))
+	private Set<Estudiante> estudiante;
+
 }
