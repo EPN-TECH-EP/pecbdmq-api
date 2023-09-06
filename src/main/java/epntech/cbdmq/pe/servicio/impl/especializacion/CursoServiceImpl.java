@@ -22,10 +22,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import epntech.cbdmq.pe.dominio.Parametro;
-import epntech.cbdmq.pe.dominio.admin.Aula;
-import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.Requisito;
-import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
+import epntech.cbdmq.pe.dominio.Usuario;
+import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -33,7 +31,9 @@ import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
+import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.EmailService;
+import epntech.cbdmq.pe.servicio.UsuarioService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +73,10 @@ public class CursoServiceImpl implements CursoService {
     private CatalogoCursoRepository catalogoCursoRepository;
     @Autowired
     private CursoEstadoService cursoEstadoService;
+    @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
+    private DatoPersonalService datoPersonalService;
 
     @Autowired
     private EmailService emailService;
@@ -204,8 +208,14 @@ public class CursoServiceImpl implements CursoService {
         cc = cursoEspRepository.insertarCursosDocumentosRequisitos(cursoDatos, requisitos, documentos/*, codTipoDocumento*/);
         CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(cc.getCodCatalogoCursos().intValue()).get();
         TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
+        LocalDateTime now = LocalDateTime.now();
+// Formatear la fecha y hora al formato que desees, por ejemplo "dd/MM/yyyy HH:mm:ss"
+        DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String formattedDate = now.format(formatterI);
+        Usuario usuario= usuarioService.getById(cc.getCodUsuarioCreacion()).get();
+        String mensaje="Se ha creado el curso" + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora"+ formattedDate;
 
-        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", "Se ha creado el curso " + cc.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito");
+        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", mensaje);
 
         return cc;
     }
