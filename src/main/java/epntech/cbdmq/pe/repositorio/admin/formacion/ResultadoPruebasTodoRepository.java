@@ -12,6 +12,8 @@ public interface ResultadoPruebasTodoRepository extends JpaRepository<Resultados
 
     @Query(value = "select * from cbdmq.get_approved_applicants(:prueba)", nativeQuery=true)
     List<ResultadosPruebasDatos> get_approved_applicants(Integer prueba);
+    @Query(value = "select * from cbdmq.get_desapproved_applicants(:prueba)", nativeQuery=true)
+    List<ResultadosPruebasDatos> get_desapproved_applicants(Integer prueba);
 
     @Query(value = "select * from cbdmq.get_all_resultados_prueba(:prueba)", nativeQuery=true)
     Page<ResultadosPruebasDatos> getResultados(Pageable pageable, Integer prueba);

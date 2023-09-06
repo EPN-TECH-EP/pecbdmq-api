@@ -12,6 +12,7 @@ import epntech.cbdmq.pe.dominio.util.InscritosValidos;
 
 @Repository
 public interface PruebasRepository extends JpaRepository<ResultadosPruebasDatos, Integer> {
+	//TODO traer los que no son aprobados tambien
 
 	@Query(value = "select * from cbdmq.get_approved_by_test_esp(:codSubTipoPrueba, :codCursoEspecializacion)", nativeQuery = true)
 	List<ResultadosPruebasDatos> get_approved_by_test_esp(Long codSubTipoPrueba, Long codCursoEspecializacion);
