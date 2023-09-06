@@ -89,11 +89,15 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
 
 
         List<ResultadosPruebasDatos> aprobados;
+        List<ResultadosPruebasDatos> reprobados;
         if (codCurso != null) {
             // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
             aprobados = pruebasRepository.get_approved_by_test_esp(subTipoPrueba.longValue(), codCurso.longValue());
+            //TODO poner para que devuelva los reprobados
+            reprobados=null;
         } else {
             aprobados = repo1.get_approved_applicants(subTipoPrueba);
+            reprobados= repo1.get_desapproved_applicants(subTipoPrueba);
         }
 
         StringBuilder errorMessageBuilder = new StringBuilder();
@@ -125,6 +129,44 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
 
             try {
                 String mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                noti.setMensaje("mensaje");
+                noti.setNotificacionEnviada(true);
+                repo.save(noti);
+            } catch (Exception e) {
+                String errorMessage = e.getMessage();
+                errorMessageBuilder.append(errorMessage).append("\n");
+                noti.setMensaje(errorMessage);
+                noti.setNotificacionEnviada(false);
+                repo.save(noti);
+            }
+        }
+        for (ResultadosPruebasDatos resultadosPruebasDatos : reprobados) {
+            DatoPersonal dato;
+
+            // si es curso, obtiene dato personal asociado a estudiante
+            if (codCurso != null) {
+                dato = estudianteService.getByIdEstudiante(resultadosPruebasDatos.getIdPostulante())
+                        .map(estudiante -> dpSvc.getDatosPersonalesById(estudiante.getCodDatosPersonales()).orElse(null))
+                        .orElse(null);
+            } else {
+
+                dato = postulanteService.getById(resultadosPruebasDatos.getCodPostulante().longValue())
+                        .map(postulante -> dpSvc.getDatosPersonalesById(postulante.getCodDatoPersonal()).orElse(null))
+                        .orElse(null);
+            }
+
+            if (dato == null) {
+                throw new DataException("No existe un dato personal asociado");
+            }
+
+            NotificacionPrueba noti = new NotificacionPrueba();
+            noti.setCodDatosPersonales(dato.getCodDatosPersonales());
+            noti.setCodPrueba(pruebaDetalle.getCodPruebaDetalle());
+            noti.setFechaPrueba(fechaActual);
+            noti.setEstado(ACTIVO);
+
+            try {
+                String mensaje = emailService.notificacionNoAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                 noti.setMensaje("mensaje");
                 noti.setNotificacionEnviada(true);
                 repo.save(noti);
