@@ -94,7 +94,7 @@ public class CursoResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Curso> updateDatos(@PathVariable("id") long codigo, @RequestBody Curso obj) {
+	public ResponseEntity<Curso> updateDatos(@PathVariable("id") long codigo, @RequestBody Curso obj) throws MessagingException {
 		obj.setCodCursoEspecializacion(codigo);
 		return new ResponseEntity<>(cursoServiceImpl.update(obj), HttpStatus.OK);
 	}
