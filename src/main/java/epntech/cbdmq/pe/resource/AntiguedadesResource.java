@@ -128,6 +128,24 @@ public class AntiguedadesResource {
 			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
 		}
 	}
+	@GetMapping("/generaArchivosReprobadosEspecializacion/{codCurso}")
+	public ResponseEntity<?> generaArchivosReprobadosEspecializacion(HttpServletResponse response,@PathVariable("codCurso") Long codCurso) throws DataException, DocumentException {
+		try {
+
+			String nombre= REPROBADOS_ESPECIALIZACION+codCurso.toString();
+			String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString()+"/";
+
+			objService.generarExcelEsp(ruta , nombre + ".xlsx", codCurso);
+			objService.generarPDFEsp(response, ruta , nombre + ".pdf", codCurso);
+
+			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("error: " + e.getMessage());
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+	}
 	@GetMapping("/descargarArchivo")
 	public ResponseEntity<?> descargarArchivo(@RequestParam String extension, HttpServletRequest request) throws FileNotFoundException {
 		String nombre = ANTIGUEDADESFORMACION + periodoAcademicoRepository.getPAActive().toString() + "." + extension;
