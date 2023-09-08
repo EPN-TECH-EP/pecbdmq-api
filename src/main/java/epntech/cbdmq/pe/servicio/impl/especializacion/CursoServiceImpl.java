@@ -221,7 +221,7 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public Curso update(Curso objActualizado) {
+    public Curso update(Curso objActualizado) throws MessagingException {
         Curso curso = cursoRepository.findById(objActualizado.getCodCursoEspecializacion())
                 .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
@@ -234,6 +234,17 @@ public class CursoServiceImpl implements CursoService {
         curso.setEmailNotificacion(objActualizado.getEmailNotificacion());
         curso.setEstado(objActualizado.getEstado());
         curso.setTieneModulos(objActualizado.getTieneModulos());
+        CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(curso.getCodCatalogoCursos().intValue()).get();
+        TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
+        LocalDateTime now = LocalDateTime.now();
+// Formatear la fecha y hora al formato que desees, por ejemplo "dd/MM/yyyy HH:mm:ss"
+        DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String formattedDate = now.format(formatterI);
+        String mensaje="Se ha editado el curso" + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
+                "El curso fue editado " +"con fecha y hora"+ formattedDate;
+
+        emailService.enviarEmail(curso.getEmailNotificacion(), "Edición de curso", mensaje);
+
 
         return cursoRepository.save(objActualizado);
     }
