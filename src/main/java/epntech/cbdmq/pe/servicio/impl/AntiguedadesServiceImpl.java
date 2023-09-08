@@ -123,6 +123,13 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 
 		return entityToArrayListAntiguedades(datos);
 	}
+	public ArrayList<ArrayList<String>> obtenerDatosReprobadosEsp(Long codCurso) {
+		Set<AntiguedadesFormacion> datos = new HashSet<>();
+
+		datos = antiguedadesFormacionRepository.getReprobadosEspecializacion(codCurso);
+
+		return entityToArrayListAntiguedades(datos);
+	}
 
 	public static String[] entityToStringArray(AntiguedadesDatos entity) {
 		return new String[] { entity.getCodPostulante().toString(), entity.getIdPostulante().toString(),
@@ -228,10 +235,33 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 
 	@Override
 	public void generarExcelEsp(String filePath, String nombre, Long codCurso) throws IOException, DataException {
+		this.generarExcelEspGeneral(filePath, nombre, codCurso, true);
+	}
+
+	@Override
+	public void generarPDFEsp(HttpServletResponse response, String filePath, String nombre, Long codCurso) throws DocumentException, IOException, DataException {
+		this.generarPDFEspGeneral(response, filePath, nombre, codCurso, true);
+	}
+
+	@Override
+	public void generarExcelReprobadosEsp(String filePath, String nombre, Long codCurso) throws IOException, DataException {
+		this.generarExcelEspGeneral(filePath, nombre, codCurso, false);
+	}
+
+	@Override
+	public void generarPDFReprobadosEsp(HttpServletResponse response, String filePath, String nombre, Long codCurso) throws DocumentException, IOException, DataException {
+		this.generarPDFEspGeneral(response, filePath, nombre, codCurso, false);
+	}
+
+	@Override
+	public void generarExcelEspGeneral(String filePath, String nombre, Long codCurso, Boolean aprobados) throws IOException, DataException {
 		String[] HEADERs = { "Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota" };
 		try {
-			ExcelHelper.generarExcel(obtenerDatosEsp(codCurso), filePath+"/"+nombre, HEADERs);
-
+			if(aprobados) {
+				ExcelHelper.generarExcel(obtenerDatosEsp(codCurso), filePath + "/" + nombre, HEADERs);
+			}else {
+				ExcelHelper.generarExcel(obtenerDatosReprobadosEsp(codCurso), filePath + "/" + nombre, HEADERs);
+			}
 			cursoDocumentoSvc.generaDocumento(filePath,nombre,codCurso);
 
 		} catch (IOException ex) {
@@ -240,7 +270,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	}
 
 	@Override
-	public void generarPDFEsp(HttpServletResponse response, String filePath, String nombre, Long codCurso) throws DocumentException, IOException, DataException {
+	public void generarPDFEspGeneral(HttpServletResponse response, String filePath, String nombre, Long codCurso, Boolean aprobados) throws DocumentException, IOException, DataException{
 		response.setContentType("application/pdf");
 
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -257,9 +287,12 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 
 		//Genera el pdf
 		exporter.setArchivosRuta(ARCHIVOS_RUTA);
-		exporter.exportar(response, columnas, obtenerDatosEsp(codCurso), widths, filePath+"/"+nombre);
-
+		if(aprobados)
+			exporter.exportar(response, columnas, obtenerDatosEsp(codCurso), widths, filePath+"/"+nombre);
+		else
+			exporter.exportar(response, columnas, obtenerDatosReprobadosEsp(codCurso), widths, filePath+"/"+nombre);
 		cursoDocumentoSvc.generaDocumento(filePath,nombre,codCurso);
+
 	}
 
 }
