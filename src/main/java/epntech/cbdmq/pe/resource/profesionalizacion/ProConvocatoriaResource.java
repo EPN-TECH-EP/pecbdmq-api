@@ -6,14 +6,10 @@ import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.impl.profesionalizacion.ProConvocatoriaServiceImpl;
-import jakarta.mail.MessagingException;
-import org.postgresql.util.PSQLException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,17 +28,13 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
     @GetMapping("/listarActiva")
     public List<ProConvocatoria> listarActiva() {
         return super.listar();
-        /*List<ProConvocatoria> listarResponse;
-        listarResponse = listar.stream().filter(x -> x.getFechaInicio().getTime() <= Calendar.getInstance().getTime().getTime() &&
-                x.getFechaFin().getTime() >= Calendar.getInstance().getTime().getTime()).toList();
-        return listarResponse;*/
     }
 
     @PostMapping("/crear")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody ProConvocatoria obj) throws DataException {
         ProConvocatoria saveItem = service.save(obj);
-        this.emailService.sendConvocatoriaProfesionalizacionEmail(obj.getCorreo());
+        service.notificar(saveItem.getCodigo());
         return new ResponseEntity<>(saveItem, HttpStatus.OK);
     }
 
@@ -63,7 +55,7 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
             datosGuardados.setCodPeriodo(obj.getCodPeriodo());
             datosGuardados.setCorreo(obj.getCorreo());
             ResponseEntity<?> responseEntity = super.actualizarDatos(datosGuardados);
-            this.emailService.sendConvocatoriaProfesionalizacionEmail(obj.getCorreo());
+            service.notificar(datosGuardados.getCodigo());
             return responseEntity;
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -94,8 +86,7 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
     }
 
     @PostMapping("/{id}/notificar")
-    public ResponseEntity<HttpResponse> notificar(@PathVariable("id") Integer codConvocatoria)
-            throws MessagingException, DataException, PSQLException, IOException {
+    public ResponseEntity<HttpResponse> notificar(@PathVariable("id") Integer codConvocatoria) {
         service.notificar(codConvocatoria);
         return response(HttpStatus.OK, EMAIL_SEND);
     }

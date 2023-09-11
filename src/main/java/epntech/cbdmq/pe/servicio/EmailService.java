@@ -389,9 +389,11 @@ public class EmailService {
         InternetAddress fromAddress = new InternetAddress(USERNAME);
         message.setFrom(fromAddress);
         message.setSubject(subject);
-        for (String destinatario : destinatarios) {
-            message.setRecipients(MimeMessage.RecipientType.TO, destinatario);
+        InternetAddress[] direccionesMail = new InternetAddress[destinatarios.length];
+        for (int i = 0; i < destinatarios.length; i++) {
+            direccionesMail[i] = new InternetAddress(destinatarios[i]);
         }
+        message.addRecipients(MimeMessage.RecipientType.TO, direccionesMail);
         message.setSubject(subject);
         String htmlTemplate = this.getHtmlGeneric("convocatoriaPro.html");
         htmlTemplate = htmlTemplate.replace("${descripcion}", descripcion);
