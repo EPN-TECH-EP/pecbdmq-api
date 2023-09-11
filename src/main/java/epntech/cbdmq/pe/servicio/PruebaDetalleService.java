@@ -31,6 +31,7 @@ public interface PruebaDetalleService {
     public String getTipoResultado(int codSubtipoPrueba);
 
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException;
+	void notificarPruebaDetalle(Long codPruebaDetalle) throws DataException;
 
 
 }
