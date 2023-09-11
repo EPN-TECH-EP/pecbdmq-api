@@ -66,4 +66,12 @@ public class CursoDocumentoResource {
             return response(HttpStatus.OK, "NO CUMPLE CON EL MINIMO DE INSCRITOS PARA GENERAR EL DOCUMENTO, SE HA CERRADO EL CURSO");
 
     }
+    @GetMapping("/generarValidados/{codCurso}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> generaValidados(HttpServletResponse response, @PathVariable("codCurso" )Long codCurso) throws DataException {
+
+        if(cursoDocumentoService.generarDocListadoValidacion(response,codCurso))
+            return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+        return response(HttpStatus.OK, ERROR_GENERAR_ARCHIVO);
+    }
 }
