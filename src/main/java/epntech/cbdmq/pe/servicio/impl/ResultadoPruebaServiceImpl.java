@@ -171,8 +171,8 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         String nombre1 = nombreArchivo + ".pdf";
         String nombre2 = nombreArchivo + ".xlsx";
         if (esAprobado) {
-            this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
-            this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
+            this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle,true);
+            this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle,true);
         } else {
             this.generarPDFReprobados(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
             this.generarExcelReprobados(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
