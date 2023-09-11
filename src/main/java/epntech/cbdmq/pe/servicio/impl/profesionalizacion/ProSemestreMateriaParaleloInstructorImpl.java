@@ -40,8 +40,6 @@ public class ProSemestreMateriaParaleloInstructorImpl extends Profesionalizacion
 
     @Override
     public ProSemestreMateriaParaleloInstructor update(ProSemestreMateriaParaleloInstructor objActualizado) throws DataException {
-        // TODO Auto-generated method stub
-
         Optional<ProSemestreMateriaParaleloInstructor> objGuardado = repository.findByCodPeriodoSemestreMateriaParaleloAndCodInstructor(objActualizado.getCodPeriodoSemestreMateriaParalelo(), objActualizado.getCodInstructor());
         if (objGuardado.isPresent() && !objGuardado.get().getCodPeriodoSemestreMateriaParaleloInstructor().equals(objActualizado.getCodPeriodoSemestreMateriaParaleloInstructor())) {
             throw new DataException(REGISTRO_YA_EXISTE);

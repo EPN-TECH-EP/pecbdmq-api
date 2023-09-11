@@ -11,7 +11,9 @@ public interface ProConvocatoriaRepository extends ProfesionalizacionRepository<
     Optional<ProConvocatoria> findById(Integer Codigo);
 
     Optional<ProConvocatoria> findByEstado(String estado);
+
     Optional<ProConvocatoria> findByCodigoUnicoConvocatoriaAndCodigo(String CodigoUnicoConvocatoria, Integer codigo);
+
     Optional<ProConvocatoria> findByCodigoUnicoConvocatoria(String CodigoUnicoConvocatoria);
 
     @Query(value = "SELECT cbdmq.get_id_next_profesionalizacion()", nativeQuery = true)
@@ -24,4 +26,6 @@ public interface ProConvocatoriaRepository extends ProfesionalizacionRepository<
             + "WHERE pc.cod_periodo = pp.cod_periodo "
             + "AND UPPER(pp.estado) = 'ACTIVO'", nativeQuery = true)
     String getEstado();
+
+    ProConvocatoria findFirstByEstadoNot(String estado);
 }
