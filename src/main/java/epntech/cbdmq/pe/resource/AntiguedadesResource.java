@@ -120,6 +120,7 @@ public class AntiguedadesResource {
 			objService.generarExcelEsp(ruta , nombre + ".xlsx", codCurso);
 			objService.generarPDFEsp(response, ruta , nombre + ".pdf", codCurso);
 			objService.notificarAprobados(codCurso);
+			objService.notificarReprobados(codCurso);
 
 			return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 
