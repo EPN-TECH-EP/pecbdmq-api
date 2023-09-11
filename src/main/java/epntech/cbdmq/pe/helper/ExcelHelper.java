@@ -150,12 +150,10 @@ public class ExcelHelper {
 
 		int rowIndex = 2;
 		for (int i = 0; i < lista.size(); i++) {
-			// System.out.println("valor " + lista.get(i).get(i));
 			Row row = sheet.createRow(rowIndex++);
 
 			for (int j = 0; j < lista.get(i).size(); j++) {
 				row.createCell(j).setCellValue(String.valueOf(lista.get(i).get(j)));
-				// System.out.println("fila: " + String.valueOf(lista.get(i).get(j)));
 			}
 
 		}
