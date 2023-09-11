@@ -31,57 +31,58 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class DescargarDocumentoResourse {
 
-	@Autowired
-	DocumentoRepository Repository;
-	
-	
-	 
-	 @GetMapping("/{id}")
-	 public ResponseEntity<?> descargarArchivo(@PathVariable Integer id, HttpServletRequest request) throws FileNotFoundException {
-	     // Buscar el archivo en la base de datos
-	     Documento archivo = Repository.findById(id).orElse(null);
-	     if (archivo == null) {
-	    	 return response(HttpStatus.BAD_REQUEST, ARCHIVO_NO_EXISTE);
-	     }
-	     // Crear un objeto Resource para el archivo
-	     File file = new File(archivo.getRuta());
-	     InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-		// Obtener la extensión del archivo
-		Path filePath = Paths.get(archivo.getNombre());
-		String extension = filePath.getFileName().toString();
-		if (extension.lastIndexOf('.') != -1) {
-			extension = extension.substring(extension.lastIndexOf('.') + 1);
-		}
-		// Determinar el tipo de contenido segón la extensión del archivo
-		String contentType;
-		if ("pdf".equalsIgnoreCase(extension)) {
-			contentType = "application/pdf";
-		} else if ("xlsx".equalsIgnoreCase(extension)||"xls".equalsIgnoreCase(extension)) {
-			contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-		} else if ("doc".equalsIgnoreCase(extension) || "docx".equalsIgnoreCase(extension)) {
-			contentType = "application/msword";
-		} else {
-			//TODO esta recayendo en este error
-			return response(HttpStatus.BAD_REQUEST, "Tipo de archivo no compatible");
-		}
-	     // Construir la URL completa de descarga del archivo
-	     String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build().toUriString();
-	     String downloadUrl = baseUrl + "/archivo/" + archivo.getCodDocumento();
-	     // Devolver una respuesta con el archivo adjunto y la URL de descarga
-	     return ResponseEntity.ok()
-	             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
-				.contentType(MediaType.parseMediaType(contentType))
-	             .body(resource);
-	 }
-	 
-	
-	
-	
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus , String message){
-		return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
-				message), httpStatus);
+    @Autowired
+    DocumentoRepository Repository;
 
-	}
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> descargarArchivo(@PathVariable Integer id, HttpServletRequest request) throws FileNotFoundException {
+        // Buscar el archivo en la base de datos
+        Documento archivo = Repository.findById(id).orElse(null);
+        if (archivo == null) {
+            return response(HttpStatus.BAD_REQUEST, ARCHIVO_NO_EXISTE);
+        }
+        // Crear un objeto Resource para el archivo
+        File file = new File(archivo.getRuta());
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        // Obtener la extensión del archivo
+        Path filePath = Paths.get(archivo.getNombre());
+        String extension = filePath.getFileName().toString();
+        if (extension.lastIndexOf('.') != -1) {
+            extension = extension.substring(extension.lastIndexOf('.') + 1);
+        }
+        // Determinar el tipo de contenido segón la extensión del archivo
+        String contentType;
+        if ("pdf".equalsIgnoreCase(extension)) {
+            contentType = "application/pdf";
+        } else if ("xlsx".equalsIgnoreCase(extension) || "xls".equalsIgnoreCase(extension)) {
+            contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        } else if ("doc".equalsIgnoreCase(extension) || "docx".equalsIgnoreCase(extension)) {
+            contentType = "application/msword";
+
+        } else if ("jpg".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)) {
+            contentType = "image/jpeg";
+        } else if ("png".equalsIgnoreCase(extension)) {
+            contentType = "image/png";
+        } else {
+            return response(HttpStatus.BAD_REQUEST, "Tipo de archivo no compatible. Recuerde que los archivos compatibles para descargar son .pdf, .doc, .docx, .xlsx, .xls,.png,.jpg");
+        }
+        // Construir la URL completa de descarga del archivo
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build().toUriString();
+        String downloadUrl = baseUrl + "/archivo/" + archivo.getCodDocumento();
+        // Devolver una respuesta con el archivo adjunto y la URL de descarga
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + archivo.getNombre() + "\"")
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+    }
+
+
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
+                message), httpStatus);
+
+    }
 }
 
 
