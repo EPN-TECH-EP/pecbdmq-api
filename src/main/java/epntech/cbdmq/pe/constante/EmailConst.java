@@ -43,6 +43,8 @@ public class EmailConst {
     public static final String EMAIL_SUBJECT_REG_NOTA = "Plataforma Educativa CBDMQ - Registro de Notas";
     public static final String EMAIL_SUBJECT_INSCRIPCION = "Plataforma Educativa CBDMQ - Registro de Inscripción";
     public static final String EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO = "Plataforma Educativa CBDMQ - Documento Rechazado";
+    public static final String EMAIL_SUBJECT_CURSO_REPROBADO = "Plataforma Educativa CBDMQ - Curso Reprobado";
+    public static final String EMAIL_SUBJECT_CURSO_APROBADO = "Plataforma Educativa CBDMQ - Curso Aprobado";
     public static final String EMAIL_SEND = "Notificaciones enviadas";
     public static final String EMAIL_SMTP_SERVER = "smtp.office365.com";
     public static final int DEFAULT_PORT = 587;
