@@ -5,6 +5,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import epntech.cbdmq.pe.dominio.Parametro;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +30,9 @@ import epntech.cbdmq.pe.servicio.AntiguedadesService;
 import epntech.cbdmq.pe.util.ExporterPdf;
 import jakarta.servlet.http.HttpServletResponse;
 
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO;
 import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
+import static epntech.cbdmq.pe.constante.MensajesConst.NO_PARAMETRO;
 
 @Service
 public class AntiguedadesServiceImpl implements AntiguedadesService {
@@ -44,6 +49,8 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 	private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
 	@Autowired
 	private CursoDocumentoService cursoDocumentoSvc;
+	@Autowired
+	private ParametroRepository parametroRepository;
 
 	@Value("${pecb.archivos.ruta}")
 	private String ARCHIVOS_RUTA;
@@ -293,6 +300,33 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
 			exporter.exportar(response, columnas, obtenerDatosReprobadosEsp(codCurso), widths, filePath+"/"+nombre);
 		cursoDocumentoSvc.generaDocumento(filePath,nombre,codCurso);
 
+	}
+
+	@Override
+	public void notificarReprobados(Long codCurso) {
+		/*
+		Parametro parametro = parametroRepository.findByNombreParametro("especializacion.reprobacion.curso")
+				.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
+		String nombres = instructoresCurso.getNombre() + " " + instructoresCurso.getApellido();
+		String cuerpoHtml = String.format(parametro.getValor(), nombres, instructoresCurso.getNombreCatalogoCurso(), documento.getNombre(), observaciones);
+		String[] destinatarios = {instructoresCurso.getCorreoInstitucional(), instructoresCurso.getCorreoPersonal()};
+		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO, cuerpoHtml);
+
+		 */
+
+	}
+
+	@Override
+	public void notificarAprobados(Long codCurso) {
+		/*
+		Parametro parametro = parametroRepository.findByNombreParametro("especializacion.aprobacion.curso")
+				.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
+		String nombres = instructoresCurso.getNombre() + " " + instructoresCurso.getApellido();
+		String cuerpoHtml = String.format(parametro.getValor(), nombres, instructoresCurso.getNombreCatalogoCurso(), documento.getNombre(), observaciones);
+		String[] destinatarios = {instructoresCurso.getCorreoInstitucional(), instructoresCurso.getCorreoPersonal()};
+		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO, cuerpoHtml);
+
+		 */
 	}
 
 }

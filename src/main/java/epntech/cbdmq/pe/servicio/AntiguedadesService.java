@@ -40,5 +40,7 @@ public interface AntiguedadesService {
 
 	void generarPDFEspGeneral(HttpServletResponse response, String filePath, String nombre, Long codCurso, Boolean aprobados)
 			throws DocumentException, IOException, DataException;
+	void notificarReprobados(Long codCurso);
+	void notificarAprobados(Long codCurso);
 }
 
