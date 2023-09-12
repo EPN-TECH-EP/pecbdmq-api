@@ -196,6 +196,9 @@ public class ResultadoPruebasHelper {
 			Workbook workbook = new XSSFWorkbook(contenidoBytes);
 
 			Sheet sheet = workbook.getSheet(SHEET);
+			if(sheet == null) {
+				throw new RuntimeException("No se encontró ninguna hoja con el nombre: " + SHEET+". Asegúrese de tener una");
+			}
 			int numRows = sheet.getPhysicalNumberOfRows();
 
             Iterator<Row> rows = sheet.iterator();
