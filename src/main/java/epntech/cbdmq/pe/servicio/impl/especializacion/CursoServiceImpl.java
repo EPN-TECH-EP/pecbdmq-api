@@ -213,7 +213,7 @@ public class CursoServiceImpl implements CursoService {
         DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String formattedDate = now.format(formatterI);
         Usuario usuario= usuarioService.getById(cc.getCodUsuarioCreacion()).get();
-        String mensaje="Se ha creado el curso" + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora"+ formattedDate;
+        String mensaje="Se ha creado el curso " + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora "+ formattedDate;
 
         emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", mensaje);
 
