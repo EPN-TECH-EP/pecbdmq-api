@@ -146,9 +146,10 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
         return cursoEstadoRepository.updateNextState(idCurso);
     }
 
-
-
-
+    @Override
+    public String previousState(Integer id) {
+        return cursoEstadoRepository.getBeforeState(id);
+    }
 
 
 }

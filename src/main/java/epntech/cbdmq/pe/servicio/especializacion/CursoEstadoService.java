@@ -29,4 +29,5 @@ public interface CursoEstadoService {
 	String getEstadoByCurso(Long codCurso);
 	public String updateState(Integer id, Integer idCursoEstado);
 	public Integer updateNextState(Integer id);
+	public String previousState(Integer id);
 }

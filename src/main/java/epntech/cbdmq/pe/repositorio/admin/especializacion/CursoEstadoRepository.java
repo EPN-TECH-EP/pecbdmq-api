@@ -43,6 +43,8 @@ public interface CursoEstadoRepository extends JpaRepository<CursoEstado, Long> 
 	String updateState(@Param("idCurso")Integer idCurso, @Param("idCursoEstado")Integer idCursoEstado);
 		@Query(value = "select * from cbdmq.get_next_state_process_curso(:idCurso)", nativeQuery=true)
 	Integer updateNextState(@Param("idCurso")Integer idCurso);
+		@Query(value = "select * from cbdmq.get_before_state_process_curso(:idCurso)", nativeQuery=true)
+	String getBeforeState(@Param("idCurso")Integer idCurso);
 
 
 
