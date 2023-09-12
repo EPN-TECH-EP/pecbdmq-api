@@ -22,10 +22,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import epntech.cbdmq.pe.dominio.Parametro;
-import epntech.cbdmq.pe.dominio.admin.Aula;
-import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.Requisito;
-import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
+import epntech.cbdmq.pe.dominio.Usuario;
+import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -33,7 +31,9 @@ import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.AulaRepository;
 import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
+import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.EmailService;
+import epntech.cbdmq.pe.servicio.UsuarioService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoEstadoService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +73,10 @@ public class CursoServiceImpl implements CursoService {
     private CatalogoCursoRepository catalogoCursoRepository;
     @Autowired
     private CursoEstadoService cursoEstadoService;
+    @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
+    private DatoPersonalService datoPersonalService;
 
     @Autowired
     private EmailService emailService;
@@ -202,13 +206,22 @@ public class CursoServiceImpl implements CursoService {
         cursoDatos.setCodAula(aula.getCodAula());
         Curso cc;
         cc = cursoEspRepository.insertarCursosDocumentosRequisitos(cursoDatos, requisitos, documentos/*, codTipoDocumento*/);
-        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", "Se ha creado el curso " + cc.getNombre() + " con éxito");
+        CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(cc.getCodCatalogoCursos().intValue()).get();
+        TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
+        LocalDateTime now = LocalDateTime.now();
+// Formatear la fecha y hora al formato que desees, por ejemplo "dd/MM/yyyy HH:mm:ss"
+        DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String formattedDate = now.format(formatterI);
+        Usuario usuario= usuarioService.getById(cc.getCodUsuarioCreacion()).get();
+        String mensaje="Se ha creado el curso" + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora"+ formattedDate;
+
+        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", mensaje);
 
         return cc;
     }
 
     @Override
-    public Curso update(Curso objActualizado) {
+    public Curso update(Curso objActualizado) throws MessagingException {
         Curso curso = cursoRepository.findById(objActualizado.getCodCursoEspecializacion())
                 .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
@@ -221,6 +234,17 @@ public class CursoServiceImpl implements CursoService {
         curso.setEmailNotificacion(objActualizado.getEmailNotificacion());
         curso.setEstado(objActualizado.getEstado());
         curso.setTieneModulos(objActualizado.getTieneModulos());
+        CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(curso.getCodCatalogoCursos().intValue()).get();
+        TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
+        LocalDateTime now = LocalDateTime.now();
+// Formatear la fecha y hora al formato que desees, por ejemplo "dd/MM/yyyy HH:mm:ss"
+        DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String formattedDate = now.format(formatterI);
+        String mensaje="Se ha editado el curso" + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
+                "El curso fue editado " +"con fecha y hora"+ formattedDate;
+
+        emailService.enviarEmail(curso.getEmailNotificacion(), "Edición de curso", mensaje);
+
 
         return cursoRepository.save(objActualizado);
     }
@@ -246,11 +270,13 @@ public class CursoServiceImpl implements CursoService {
         curso.setCodUsuarioValidacion(codigoUserAprueba);
         curso= cursoRepository.save(curso);
         String mensaje=null;
+        CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(curso.getCodCatalogoCursos().intValue()).get();
+        TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
         if(aprobadoCurso) {
-            mensaje="Se ha aprobado el curso " + curso.getNombre() + " con éxito." + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
+            mensaje="Se ha aprobado el curso " + curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+" con éxito." + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
 
         }else{
-            mensaje="Se ha rechazado el curso " + curso.getNombre() + ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
+            mensaje="Se ha rechazado el curso " +curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
         }
         emailService.enviarEmail(curso.getEmailNotificacion(), "Validación de curso",mensaje );
 

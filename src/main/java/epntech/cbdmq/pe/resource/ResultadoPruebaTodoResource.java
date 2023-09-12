@@ -63,6 +63,18 @@ public class ResultadoPruebaTodoResource {
 		}
 		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 	}
+	@PostMapping("/generarReprobados")
+	public ResponseEntity<?> generarReprobados(HttpServletResponse response, @RequestParam("subTipoPrueba") Integer subTipoPrueba)
+			throws DocumentException, DataException {
+		try {
+			objService.generarArchivoReprobados(response, subTipoPrueba, null);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("error: " + e.getMessage());
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+	}
 
 	// generaExcel de resultados por prueba
 

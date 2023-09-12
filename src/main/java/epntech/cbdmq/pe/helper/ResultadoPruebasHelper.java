@@ -118,6 +118,9 @@ public class ResultadoPruebasHelper {
 			Workbook workbook = new XSSFWorkbook(is);
 
             Sheet sheet = workbook.getSheet(SHEET);
+			if(sheet == null) {
+				throw new RuntimeException("No se encontró ninguna hoja con el nombre: " + SHEET+". Asegúrese de tener una");
+			}
             Iterator<Row> rows = sheet.iterator();
 
 			List<ResultadoPruebasUtil> datos = new ArrayList<ResultadoPruebasUtil>();

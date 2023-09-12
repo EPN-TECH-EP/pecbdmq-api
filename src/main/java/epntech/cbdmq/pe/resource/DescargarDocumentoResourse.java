@@ -56,13 +56,17 @@ public class DescargarDocumentoResourse {
 		String contentType;
 		if ("pdf".equalsIgnoreCase(extension)) {
 			contentType = "application/pdf";
-		} else if ("xlsx".equalsIgnoreCase(extension)||"xls".equalsIgnoreCase(extension)) {
+        } else if ("xlsx".equalsIgnoreCase(extension) || "xls".equalsIgnoreCase(extension)) {
 			contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 		} else if ("doc".equalsIgnoreCase(extension) || "docx".equalsIgnoreCase(extension)) {
 			contentType = "application/msword";
+
+        } else if ("jpg".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)) {
+            contentType = "image/jpeg";
+        } else if ("png".equalsIgnoreCase(extension)) {
+            contentType = "image/png";
 		} else {
-			// Tipo de archivo desconocido
-			return response(HttpStatus.BAD_REQUEST, "Tipo de archivo no compatible");
+            return response(HttpStatus.BAD_REQUEST, "Tipo de archivo no compatible. Recuerde que los archivos compatibles para descargar son .pdf, .doc, .docx, .xlsx, .xls,.png,.jpg");
 		}
 	     // Construir la URL completa de descarga del archivo
 	     String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build().toUriString();
@@ -75,9 +79,7 @@ public class DescargarDocumentoResourse {
 	 }
 	 
 	
-	
-	
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus , String message){
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
 				message), httpStatus);
 

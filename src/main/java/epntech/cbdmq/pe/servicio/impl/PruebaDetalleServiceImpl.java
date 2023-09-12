@@ -1,27 +1,38 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CURSO_REPROBADO;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.NO_SUBTIPO_PRUEBA;
-import static epntech.cbdmq.pe.constante.MensajesConst.DATOS_RELACIONADOS;
-import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
+import epntech.cbdmq.pe.dominio.Parametro;
+import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
+import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
+import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
+import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
+import epntech.cbdmq.pe.repositorio.ParametroRepository;
+import epntech.cbdmq.pe.repositorio.admin.CatalogoCursoRepository;
 import epntech.cbdmq.pe.repositorio.admin.SubTipoPruebaRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.InscripcionEspRepository;
+import epntech.cbdmq.pe.repositorio.admin.especializacion.TipoCursoRepository;
+import epntech.cbdmq.pe.servicio.*;
+import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
 import epntech.cbdmq.pe.constante.MensajesConst;
-import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleDatos;
 import epntech.cbdmq.pe.dominio.util.PruebaDetalleOrden;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
-import epntech.cbdmq.pe.servicio.PruebaDetalleService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -40,6 +51,22 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 
 	@Autowired
 	private SubTipoPruebaRepository subTipoPruebaRepository;
+	@Autowired
+	private InscripcionEspRepository inscripcionEspRepository;
+	@Autowired
+	private DatoPersonalService dpSvc;
+	@Autowired
+	private ParametroRepository parametroRepository;
+	@Autowired
+	private CursoService cursoSc;
+	@Autowired
+	private TipoCursoRepository tipoCursoRepository;
+	@Autowired
+	private CatalogoCursoRepository catalogoCursoRepository;
+	@Autowired
+	private EmailService emailService;
+	@Autowired
+	private TipoPruebaService tipoPruebaSvc;
 
 	@Override
 	public Optional<PruebaDetalle> getBySubtipoAndPA(Integer subtipo, Integer periodo) {
@@ -249,5 +276,46 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 		}
 
 		return retval;
+	}
+
+	@Override
+	public void notificarPruebaDetalle(Long codPruebaDetalle) throws DataException {
+		Optional<PruebaDetalle> pruebaDetalleOpt = this.pruebaDetalleRepository.findById(codPruebaDetalle.intValue());
+
+		if (pruebaDetalleOpt.isPresent()) {
+			Parametro parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.prueba")
+					.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
+			Curso curso= cursoSc.getById(pruebaDetalleOpt.get().getCodCursoEspecializacion().longValue());
+			CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(curso.getCodCatalogoCursos().intValue()).get();
+			TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
+			String mensajeCurso=curso.getNombre() +" - "+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso();
+			Set<InscripcionDatosEspecializacion> datos = inscripcionEspRepository.getInscripcionesByCursoEstado(pruebaDetalleOpt.get().getCodCursoEspecializacion().longValue(), "%");
+			SubTipoPrueba subTipoPrueba= subTipoPruebaRepository.findById(pruebaDetalleOpt.get().getCodSubtipoPrueba()).get();
+			TipoPrueba tipoPrueba= tipoPruebaSvc.getById(subTipoPrueba.getCodTipoPrueba()).get();
+			for (InscripcionDatosEspecializacion resultadosPruebasDatos : datos) {
+				DatoPersonal dato;
+
+
+				dato = dpSvc.getByCedula(resultadosPruebasDatos.getCedula()).get();
+
+
+				if (dato == null) {
+					throw new DataException("No existe un dato personal asociado");
+				}
+
+				try {
+					String nombres = dato.getNombre() + " " + dato.getApellido();
+					String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso, subTipoPrueba.getNombre(), tipoPrueba.getTipoPrueba(),tipoPrueba.getEsFisica()? "FÍSICA":"NO FÍSICA", pruebaDetalleOpt.get().getFechaInicio(), pruebaDetalleOpt.get().getFechaFin(),pruebaDetalleOpt.get().getHora());
+					String[] destinatarios = {dato.getCorreoPersonal(),dato.getCorreoInstitucional()};
+					emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
+
+				} catch (Exception e) {
+				}
+			}
+
+
+		} else {
+			throw new DataException(REGISTRO_NO_EXISTE);
+		}
 	}
 }

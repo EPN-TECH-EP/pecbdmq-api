@@ -21,7 +21,9 @@ public interface ResultadoPruebaService {
 	ResultadoPrueba update(ResultadoPrueba objActualizado) throws DataException;
 	
 	void delete(Integer codigo);
+	Boolean generarArchivo(HttpServletResponse response, Integer codSubtipoPrueba, Integer codCurso, Boolean esAprobado) throws DataException, DocumentException, IOException;
 	Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba, Integer codCurso) throws DataException, DocumentException, IOException;
+	Boolean generarArchivoReprobados(HttpServletResponse response, Integer codSubtipoPrueba, Integer codCurso) throws DataException, DocumentException, IOException;
 	
 	
 	

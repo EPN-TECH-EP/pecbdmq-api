@@ -22,7 +22,7 @@ public interface CursoService {
 
 	Curso save(String datos, List<MultipartFile> documentos/*, Long codTipoDocumento*/) throws JsonProcessingException, ParseException, MessagingException;
 
-	Curso update(Curso objActualizado);
+	Curso update(Curso objActualizado) throws MessagingException;
 
 	List<Curso> listarAll();
 

@@ -286,7 +286,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     @Override
     public void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException {
-        String[] HEADERs = {"Codigo", "Cedula", "Correo"};
+        String[] HEADERs = {"Codigo", "Cedula", "Correo","Nombres","Apellidos"};
         try {
             ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath+"/"+nombre, HEADERs);
 
@@ -310,8 +310,8 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         response.addHeader(cabecera, valor);
 
         ExporterPdf exporter = new ExporterPdf();
-        String[] columnas = {"Codigo", "Cedula", "Nombre"};
-        float[] widths = new float[]{2f, 3f, 6f};
+        String[] columnas = {"Codigo", "Cedula", "Correo","Nombres","Apellidos"};
+        float[] widths = new float[]{2f, 3f, 6f,4f,4f};
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
@@ -369,10 +369,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     }
 
     public static String[] entityToStringArrayFormacion(InscripcionDatosEspecializacion entity) {
-        return new String[]{entity.getCodigoUnicoEstudiante().toString()
-                /* getCodInscripcion().toString()*/,
+        return new String[]{entity.getCodigoUnicoEstudiante().toString(),
                 entity.getCedula(),
-                entity.getCorreoUsuario()};
+                entity.getCorreoUsuario(),
+                entity.getNombre(),
+                entity.getApellido()};
     }
 
     public static ArrayList<ArrayList<String>> entityToArrayListFormacion(Set<InscripcionDatosEspecializacion> datos) {
