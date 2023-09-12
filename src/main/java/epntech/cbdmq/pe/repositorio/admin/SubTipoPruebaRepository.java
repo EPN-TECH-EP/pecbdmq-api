@@ -37,6 +37,7 @@ public interface SubTipoPruebaRepository extends JpaRepository<SubTipoPrueba, In
 			+ "	cbdmq.gen_subtipo_prueba gsp \r\n"
 			+ " where\r\n"
 			+ "	gsp.cod_tipo_prueba = :codTipoPrueba\r\n"
+			+ "and gsp.estado <> 'ELIMINADO' \r\n"
 			+ " order by \r\n"
 			+ "	gsp.nombre ", nativeQuery = true)
 	List<SubTipoPrueba> listarAllByCodTipoPruebaOrderByNombre(@Param("codTipoPrueba") Long codTipoPrueba);

@@ -93,4 +93,9 @@ public class PruebaDetalleResource {
 	public List<PruebaDetalleDatos> listarTodosConDatosSubTipoPrueba(@PathVariable("codCurso") Integer codCurso) {
 		return this.objService.listarTodosConDatosSubTipoPrueba(codCurso);
 	}
+	@GetMapping("/notificarPrueba/{codPruebaDetalle}")
+	@Operation(summary = "Lista de todas las pruebas configuradas para el curso con id")
+	public void notificarPrueba(@PathVariable("codPruebaDetalle") Long codPruebaDetalle) throws DataException {
+		this.objService.notificarPruebaDetalle(codPruebaDetalle);
+	}
 }

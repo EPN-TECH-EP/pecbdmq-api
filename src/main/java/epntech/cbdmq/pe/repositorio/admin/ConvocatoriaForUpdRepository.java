@@ -63,6 +63,8 @@ public class ConvocatoriaForUpdRepository {
 
 	@Value("${eureka.instance.hostname}")
 	public String HOSTNAME;
+	@Value("${url.descarga.archivos}")
+	public String URLDESCARGA;
 
 	@Autowired
 	private DocumentoServiceimpl objServiceDoc;
@@ -192,7 +194,7 @@ public class ConvocatoriaForUpdRepository {
 
 		// ENVIO DE EMAIL CON DOCUMENTO CONVOCATORIA
 		if (docsConvocatoria != null) {
-			String link = HOSTNAME + ":" + SERVER_PORT + "/link/" + documentosFor.getCodDocumento();
+			String link = URLDESCARGA + "/link/" + documentosFor.getCodDocumento();
 
 			String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link
 					+ " \n \n Plataforma educativa - CBDMQ";

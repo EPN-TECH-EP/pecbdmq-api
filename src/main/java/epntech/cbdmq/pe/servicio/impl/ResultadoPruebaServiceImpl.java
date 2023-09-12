@@ -123,14 +123,15 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     }
 
     @Override
-    public Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba,
-                                           Integer codCurso) throws DataException, DocumentException, IOException {
+    public Boolean generarArchivo(HttpServletResponse response, Integer codSubtipoPrueba, Integer codCurso, Boolean esAprobado) throws DataException, DocumentException, IOException {
         String[] columnas = {"Código Único", "Correo", "Cedula", "Nombre", "Apellido"};
 
         Optional<PruebaDetalle> pp = null;
         String ruta = "";
         String nombreArchivo = "";
         Integer codPruebaDetalle = null;
+        String prefijo = esAprobado ? "Lista de aprobados " : "Lista de reprobados ";
+
 
         // si recibe curso como parametro, se genera el archivo de aprobados por curso
         if (codCurso != null) {
@@ -146,11 +147,11 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
                 codPruebaDetalle = pruebaDetalle.getCodPruebaDetalle();
 
-                nombreArchivo = "Lista de aprobados " +
-                        (pruebaDetalle.getDescripcionPrueba() != null ? pruebaDetalle.getDescripcionPrueba() : pruebaDetalle.getCodPruebaDetalle()) +
-                        " " + codCurso;
+                String detallePrueba = pruebaDetalle.getDescripcionPrueba() != null ? pruebaDetalle.getDescripcionPrueba() : pruebaDetalle.getCodPruebaDetalle().toString();
+                nombreArchivo = prefijo + detallePrueba + " " + codCurso;
+
             } else {
-                nombreArchivo = "Lista de aprobados " + codCurso;
+                nombreArchivo = prefijo+ codCurso;
             }
         } else {
 
@@ -164,25 +165,76 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                     periodoAcademicoRepository.getPAActive());
 
             codPruebaDetalle = pp.get().getCodPruebaDetalle();
-
-        /*if (pp.get().getEstado().equalsIgnoreCase(EstadosConst.PRUEBAS_CIERRE)) {
-            throw new DataException(ESTADO_INVALIDO);
-        } else {*/
-            nombreArchivo = "Lista de aprobados " + pp.get().getDescripcionPrueba() + " " + pActive;
+            String detallePrueba = pp.get().getDescripcionPrueba() + " " + pActive;
+            nombreArchivo = prefijo + detallePrueba;
         }
 
         String nombre1 = nombreArchivo + ".pdf";
         String nombre2 = nombreArchivo + ".xlsx";
-
-        this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
-        this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
-        //}
+        if (esAprobado) {
+            this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle,true);
+            this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle,true);
+        } else {
+            this.generarPDFReprobados(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
+            this.generarExcelReprobados(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
+        }
 
         return true;
     }
 
+    @Override
+    public Boolean generarArchivoAprobados(HttpServletResponse response, Integer codSubtipoPrueba, Integer codCurso) throws DataException, DocumentException, IOException {
+        return generarArchivo(response, codSubtipoPrueba, codCurso, true);
+    }
 
-    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle)
+    @Override
+    public Boolean generarArchivoReprobados(HttpServletResponse response, Integer codSubtipoPrueba, Integer codCurso) throws DataException, DocumentException, IOException {
+        return generarArchivo(response, codSubtipoPrueba, codCurso, false);
+    }
+
+
+    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle, Boolean esAprobado)
+            throws DocumentException, IOException, DataException {
+
+
+        //TODO el response no tiene ninguna funcionalidad
+        /*
+                response.setContentType("application/pdf");
+                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+                String fechaActual = dateFormatter.format(new Date());
+                String cabecera = "Cuerpo-Bomberos";
+                String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+                response.addHeader(cabecera, valor);
+
+         */
+        ExporterPdf exporter = new ExporterPdf();
+        //anchos de las columnas
+        float[] widths = new float[]{2.5f, 2.5f, 2.5f, 2.5f, 2.5f};
+
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        if(esAprobado) {
+        exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
+        }else{
+            exporter.exportar(response, headers, obtenerDatosEspDesaprobados(subTipoPrueba, codCurso), widths, ruta);
+        }
+        generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
+
+
+    }
+
+    public void generarExcel(String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle, Boolean esAprobado) throws IOException, DataException {
+        // Optional<Prueba> pp = pruebaRepository.findById(prueba);
+
+
+        if (esAprobado){
+            ExcelHelper.generarExcel(obtenerDatosEsp(subTipoPrueba, codCurso), ruta, headers);
+        }else {
+            ExcelHelper.generarExcel(obtenerDatosEspDesaprobados(subTipoPrueba, codCurso), ruta, headers);
+        }
+        generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
+
+    }   public void generarPDFReprobados(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle)
             throws DocumentException, IOException, DataException {
 
 
@@ -208,7 +260,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
     }
 
-    public void generarExcel(String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle) throws IOException, DataException {
+    public void generarExcelReprobados(String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle) throws IOException, DataException {
         // Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 
@@ -270,6 +322,20 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             datos = inscripcionEspService.getAprobadosPruebas(codCurso);
         } else {
             datos = inscripcionEspService.getAprobadosPruebasSubtipoPrueba(codCurso, prueba);
+        }
+
+        return entityToArrayListEsp(datos);
+    }
+    public ArrayList<ArrayList<String>> obtenerDatosEspDesaprobados(Integer prueba, Integer codCurso) throws DataException {
+
+        List<DatosInscripcionEsp> datos;
+
+        if (prueba == null) {
+            // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
+            //TODO
+            datos = inscripcionEspService.getDesAprobadosPruebas(codCurso);
+        } else {
+            datos = null;
         }
 
         return entityToArrayListEsp(datos);
