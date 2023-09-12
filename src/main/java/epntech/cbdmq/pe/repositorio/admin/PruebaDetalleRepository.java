@@ -16,7 +16,6 @@ public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, In
 	Optional<PruebaDetalle> findByCodSubtipoPruebaAndCodPeriodoAcademico(@Param("cod_subtipo_prueba")Integer subtipo, @Param("cod_periodo_academico")Integer periodo);
 
 	Optional<PruebaDetalle> findByCodCursoEspecializacion(Long codCursoEspecializacion);
-	Optional<PruebaDetalle> findByCodCursoEspecializacionAndCodSubtipoPrueba(Long codCursoEspecializacion, Integer codSubtipoPrueba);
 
 
 	@Procedure(value = "cbdmq.get_tipo_resultado")
@@ -26,6 +25,7 @@ public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, In
 	//List<PruebaDetalle> listarTodosConDatosSubTipoPrueba();
 
 	Optional<PruebaDetalle> findByCodCursoEspecializacionAndCodSubtipoPrueba(Integer codCursoEspecializacion, Integer codSubtipoPrueba);
+
 
 	@Query(nativeQuery = true, name = "PruebaDetalle.findDatosPrueba")
 	Optional<PruebaDetalleData> getPruebaDetalleDatos(@Param("codCursoEspecializacion") Long codCursoEspecializacion, @Param("codSubTipoPrueba") Long codSubTipoPrueba);
