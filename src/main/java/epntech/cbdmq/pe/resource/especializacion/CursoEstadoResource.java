@@ -39,10 +39,12 @@ public class CursoEstadoResource {
     public List<CursoEstado> listarByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
         return cursoEstadoServiceImpl.listarByTipoCurso(codTipoCurso);
     }
+
     @GetMapping("/listarModuloEstados/{codTipoCurso}")
     public List<ModuloEstadosData> listarModuloEstadosByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
         return cursoEstadoServiceImpl.listarModuloEstadosByTipoCurso(codTipoCurso);
     }
+
     @GetMapping("/listarEstados/{codTipoCurso}")
     public List<Estados> listarEstadosByTipoCurso(@PathVariable("codTipoCurso") Long codTipoCurso) throws DataException {
         return cursoEstadoServiceImpl.listarEstadosByTipoCurso(codTipoCurso);
@@ -54,6 +56,7 @@ public class CursoEstadoResource {
         return cursoEstadoServiceImpl.getById(codigo).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @GetMapping("/activo/{id}")
     public ResponseEntity<HttpResponse> getEstado(@PathVariable("id") long codigo) {
         String result = cursoEstadoServiceImpl.getEstadoByCurso(codigo);
@@ -64,14 +67,17 @@ public class CursoEstadoResource {
 
         return response(HttpStatus.OK, result);
     }
+
     @GetMapping("/actualizarEstado/{idCurso}/{idCursoEstado}")
     public ResponseEntity<HttpResponse> nextState(
-                                                  @PathVariable("idCurso") Integer idCurso,
-                                                  @PathVariable("idCursoEstado") Integer idCursoEstado) {
-        String result = cursoEstadoServiceImpl.updateState(idCurso,idCursoEstado);
+            @PathVariable("idCurso") Integer idCurso,
+            @PathVariable("idCursoEstado") Integer idCursoEstado) {
+        String result = cursoEstadoServiceImpl.updateState(idCurso, idCursoEstado);
 
         return response(HttpStatus.OK, result);
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<CursoEstado> actualizarDatos(@PathVariable("id") long codigo, @RequestBody CursoEstado obj) throws DataException {

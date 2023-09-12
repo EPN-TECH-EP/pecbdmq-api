@@ -150,6 +150,18 @@ public class CursoResource {
 		cursoServiceImpl.deleteDocumento(codCursoEspecializacion, codDocumento);
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
+	@GetMapping("/reactivar/{idCurso}")
+	public ResponseEntity<HttpResponse> nextState(
+			@PathVariable("idCurso") Integer idCurso
+	) throws DataException {
+		Boolean result = cursoServiceImpl.reabrirCurso(idCurso);
+		if (result) {
+			return response(HttpStatus.OK, "Se reabrio el curso");
+		} else {
+
+			return response(HttpStatus.CONFLICT, "Hubo un error");
+		}
+	}
 
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),

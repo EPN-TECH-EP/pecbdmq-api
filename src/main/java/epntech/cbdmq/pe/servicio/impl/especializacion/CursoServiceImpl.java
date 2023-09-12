@@ -284,6 +284,7 @@ public class CursoServiceImpl implements CursoService {
     }
 
 
+
     @Override
     public List<Curso> listarAll() {
         return cursoRepository.findAll();
@@ -627,6 +628,35 @@ public class CursoServiceImpl implements CursoService {
     @Override
     public List<Curso> listarPorInstructorAndEstado(Integer codUsuario, String estado) {
         return cursoRepository.findByInstructorAndEstado(codUsuario, estado);
+    }
+    @Override
+    public Boolean reabrirCurso(Integer idCurso) throws DataException {
+        String mensaje = this.getById(idCurso.longValue()).getEstado();
+        Integer codCursoEstadoToUpdate = null;
+
+        switch (mensaje) {
+            case CIERRE_INSCRITOS:
+                codCursoEstadoToUpdate = cursoEstadoService.getByTipoCursoAndEstado(idCurso.longValue(), INSCRIPCION).getCodCursoEstado().intValue();
+                break;
+
+            case CIERRE_VALIDACION:
+                codCursoEstadoToUpdate = cursoEstadoService.getByTipoCursoAndEstado(idCurso.longValue(), VALIDACION_REQUISITOS).getCodCursoEstado().intValue();
+                break;
+
+            case CIERRE_PRUEBAS:
+                codCursoEstadoToUpdate = cursoEstadoService.getByTipoCursoAndEstado(idCurso.longValue(), VALIDACION_PRUEBAS).getCodCursoEstado().intValue();
+                break;
+
+            default:
+                return false;
+        }
+
+        if (codCursoEstadoToUpdate != null) {
+            cursoEstadoService.updateState(idCurso, codCursoEstadoToUpdate);
+            return true;
+        }
+
+        return false;
     }
 
 

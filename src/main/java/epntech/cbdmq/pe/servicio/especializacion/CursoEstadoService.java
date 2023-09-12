@@ -21,6 +21,7 @@ public interface CursoEstadoService {
 	List<CursoEstado> listarByTipoCurso(Long codTipoCurso) throws DataException;
 	List<ModuloEstadosData> listarModuloEstadosByTipoCurso(Long codTipoCurso) throws DataException;
 	List<Estados> listarEstadosByTipoCurso(Long codTipoCurso) throws DataException;
+	CursoEstado getByTipoCursoAndEstado(Long codTipoCurso, String estado) throws DataException;
 
 	Optional<CursoEstado> getById(Long codCursoEstado) throws DataException;
 	
