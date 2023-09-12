@@ -240,8 +240,8 @@ public class CursoServiceImpl implements CursoService {
 // Formatear la fecha y hora al formato que desees, por ejemplo "dd/MM/yyyy HH:mm:ss"
         DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String formattedDate = now.format(formatterI);
-        String mensaje="Se ha editado el curso" + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
-                "El curso fue editado " +"con fecha y hora"+ formattedDate;
+        String mensaje="Se ha editado el curso " + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
+                "El curso fue editado con fecha y hora "+ formattedDate;
 
         emailService.enviarEmail(curso.getEmailNotificacion(), "Edición de curso", mensaje);
 
