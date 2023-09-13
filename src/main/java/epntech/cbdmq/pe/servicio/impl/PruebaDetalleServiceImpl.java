@@ -24,6 +24,7 @@ import epntech.cbdmq.pe.repositorio.admin.especializacion.TipoCursoRepository;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
@@ -279,6 +280,7 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	}
 
 	@Override
+	@Async
 	public void notificarPruebaDetalle(Long codPruebaDetalle) throws DataException {
 		Optional<PruebaDetalle> pruebaDetalleOpt = this.pruebaDetalleRepository.findById(codPruebaDetalle.intValue());
 
