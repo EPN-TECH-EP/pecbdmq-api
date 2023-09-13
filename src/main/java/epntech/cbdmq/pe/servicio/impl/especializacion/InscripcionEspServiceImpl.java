@@ -188,7 +188,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         InscripcionEsp inscripcionEsp = objectMapper.readValue(datos, InscripcionEsp.class);
 
-        InscripcionEsp inscripcionEsp1= this.save(inscripcionEsp);
+        InscripcionEsp inscripcionEsp1 = this.save(inscripcionEsp);
         this.guardarDocumentos(archivos, inscripcionEsp1.getCodInscripcion());
 
         return inscripcionEsp1;
@@ -203,38 +203,38 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return inscripcionEspRepository.save(inscripcionEspActualizada);
     }
 
-	@Override
-	public InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario) {
-		InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+    @Override
+    public InscripcionEsp updateDelegado(Long codInscripcion, Long codigoUsuario) {
+        InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		inscripcionEsp.setCodUsuario(codigoUsuario);
-		inscripcionEsp.setEstado(ESTADO_INSCRIPCION_ASIGNADO);
+        inscripcionEsp.setCodUsuario(codigoUsuario);
+        inscripcionEsp.setEstado(ESTADO_INSCRIPCION_ASIGNADO);
 
-		return inscripcionEspRepository.save(inscripcionEsp);
-	}
+        return inscripcionEspRepository.save(inscripcionEsp);
+    }
 
-	@Override
-	public Optional<InscripcionDatosEsp> getById(Long codInscripcion) {
-		InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+    @Override
+    public Optional<InscripcionDatosEsp> getById(Long codInscripcion) {
+        InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		return inscripcionDatosRepository.findByInscripcion(inscripcionEsp.getCodInscripcion());
-	}
+        return inscripcionDatosRepository.findByInscripcion(inscripcionEsp.getCodInscripcion());
+    }
 
-	@Override
-	public List<InscripcionDatosEspecializacion> getByCursoAndUsuarioPaginado(Long codCurso, Long codUsuario, Pageable pageable) {
-		return inscripcionEspRepository.getAllInscripcionesByCursoAndUsuario(codCurso, codUsuario, pageable);
-	}
+    @Override
+    public List<InscripcionDatosEspecializacion> getByCursoAndUsuarioPaginado(Long codCurso, Long codUsuario, Pageable pageable) {
+        return inscripcionEspRepository.getAllInscripcionesByCursoAndUsuario(codCurso, codUsuario, pageable);
+    }
 
-	@Override
-	public List<InscripcionDatosEspecializacion> getAllByCursoPaginado(Long codCurso, Pageable pageable) {
-		return inscripcionEspRepository.getAllInscripcionesByCurso(codCurso, pageable);
-	}
+    @Override
+    public List<InscripcionDatosEspecializacion> getAllByCursoPaginado(Long codCurso, Pageable pageable) {
+        return inscripcionEspRepository.getAllInscripcionesByCurso(codCurso, pageable);
+    }
 
-	@Override
-	public void delete(Long codInscripcion) {
-		InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
+    @Override
+    public void delete(Long codInscripcion) {
+        InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
                 .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
         inscripcionEspRepository.deleteById(inscripcionEsp.getCodInscripcion());
@@ -369,7 +369,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     @Override
     public Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException {
         return inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, Estado);
-    }    @Override
+    }
+
+    @Override
     public List<DatosInscripcionEsp> getAprobadosPruebas(Integer codCurso) throws DataException {
         return inscripcionEspRepository.getAprobadosPruebas(codCurso);
     }
@@ -380,77 +382,77 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     }
 
     @Override
-    public List<DatosInscripcionEsp> getAprobadosPruebasSubtipoPrueba(Integer codCurso, Integer codSubtipoPrueba)  {
+    public List<DatosInscripcionEsp> getAprobadosPruebasSubtipoPrueba(Integer codCurso, Integer codSubtipoPrueba) {
         return inscripcionEspRepository.getAprobadosPruebasBySubtipoPrueba(codCurso, codSubtipoPrueba);
     }
 
     @Override
-	public List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
-		validarRequisitosCursoEspecializacion(validaRequisitos);
-		try {
-			return validaRequisitosRepository.saveAll(validaRequisitos);
-		} catch (DataIntegrityViolationException dive) {
-			throw new BusinessException(REGISTRO_YA_EXISTE);
-		}
-	}
+    public List<ValidaRequisitos> saveValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
+        validarRequisitosCursoEspecializacion(validaRequisitos);
+        try {
+            return validaRequisitosRepository.saveAll(validaRequisitos);
+        } catch (DataIntegrityViolationException dive) {
+            throw new BusinessException(REGISTRO_YA_EXISTE);
+        }
+    }
 
-	private void validarRequisitosCursoEspecializacion(List<ValidaRequisitos> validaRequisitos) {
-		if (validaRequisitos.isEmpty()) {
-			throw new BusinessException(REQUISITOS_OBLIGATORIO);
-		}
+    private void validarRequisitosCursoEspecializacion(List<ValidaRequisitos> validaRequisitos) {
+        if (validaRequisitos.isEmpty()) {
+            throw new BusinessException(REQUISITOS_OBLIGATORIO);
+        }
 
-		InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(validaRequisitos.get(0).getCodInscripcion())
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+        InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(validaRequisitos.get(0).getCodInscripcion())
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		List<CursoRequisito> cursoRequisitos = cursoRequisitoRepository.findByCodCursoEspecializacion(inscripcionEsp.getCodCursoEspecializacion());
+        List<CursoRequisito> cursoRequisitos = cursoRequisitoRepository.findByCodCursoEspecializacion(inscripcionEsp.getCodCursoEspecializacion());
 
-		Set<Long> requisitosCursoSet = cursoRequisitos.stream()
-				.map(CursoRequisito::getCodRequisito)
-				.collect(Collectors.toSet());
+        Set<Long> requisitosCursoSet = cursoRequisitos.stream()
+                .map(CursoRequisito::getCodRequisito)
+                .collect(Collectors.toSet());
 
-		boolean allRequisitosExist = validaRequisitos.stream()
-				.map(ValidaRequisitos::getCodRequisito)
-				.allMatch(requisitosCursoSet::contains);
+        boolean allRequisitosExist = validaRequisitos.stream()
+                .map(ValidaRequisitos::getCodRequisito)
+                .allMatch(requisitosCursoSet::contains);
 
-		if (!allRequisitosExist) {
-			throw new BusinessException(REQUISITOS_NO_COINCIDEN);
-		}
-	}
+        if (!allRequisitosExist) {
+            throw new BusinessException(REQUISITOS_NO_COINCIDEN);
+        }
+    }
 
-	@Override
-	public List<ValidacionRequisitosDatos> getRequisitos(Long codInscripcion) {
-		InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+    @Override
+    public List<ValidacionRequisitosDatos> getRequisitos(Long codInscripcion) {
+        InscripcionEsp inscripcionEsp = inscripcionEspRepository.findById(codInscripcion)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		return validaRequisitosRepository.findRequisitosPorInscripcion(inscripcionEsp.getCodInscripcion());
-	}
+        return validaRequisitosRepository.findRequisitosPorInscripcion(inscripcionEsp.getCodInscripcion());
+    }
 
-	@Override
-	@Async
-	public void updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
-		validaRequisitosRepository.saveAll(validaRequisitos);
-		String validaRequisitoEstudiante = validaRequisitosRepository.cumpleRequisitosCurso(validaRequisitos.get(0).getCodInscripcion());
-		if (validaRequisitoEstudiante.equals(ESTADO_INSCRIPCION_VALIDO)) {
-			notificarInscripcion(validaRequisitos.get(0).getCodInscripcion(), "especializacion.notificacion.inscripcion.valida");
-		} else if(validaRequisitoEstudiante.equals(ESTADO_INSCRIPCION_INVALIDO)) {
-			notificarInscripcion(validaRequisitos.get(0).getCodInscripcion(), "especializacion.notificacion.inscripcion.novalida");
-		}
-	}
+    @Override
+    @Async
+    public void updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos) {
+        validaRequisitosRepository.saveAll(validaRequisitos);
+        String validaRequisitoEstudiante = validaRequisitosRepository.cumpleRequisitosCurso(validaRequisitos.get(0).getCodInscripcion());
+        if (validaRequisitoEstudiante.equals(ESTADO_INSCRIPCION_VALIDO)) {
+            notificarInscripcion(validaRequisitos.get(0).getCodInscripcion(), "especializacion.notificacion.inscripcion.valida");
+        } else if (validaRequisitoEstudiante.equals(ESTADO_INSCRIPCION_INVALIDO)) {
+            notificarInscripcion(validaRequisitos.get(0).getCodInscripcion(), "especializacion.notificacion.inscripcion.novalida");
+        }
+    }
 
-	private void notificarInscripcion(Long codInscripcion, String nombreParametro) {
-		InscripcionEstudianteDatosEspecializacion inscripcion = inscripcionEspRepository.getInscripcionEstudiante(codInscripcion)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+    private void notificarInscripcion(Long codInscripcion, String nombreParametro) {
+        InscripcionEstudianteDatosEspecializacion inscripcion = inscripcionEspRepository.getInscripcionEstudiante(codInscripcion)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		Parametro parametro = parametroRepository.findByNombreParametro(nombreParametro)
-				.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
+        Parametro parametro = parametroRepository.findByNombreParametro(nombreParametro)
+                .orElseThrow(() -> new BusinessException(NO_PARAMETRO));
 
-		String nombres = inscripcion.getNombre() + " " + inscripcion.getApellido();
-		String cuerpoHtml = String.format(parametro.getValor(), nombres, inscripcion.getNombreCatalogoCurso(), inscripcion.getFechaInicioCurso(), inscripcion.getFechaFinCurso());
+        String nombres = inscripcion.getNombre() + " " + inscripcion.getApellido();
+        String cuerpoHtml = String.format(parametro.getValor(), nombres, inscripcion.getNombreCatalogoCurso(), inscripcion.getFechaInicioCurso(), inscripcion.getFechaFinCurso());
 
-		String[] destinatarios = {inscripcion.getCorreoPersonal()};
+        String[] destinatarios = {inscripcion.getCorreoPersonal()};
 
-		emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
-	}
+        emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+    }
 
     @Override
     public List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion) {
@@ -464,60 +466,60 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
     @Override
     @Async
-	public void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba) {
-		Curso curso = cursoRepository.findById(codCursoEspecializacion)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+    public void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba) {
+        Curso curso = cursoRepository.findById(codCursoEspecializacion)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		SubTipoPrueba subTipoPrueba = subTipoPruebaRepository.findById(codSubTipoPrueba.intValue())
-				.orElseThrow(() -> new BusinessException(NO_SUBTIPO_PRUEBA));
+        SubTipoPrueba subTipoPrueba = subTipoPruebaRepository.findById(codSubTipoPrueba.intValue())
+                .orElseThrow(() -> new BusinessException(NO_SUBTIPO_PRUEBA));
 
-		PruebaDetalle pruebaDetalle = pruebaDetalleRepository
-				.findByCodCursoEspecializacionAndCodSubtipoPrueba(curso.getCodCursoEspecializacion().intValue(), subTipoPrueba.getCodSubtipoPrueba())
-				.orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
+        PruebaDetalle pruebaDetalle = pruebaDetalleRepository
+                .findByCodCursoEspecializacionAndCodSubtipoPrueba(curso.getCodCursoEspecializacion().intValue(), subTipoPrueba.getCodSubtipoPrueba())
+                .orElseThrow(() -> new BusinessException(CURSO_NO_PRUEBAS));
 
-		List<InscritosEspecializacion> listaInscritos;
-		listaInscritos = inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
+        List<InscritosEspecializacion> listaInscritos;
+        listaInscritos = inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
 
-		for (InscritosEspecializacion inscritosEspecializacion : listaInscritos) {
+        for (InscritosEspecializacion inscritosEspecializacion : listaInscritos) {
 
-			Parametro parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.pruebas")
-					.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
+            Parametro parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.pruebas")
+                    .orElseThrow(() -> new BusinessException(NO_PARAMETRO));
 
-			String nombres = inscritosEspecializacion.getNombre() + " " + inscritosEspecializacion.getApellido();
-			String cuerpoHtml = String.format(parametro.getValor(), nombres, inscritosEspecializacion.getNombreCatalogoCurso(), pruebaDetalle.getDescripcionPrueba(),
-					subTipoPrueba.getNombre(), pruebaDetalle.getFechaInicio(), pruebaDetalle.getFechaFin(), pruebaDetalle.getHora());
+            String nombres = inscritosEspecializacion.getNombre() + " " + inscritosEspecializacion.getApellido();
+            String cuerpoHtml = String.format(parametro.getValor(), nombres, inscritosEspecializacion.getNombreCatalogoCurso(), pruebaDetalle.getDescripcionPrueba(),
+                    subTipoPrueba.getNombre(), pruebaDetalle.getFechaInicio(), pruebaDetalle.getFechaFin(), pruebaDetalle.getHora());
 
-			String[] destinatarios = {inscritosEspecializacion.getCorreoPersonal()};
+            String[] destinatarios = {inscritosEspecializacion.getCorreoPersonal()};
 
-			emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT2, cuerpoHtml);
-		}
+            emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT2, cuerpoHtml);
+        }
 
-	}
+    }
 
-	@Override
-	@Async
-	public void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba) {
-		PruebaDetalleEntity pruebaDetalle = pruebaDetalleEntityRepository
-				.findByCodCursoEspecializacionAndCodSubtipoPrueba(codCursoEspecializacion, codSubTipoPrueba)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+    @Override
+    @Async
+    public void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba) {
+        PruebaDetalleEntity pruebaDetalle = pruebaDetalleEntityRepository
+                .findByCodCursoEspecializacionAndCodSubtipoPrueba(codCursoEspecializacion, codSubTipoPrueba)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		CursoDatos cursoDatos = cursoEntityRepository.getCursoDatos(codCursoEspecializacion)
-				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+        CursoDatos cursoDatos = cursoEntityRepository.getCursoDatos(codCursoEspecializacion)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		List<ResultadosPruebasDatos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
+        List<ResultadosPruebasDatos> listaInscritosValidos = pruebasRepository.get_approved_by_test_esp(codSubTipoPrueba, codCursoEspecializacion);
 
-		for (ResultadosPruebasDatos inscritosValidos : listaInscritosValidos) {
-			Parametro parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.resultado.prueba")
-					.orElseThrow(() -> new BusinessException(NO_PARAMETRO));
+        for (ResultadosPruebasDatos inscritosValidos : listaInscritosValidos) {
+            Parametro parametro = parametroRepository.findByNombreParametro("especializacion.notificacion.resultado.prueba")
+                    .orElseThrow(() -> new BusinessException(NO_PARAMETRO));
 
-			String nombres = inscritosValidos.getNombre() + " " + inscritosValidos.getApellido();
-			String cuerpoHtml = String.format(parametro.getValor(), nombres, cursoDatos.getNombreCatalogoCurso(), pruebaDetalle.getFechaInicio(), pruebaDetalle.getFechaFin());
+            String nombres = inscritosValidos.getNombre() + " " + inscritosValidos.getApellido();
+            String cuerpoHtml = String.format(parametro.getValor(), nombres, cursoDatos.getNombreCatalogoCurso(), pruebaDetalle.getFechaInicio(), pruebaDetalle.getFechaFin());
 
-			String[] destinatarios = {inscritosValidos.getCorreoPersonal()};
+            String[] destinatarios = {inscritosValidos.getCorreoPersonal()};
 
-			emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_PRUEBAS, cuerpoHtml);
-		}
-	}
+            emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_PRUEBAS, cuerpoHtml);
+        }
+    }
 
     @Override
     @Transactional
@@ -653,7 +655,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                         throw new DataException(REGISTRO_NO_EXISTE);
                     }
                     //TODO se asume que solo debe haber uno por que la cedula solo devuelve uno
-                     DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
+                    DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
                 }
@@ -713,29 +715,36 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     }
 
     @Override
-    public DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception {
+    public DatoPersonalEstudianteDto colocarMasInformacion(DatoPersonal datoPersonal) throws Exception {
+        Optional<DatoPersonal> datoPersonalObj = datoPersonalSvc.getByCedula(datoPersonal.getCedula());
         DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
+        //SI ES QUE NO EXISTE UN DATO PERSONAL
+        if (datoPersonalObj.isEmpty()) {
+            Usuario newUser = new Usuario();
+            newUser.setCodDatosPersonales(datoPersonal);
+            newUser.setNombreUsuario(datoPersonal.getCedula());
+            newUser.setClave(this.encodePassword(datoPersonal.getCedula()));
+            newUser = usuarioSvc.crear(newUser);
 
-        Usuario newUser = new Usuario();
-        newUser.setCodDatosPersonales(datoPersonal);
-        newUser.setNombreUsuario(datoPersonal.getCedula());
-        newUser.setClave(this.encodePassword(datoPersonal.getCedula()));
-        newUser=usuarioSvc.crear(newUser);
+            Estudiante newEstudiante = new Estudiante();
+            newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
+            newEstudiante.setEstado(ACTIVO);
+            newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
+            newEstudiante = estudianteRepository.save(newEstudiante);
 
-        Estudiante newEstudiante = new Estudiante();
-        newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
-        newEstudiante.setEstado(ACTIVO);
-        newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
-        newEstudiante = estudianteRepository.save(newEstudiante);
+            datoPersonalEstudianteDto.setEstudiante(newEstudiante);
+            datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
+        } else {
+            DatoPersonal datoPersonal1 = datoPersonalSvc.updateDatosPersonales(datoPersonal);
+            Usuario usuario= usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonal1.getCodDatosPersonales()).get();
+            Estudiante estudiante= estudianteRepository.getEstudianteByUsuario(usuario.getCodUsuario().toString());
+            datoPersonalEstudianteDto.setEstudiante(estudiante);
+            datoPersonalEstudianteDto.setDatoPersonal(datoPersonal1);
+        }
 
-        datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-        datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
 
         return datoPersonalEstudianteDto;
     }
-
-
-
 
 
     private DatoPersonal createDatoPersonalFromFuncionario(FuncionarioApiDto funcionario) {
@@ -744,16 +753,16 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         //TODO no esta tomando cedula
         newDatoPersonal.setCedula(funcionario.getCedula());
         String correo = funcionario.getCorreoPersonal();
-        String correoInstitucional= funcionario.getCorreoInstitucional();
-        if(correo==null||correo.isEmpty()){
-            correo=correoInstitucional;
+        String correoInstitucional = funcionario.getCorreoInstitucional();
+        if (correo == null || correo.isEmpty()) {
+            correo = correoInstitucional;
         }
         newDatoPersonal.setCorreoPersonal(correo);
         newDatoPersonal.setEstado(ACTIVO);
         newDatoPersonal.setNombre(funcionario.getNombres());
         newDatoPersonal.setNumTelefConvencional(funcionario.getTelefonoConvencional());
         newDatoPersonal.setTipoSangre(funcionario.getTipoSangre());
-        Optional<UnidadGestion> unidadGestion= unidadGestionSvc.getUnidadGestionByNombre(funcionario.getCodigoUnidadGestion());
+        Optional<UnidadGestion> unidadGestion = unidadGestionSvc.getUnidadGestionByNombre(funcionario.getCodigoUnidadGestion());
         newDatoPersonal.setCodUnidadGestion(unidadGestion.isEmpty() ? null : unidadGestion.get().getCodigo());
         newDatoPersonal.setSexo(funcionario.getSexo().toUpperCase());
 
@@ -789,6 +798,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         return newDatoPersonal;
     }
+
     private DatoPersonal createDatoPersonalFromCiudadno(CiudadanoApiDto ciudadano) {
         DatoPersonal newDatoPersonal = new DatoPersonal();
         String[] nombreApellidos = dividirNombre(ciudadano.getNombre());
@@ -805,6 +815,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         return newDatoPersonal;
     }
+
     public static String[] dividirNombre(String nombreCompleto) {
         String[] palabras = nombreCompleto.split(" ");
         int indiceSeparacion = 2; // Segunda palabra desde la izquierda
