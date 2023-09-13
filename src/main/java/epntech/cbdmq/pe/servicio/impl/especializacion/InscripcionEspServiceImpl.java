@@ -658,6 +658,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
+                    datoPersonalEstudianteDto.setEsUsuario(false);
                 }
             }
             //SI ES QUE EXISTE UN DATO PERSONAL
