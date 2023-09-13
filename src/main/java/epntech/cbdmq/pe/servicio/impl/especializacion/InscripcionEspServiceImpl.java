@@ -634,55 +634,35 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         try {
             Optional<DatoPersonal> datoPersonalObj = datoPersonalSvc.getByCedula(cedula);
-
+            //SI ES QUE NO EXISTE UN DATO PERSONAL
             if (datoPersonalObj.isEmpty()) {
-                //TODO APIS FUNCIONARIOS Y CIUDADANOS
                 Optional<FuncionarioApiDto> funcionarioSinRegistrar = apiFuncionarioCBDMQSvc.servicioFuncionarios(cedula);
-
+                //API FUNCIONARIO
                 if (funcionarioSinRegistrar.isPresent()) {
-                    // dato personal
                     DatoPersonal newDatoPersonal = createDatoPersonalFromFuncionario(funcionarioSinRegistrar.get());
-                    newDatoPersonal.setCedula(cedula);
-                    newDatoPersonal.setEstado(ACTIVO);
+                    datoPersonalEstudianteDto.setEstudiante(null);
+                    datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
 
-                    // usuario
-                    Usuario newUser = new Usuario();
-                    newUser.setCodDatosPersonales(newDatoPersonal);
-                    newUser.setNombreUsuario(newDatoPersonal.getCedula());
-                    newUser.setClave(this.encodePassword(cedula));
-                    newUser=usuarioSvc.crear(newUser);
-
-                    // estudiante
-                    Estudiante newEstudiante = new Estudiante();
-                    newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
-                    newEstudiante.setEstado(ACTIVO);
-                    newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
-                    newEstudiante = estudianteRepository.save(newEstudiante);
-
-                    datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-                    datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
-
-                } else {
+                }
+                //API CIUDADANO
+                else {
                     List<CiudadanoApiDto> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
                     CiudadanoApiDto ciudadanoApiDto = ciudadanoSinRegistrar.get(0);
 
                     if (ciudadanoSinRegistrar.isEmpty()) {
                         throw new DataException(REGISTRO_NO_EXISTE);
                     }
-
                     //TODO se asume que solo debe haber uno por que la cedula solo devuelve uno
-                   System.out.println("ciudadanoApiDto: "+ciudadanoApiDto.getCedula());
                      DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
-
-
-
-
                 }
-            } else {
+            }
+            //SI ES QUE EXISTE UN DATO PERSONAL
+            else {
                 Optional<Usuario> usuarioObj = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonalObj.get().getCodDatosPersonales());
 
+                //NO EXISTE USUARIO
                 if (usuarioObj.isEmpty()) {
                     Usuario newUser = new Usuario();
                     newUser.setNombreUsuario(datoPersonalObj.get().getCedula());
@@ -698,9 +678,11 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
-                } else {
+                }
+                //EXISTE USUARIO
+                else {
                     Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getCodUsuario().toString());
-
+                    //NO ES ESTUDIANTE
                     if (estudianteObj == null) {
                         Estudiante newEstudiante = new Estudiante();
                         newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
