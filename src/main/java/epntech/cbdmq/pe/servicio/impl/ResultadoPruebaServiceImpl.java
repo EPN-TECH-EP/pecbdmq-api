@@ -151,8 +151,18 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
                 nombreArchivo = prefijo + detallePrueba + " " + codCurso;
 
             } else {
-                nombreArchivo = prefijo+ codCurso;
+                nombreArchivo = prefijo + codCurso;
             }
+            String nombre1 = nombreArchivo + ".pdf";
+            String nombre2 = nombreArchivo + ".xlsx";
+            if (esAprobado) {
+                this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle, true);
+                this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle, true);
+            } else {
+                this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle, false);
+                this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle, false);
+            }
+
         } else {
 
             ruta = ARCHIVOS_RUTA + PATH_RESULTADO_PRUEBAS
@@ -167,16 +177,15 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             codPruebaDetalle = pp.get().getCodPruebaDetalle();
             String detallePrueba = pp.get().getDescripcionPrueba() + " " + pActive;
             nombreArchivo = prefijo + detallePrueba;
-        }
-
         String nombre1 = nombreArchivo + ".pdf";
         String nombre2 = nombreArchivo + ".xlsx";
         if (esAprobado) {
-            this.generarPDF(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle,true);
-            this.generarExcel(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle,true);
+                this.generarPDFFormacion(response, ruta + nombre1, nombre1, codSubtipoPrueba, codCurso, columnas, true);
+                this.generarExcelFormacion(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, true);
         } else {
-            this.generarPDFReprobados(response, ruta + nombre1, nombre1, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
-            this.generarExcelReprobados(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, codPruebaDetalle);
+                this.generarPDFFormacion(response, ruta + nombre1, nombre1, codSubtipoPrueba, codCurso, columnas, false);
+                this.generarExcelFormacion(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, false);
+            }
         }
 
         return true;
@@ -213,9 +222,9 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        if(esAprobado) {
+        if (esAprobado) {
         exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
-        }else{
+        } else {
             exporter.exportar(response, headers, obtenerDatosEspDesaprobados(subTipoPrueba, codCurso), widths, ruta);
         }
         generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
@@ -227,16 +236,17 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         // Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 
-        if (esAprobado){
+        if (esAprobado) {
             ExcelHelper.generarExcel(obtenerDatosEsp(subTipoPrueba, codCurso), ruta, headers);
-        }else {
+        } else {
             ExcelHelper.generarExcel(obtenerDatosEspDesaprobados(subTipoPrueba, codCurso), ruta, headers);
         }
         generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
 
-    }   public void generarPDFReprobados(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle)
-            throws DocumentException, IOException, DataException {
+    }
 
+    public void generarPDFFormacion(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, Integer codCurso, String[] headers, Boolean esAprobado)
+            throws DocumentException, IOException, DataException {
 
         //TODO el response no tiene ninguna funcionalidad
         /*
@@ -254,17 +264,25 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
+        if (esAprobado) {
+            exporter.exportar(response, headers, obtenerDatos(subTipoPrueba, codCurso), widths, ruta);
+        } else {
+            exporter.exportar(response, headers, obtenerDatos(subTipoPrueba, codCurso), widths, ruta);
+        }
         generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
 
 
     }
 
-    public void generarExcelReprobados(String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Integer codPruebaDetalle) throws IOException, DataException {
+    public void generarExcelFormacion(String ruta, String nombre, Integer subTipoPrueba, String[] headers, Integer codCurso, Boolean esAprobado) throws IOException, DataException {
         // Optional<Prueba> pp = pruebaRepository.findById(prueba);
 
 
-        ExcelHelper.generarExcel(obtenerDatosEsp(subTipoPrueba, codCurso), ruta, headers);
+        if (esAprobado) {
+            ExcelHelper.generarExcel(obtenerDatos(subTipoPrueba, codCurso), ruta, headers);
+        } else {
+            ExcelHelper.generarExcel(obtenerDatosReprobados(subTipoPrueba, codCurso), ruta, headers);
+        }
         generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
 
     }
@@ -312,14 +330,30 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         return entityToArrayList(datos);
     }
 
+    public ArrayList<ArrayList<String>> obtenerDatosReprobados(Integer prueba, Integer codCurso) {
+
+        List<ResultadosPruebasDatos> datos;
+
+        if (codCurso != null) {
+            // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
+            //TODO
+            //poner el procedimiento que obtiene los reprobados
+            datos = null;
+        } else {
+            datos = repo2.get_desapproved_applicants(prueba);
+        }
+
+        return entityToArrayList(datos);
+    }
+
     public ArrayList<ArrayList<String>> obtenerDatosEsp(Integer prueba, Integer codCurso) throws DataException {
 
         List<DatosInscripcionEsp> datos;
 
-        if (prueba == null) {
+        if (codCurso == null) {
             // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
             //TODO
-            datos = inscripcionEspService.getAprobadosPruebas(codCurso);
+            datos = inscripcionEspService.getAprobadosPruebas(prueba);
         } else {
             datos = inscripcionEspService.getAprobadosPruebasSubtipoPrueba(codCurso, prueba);
         }
@@ -330,10 +364,10 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         List<DatosInscripcionEsp> datos;
 
-        if (prueba == null) {
+        if (codCurso == null) {
             // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
             //TODO
-            datos = inscripcionEspService.getDesAprobadosPruebas(codCurso);
+            datos = inscripcionEspService.getDesAprobadosPruebas(prueba);
         } else {
             datos = null;
         }
@@ -389,11 +423,18 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
     @Transactional
     public void generaDocumento(String ruta, String nombre, Integer codSubtipo, Integer codCurso) throws DataException {
-
-
-        Optional<PruebaDetalle> pruebaDetalleOpt = pruebaDetalleRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(
+        Optional<PruebaDetalle> pruebaDetalleOpt = null;
+        if (codCurso != null) {
+            pruebaDetalleOpt = pruebaDetalleRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(
                 codCurso,
                 codSubtipo);
+        } else {
+            pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
+                    codSubtipo,
+                    periodoAcademicoRepository.getPAActive());
+
+        }
+
         Integer codPruebaDetalle = null;
 
         if (pruebaDetalleOpt.isPresent()) {
@@ -484,7 +525,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             docPA.setCodDocumento(documento.getCodDocumento());
             periodoAcademicoDocForRepository.save(docPA);
         }
-        if(codPruebaDetalle != null) {
+        if (codPruebaDetalle != null) {
             DocumentoPrueba doc = new DocumentoPrueba();
             doc.setCodPruebaDetalle(codPruebaDetalle);
             doc.setCodDocumento(documento.getCodDocumento());

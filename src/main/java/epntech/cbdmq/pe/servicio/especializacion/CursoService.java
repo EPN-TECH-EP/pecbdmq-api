@@ -59,4 +59,5 @@ public interface CursoService {
 	Curso updateEstado(long codigo, String estado);
 
     Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String Observaciones, long codigoUserAprueba) throws MessagingException;
+	public Boolean reabrirCurso(Integer idCurso) throws DataException;
 }

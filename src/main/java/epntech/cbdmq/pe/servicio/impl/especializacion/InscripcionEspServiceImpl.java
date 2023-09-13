@@ -188,7 +188,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         InscripcionEsp inscripcionEsp = objectMapper.readValue(datos, InscripcionEsp.class);
 
-        InscripcionEsp inscripcionEsp1= this.save(inscripcionEsp);
+        InscripcionEsp inscripcionEsp1 = this.save(inscripcionEsp);
         this.guardarDocumentos(archivos, inscripcionEsp1.getCodInscripcion());
 
         return inscripcionEsp1;
@@ -369,7 +369,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     @Override
     public Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException {
         return inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, Estado);
-    }    @Override
+    }
+
+    @Override
     public List<DatosInscripcionEsp> getAprobadosPruebas(Integer codCurso) throws DataException {
         return inscripcionEspRepository.getAprobadosPruebas(codCurso);
     }
@@ -432,7 +434,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 		String validaRequisitoEstudiante = validaRequisitosRepository.cumpleRequisitosCurso(validaRequisitos.get(0).getCodInscripcion());
 		if (validaRequisitoEstudiante.equals(ESTADO_INSCRIPCION_VALIDO)) {
 			notificarInscripcion(validaRequisitos.get(0).getCodInscripcion(), "especializacion.notificacion.inscripcion.valida");
-		} else if(validaRequisitoEstudiante.equals(ESTADO_INSCRIPCION_INVALIDO)) {
+        } else if (validaRequisitoEstudiante.equals(ESTADO_INSCRIPCION_INVALIDO)) {
 			notificarInscripcion(validaRequisitos.get(0).getCodInscripcion(), "especializacion.notificacion.inscripcion.novalida");
 		}
 	}
@@ -642,27 +644,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                 if (funcionarioSinRegistrar.isPresent()) {
                     // dato personal
                     DatoPersonal newDatoPersonal = createDatoPersonalFromFuncionario(funcionarioSinRegistrar.get());
-                    newDatoPersonal.setCedula(cedula);
-                    newDatoPersonal.setEstado(ACTIVO);
+                    datoPersonalEstudianteDto.setEstudiante(null);
+                    datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
 
-                    // usuario
-                    Usuario newUser = new Usuario();
-                    newUser.setCodDatosPersonales(newDatoPersonal);
-                    newUser.setNombreUsuario(newDatoPersonal.getCedula());
-                    newUser.setClave(this.encodePassword(cedula));
-                    newUser=usuarioSvc.crear(newUser);
-
-                    // estudiante
-                    Estudiante newEstudiante = new Estudiante();
-                    newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
-                    newEstudiante.setEstado(ACTIVO);
-                    newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
-                    newEstudiante = estudianteRepository.save(newEstudiante);
-
-                    datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-                    datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
-
-                } else {
+                }
+                //API CIUDADANO
+                else {
                     List<CiudadanoApiDto> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
                     CiudadanoApiDto ciudadanoApiDto = ciudadanoSinRegistrar.get(0);
 
@@ -671,16 +658,14 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     }
 
                     //TODO se asume que solo debe haber uno por que la cedula solo devuelve uno
-                   System.out.println("ciudadanoApiDto: "+ciudadanoApiDto.getCedula());
                      DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
-
-
-
-
+                    datoPersonalEstudianteDto.setEsUsuario(false);
                 }
-            } else {
+            }
+            //SI ES QUE EXISTE UN DATO PERSONAL
+            else {
                 Optional<Usuario> usuarioObj = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonalObj.get().getCodDatosPersonales());
 
                 if (usuarioObj.isEmpty()) {
@@ -698,7 +683,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
-                } else {
+                }
+                //EXISTE USUARIO
+                else {
                     Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getCodUsuario().toString());
 
                     if (estudianteObj == null) {
@@ -731,14 +718,16 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     }
 
     @Override
-    public DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception {
+    public DatoPersonalEstudianteDto colocarMasInformacion(DatoPersonal datoPersonal) throws Exception {
+        Optional<DatoPersonal> datoPersonalObj = datoPersonalSvc.getByCedula(datoPersonal.getCedula());
         DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
-
+        //SI ES QUE NO EXISTE UN DATO PERSONAL
+        if (datoPersonalObj.isEmpty()) {
         Usuario newUser = new Usuario();
         newUser.setCodDatosPersonales(datoPersonal);
         newUser.setNombreUsuario(datoPersonal.getCedula());
         newUser.setClave(this.encodePassword(datoPersonal.getCedula()));
-        newUser=usuarioSvc.crear(newUser);
+            newUser = usuarioSvc.crear(newUser);
 
         Estudiante newEstudiante = new Estudiante();
         newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
@@ -748,12 +737,17 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
         datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
-
-        return datoPersonalEstudianteDto;
+        } else {
+            DatoPersonal datoPersonal1 = datoPersonalSvc.updateDatosPersonales(datoPersonal);
+            Usuario usuario= usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonal1.getCodDatosPersonales()).get();
+            Estudiante estudiante= estudianteRepository.getEstudianteByUsuario(usuario.getCodUsuario().toString());
+            datoPersonalEstudianteDto.setEstudiante(estudiante);
+            datoPersonalEstudianteDto.setDatoPersonal(datoPersonal1);
     }
 
 
-
+        return datoPersonalEstudianteDto;
+    }
 
 
     private DatoPersonal createDatoPersonalFromFuncionario(FuncionarioApiDto funcionario) {
@@ -762,16 +756,16 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         //TODO no esta tomando cedula
         newDatoPersonal.setCedula(funcionario.getCedula());
         String correo = funcionario.getCorreoPersonal();
-        String correoInstitucional= funcionario.getCorreoInstitucional();
-        if(correo==null||correo.isEmpty()){
-            correo=correoInstitucional;
+        String correoInstitucional = funcionario.getCorreoInstitucional();
+        if (correo == null || correo.isEmpty()) {
+            correo = correoInstitucional;
         }
         newDatoPersonal.setCorreoPersonal(correo);
         newDatoPersonal.setEstado(ACTIVO);
         newDatoPersonal.setNombre(funcionario.getNombres());
         newDatoPersonal.setNumTelefConvencional(funcionario.getTelefonoConvencional());
         newDatoPersonal.setTipoSangre(funcionario.getTipoSangre());
-        Optional<UnidadGestion> unidadGestion= unidadGestionSvc.getUnidadGestionByNombre(funcionario.getCodigoUnidadGestion());
+        Optional<UnidadGestion> unidadGestion = unidadGestionSvc.getUnidadGestionByNombre(funcionario.getCodigoUnidadGestion());
         newDatoPersonal.setCodUnidadGestion(unidadGestion.isEmpty() ? null : unidadGestion.get().getCodigo());
         newDatoPersonal.setSexo(funcionario.getSexo().toUpperCase());
 

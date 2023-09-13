@@ -195,7 +195,7 @@ public class InscripcionEspResource {
     public ResponseEntity<?> getData(@RequestBody DatoPersonal datoPersonal) throws Exception {
 
         try {
-            return new ResponseEntity<>(inscripcionEspServiceImpl.colocarCorreoCiudadano(datoPersonal), HttpStatus.OK);
+            return new ResponseEntity<>(inscripcionEspServiceImpl.colocarMasInformacion(datoPersonal), HttpStatus.OK);
         } catch (Exception ex) {
 
             return response(HttpStatus.BAD_REQUEST, ex.getMessage());
