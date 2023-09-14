@@ -241,7 +241,7 @@ public class InscripcionForRepository {
 					.setParameter("cod_canton_residencia", inscripcion.getCodCantonResidencia())
 					.setParameter("fecha_salida_institucion", inscripcion.getFechaSalidaInstitucion())
 					.setParameter("nivel_instruccion", inscripcion.getNivelInstruccion())
-					.setParameter("nombre_titulo_tercernivel", inscripcion.getNombreTituloTercernivel())
+					.setParameter("nombre_titulo_tercernivel", inscripcion.getNombreTituloTercerNivel())
 					.setParameter("nombre_titulo_cuartonivel", inscripcion.getNombreTituloCuartoNivel())
 					.setParameter("es_vulnerable", inscripcion.getEsVulnerable())
 					.setParameter("pais_titulo_cuartonivel", inscripcion.getPaisTituloCuartoNivel())
