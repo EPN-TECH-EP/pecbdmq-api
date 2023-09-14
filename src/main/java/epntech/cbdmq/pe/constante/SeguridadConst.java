@@ -35,6 +35,7 @@ public class SeguridadConst {
 			"/curso/**",
 			"/cursoEstado/**",
 			"/inscripcionEsp/**",
+			"/convocatoria/activa"
 	};
 	
 	@Value("${pecb.app-key}")
