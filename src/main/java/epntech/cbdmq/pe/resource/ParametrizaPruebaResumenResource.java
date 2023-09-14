@@ -67,6 +67,7 @@ public class ParametrizaPruebaResumenResource {
 			datosGuardados.setDescripcion(obj.getDescripcion());
 			datosGuardados.setCodSubTipoPrueba(obj.getCodSubTipoPrueba());
 			datosGuardados.setEstado(obj.getEstado());
+			datosGuardados.setPonderacion(obj.getPonderacion());
 			/*datosGuardados.setPuntaje_minimo(obj.getPuntaje_minimo());
 			datosGuardados.setPuntaje_maximo(obj.getPuntaje_maximo());*/
 			

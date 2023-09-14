@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.util.*;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,6 +61,6 @@ public interface InscripcionEspService {
 	
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula, Long codCurso) throws Exception;
-	DatoPersonalEstudianteDto colocarCorreoCiudadano(DatoPersonal datoPersonal) throws Exception;
+	DatoPersonalEstudianteDto colocarMasInformacion(DatoPersonal datoPersonal) throws Exception;
 
 }

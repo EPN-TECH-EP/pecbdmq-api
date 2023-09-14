@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class DatoPersonalEstudianteDto {
-private DatoPersonal datoPersonal;
-private Estudiante estudiante;
+    private DatoPersonal datoPersonal;
+    private Estudiante estudiante;
+    private Boolean esUsuario = true;
 }

@@ -103,6 +103,11 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
     }
 
     @Override
+    public CursoEstado getByTipoCursoAndEstado(Long codTipoCurso, String estado) throws DataException {
+        return cursoEstadoRepository.getEstadoByCurso(codTipoCurso, estado);
+    }
+
+    @Override
     public Optional<CursoEstado> getById(Long codCursoEstado) throws DataException {
         Optional<CursoEstado> cursoEstadoOptional;
         cursoEstadoOptional = cursoEstadoRepository.findById(codCursoEstado);
@@ -130,7 +135,7 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
 
     @Override
     public String updateState(Integer idCurso, Integer idCursoEstado) {
-        String mensaje=cursoEstadoRepository.updateState(idCurso, idCursoEstado);
+        String mensaje = cursoEstadoRepository.updateState(idCurso, idCursoEstado);
         /**/
 
         return mensaje;
@@ -141,6 +146,10 @@ public class CursoEstadoServiceImpl implements CursoEstadoService {
         return cursoEstadoRepository.updateNextState(idCurso);
     }
 
+    @Override
+    public String previousState(Integer id) {
+        return cursoEstadoRepository.getBeforeState(id);
+    }
 
 
 }

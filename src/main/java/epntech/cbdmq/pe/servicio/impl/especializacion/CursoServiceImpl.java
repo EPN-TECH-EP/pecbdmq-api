@@ -213,7 +213,7 @@ public class CursoServiceImpl implements CursoService {
         DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String formattedDate = now.format(formatterI);
         Usuario usuario= usuarioService.getById(cc.getCodUsuarioCreacion()).get();
-        String mensaje="Se ha creado el curso" + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora"+ formattedDate;
+        String mensaje="Se ha creado el curso " + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora "+ formattedDate;
 
         emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", mensaje);
 
@@ -240,8 +240,8 @@ public class CursoServiceImpl implements CursoService {
 // Formatear la fecha y hora al formato que desees, por ejemplo "dd/MM/yyyy HH:mm:ss"
         DateTimeFormatter formatterI = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         String formattedDate = now.format(formatterI);
-        String mensaje="Se ha editado el curso" + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
-                "El curso fue editado " +"con fecha y hora"+ formattedDate;
+        String mensaje="Se ha editado el curso " + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
+                "El curso fue editado con fecha y hora "+ formattedDate;
 
         emailService.enviarEmail(curso.getEmailNotificacion(), "Edición de curso", mensaje);
 
@@ -627,6 +627,35 @@ public class CursoServiceImpl implements CursoService {
     @Override
     public List<Curso> listarPorInstructorAndEstado(Integer codUsuario, String estado) {
         return cursoRepository.findByInstructorAndEstado(codUsuario, estado);
+    }
+    @Override
+    public Boolean reabrirCurso(Integer idCurso) throws DataException {
+        String mensaje = this.getById(idCurso.longValue()).getEstado();
+        Integer codCursoEstadoToUpdate = null;
+
+        switch (mensaje) {
+            case CIERRE_INSCRITOS:
+                codCursoEstadoToUpdate = cursoEstadoService.getByTipoCursoAndEstado(idCurso.longValue(), INSCRIPCION).getCodCursoEstado().intValue();
+                break;
+
+            case CIERRE_VALIDACION:
+                codCursoEstadoToUpdate = cursoEstadoService.getByTipoCursoAndEstado(idCurso.longValue(), VALIDACION_REQUISITOS).getCodCursoEstado().intValue();
+                break;
+
+            case CIERRE_PRUEBAS:
+                codCursoEstadoToUpdate = cursoEstadoService.getByTipoCursoAndEstado(idCurso.longValue(), VALIDACION_PRUEBAS).getCodCursoEstado().intValue();
+                break;
+
+            default:
+                return false;
+        }
+
+        if (codCursoEstadoToUpdate != null) {
+            cursoEstadoService.updateState(idCurso, codCursoEstadoToUpdate);
+            return true;
+        }
+
+        return false;
     }
 
 

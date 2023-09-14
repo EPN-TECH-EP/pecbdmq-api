@@ -293,7 +293,7 @@ public class ConvocatoriaForRepository {
 
         String link = URLDESCARGA + "/link/" + codigoDocumento;
 
-        String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
+        String mensaje = "Se adjunta link de los recursos de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
 
         emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
 
