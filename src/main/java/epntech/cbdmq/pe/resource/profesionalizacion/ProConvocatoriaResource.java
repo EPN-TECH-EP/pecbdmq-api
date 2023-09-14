@@ -32,10 +32,6 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
     @GetMapping("/listarActiva")
     public List<ProConvocatoria> listarActiva() {
         return super.listar();
-        /*List<ProConvocatoria> listarResponse;
-        listarResponse = listar.stream().filter(x -> x.getFechaInicio().getTime() <= Calendar.getInstance().getTime().getTime() &&
-                x.getFechaFin().getTime() >= Calendar.getInstance().getTime().getTime()).toList();
-        return listarResponse;*/
     }
 
     @PostMapping("/crear")

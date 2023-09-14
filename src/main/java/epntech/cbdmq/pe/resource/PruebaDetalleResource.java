@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.resource;
 
+import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 import java.util.List;
@@ -93,9 +94,10 @@ public class PruebaDetalleResource {
 	public List<PruebaDetalleDatos> listarTodosConDatosSubTipoPrueba(@PathVariable("codCurso") Integer codCurso) {
 		return this.objService.listarTodosConDatosSubTipoPrueba(codCurso);
 	}
-	@GetMapping("/notificarPrueba/{codPruebaDetalle}")
+	@PostMapping("/notificarPrueba/{codPruebaDetalle}")
 	@Operation(summary = "Lista de todas las pruebas configuradas para el curso con id")
-	public void notificarPrueba(@PathVariable("codPruebaDetalle") Long codPruebaDetalle) throws DataException {
+	public ResponseEntity<HttpResponse> notificarPrueba(@PathVariable("codPruebaDetalle") Long codPruebaDetalle) throws DataException {
 		this.objService.notificarPruebaDetalle(codPruebaDetalle);
+		return response(HttpStatus.OK, EMAIL_SEND);
 	}
 }

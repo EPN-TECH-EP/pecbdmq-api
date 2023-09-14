@@ -744,6 +744,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         }
 
 
+
         return datoPersonalEstudianteDto;
     }
 

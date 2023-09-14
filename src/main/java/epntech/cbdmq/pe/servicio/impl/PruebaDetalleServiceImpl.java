@@ -177,29 +177,29 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 		Query q =
 
 				this.entityManager.createNativeQuery("select "
-						+ "	gpd.cod_prueba_detalle, "
-						+ "	gpd.descripcion_prueba, "
-						+ "	gpd.fecha_inicio, "
-						+ "	gpd.fecha_fin, "
-						+ "	gpd.hora, "
-						+ "	gpd.estado, "
-						+ "	gpd.cod_periodo_academico, "
-						+ "	gpd.cod_curso_especializacion, "
-						+ "	gpd.cod_subtipo_prueba, "
-						+ "	gpd.orden_tipo_prueba, "
-						+ "	gpd.puntaje_minimo, "
-						+ "	gpd.puntaje_maximo, "
-						+ "	gpd.tiene_puntaje, "
-						+ "	gsp.nombre as sub_tipo_prueba_nombre, "
-						+ "	gtp.tipo_prueba as tipo_prueba_nombre, gtp.es_fisica as es_fisica  "
-						+ "from "
-						+ "	cbdmq.gen_prueba_detalle gpd, "
-						+ "	cbdmq.gen_subtipo_prueba gsp, "
-						+ "	cbdmq.gen_tipo_prueba gtp "
-						+ "where "
-						+ "	gpd.cod_subtipo_prueba = gsp.cod_subtipo_prueba"
-						+ " and gsp.cod_tipo_prueba = gtp.cod_tipo_prueba and gpd.cod_periodo_academico = cbdmq.get_pa_activo() "
-						+ " and gpd.estado <> 'ELIMINADO' order by gpd.orden_tipo_prueba",
+								+ "	gpd.cod_prueba_detalle, "
+								+ "	gpd.descripcion_prueba, "
+								+ "	gpd.fecha_inicio, "
+								+ "	gpd.fecha_fin, "
+								+ "	gpd.hora, "
+								+ "	gpd.estado, "
+								+ "	gpd.cod_periodo_academico, "
+								+ "	gpd.cod_curso_especializacion, "
+								+ "	gpd.cod_subtipo_prueba, "
+								+ "	gpd.orden_tipo_prueba, "
+								+ "	gpd.puntaje_minimo, "
+								+ "	gpd.puntaje_maximo, "
+								+ "	gpd.tiene_puntaje, "
+								+ "	gsp.nombre as sub_tipo_prueba_nombre, "
+								+ "	gtp.tipo_prueba as tipo_prueba_nombre, gtp.es_fisica as es_fisica  "
+								+ "from "
+								+ "	cbdmq.gen_prueba_detalle gpd, "
+								+ "	cbdmq.gen_subtipo_prueba gsp, "
+								+ "	cbdmq.gen_tipo_prueba gtp "
+								+ "where "
+								+ "	gpd.cod_subtipo_prueba = gsp.cod_subtipo_prueba"
+								+ " and gsp.cod_tipo_prueba = gtp.cod_tipo_prueba and gpd.cod_periodo_academico = cbdmq.get_pa_activo() "
+								+ " and gpd.estado <> 'ELIMINADO' order by gpd.orden_tipo_prueba",
 						PruebaDetalleDatos.class);
 
 		List<PruebaDetalleDatos> lista = q.getResultList();
@@ -248,7 +248,7 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	@Override
 	public String getTipoResultado(int codSubtipoPrueba){
 		return pruebaDetalleRepository.getTipoResultado(codSubtipoPrueba);
-}
+	}
 
 	@Override
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException {

@@ -11,6 +11,7 @@ public class InstructorDatos {
 	@Id
 	private Long codInstructor;
 	private Integer codTipoProcedencia;
+	private Integer codDatosPersonales;
 	private String tipoProcedencia;
 	private Integer codEstacion;
 	private String nombreZona;

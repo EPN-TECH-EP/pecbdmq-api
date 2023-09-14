@@ -12,7 +12,6 @@ import epntech.cbdmq.pe.repositorio.admin.profesionalizacion.ProConvocatoriaRepo
 import epntech.cbdmq.pe.repositorio.profesionalizacion.ProPeriodosRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.profesionalizacion.ProConvocatoriaService;
-import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -87,28 +86,37 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
 
     @Transactional
     public ProConvocatoria updateEstadoConvocatoria(Integer id, String estado) throws DataException {
-        Optional<ProConvocatoria> byId = repository.findById(id);
-        if (byId.isPresent()) {
-            if (estado.equals("INSCRIPCION")) {
-                Optional<ProConvocatoria> notificacion = repository.findByEstado("INSCRIPCION");
-                if (notificacion.isPresent()) {
-                    throw new DataException("Ya existe una convocatoria en estado INSCRIPCIÓN.");
-                }
+        ProConvocatoria byId = repository.findById(id)
+                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+
+        if (byId.getEstado().equals("FINALIZADO")) {
+            ProConvocatoria convocatoria = repository.findFirstByEstadoNot("FINALIZADO");
+            if (convocatoria != null) {
+                throw new BusinessException("La convocatoria [" + convocatoria.getNombre() + "] está en estado [" + convocatoria.getEstado() + "] por lo que no se puede actualizar la convocatoria actual");
             }
-            if (estado.equals("FINALIZADO")) {
-                ProPeriodos periodo = proPeriodosRepository.findByConvocatoria(byId.get().getCodigo());
-                inactivarPeriodo(periodo);
-            }
-            if (byId.get().getEstado().equals("FINALIZADO") && estado.equals("GRADUACION")) {
-                ProPeriodos periodo = proPeriodosRepository.findByConvocatoria(byId.get().getCodigo());
-                activarPeriodo(periodo);
-            }
-            ProConvocatoria proConvocatoria = byId.get();
-            proConvocatoria.setEstado(estado);
-            return repository.save(proConvocatoria);
-        } else {
-            throw new DataException(REGISTRO_NO_EXISTE);
         }
+
+        if (estado.equals("INSCRIPCION")) {
+            Optional<ProConvocatoria> notificacion = repository.findByEstado("INSCRIPCION");
+            if (notificacion.isPresent()) {
+                throw new DataException("Ya existe una convocatoria en estado INSCRIPCIÓN.");
+            }
+        }
+
+        if (estado.equals("FINALIZADO")) {
+            ProPeriodos periodo = proPeriodosRepository.findByConvocatoria(byId.getCodigo());
+            inactivarPeriodo(periodo);
+        }
+
+        if (byId.getEstado().equals("FINALIZADO") && estado.equals("GRADUACION")) {
+            ProPeriodos periodo = proPeriodosRepository.findByConvocatoria(byId.getCodigo());
+            activarPeriodo(periodo);
+        }
+
+        ProConvocatoria proConvocatoria = byId;
+        proConvocatoria.setEstado(estado);
+        return repository.save(proConvocatoria);
+
     }
 
     private void inactivarPeriodo(ProPeriodos periodo) {
@@ -128,29 +136,34 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
 
     @Override
     @Async
-    public void notificar(Integer codConvocatoria) throws MessagingException, DataException, IOException {
-        ProConvocatoria proConvocatoria = repository.findById(codConvocatoria)
-                .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+    public void notificar(Integer codConvocatoria) {
+        try {
+            ProConvocatoria proConvocatoria = repository.findById(codConvocatoria)
+                    .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-        List<ProConvocatoriaRequisitoDto> requisitos = convocatoriaRequisitoDatosRepository
-                .findByProConvocatoria(codConvocatoria);
+            List<ProConvocatoriaRequisitoDto> requisitos = convocatoriaRequisitoDatosRepository
+                    .findByProConvocatoria(codConvocatoria);
 
-        String[] destinatarios = proConvocatoria.getCorreo().split(",");
+            String[] destinatarios = proConvocatoria.getCorreo().split(",");
+            System.out.println(destinatarios);
 
-        String textoRequisitos = "";
-        for (ProConvocatoriaRequisitoDto requisito : requisitos) {
-            textoRequisitos += requisito.getNombreRequisito() + ": " + requisito.getDescripcionRequisito() + "<br>";
+            String textoRequisitos = "";
+            for (ProConvocatoriaRequisitoDto requisito : requisitos) {
+                textoRequisitos += requisito.getNombreRequisito() + ": " + requisito.getDescripcionRequisito() + "<br>";
+            }
+
+            String mensajes = "";
+            Parametro parametro1 = parametroRepository.findById(proConvocatoria.getCodigoParametro().longValue()).orElseThrow(() -> new BusinessException(""));
+            mensajes += parametro1.getNombreParametro() + ": " + parametro1.getValor() + "<br>";
+            Parametro parametro2 = parametroRepository.findById(proConvocatoria.getCodigoParametro2().longValue()).orElseThrow(() -> new BusinessException(""));
+            mensajes += parametro2.getNombreParametro() + ": " + parametro2.getValor() + "<br>";
+
+            emailService.sendEmailHtmlToListPro(destinatarios, EMAIL_SUBJECT_CONVOCATORIA_PRO, proConvocatoria.getNombre(),
+                    formatDate(proConvocatoria.getFechaActual()), formatDate(proConvocatoria.getFechaInicio()),
+                    formatDate(proConvocatoria.getFechaFin()), textoRequisitos, mensajes, URL_INSCRIPCION);
+        } catch (MessagingException | IOException e) {
+            throw new BusinessException("Error al enviar correo");
         }
-
-        String mensajes = "";
-        Parametro parametro1 = parametroRepository.findById(proConvocatoria.getCodigoParametro().longValue()).orElseThrow(() -> new BusinessException(""));
-        mensajes += parametro1.getNombreParametro() + ": " + parametro1.getValor() + "<br>";
-        Parametro parametro2 = parametroRepository.findById(proConvocatoria.getCodigoParametro2().longValue()).orElseThrow(() -> new BusinessException(""));
-        mensajes += parametro2.getNombreParametro() + ": " + parametro2.getValor() + "<br>";
-
-        emailService.sendEmailHtmlToListPro(destinatarios, EMAIL_SUBJECT_CONVOCATORIA_PRO, proConvocatoria.getNombre(),
-                formatDate(proConvocatoria.getFechaActual()), formatDate(proConvocatoria.getFechaInicio()),
-                formatDate(proConvocatoria.getFechaFin()), textoRequisitos, mensajes, URL_INSCRIPCION);
     }
 
     private String formatDate(Date date) {
