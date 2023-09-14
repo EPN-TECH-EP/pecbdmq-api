@@ -258,7 +258,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         if (esAprobado) {
             exporter.exportar(response, headers, obtenerDatos(subTipoPrueba, codCurso), widths, ruta);
         } else {
-            exporter.exportar(response, headers, obtenerDatos(subTipoPrueba, codCurso), widths, ruta);
+            exporter.exportar(response, headers, obtenerDatosReprobados(subTipoPrueba, codCurso), widths, ruta);
         }
         generaDocumento(ruta, nombre, subTipoPrueba, codCurso);
 
@@ -368,8 +368,10 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     }
 
     public static String[] entityToStringArray(ResultadosPruebasDatos entity) {
-        return new String[]{entity.getIdPostulante() != null ? entity.getIdPostulante().toString() : ""
-        };
+        return new String[]{entity.getIdPostulante() != null ? entity.getIdPostulante().toString() : "",
+                entity.getCorreoPersonal(),
+                entity.getCedula(), entity.getNombre(),
+                entity.getApellido()};
     }
 
     public static String[] entityToStringArrayEsp(DatosInscripcionEsp entity) {

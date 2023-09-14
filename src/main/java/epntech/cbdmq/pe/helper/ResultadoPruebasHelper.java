@@ -43,7 +43,7 @@ public class ResultadoPruebasHelper {
     static String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
     static String SHEET = "Hoja1";
 
-    public static boolean hasExcelFormat(MultipartFile file) {
+		public static boolean hasExcelFormat(MultipartFile file) {
 
         if (!TYPE.equals(file.getContentType())) {
             return false;
