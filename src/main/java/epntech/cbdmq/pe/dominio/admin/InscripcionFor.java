@@ -103,7 +103,7 @@ public class InscripcionFor {
 	@Column(name = "nivel_instruccion")
 	private String nivelInstruccion;
 	@Column(name = "nombre_titulo_tercer_nivel")
-	private String nombreTituloTercernivel;
+	private String nombreTituloTercerNivel;
 	@Column(name = "nombre_titulo_cuarto_nivel")
 	private String nombreTituloCuartoNivel;
 	@Column(name = "es_vulnerable")

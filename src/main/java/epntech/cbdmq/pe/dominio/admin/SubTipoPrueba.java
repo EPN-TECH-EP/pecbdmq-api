@@ -31,6 +31,7 @@ import lombok.Data;
 				+ "	cbdmq.gen_tipo_prueba gtp\r\n"
 				+ "where\r\n"
 				+ "	gtp.cod_tipo_prueba = gsp.cod_tipo_prueba\r\n"
+				+ "	and gsp.estado<>'ELIMINADO'\r\n"
 				+ "order by \r\n"
 				+ "	gtp.tipo_prueba,\r\n"
 				+ "	gsp.nombre ",resultSetMapping = "SubTipoPruebaDatos"

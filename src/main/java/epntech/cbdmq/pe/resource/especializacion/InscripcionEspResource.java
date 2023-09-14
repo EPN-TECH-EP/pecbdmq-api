@@ -3,19 +3,14 @@ package epntech.cbdmq.pe.resource.especializacion;
 import static epntech.cbdmq.pe.constante.ArchivoConst.NO_ADJUNTO;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SEND;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
-import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
-import static epntech.cbdmq.pe.constante.ResponseMessage.EXITO_GENERAR_ARCHIVO;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.util.DatosInscripcionEsp;
-import jakarta.servlet.http.HttpServletResponse;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

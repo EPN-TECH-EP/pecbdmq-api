@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.dominio.admin;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,6 +54,8 @@ public class ParametrizaPruebaResumen {
 	
 	@Column(name = "estado")
 	private String estado;
+	@Column(name = "ponderacion")
+	private BigDecimal ponderacion;
 	
 	@OneToMany(mappedBy="codSubtipoPrueba")
     private List<SubTipoPrueba> codSubTipoPrueba;

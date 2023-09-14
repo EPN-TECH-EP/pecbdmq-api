@@ -83,6 +83,7 @@ public class ParametrizaPruebaResumenServiceImpl implements ParametrizaPruebaRes
 				+ "	gppr.fecha_fin,\n"
 				+ "	gppr.descripcion,\n"
 				+ "	gppr.estado,\n"
+				+ "	gppr.ponderacion,\n"
 				+ "	gppr.cod_subtipo_prueba,\n"
 				+ "	gsp.nombre as subtipo_prueba_nombre,\n"
 				+ "	gtp.tipo_prueba as tipo_prueba_nombre\n"

@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.util.*;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 

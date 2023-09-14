@@ -196,7 +196,7 @@ public class ConvocatoriaForUpdRepository {
 		if (docsConvocatoria != null) {
 			String link = URLDESCARGA + "/link/" + documentosFor.getCodDocumento();
 
-			String mensaje = "Se adjunta link de convocatoria \n \n" + "link: http://" + link
+			String mensaje = "Se adjunta link de los recursos de convocatoria \n \n" + "link: http://" + link
 					+ " \n \n Plataforma educativa - CBDMQ";
 
 			emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
