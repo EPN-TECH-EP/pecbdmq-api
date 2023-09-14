@@ -38,7 +38,7 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> guardar(@RequestBody ProConvocatoria obj) throws DataException {
         ProConvocatoria saveItem = service.save(obj);
-        this.emailService.sendConvocatoriaProfesionalizacionEmail(obj.getCorreo());
+        service.notificar(saveItem.getCodigo());
         return new ResponseEntity<>(saveItem, HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class ProConvocatoriaResource extends ProfesionalizacionResource<ProConvo
             datosGuardados.setCodPeriodo(obj.getCodPeriodo());
             datosGuardados.setCorreo(obj.getCorreo());
             ResponseEntity<?> responseEntity = super.actualizarDatos(datosGuardados);
-            this.emailService.sendConvocatoriaProfesionalizacionEmail(obj.getCorreo());
+            service.notificar(datosGuardados.getCodigo());
             return responseEntity;
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
