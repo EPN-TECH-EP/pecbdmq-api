@@ -8,5 +8,7 @@ import lombok.Data;
 public class DatoPersonalEstudianteDto {
     private DatoPersonal datoPersonal;
     private Estudiante estudiante;
-    private Boolean esUsuario = true;
+    private Boolean esCiudadano = false;
+    private Boolean esFuncionario= false;
+
 }

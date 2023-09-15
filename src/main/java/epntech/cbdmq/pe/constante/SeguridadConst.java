@@ -38,7 +38,8 @@ public class SeguridadConst {
 			"/convocatoria/activa",
 			"/estacionTrabajo/listar",
 			"/cargo/listar",
-			"/grado/listar"
+			"/grado/listar",
+			"/grado/listarRangos"
 	};
 	
 	@Value("${pecb.app-key}")
