@@ -650,13 +650,14 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     DatoPersonal newDatoPersonal = createDatoPersonalFromCiudadno(ciudadanoApiDto);
                     datoPersonalEstudianteDto.setEstudiante(null);
                     datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
-                    datoPersonalEstudianteDto.setEsUsuario(false);
+                    datoPersonalEstudianteDto.setEsCiudadano(true);
                 }
             }
             //SI ES QUE EXISTE UN DATO PERSONAL
             else {
                 Optional<Usuario> usuarioObj = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonalObj.get().getCodDatosPersonales());
-
+                Optional<FuncionarioApiDto> funcionario = apiFuncionarioCBDMQSvc.servicioFuncionarios(cedula);
+                Boolean esFuncionario= funcionario.isPresent()?true:false;
                 //NO EXISTE USUARIO
                 if (usuarioObj.isEmpty()) {
                     Usuario newUser = new Usuario();
@@ -673,6 +674,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
+                    datoPersonalEstudianteDto.setEsFuncionario(esFuncionario);
                 }
                 //EXISTE USUARIO
                 else {
@@ -687,6 +689,8 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
+                        datoPersonalEstudianteDto.setEsFuncionario(esFuncionario);
+
                     } else {
 
                         // verifica si el estudiante ya esta inscrito en el curso
@@ -696,6 +700,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
                         datoPersonalEstudianteDto.setEstudiante(estudianteObj);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
+                        datoPersonalEstudianteDto.setEsFuncionario(esFuncionario);
                     }
                 }
             }
