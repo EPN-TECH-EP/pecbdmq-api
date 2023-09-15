@@ -67,7 +67,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
     }
 
     @Override
-    public void enviarNotificacion(Integer subTipoPrueba, Integer codCurso) throws MessagingException, DataException, ParseException {
+    public void enviarNotificacion(Integer subTipoPrueba, Integer codCurso, Boolean esUltimo) throws MessagingException, DataException, ParseException {
 
         Optional<PruebaDetalle> pruebaDetalleOpt = Optional.empty();
 
@@ -128,7 +128,12 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             noti.setEstado(ACTIVO);
 
             try {
-                String mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                String mensaje;
+                if (esUltimo) {
+                    mensaje = emailService.notificacionAprobadoFinalEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                } else {
+                    mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                }
                 noti.setMensaje("mensaje");
                 noti.setNotificacionEnviada(true);
                 repo.save(noti);
@@ -140,6 +145,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
                 repo.save(noti);
             }
         }
+        if(reprobados!=null) {
         for (ResultadosPruebasDatos resultadosPruebasDatos : reprobados) {
             DatoPersonal dato;
 
@@ -166,7 +172,12 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             noti.setEstado(ACTIVO);
 
             try {
-                String mensaje = emailService.notificacionNoAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                    String mensaje;
+                    if (esUltimo) {
+                        mensaje = emailService.notificacionNoAprobadoFinalEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                    } else {
+                        mensaje = emailService.notificacionNoAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                    }
                 noti.setMensaje("mensaje");
                 noti.setNotificacionEnviada(true);
                 repo.save(noti);
@@ -178,7 +189,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
                 repo.save(noti);
             }
         }
-
+        }
         // Enviar el mensaje de error una vez, si es que hay algún error.
         if (!errorMessageBuilder.isEmpty()) {
             throw new DataException(errorMessageBuilder.toString());

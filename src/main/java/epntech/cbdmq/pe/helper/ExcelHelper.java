@@ -172,7 +172,7 @@ public class ExcelHelper {
 	public static void generarExcelII(ArrayList<ArrayList<String>> lista, String filePath, String[] cabecera)
 			throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("Datos");
+		Sheet sheet = workbook.createSheet(SHEET);
 
 		// Header
 		Row headerRow = sheet.createRow(0);
@@ -205,7 +205,7 @@ public class ExcelHelper {
 	public static ByteArrayOutputStream generarExcelFOS(ArrayList<ArrayList<String>> lista, String nombre, String[] cabecera)
 			throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("Datos");
+		Sheet sheet = workbook.createSheet(SHEET);
 
 
 		String fechaActual = getFechaActualFormato();

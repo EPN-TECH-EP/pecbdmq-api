@@ -469,6 +469,63 @@ public class EmailService {
 
         return message;
     }
+    private SimpleMailMessage /* Message */    notificacionAprobadoFinalEmailMensaje(String nombrePrueba, DatoPersonal datoPersonal /*String email*/)
+            throws MessagingException {
+
+        String email = datoPersonal.getCorreoPersonal();
+        String datoSaludos = datoPersonal.getNombre() + " " + datoPersonal.getApellido();
+        //cadena de fecha actual en formato año mes día
+        LocalDateTime fechaActual = LocalDateTime.now();
+        String fecha = fechaActual.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(USERNAME);
+
+        // si email es una lista, se envia a todos los correos de la lista con setTo(String[] to)
+        // busca si se usa , o ; como separador
+        if (email.contains(",") || email.contains(";")) {
+            String[] emails = email.split(",|;");
+            message.setTo(emails);
+        } else {
+            message.setTo(email);
+        }
+
+        message.setSubject(EMAIL_SUBJECT2);
+        message.setText("Saludos " + datoSaludos + " \n Usted ha aprobado la última prueba " + nombrePrueba
+                + "\n Fecha: " + fecha + " \n +" +
+                "A partir de ahora esta aprobado para participar en calidad de alumno en el proceso contiguo\n +"+"Plataforma educativa - CBDMQ");
+
+        return message;
+    }private SimpleMailMessage /* Message */    notificacionNoAprobadoFinalEmailMensaje(String nombrePrueba, DatoPersonal datoPersonal /*String email*/)
+            throws MessagingException {
+
+        String email = datoPersonal.getCorreoPersonal();
+        String datoSaludos = datoPersonal.getNombre() + " " + datoPersonal.getApellido();
+        //cadena de fecha actual en formato año mes día
+        LocalDateTime fechaActual = LocalDateTime.now();
+        String fecha = fechaActual.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(USERNAME);
+
+        // si email es una lista, se envia a todos los correos de la lista con setTo(String[] to)
+        // busca si se usa , o ; como separador
+        if (email.contains(",") || email.contains(";")) {
+            String[] emails = email.split(",|;");
+            message.setTo(emails);
+        } else {
+            message.setTo(email);
+        }
+
+        message.setSubject(EMAIL_SUBJECT2);
+        message.setText("Saludos " + datoSaludos + " \n Usted no ha aprobado la última prueba " + nombrePrueba
+                + "\n Fecha: " + fecha + " \n +" +
+                "Lamentablemente no está aprobado para participar en calidad de alumno en el proceso contiguo\n +"+"Plataforma educativa - CBDMQ");
+
+        return message;
+    }
 
     public String notificacionAprobadoEmail(String nombrePrueba, DatoPersonal datoPersonal/*String email*/) throws MessagingException {
         JavaMailSender emailSender = this.getJavaMailSender();
@@ -485,6 +542,23 @@ public class EmailService {
         return message.getText();
 
     }
+    public String notificacionAprobadoFinalEmail(String nombrePrueba, DatoPersonal datoPersonal/*String email*/) throws MessagingException {
+        JavaMailSender emailSender = this.getJavaMailSender();
+        SimpleMailMessage message = this.notificacionAprobadoFinalEmailMensaje(nombrePrueba, datoPersonal);
+
+        emailSender.send(message);
+        return message.getText();
+
+    }
+    public String notificacionNoAprobadoFinalEmail(String nombrePrueba, DatoPersonal datoPersonal/*String email*/) throws MessagingException {
+        JavaMailSender emailSender = this.getJavaMailSender();
+        SimpleMailMessage message = this.notificacionNoAprobadoFinalEmailMensaje(nombrePrueba, datoPersonal);
+
+        emailSender.send(message);
+        return message.getText();
+
+    }
+
 
     public void enviarEmailHtml(String[] destinatarios, String subject, String texto) {
         try {

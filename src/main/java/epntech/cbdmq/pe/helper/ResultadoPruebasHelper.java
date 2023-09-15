@@ -267,7 +267,7 @@ public class ResultadoPruebasHelper {
 
 	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("Datos");
+		Sheet sheet = workbook.createSheet(SHEET);
 
 		// Header
 		Row headerRow = sheet.createRow(0);
@@ -299,7 +299,7 @@ public class ResultadoPruebasHelper {
 
 	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath) throws IOException {
 		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet("Datos");
+		Sheet sheet = workbook.createSheet(SHEET);
 
 		// Header
 		Row headerRow = sheet.createRow(0);

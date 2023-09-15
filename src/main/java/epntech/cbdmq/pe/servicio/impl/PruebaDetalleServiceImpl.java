@@ -4,9 +4,7 @@ import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CURSO_REPROBAD
 import static epntech.cbdmq.pe.constante.EspecializacionConst.NO_SUBTIPO_PRUEBA;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.*;
@@ -22,7 +20,6 @@ import epntech.cbdmq.pe.repositorio.admin.especializacion.TipoCursoRepository;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
@@ -247,7 +244,7 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	@Override
 	public String getTipoResultado(int codSubtipoPrueba){
 		return pruebaDetalleRepository.getTipoResultado(codSubtipoPrueba);
-}
+	}
 
 	@Override
 	public String getTipoResultadoCurso(int codSubtipoPrueba, int codCurso){
@@ -283,7 +280,6 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	}
 
 	@Override
-	@Async
 	public void notificarPruebaDetalle(Long codPruebaDetalle) throws DataException {
 		Optional<PruebaDetalle> pruebaDetalleOpt = this.pruebaDetalleRepository.findById(codPruebaDetalle.intValue());
 
@@ -311,7 +307,17 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 				try {
 					String nombres = dato.getNombre() + " " + dato.getApellido();
 					String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso, subTipoPrueba.getNombre(), tipoPrueba.getTipoPrueba(),tipoPrueba.getEsFisica()? "FÍSICA":"NO FÍSICA", pruebaDetalleOpt.get().getFechaInicio(), pruebaDetalleOpt.get().getFechaFin(),pruebaDetalleOpt.get().getHora());
-					String[] destinatarios = {dato.getCorreoPersonal(),dato.getCorreoInstitucional()};
+					List<String> destinatariosList = new ArrayList<>();
+
+					if(dato.getCorreoPersonal() != null && !dato.getCorreoPersonal().trim().isEmpty()) {
+						destinatariosList.add(dato.getCorreoPersonal());
+					}
+
+					if(dato.getCorreoInstitucional() != null && !dato.getCorreoInstitucional().trim().isEmpty()) {
+						destinatariosList.add(dato.getCorreoInstitucional());
+					}
+
+					String[] destinatarios = destinatariosList.toArray(new String[0]);
 					emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
 
 				} catch (Exception e) {
