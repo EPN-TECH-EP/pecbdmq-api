@@ -67,7 +67,7 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
     }
 
     @Override
-    public void enviarNotificacion(Integer subTipoPrueba, Integer codCurso) throws MessagingException, DataException, ParseException {
+    public void enviarNotificacion(Integer subTipoPrueba, Integer codCurso, Boolean esUltimo) throws MessagingException, DataException, ParseException {
 
         Optional<PruebaDetalle> pruebaDetalleOpt = Optional.empty();
 
@@ -128,7 +128,12 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             noti.setEstado(ACTIVO);
 
             try {
-                String mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                String mensaje;
+                if (esUltimo) {
+                    mensaje = emailService.notificacionAprobadoFinalEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                } else {
+                    mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                }
                 noti.setMensaje("mensaje");
                 noti.setNotificacionEnviada(true);
                 repo.save(noti);
@@ -140,45 +145,51 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
                 repo.save(noti);
             }
         }
-        for (ResultadosPruebasDatos resultadosPruebasDatos : reprobados) {
-            DatoPersonal dato;
+        if(reprobados!=null) {
+            for (ResultadosPruebasDatos resultadosPruebasDatos : reprobados) {
+                DatoPersonal dato;
 
-            // si es curso, obtiene dato personal asociado a estudiante
-            if (codCurso != null) {
-                dato = estudianteService.getByIdEstudiante(resultadosPruebasDatos.getIdPostulante())
-                        .map(estudiante -> dpSvc.getDatosPersonalesById(estudiante.getCodDatosPersonales()).orElse(null))
-                        .orElse(null);
-            } else {
+                // si es curso, obtiene dato personal asociado a estudiante
+                if (codCurso != null) {
+                    dato = estudianteService.getByIdEstudiante(resultadosPruebasDatos.getIdPostulante())
+                            .map(estudiante -> dpSvc.getDatosPersonalesById(estudiante.getCodDatosPersonales()).orElse(null))
+                            .orElse(null);
+                } else {
 
-                dato = postulanteService.getById(resultadosPruebasDatos.getCodPostulante().longValue())
-                        .map(postulante -> dpSvc.getDatosPersonalesById(postulante.getCodDatoPersonal()).orElse(null))
-                        .orElse(null);
-            }
+                    dato = postulanteService.getById(resultadosPruebasDatos.getCodPostulante().longValue())
+                            .map(postulante -> dpSvc.getDatosPersonalesById(postulante.getCodDatoPersonal()).orElse(null))
+                            .orElse(null);
+                }
 
-            if (dato == null) {
-                throw new DataException("No existe un dato personal asociado");
-            }
+                if (dato == null) {
+                    throw new DataException("No existe un dato personal asociado");
+                }
 
-            NotificacionPrueba noti = new NotificacionPrueba();
-            noti.setCodDatosPersonales(dato.getCodDatosPersonales());
-            noti.setCodPrueba(pruebaDetalle.getCodPruebaDetalle());
-            noti.setFechaPrueba(fechaActual);
-            noti.setEstado(ACTIVO);
+                NotificacionPrueba noti = new NotificacionPrueba();
+                noti.setCodDatosPersonales(dato.getCodDatosPersonales());
+                noti.setCodPrueba(pruebaDetalle.getCodPruebaDetalle());
+                noti.setFechaPrueba(fechaActual);
+                noti.setEstado(ACTIVO);
 
-            try {
-                String mensaje = emailService.notificacionNoAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
-                noti.setMensaje("mensaje");
-                noti.setNotificacionEnviada(true);
-                repo.save(noti);
-            } catch (Exception e) {
-                String errorMessage = e.getMessage();
-                errorMessageBuilder.append(errorMessage).append("\n");
-                noti.setMensaje(errorMessage);
-                noti.setNotificacionEnviada(false);
-                repo.save(noti);
+                try {
+                    String mensaje;
+                    if (esUltimo) {
+                        mensaje = emailService.notificacionNoAprobadoFinalEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                    } else {
+                        mensaje = emailService.notificacionNoAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                    }
+                    noti.setMensaje("mensaje");
+                    noti.setNotificacionEnviada(true);
+                    repo.save(noti);
+                } catch (Exception e) {
+                    String errorMessage = e.getMessage();
+                    errorMessageBuilder.append(errorMessage).append("\n");
+                    noti.setMensaje(errorMessage);
+                    noti.setNotificacionEnviada(false);
+                    repo.save(noti);
+                }
             }
         }
-
         // Enviar el mensaje de error una vez, si es que hay algún error.
         if (!errorMessageBuilder.isEmpty()) {
             throw new DataException(errorMessageBuilder.toString());

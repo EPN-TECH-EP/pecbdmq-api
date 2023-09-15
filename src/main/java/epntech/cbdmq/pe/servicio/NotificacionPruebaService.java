@@ -21,5 +21,5 @@ public interface NotificacionPruebaService {
 	    void delete(Integer codigo);*/
 
 
-    void enviarNotificacion(Integer subTipoPrueba, Integer codCurso) throws MessagingException, DataException, ParseException;
+    void enviarNotificacion(Integer subTipoPrueba, Integer codCurso,Boolean esUltimo) throws MessagingException, DataException, ParseException;
 }
