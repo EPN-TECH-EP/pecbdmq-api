@@ -142,4 +142,39 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 		return lista;
 	}
 
+	/////////////////////////////////////////////////////////
+	// listado postulantes para seguimiento de inscripciones
+
+	@Override
+	public List<PostulantesValidos> getPostulantesTodoFiltro(String tipoFiltro, String valorFiltro) {
+		List<PostulantesValidos> lista = new ArrayList<>();
+		switch (tipoFiltro) {
+			case "cedula":
+				lista = repo.getPostulantesTodoFiltroCedula(valorFiltro);
+				break;
+			case "idPostulante":
+				lista = repo.getPostulantesTodoFiltroIdPostulante(valorFiltro);
+				break;
+			case "apellido":
+				lista = repo.getPostulantesTodoFiltroApellido(valorFiltro);
+				break;
+			default:
+				lista = repo.getAllPostulantesTodo();
+				break;
+		}
+		return lista;
+	}
+
+	@Override
+	public Page<PostulantesValidos> getAllPostulantesTodoPaginado(Pageable pageable){
+		return this.repo.getAllPostulantesTodoPaginado(pageable);
+	}
+
+
+
+	@Override
+	public Page<PostulantesValidos> getAllPostulantesTodoPaginadoOrderApellido(Pageable pageable) {
+		return this.repo.getAllPostulantesTodoPaginadoOrderApellido(pageable);
+	}
+
 }

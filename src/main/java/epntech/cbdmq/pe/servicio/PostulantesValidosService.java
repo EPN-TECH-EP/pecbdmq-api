@@ -37,5 +37,14 @@ public interface PostulantesValidosService {
 
 	// buscar postulantes válidos por filtro
 	List<PostulantesValidos> getPostulantesValidosFiltro(String tipoFiltro, String valorFiltro);
+
+	/////////////////////////////////////////////////////////
+	// listado postulantes para seguimiento de inscripciones
+	List<PostulantesValidos> getPostulantesTodoFiltro(String tipoFiltro, String valorFiltro);
+
+	Page<PostulantesValidos> getAllPostulantesTodoPaginado(Pageable pageable);
+
+	Page<PostulantesValidos> getAllPostulantesTodoPaginadoOrderApellido(Pageable pageable);
+
 }
 

@@ -55,6 +55,10 @@ public interface InscripcionEspService {
 	void updateValidacionRequisito(List<ValidaRequisitos> validaRequisitos);
 	
 	List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion);
+
+	// monitoreo inscripciones curso
+	List<InscritosEspecializacion> getInscritosTodoCurso(Long codCursoEspecializacion);
+
 	List<InscripcionEsp> getAll2();
 
 	void notificarPrueba(Long codCursoEspecializacion, Long codSubTipoPrueba);

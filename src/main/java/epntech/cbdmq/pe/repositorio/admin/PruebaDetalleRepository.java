@@ -22,6 +22,12 @@ public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, In
 	@Procedure(value = "cbdmq.get_tipo_resultado")
 	String getTipoResultado(@Param("p_cod_subtipo_prueba") Integer p_cod_subtipo_prueba);
 
+	// tipo de resultado por curso
+	//cbdmq.get_tipo_resultado_curso(p_cod_subtipo_prueba integer, p_cod_curso integer)
+	@Procedure(value = "cbdmq.get_tipo_resultado_curso")
+	String getTipoResultadoCurso(@Param("p_cod_subtipo_prueba") Integer p_cod_subtipo_prueba, @Param("p_cod_curso") Integer p_cod_curso);
+
+
 
 	//List<PruebaDetalle> listarTodosConDatosSubTipoPrueba();
 

@@ -4,7 +4,6 @@ import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CURSO_REPROBAD
 import static epntech.cbdmq.pe.constante.EspecializacionConst.NO_SUBTIPO_PRUEBA;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -13,7 +12,6 @@ import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
-import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
@@ -250,6 +248,11 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	public String getTipoResultado(int codSubtipoPrueba){
 		return pruebaDetalleRepository.getTipoResultado(codSubtipoPrueba);
 }
+
+	@Override
+	public String getTipoResultadoCurso(int codSubtipoPrueba, int codCurso){
+		return pruebaDetalleRepository.getTipoResultadoCurso(codSubtipoPrueba, codCurso);
+	}
 
 	@Override
 	public Boolean reordenar(List<PruebaDetalleOrden> listaOrden) throws DataException {

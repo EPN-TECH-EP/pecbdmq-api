@@ -155,7 +155,7 @@ public class ResultadoPruebasHelper {
 						if (codPruebaDetalleStr != null && !codPruebaDetalleStr.isEmpty()) {
 
 							if (tipoResultado.equals("CUMPLE|NO-CUMPLE")) {
-								if (codPruebaDetalleStr.equals("CUMPLE"))
+								if (codPruebaDetalleStr.equalsIgnoreCase("CUMPLE"))
 									dato.setCumplePrueba(true);
 								else
 									dato.setCumplePrueba(false);
