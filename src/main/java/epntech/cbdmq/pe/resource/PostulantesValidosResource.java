@@ -24,7 +24,7 @@ public class PostulantesValidosResource {
 	// en PostulantesValidosServiceImpl.java
 
 	@GetMapping("/postulantesValidosFiltro")
-	public ResponseEntity<?> listarAllFiltro(String tipoFiltro, String valorFiltro) {
+	public ResponseEntity<?> listarAllValidoFiltro(String tipoFiltro, String valorFiltro) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(service.getPostulantesValidosFiltro(tipoFiltro, valorFiltro));
 		} catch (Exception e) {
@@ -42,7 +42,7 @@ public class PostulantesValidosResource {
 	}
 	
 	@GetMapping("/postulantesValidosPaginado")
-	public ResponseEntity<?> listarAllPaginado(Pageable pageable) {
+	public ResponseEntity<?> listarAllValidoPaginado(Pageable pageable) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(service.getAllPostulantesValidosPaginado(pageable));
 		} catch (Exception e) {
@@ -51,7 +51,7 @@ public class PostulantesValidosResource {
 	}
 	
 	@GetMapping("/postulantesValidosPaginadoOrderApellido")
-	public ResponseEntity<?> listarAllPaginadoOrderApellido(Pageable pageable) {
+	public ResponseEntity<?> listarAllValidoPaginadoOrderApellido(Pageable pageable) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(service.getAllPostulantesValidosPaginadoOrderApellido(pageable));
 		} catch (Exception e) {
@@ -63,5 +63,34 @@ public class PostulantesValidosResource {
 		return new ResponseEntity<>(
 				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
 				httpStatus);
+	}
+
+
+	// listar todos los postulantes para seguimiento de inscripciones
+	@GetMapping("/postulantesTodoFiltro")
+	public ResponseEntity<?> listarAllFiltro(String tipoFiltro, String valorFiltro) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(service.getPostulantesTodoFiltro(tipoFiltro, valorFiltro));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
+	}
+
+	@GetMapping("/postulantesTodoPaginado")
+	public ResponseEntity<?> listarAllPaginado(Pageable pageable) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(service.getAllPostulantesTodoPaginado(pageable));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
+	}
+
+	@GetMapping("/postulantesTodoPaginadoOrderApellido")
+	public ResponseEntity<?> listarAllPaginadoOrderApellido(Pageable pageable) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(service.getAllPostulantesTodoPaginadoOrderApellido(pageable));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
 	}
 }

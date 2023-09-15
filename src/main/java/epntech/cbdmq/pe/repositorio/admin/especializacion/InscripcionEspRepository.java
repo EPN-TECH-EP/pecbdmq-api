@@ -42,6 +42,12 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionValidaPorCurso")
 	List<InscritosEspecializacion> getInscripcionesValidasByCurso(@Param("codCurso") Long codCurso);
+
+	// monitoreo inscripciones curso
+	// InscripcionEsp.findTodoInscripcionPorCurso
+	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionValidaPorCurso")
+	List<InscritosEspecializacion> getInscripcionesTodoByCurso(@Param("codCurso") Long codCurso);
+
 	@Query(nativeQuery = true, name = "InscripcionEsp.getListasByEstado")
 	Set<InscripcionDatosEspecializacion> getInscripcionesByCursoEstado(@Param("codCurso") Long codCurso, @Param("estado") String estado);
 	@Query(nativeQuery = true, name = "DatosInscripcionEsp.aprobadosPruebas")

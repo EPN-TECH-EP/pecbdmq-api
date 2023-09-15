@@ -82,5 +82,34 @@ public interface PostulantesValidosRepository extends JpaRepository<PostulantesV
 	
 	@Query(value = "select * from cbdmq.get_approved_by_test(:prueba)", nativeQuery=true)
 	Page<PostulantesValidos> get_approved_by_test(Pageable pageable, Integer prueba);
+
+	// lista de todos los postulantes para seguimiento de inscripciones
+	String queryBaseTodo = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "
+			+ "from cbdmq.gen_postulante p, cbdmq.gen_dato_personal dp "
+			+ "where p.cod_datos_personales = dp.cod_datos_personales "
+			+ "and UPPER(dp.estado) = 'ACTIVO' "
+			+ "and cod_periodo_academico = cbdmq.get_pa_activo() ";
+
+	// consulta de postulantes válidos por filtro
+	@Query(value = queryBaseTodo + filtroCedula + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getPostulantesTodoFiltroCedula(String filtro);
+
+	@Query(value = queryBaseTodo + filtroIdPostulante + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getPostulantesTodoFiltroIdPostulante(String filtro);
+
+	@Query(value = queryBaseTodo + filtroApellido + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getPostulantesTodoFiltroApellido(String filtro);
+
+	@Query(value = queryBaseTodo  + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getAllPostulantesTodo();
+
+	@Query(value = queryBaseTodo  + orderByApellidoPostulante, nativeQuery=true)
+	List<PostulantesValidos> getAllPostulantesTodoOrderApellido();
+
+	@Query(value = queryBaseTodo + orderByIdPostulante, nativeQuery=true)
+	Page<PostulantesValidos> getAllPostulantesTodoPaginado(Pageable pageable);
+
+	@Query(value = queryBaseTodo + orderByApellidoPostulante, nativeQuery=true)
+	Page<PostulantesValidos> getAllPostulantesTodoPaginadoOrderApellido(Pageable pageable);
 	
 }

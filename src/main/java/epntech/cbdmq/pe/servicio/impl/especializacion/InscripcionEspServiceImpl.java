@@ -1,24 +1,17 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.*;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_ANTIGUEDADES;
 import static epntech.cbdmq.pe.constante.EmailConst.*;
 import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
-import static epntech.cbdmq.pe.constante.EstadosConst.PRUEBAS;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
-import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
-import static epntech.cbdmq.pe.constante.ResponseMessage.EXITO_GENERAR_ARCHIVO;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,36 +19,29 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.*;
 import epntech.cbdmq.pe.dominio.util.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
-import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.*;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.*;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
-import epntech.cbdmq.pe.util.ExporterPdf;
 import epntech.cbdmq.pe.util.Utilitarios;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.fichaPersonal.Estudiante;
@@ -457,6 +443,12 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     @Override
     public List<InscritosEspecializacion> getInscritosValidosCurso(Long codCursoEspecializacion) {
         return inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
+    }
+
+    // monitoreo inscripciones curso
+    @Override
+    public List<InscritosEspecializacion> getInscritosTodoCurso(Long codCursoEspecializacion) {
+        return inscripcionEspRepository.getInscripcionesTodoByCurso(codCursoEspecializacion);
     }
 
     @Override

@@ -152,6 +152,12 @@ public class InscripcionEspResource {
         return inscripcionEspServiceImpl.getInscritosValidosCurso(codigo);
     }
 
+    // monitoreo inscripciones curso
+    @GetMapping("/inscripcionesTodo/{id}")
+    public List<InscritosEspecializacion> listarInscripcionesTodo(@PathVariable("id") long codigo) {
+        return inscripcionEspServiceImpl.getInscritosTodoCurso(codigo);
+    }
+
     @PostMapping("/notificarPrueba")
     public ResponseEntity<?> notificarPrueba(@RequestParam("codCursoEspecializacion") Long codCursoEspecializacion, @RequestParam("subTipoPrueba") Long subTipoPrueba) {
         inscripcionEspServiceImpl.notificarPrueba(codCursoEspecializacion, subTipoPrueba);

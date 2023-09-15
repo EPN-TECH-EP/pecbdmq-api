@@ -52,6 +52,12 @@ public class PruebaDetalleResource {
 		return objService.getTipoResultado(codigo);
 	}
 
+	//@GetMapping("/tipoResultadoCurso/{id}")
+	@GetMapping("/tipoResultadoCurso/{id}/curso/{codCurso}")
+	public String obtenerTipoResultadoCurso(@PathVariable("id") int codigo, @PathVariable("codCurso") int codCurso) {
+		return objService.getTipoResultadoCurso(codigo, codCurso);
+	}
+
 	@GetMapping("/listar")
 	public List<PruebaDetalle> listar() {
 		return objService.getAll();

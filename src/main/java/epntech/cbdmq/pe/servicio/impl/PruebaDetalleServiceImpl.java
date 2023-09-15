@@ -10,7 +10,6 @@ import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
-import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
@@ -245,6 +244,11 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 	@Override
 	public String getTipoResultado(int codSubtipoPrueba){
 		return pruebaDetalleRepository.getTipoResultado(codSubtipoPrueba);
+	}
+
+	@Override
+	public String getTipoResultadoCurso(int codSubtipoPrueba, int codCurso){
+		return pruebaDetalleRepository.getTipoResultadoCurso(codSubtipoPrueba, codCurso);
 	}
 
 	@Override
