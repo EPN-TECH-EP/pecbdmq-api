@@ -37,6 +37,7 @@ public class ArchivoConst {
 
 	public static final String FALLA_PROCESAR_EXCEL = "Falla al procesar el archivo excel";
 	public static final String PATH_RESULTADO_PRUEBAS = "Resultado Pruebas/";
+	public static final String PATH_RESULTADO_VALIDACION = "Resultado Validacion/";
 
 	public static final String PATH_RESULTADO_PRUEBAS_CURSO = "Resultado Pruebas Curso/";
 	public static final String PATH_RESULTADO_ANTIGUEDADES = "Antiguedades/";

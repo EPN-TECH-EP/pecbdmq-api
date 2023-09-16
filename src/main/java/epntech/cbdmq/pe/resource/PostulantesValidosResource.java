@@ -1,16 +1,23 @@
 package epntech.cbdmq.pe.resource;
 
+import com.lowagie.text.DocumentException;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.servicio.impl.PostulantesValidosServiceImpl;
+
+import java.io.IOException;
+
+import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
+import static epntech.cbdmq.pe.constante.ResponseMessage.EXITO_GENERAR_ARCHIVO;
+import static epntech.cbdmq.pe.util.ResponseEntityUtil.response;
 
 @RestController
 @RequestMapping("/postulantesValidos")
@@ -92,5 +99,16 @@ public class PostulantesValidosResource {
 		} catch (Exception e) {
 			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
 		}
+	}
+	@PostMapping("/generarArchivoAprobados")
+	public ResponseEntity<?> generar(HttpServletResponse response)
+			throws DocumentException, DataException {
+		try {
+			service.generarArchivosAprobados(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
 	}
 }

@@ -1,10 +1,14 @@
 package epntech.cbdmq.pe.servicio;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
+import com.lowagie.text.DocumentException;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.postgresql.util.PSQLException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +49,11 @@ public interface PostulantesValidosService {
 	Page<PostulantesValidos> getAllPostulantesTodoPaginado(Pageable pageable);
 
 	Page<PostulantesValidos> getAllPostulantesTodoPaginadoOrderApellido(Pageable pageable);
+
+	public Boolean generarArchivos(HttpServletResponse response, Boolean esAprobado) throws DataException, DocumentException, IOException;
+	public Boolean generarArchivosAprobados(HttpServletResponse response) throws DataException, DocumentException, IOException;
+	public Boolean generarArchivosReprobados(HttpServletResponse response) throws DataException, DocumentException, IOException;
+
 
 }
 
