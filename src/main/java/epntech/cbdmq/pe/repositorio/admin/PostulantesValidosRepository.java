@@ -29,12 +29,17 @@ public interface PostulantesValidosRepository extends JpaRepository<PostulantesV
 	List<PostulantesValidos> getPostulantesValidosDiferentBaja();
 
 	
-	String queryBase = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "
+	String queryBaseComun = "select p.cod_postulante, p.id_postulante, dp.cedula, dp.correo_personal, dp.nombre, dp.apellido "
 			+ "from cbdmq.gen_postulante p, cbdmq.gen_dato_personal dp "
 			+ "where p.cod_datos_personales = dp.cod_datos_personales "
 			+ "and UPPER(dp.estado) = 'ACTIVO' "
-			+ "and UPPER(p.estado) in ('VALIDO', 'VALIDO MUESTRA') "
 			+ "and cod_periodo_academico = cbdmq.get_pa_activo() ";
+	String queryValidCondition = "and UPPER(p.estado) in ('VALIDO', 'VALIDO MUESTRA') ";
+	String queryNoValidCondition = "and UPPER(p.estado) not in ('VALIDO', 'VALIDO MUESTRA') ";
+
+	String queryBase = queryBaseComun + queryValidCondition;
+	String queryNoValidos = queryBaseComun + queryNoValidCondition;
+
 	String orderByIdPostulante	=	 "order by p.id_postulante";
 	String orderByApellidoPostulante	=	 "order by dp.apellido";
 
@@ -59,6 +64,8 @@ public interface PostulantesValidosRepository extends JpaRepository<PostulantesV
 
 	@Query(value = queryBase  + orderByIdPostulante, nativeQuery=true)
 	List<PostulantesValidos> getAllPostulantesValidos();
+	@Query(value = queryNoValidos  + orderByIdPostulante, nativeQuery=true)
+	List<PostulantesValidos> getAllPostulantesNoValidos();
 	
 	@Query(value = queryBase  + orderByApellidoPostulante, nativeQuery=true)
 	List<PostulantesValidos> getAllPostulantesValidosOrderApellido();

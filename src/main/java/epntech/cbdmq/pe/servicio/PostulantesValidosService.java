@@ -23,6 +23,7 @@ public interface PostulantesValidosService {
 	List<PostulantesValidos> getPostulantesValidosDiferentBaja();
 
 	List<PostulantesValidos> getAllPostulantesValidos();
+	List<PostulantesValidos> getAllPostulantesNoValidos();
 	
 	Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable);
 	

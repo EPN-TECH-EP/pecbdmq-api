@@ -101,10 +101,33 @@ public class PostulantesValidosResource {
 		}
 	}
 	@PostMapping("/generarArchivoAprobados")
+	public ResponseEntity<?> generarAprobados(HttpServletResponse response)
+			throws DocumentException, DataException {
+		try {
+			service.generarArchivosAprobados(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+	}
+	@PostMapping("/generarArchivoReprobados")
+	public ResponseEntity<?> generarReprobados(HttpServletResponse response)
+			throws DocumentException, DataException {
+		try {
+			service.generarArchivosReprobados(response);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);
+		}
+		return response(HttpStatus.OK, EXITO_GENERAR_ARCHIVO);
+	}
+	@PostMapping("/generar")
 	public ResponseEntity<?> generar(HttpServletResponse response)
 			throws DocumentException, DataException {
 		try {
 			service.generarArchivosAprobados(response);
+			service.generarArchivosReprobados(response);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return response(HttpStatus.BAD_REQUEST, ERROR_GENERAR_ARCHIVO);

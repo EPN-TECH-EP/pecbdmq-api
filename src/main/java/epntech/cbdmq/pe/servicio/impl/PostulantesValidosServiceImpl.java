@@ -65,6 +65,10 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
     public List<PostulantesValidos> getAllPostulantesValidos() {
         return repo.getAllPostulantesValidos();
     }
+    @Override
+    public List<PostulantesValidos> getAllPostulantesNoValidos() {
+        return repo.getAllPostulantesNoValidos();
+    }
 
     @Override
     public Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable) {
@@ -276,8 +280,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
             //TODO reprobados despues de validación en especialización
             datos = null;
         } else {
-            //TODO reprobados despues de validación en formación
-            datos = null;
+            datos = this.getAllPostulantesNoValidos();
         }
 
         return entityToArrayList(datos);
