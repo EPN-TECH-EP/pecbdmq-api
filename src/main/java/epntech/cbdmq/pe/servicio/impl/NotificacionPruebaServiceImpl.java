@@ -146,8 +146,8 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             }
         }
         if(reprobados!=null) {
-            for (ResultadosPruebasDatos resultadosPruebasDatos : reprobados) {
-                DatoPersonal dato;
+        for (ResultadosPruebasDatos resultadosPruebasDatos : reprobados) {
+            DatoPersonal dato;
 
                 // si es curso, obtiene dato personal asociado a estudiante
                 if (codCurso != null) {
@@ -171,24 +171,24 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
                 noti.setFechaPrueba(fechaActual);
                 noti.setEstado(ACTIVO);
 
-                try {
+            try {
                     String mensaje;
                     if (esUltimo) {
                         mensaje = emailService.notificacionNoAprobadoFinalEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                     } else {
                         mensaje = emailService.notificacionNoAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                     }
-                    noti.setMensaje("mensaje");
-                    noti.setNotificacionEnviada(true);
-                    repo.save(noti);
-                } catch (Exception e) {
-                    String errorMessage = e.getMessage();
-                    errorMessageBuilder.append(errorMessage).append("\n");
-                    noti.setMensaje(errorMessage);
-                    noti.setNotificacionEnviada(false);
-                    repo.save(noti);
-                }
+                noti.setMensaje("mensaje");
+                noti.setNotificacionEnviada(true);
+                repo.save(noti);
+            } catch (Exception e) {
+                String errorMessage = e.getMessage();
+                errorMessageBuilder.append(errorMessage).append("\n");
+                noti.setMensaje(errorMessage);
+                noti.setNotificacionEnviada(false);
+                repo.save(noti);
             }
+        }
         }
         // Enviar el mensaje de error una vez, si es que hay algún error.
         if (!errorMessageBuilder.isEmpty()) {
