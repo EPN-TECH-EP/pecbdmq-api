@@ -1,29 +1,35 @@
 package epntech.cbdmq.pe.servicio.impl;
 
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
+import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_VALIDACION;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_PRUEBAS;
 
+import java.io.IOException;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.lowagie.text.DocumentException;
+import epntech.cbdmq.pe.dominio.admin.*;
+import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
+import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
+import epntech.cbdmq.pe.helper.ExcelHelper;
+import epntech.cbdmq.pe.repositorio.admin.*;
+import epntech.cbdmq.pe.util.ExporterPdf;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import epntech.cbdmq.pe.dominio.admin.PruebaDetalle;
-import epntech.cbdmq.pe.dominio.admin.ResultadoPruebas;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
-import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
-import epntech.cbdmq.pe.repositorio.admin.PostulantesValidosRepository;
-import epntech.cbdmq.pe.repositorio.admin.PruebaDetalleRepository;
-import epntech.cbdmq.pe.repositorio.admin.ResultadoPruebasRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.PostulantesValidosService;
 import jakarta.mail.MessagingException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PostulantesValidosServiceImpl implements PostulantesValidosService {
@@ -38,8 +44,14 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	private PruebaDetalleRepository pruebaDetalleRepository;
 	@Autowired
 	private PeriodoAcademicoRepository periodoAcademicoRepository;
+    @Autowired
+    private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
+    @Value("${pecb.archivos.ruta}")
+    private String ARCHIVOS_RUTA;
+    @Autowired
+    private DocumentoRepository documentoRepo;
 
-@Override
+    @Override
 	public List<PostulantesValidos> getPostulantesValidos() {
 		return repo.getPostulantesValidos();
 	}
@@ -53,9 +65,13 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	public List<PostulantesValidos> getAllPostulantesValidos() {
 		return repo.getAllPostulantesValidos();
 	}
+    @Override
+    public List<PostulantesValidos> getAllPostulantesNoValidos() {
+        return repo.getAllPostulantesNoValidos();
+    }
 	
 	@Override
-	public Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable){
+    public Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable) {
 		return this.repo.getAllPostulantesValidosPaginado(pageable);
 	}
 	
@@ -166,7 +182,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	}
 
 	@Override
-	public Page<PostulantesValidos> getAllPostulantesTodoPaginado(Pageable pageable){
+    public Page<PostulantesValidos> getAllPostulantesTodoPaginado(Pageable pageable) {
 		return this.repo.getAllPostulantesTodoPaginado(pageable);
 	}
 
@@ -176,5 +192,149 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 	public Page<PostulantesValidos> getAllPostulantesTodoPaginadoOrderApellido(Pageable pageable) {
 		return this.repo.getAllPostulantesTodoPaginadoOrderApellido(pageable);
 	}
+
+    @Override
+    public Boolean generarArchivos(HttpServletResponse response, Boolean esAprobado) throws DataException, DocumentException, IOException {
+        String[] columnas = {"Código Único", "Correo", "Cedula", "Nombre", "Apellido"};
+
+        String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_VALIDACION
+                + periodoAcademicoRepository.getPAActive().toString()
+                + "/";
+        Integer codCurso = null;
+        if (esAprobado) {
+            String nombre1 = "AprobadosRequisitos.pdf";
+            String nombre2 = "AprobadosRequisitos.xlsx";
+            this.generarPDF(response, ruta + nombre1, nombre1, codCurso, columnas, true);
+            this.generarExcel(ruta + nombre2, nombre2, columnas, codCurso, true);
+        } else {
+            String nombre1 = "ReprobadosRequisitos.pdf";
+            String nombre2 = "ReprobadosRequisitos.xlsx";
+            this.generarPDF(response, ruta + nombre1, nombre1, codCurso, columnas, false);
+            this.generarExcel(ruta + nombre2, nombre2, columnas, codCurso, false);
+
+        }
+
+        return null;
+    }
+
+	@Override
+	public Boolean generarArchivosAprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
+		return this.generarArchivos(response, true);
+	}
+
+	@Override
+	public Boolean generarArchivosReprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
+		return this.generarArchivos(response, false);
+	}
+
+	public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer codCurso, String[] headers, Boolean esAprobado)
+            throws DocumentException, IOException, DataException {
+
+        ExporterPdf exporter = new ExporterPdf();
+        //anchos de las columnas
+        float[] widths = new float[]{2.5f, 2.5f, 2.5f, 2.5f, 2.5f};
+
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        if (esAprobado) {
+            exporter.exportar(response, headers, obtenerDatosAprobados(codCurso), widths, ruta);
+        } else {
+            exporter.exportar(response, headers, obtenerDatosReprobados(codCurso), widths, ruta);
+        }
+		generaDocumento(ruta, nombre, codCurso, esAprobado);
+
+
+
+    }
+
+    public void generarExcel(String ruta, String nombre, String[] headers, Integer codCurso, Boolean esAprobado) throws IOException, DataException {
+        // Optional<Prueba> pp = pruebaRepository.findById(prueba);
+
+
+        if (esAprobado) {
+            ExcelHelper.generarExcel(obtenerDatosAprobados(codCurso), ruta, headers);
+        } else {
+            ExcelHelper.generarExcel(obtenerDatosReprobados(codCurso), ruta, headers);
+        }
+        generaDocumento(ruta, nombre, codCurso,esAprobado);
+
+    }
+
+    public ArrayList<ArrayList<String>> obtenerDatosAprobados(Integer codCurso) {
+
+        List<PostulantesValidos> datos;
+
+        if (codCurso != null) {
+            datos = null;
+        } else {
+            datos = this.getAllPostulantesValidos();
+        }
+
+        return entityToArrayList(datos);
+    }
+
+    public ArrayList<ArrayList<String>> obtenerDatosReprobados(Integer codCurso) {
+
+        List<PostulantesValidos> datos;
+
+        if (codCurso != null) {
+            //TODO reprobados despues de validación en especialización
+            datos = null;
+        } else {
+            datos = this.getAllPostulantesNoValidos();
+        }
+
+        return entityToArrayList(datos);
+    }
+
+    public static ArrayList<ArrayList<String>> entityToArrayList(List<PostulantesValidos> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+        for (PostulantesValidos dato : datos) {
+
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
+        }
+        return arrayMulti;
+    }
+
+    public static String[] entityToStringArray(PostulantesValidos entity) {
+        return new String[]{entity.getIdPostulante() != null ? entity.getIdPostulante().toString() : "",
+                entity.getCorreoPersonal(),
+                entity.getCedula(), entity.getNombre(),
+                entity.getApellido()};
+    }
+
+    @Transactional
+    public void generaDocumento(String ruta, String nombre, Integer codCurso, Boolean esAprobado) throws DataException {
+
+        Documento documento = new Documento();
+        documento.setEstado("ACTIVO");
+        documento.setNombre(nombre);
+        documento.setRuta(ruta);
+
+        if (esAprobado) {
+            documento.setDescripcion("APROBADOS");
+        } else {
+            documento.setDescripcion("REPROBADOS");
+        }
+
+        documento = documentoRepo.save(documento);
+
+        // si es curso, guarda en repo del curso, caso contrario guarda en repo de formación
+        if (codCurso != null) {
+            //TODO
+			/*
+			CursoDocumento cursoDoc = new CursoDocumento();
+			cursoDoc.setCodCursoEspecializacion(codCurso.longValue());
+			cursoDoc.setCodDocumento(documento.getCodDocumento().longValue());
+			cursoDocumentoRepository.save(cursoDoc);
+			 */
+        } else {
+            PeriodoAcademicoDocumentoFor docPA = new PeriodoAcademicoDocumentoFor();
+            docPA.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
+            docPA.setCodDocumento(documento.getCodDocumento());
+            periodoAcademicoDocForRepository.save(docPA);
+        }
+    }
+
 
 }
