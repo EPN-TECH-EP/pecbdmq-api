@@ -78,10 +78,13 @@ public class EmailService {
     }
 
     public void sendConvocatoriaFormacionEmail(String toEmail, ConvocatoriaFor convocatoria, Integer codigoDocumento) throws IOException, MessagingException {
-        String destinatarios[] = {toEmail};
+        String[] emails = {toEmail};
+        if (toEmail.contains(",") || toEmail.contains(";")) {
+            emails = toEmail.split(",|;");
+        }
         String Path = RUTA_PLANTILLAS + "templates-formacion/template-convocatoria.html";
         String linkRespaldo = URLDESCARGA + "/link/" + codigoDocumento;
-        String link = URLDESCARGA + "/inscripcion";
+        String link ="192.168.0.184:8084/inscripcion";
 
         String htmlTemplate = readFile(Path);
         htmlTemplate = htmlTemplate.replace("${nombre}", convocatoria.getNombre());
@@ -98,7 +101,7 @@ public class EmailService {
         requisitosHtml.append("</ul>");
         htmlTemplate = htmlTemplate.replace("${requisitos}", requisitosHtml.toString());
 
-        MimeMessage message = this.createEmailHtml(destinatarios, EMAIL_SUBJECT_CONVOCATORIA, htmlTemplate);
+        MimeMessage message = this.createEmailHtml(emails, EMAIL_SUBJECT_CONVOCATORIA, htmlTemplate);
         JavaMailSender emailSender = this.getJavaMailSender();
         emailSender.send(message);
 
