@@ -18,7 +18,6 @@ import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.dominio.admin.profesionalizacion.ProConvocatoria;
 import epntech.cbdmq.pe.dominio.util.profesionalizacion.ProInscripcionDto;
-import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
@@ -84,7 +83,7 @@ public class EmailService {
         }
         String Path = RUTA_PLANTILLAS + "templates-formacion/template-convocatoria.html";
         String linkRespaldo = URLDESCARGA + "/link/" + codigoDocumento;
-        String link ="192.168.0.184:8084/inscripcion";
+        String link = "192.168.0.184:8084/inscripcion";
 
         String htmlTemplate = readFile(Path);
         htmlTemplate = htmlTemplate.replace("${nombre}", convocatoria.getNombre());
@@ -125,7 +124,7 @@ public class EmailService {
         }
     }
 
-    public String notificacionAprobadoSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
+    public String notificacionAprobadoPruebaSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
             throws MessagingException, IOException {
 
         String email = datoPersonal.getCorreoPersonal();
@@ -149,7 +148,7 @@ public class EmailService {
 
     }
 
-    public String notificacionNoAprobadoSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
+    public String notificacionNoAprobadosPruebaSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
             throws MessagingException, IOException {
 
         String email = datoPersonal.getCorreoPersonal();
@@ -173,7 +172,7 @@ public class EmailService {
 
     }
 
-    public String notificacionAprobadoFinalSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
+    public String notificacionAprobadoPruebaFinalSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
             throws MessagingException, IOException {
 
         String email = datoPersonal.getCorreoPersonal();
@@ -197,7 +196,7 @@ public class EmailService {
 
     }
 
-    public String notificacionNoAprobadoFinalSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
+    public String notificacionNoAprobadoPruebaFinalSendEmail(String nombrePrueba, DatoPersonal datoPersonal)
             throws MessagingException, IOException {
 
         String email = datoPersonal.getCorreoPersonal();
@@ -237,7 +236,9 @@ public class EmailService {
         } catch (Exception ex) {
 
         }
-    }    public void sendMensajeGeneralList(String[] email, String subject, String mensaje) {
+    }
+
+    public void sendMensajeGeneralList(String[] email, String subject, String mensaje) {
         try {
 
             String Path = RUTA_PLANTILLAS + " template-pecbdmq-general-html.html";
@@ -250,39 +251,6 @@ public class EmailService {
 
         }
     }
-
-    //TODO NO HACE NADA
-    public void notificacionEmail(LocalDateTime fecha, String mensaje, String email) throws MessagingException {
-        JavaMailSender emailSender = this.getJavaMailSender();
-        SimpleMailMessage message = this.notificacionSendEmail(fecha, mensaje, email);
-
-        emailSender.send(message);
-
-    }
-
-    private SimpleMailMessage /* Message */ notificacionSendEmail(LocalDateTime fecha, String mensaje, String email)
-            throws MessagingException {
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(USERNAME);
-
-        // si email es una lista, se envia a todos los correos de la lista con setTo(String[] to)
-        // busca si se usa , o ; como separador
-        if (email.contains(",") || email.contains(";")) {
-            String[] emails = email.split(",|;");
-            message.setTo(emails);
-        } else {
-            message.setTo(email);
-        }
-
-        message.setSubject(EMAIL_SUBJECT2);
-        message.setText("Para el dia " + fecha + ", \n \n " + mensaje
-                + "\n \n Plataforma educativa - CBDMQ");
-
-        return message;
-    }
-    //TODO termina no hace nada
-
 
     public void sendInscripcionProEmail(String toEmail, ProConvocatoria convocatoria, ProInscripcionDto proInscripcion) {
         try {
@@ -314,6 +282,11 @@ public class EmailService {
 
         }
     }
+    public String htmlTemplateRenderAprobacionInscripcion() throws IOException {
+        String Path = RUTA_PLANTILLAS + "templateAprobacionInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
+        String htmlTemplate = readFile(Path);
+        return htmlTemplate;
+    }
 
 
     public void sendRechazadoValidacionProEmail(String toEmail) {
@@ -338,11 +311,6 @@ public class EmailService {
         return htmlTemplate;
     }
 
-    public String htmlTemplateRenderAprobacionInscripcion() throws IOException {
-        String Path = RUTA_PLANTILLAS + "templateAprobacionInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
-        String htmlTemplate = readFile(Path);
-        return htmlTemplate;
-    }
 
     public String htmlTemplateRenderRechazoInscripcion() throws IOException {
         String Path = RUTA_PLANTILLAS + "templateRechazoInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
@@ -374,7 +342,6 @@ public class EmailService {
         return Session.getInstance(properties, null);
     }
 
-    // Impl con Spring mail
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -393,39 +360,6 @@ public class EmailService {
         return mailSender;
     }
 
-
-    private SimpleMailMessage /* Message */ sendEmail(String email, String subject, String texto)
-            throws MessagingException {
-
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setFrom(USERNAME);
-
-
-        // si email es una lista, se envia a todos los correos de la lista con setTo(String[] to)
-        // busca si se usa , o ; como separador
-        if (email.contains(",") || email.contains(";")) {
-            String[] emails = email.split(",|;");
-            message.setTo(emails);
-        } else {
-            message.setTo(email);
-        }
-
-        message.setSubject(subject);
-        message.setText(texto);
-
-        return message;
-    }
-
-    public void enviarEmail(String email, String subject, String texto) throws MessagingException {
-        JavaMailSender emailSender = this.getJavaMailSender();
-        SimpleMailMessage message = this.sendEmail(email, subject, texto);
-
-        emailSender.send(message);
-
-    }
-
-    //TODO CONVOCATORIA ESPECIALIZACION
 
     public MimeMessage sendEmailHtmlToList(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicioCurso, String fechaFinCurso, String cupos, String requisitos, String link)
             throws MessagingException, IOException {
@@ -465,17 +399,6 @@ public class EmailService {
         JavaMailSender emailSender = this.getJavaMailSender();
         emailSender.send(message);
         return message;
-    }
-
-
-    public void enviarEmailHtml(String[] destinatarios, String subject, String texto) {
-        try {
-            JavaMailSender emailSender = this.getJavaMailSender();
-            MimeMessage message = this.createEmailHtml(destinatarios, subject, texto);
-            emailSender.send(message);
-        } catch (MessagingException me) {
-            throw new BusinessException("Error al enviar correo");
-        }
     }
 
     private MimeMessage createEmailHtml(String[] destinatarios, String subject, String textoHtml)
