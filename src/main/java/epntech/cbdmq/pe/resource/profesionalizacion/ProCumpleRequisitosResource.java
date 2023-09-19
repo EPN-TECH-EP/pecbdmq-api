@@ -59,7 +59,7 @@ public class ProCumpleRequisitosResource extends ProfesionalizacionResource<ProC
             Optional<ProInscripcionDto> proDatosInscripcion = datosRepository.getProDatosInscripcion(obj.get(0).getCodInscripcion());
             if (proDatosInscripcion.isPresent()){
                 ProInscripcionDto proInscripcionDto = proDatosInscripcion.get();
-                this.emailService.sendvValidacionAprobadoEmail(proInscripcionDto.getCorreoPersonal());
+                this.emailService.sendAprobadoValidacionProEmail(proInscripcionDto.getCorreoPersonal());
 
             }
             return service.apruebaInscripcion(obj.get(0).getCodInscripcion());
@@ -67,7 +67,7 @@ public class ProCumpleRequisitosResource extends ProfesionalizacionResource<ProC
             Optional<ProInscripcionDto> proDatosInscripcion = datosRepository.getProDatosInscripcion(obj.get(0).getCodInscripcion());
             if (proDatosInscripcion.isPresent()){
                 ProInscripcionDto proInscripcionDto = proDatosInscripcion.get();
-                this.emailService.sendValidacionRechazadoEmail(proInscripcionDto.getCorreoPersonal());
+                this.emailService.sendRechazadoValidacionProEmail(proInscripcionDto.getCorreoPersonal());
             }
             return service.rechazaInscripcion(obj.get(0).getCodInscripcion());
         }

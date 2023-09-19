@@ -148,7 +148,7 @@ public class ProInscripcionServiceImpl extends ProfesionalizacionServiceImpl<Pro
         var con = proConvocatoriaRepository.findById(proInscripcion.getCodConvocatoria()).get();
         var correoPersonal = insp.getCorreoPersonal();
 
-        emailService.sendInscripcionFormacionEmail(proInscripcion.getEmail(), con, insp);
+        emailService.sendInscripcionProEmail(proInscripcion.getEmail(), con, insp);
         return proInscripcion1;
     }
 
