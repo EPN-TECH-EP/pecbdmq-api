@@ -216,17 +216,17 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
         return null;
     }
 
-	@Override
-	public Boolean generarArchivosAprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
-		return this.generarArchivos(response, true);
-	}
+    @Override
+    public Boolean generarArchivosAprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
+        return this.generarArchivos(response, true);
+    }
 
-	@Override
-	public Boolean generarArchivosReprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
-		return this.generarArchivos(response, false);
-	}
+    @Override
+    public Boolean generarArchivosReprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
+        return this.generarArchivos(response, false);
+    }
 
-	public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer codCurso, String[] headers, Boolean esAprobado)
+    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer codCurso, String[] headers, Boolean esAprobado)
             throws DocumentException, IOException, DataException {
 
         ExporterPdf exporter = new ExporterPdf();
@@ -240,7 +240,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
         } else {
             exporter.exportar(response, headers, obtenerDatosReprobados(codCurso), widths, ruta);
         }
-		generaDocumento(ruta, nombre, codCurso, esAprobado);
+        generaDocumento(ruta, nombre, codCurso, esAprobado);
 
 
 
