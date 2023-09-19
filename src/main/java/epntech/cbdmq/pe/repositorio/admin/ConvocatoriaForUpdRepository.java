@@ -1,8 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_CONVOCATORIA;
-import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -26,8 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumento;
-import epntech.cbdmq.pe.dominio.admin.ConvocatoriaDocumentoForDoc;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaRequisito;
 import epntech.cbdmq.pe.dominio.admin.DocumentoFor;
@@ -192,15 +187,9 @@ public class ConvocatoriaForUpdRepository {
 			}
 		}
 
-		// ENVIO DE EMAIL CON DOCUMENTO CONVOCATORIA
-		if (docsConvocatoria != null) {
-			String link = URLDESCARGA + "/link/" + documentosFor.getCodDocumento();
 
-			String mensaje = "Se adjunta link de los recursos de convocatoria \n \n" + "link: http://" + link
-					+ " \n \n Plataforma educativa - CBDMQ";
 
-			emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
-		}
+			emailService.sendConvocatoriaFormacionEmail(convocatoria.getCorreo(),convocatoria, documentosFor.getCodDocumento());
 
 		PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
 

@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.resource;
 
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class DatoPersonalResource {
 
 	@PostMapping("/crear")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) throws DataException, MessagingException {
+	public ResponseEntity<?> guardarDatosPersonales(@RequestBody DatoPersonal obj) throws DataException, MessagingException, IOException {
 		return new ResponseEntity<>(objService.saveDatosPersonales(obj), HttpStatus.OK);
 	}
 

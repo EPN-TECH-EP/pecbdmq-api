@@ -130,9 +130,9 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             try {
                 String mensaje;
                 if (esUltimo) {
-                    mensaje = emailService.notificacionAprobadoFinalEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                    mensaje = emailService.notificacionAprobadoFinalSendEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                 } else {
-                    mensaje = emailService.notificacionAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                    mensaje = emailService.notificacionAprobadoSendEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                 }
                 noti.setMensaje("mensaje");
                 noti.setNotificacionEnviada(true);
@@ -174,9 +174,9 @@ public class NotificacionPruebaServiceImpl implements NotificacionPruebaService 
             try {
                     String mensaje;
                     if (esUltimo) {
-                        mensaje = emailService.notificacionNoAprobadoFinalEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                        mensaje = emailService.notificacionNoAprobadoFinalSendEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                     } else {
-                        mensaje = emailService.notificacionNoAprobadoEmail(pruebaDetalle.getDescripcionPrueba(), dato);
+                        mensaje = emailService.notificacionNoAprobadoSendEmail(pruebaDetalle.getDescripcionPrueba(), dato);
                     }
                 noti.setMensaje("mensaje");
                 noti.setNotificacionEnviada(true);

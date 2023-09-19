@@ -353,7 +353,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
                 String nombres = dato.getNombre() + " " + dato.getApellido();
                 String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso);
                 String[] destinatarios = {resultadosPruebasDatos.getCorreoPersonal()};
-                emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
+                emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
 
             } catch (Exception e) {
                 String errorMessage = e.getMessage();
@@ -393,7 +393,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
                 String nombres = dato.getNombre() + " " + dato.getApellido();
                 String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso);
                 String[] destinatarios = {resultadosPruebasDatos.getCorreoPersonal()};
-                emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_APROBADO, cuerpoHtml);
+                emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_APROBADO, cuerpoHtml);
 
             } catch (Exception e) {
                 String errorMessage = e.getMessage();

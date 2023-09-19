@@ -18,7 +18,7 @@ import jakarta.mail.MessagingException;
 
 public interface DatoPersonalService {
 
-	DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException;
+	DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException, IOException;
 	
 	List<DatoPersonal> getAllDatosPersonales();
 	

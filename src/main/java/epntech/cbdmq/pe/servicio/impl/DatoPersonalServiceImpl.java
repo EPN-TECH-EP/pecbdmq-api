@@ -65,7 +65,7 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 	BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
 	@Override
-	public DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException {
+	public DatoPersonal saveDatosPersonales(DatoPersonal obj) throws DataException, MessagingException, IOException {
 		String code = "";
 
 		if (obj.getNombre() == null || obj.getCedula() == null || obj.getNombre().isEmpty()

@@ -103,7 +103,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
         for (PostulantesValidos postulantesValidos : lista) {
             String msg = String.format(mensaje, postulantesValidos.getIdPostulante(), prueba, fechaIni, fechaFin, hora);
 
-            emailService.enviarEmail(postulantesValidos.getCorreoPersonal(), EMAIL_SUBJECT_PRUEBAS, msg);
+            emailService.sendMensajeGeneral(postulantesValidos.getCorreoPersonal(), EMAIL_SUBJECT_PRUEBAS, msg);
         }
         /*
          * }catch(Exception ex) { System.out.println("error: " + ex.getMessage()); throw

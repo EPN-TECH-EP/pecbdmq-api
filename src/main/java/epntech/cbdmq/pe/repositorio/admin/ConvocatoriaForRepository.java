@@ -1,7 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
-import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
 import static epntech.cbdmq.pe.constante.ArchivoConst.*;
 
 import java.io.IOException;
@@ -291,11 +290,10 @@ public class ConvocatoriaForRepository {
          * .setParameter("codDocumento", elemento.getDocumentosRequisito()); }
          */
 
-        String link = URLDESCARGA + "/link/" + codigoDocumento;
 
-        String mensaje = "Se adjunta link de los recursos de convocatoria \n \n" + "link: http://" + link + " \n \n Plataforma educativa - CBDMQ";
 
-        emailService.enviarEmail(convocatoria.getCorreo(), EMAIL_SUBJECT_CONVOCATORIA, mensaje);
+
+        emailService.sendConvocatoriaFormacionEmail(convocatoria.getCorreo(),convocatoria, codigoDocumento);
 
         PeriodoAcademicoFor pa = new PeriodoAcademicoFor();
 
