@@ -21,7 +21,7 @@ public interface InstructorService {
 
 	Optional<Instructor> getById(Integer codigo);
 
-	Instructor update(Instructor objActualizado);
+	Instructor update(InstructorDatos objActualizado);
 
 	void delete(Integer codigo);
 		Instructor getInstructorByUser(String coduser);
