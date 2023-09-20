@@ -335,7 +335,7 @@ public class EmailService {
     }
 
     public String htmlTemplateRenderAprobacionInscripcion() throws IOException {
-        String Path = RUTA_PLANTILLAS + "templateAprobacionInscripcion.html";
+        String Path = RUTA_PLANTILLAS + "/templates-profesionalizacion/template-aprobados.html";
         String htmlTemplate = readFile(Path);
         return htmlTemplate;
     }
@@ -358,7 +358,7 @@ public class EmailService {
     }
 
     public String htmlTemplateRenderRechazoInscripcion() throws IOException {
-        String Path = RUTA_PLANTILLAS + "templateRechazoInscripcion.html";
+        String Path = RUTA_PLANTILLAS + "templates-profesionalizacion/template-reprobados.html";
         String htmlTemplate = readFile(Path);
         return htmlTemplate;
     }
