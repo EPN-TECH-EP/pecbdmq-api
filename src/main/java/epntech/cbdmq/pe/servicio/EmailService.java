@@ -15,18 +15,18 @@ import java.util.Set;
 
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.admin.Requisito;
 import epntech.cbdmq.pe.dominio.admin.RequisitoFor;
 import epntech.cbdmq.pe.dominio.admin.profesionalizacion.ProConvocatoria;
+import epntech.cbdmq.pe.dominio.util.profesionalizacion.ProConvocatoriaRequisitoDto;
 import epntech.cbdmq.pe.dominio.util.profesionalizacion.ProInscripcionDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
@@ -227,7 +227,7 @@ public class EmailService {
                 emails = email.split(",|;");
             }
 
-            String Path = RUTA_PLANTILLAS + " template-pecbdmq-general.html";
+            String Path = RUTA_PLANTILLAS + "template-pecbdmq-general.html";
             String htmlTemplate = readFile(Path);
             htmlTemplate = htmlTemplate.replace("${mensaje}", mensaje);
             MimeMessage message = this.createEmailHtml(emails, subject, htmlTemplate);
@@ -241,7 +241,7 @@ public class EmailService {
     public void sendMensajeGeneralList(String[] email, String subject, String mensaje) {
         try {
 
-            String Path = RUTA_PLANTILLAS + " template-pecbdmq-general-html.html";
+            String Path = RUTA_PLANTILLAS + "template-pecbdmq-general-html.html";
             String htmlTemplate = readFile(Path);
             htmlTemplate = htmlTemplate.replace("${mensaje}", mensaje);
             MimeMessage message = this.createEmailHtml(email, subject, htmlTemplate);
@@ -251,20 +251,71 @@ public class EmailService {
 
         }
     }
+    //ESPECIALIZACION
 
-    public void sendInscripcionProEmail(String toEmail, ProConvocatoria convocatoria, ProInscripcionDto proInscripcion) {
-        try {
-            String destinatarios[] = {toEmail};
-            String Path = RUTA_PLANTILLAS + "templateInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
-            String htmlTemplate = readFile(Path);
-            htmlTemplate = htmlTemplate.replace("${numeroConvocatoria}", convocatoria.getCodigoUnicoConvocatoria());
-            htmlTemplate = htmlTemplate.replace("${usuario}", proInscripcion.getApellido() + " " + proInscripcion.getNombre());
-            MimeMessage message = this.createEmailHtml(destinatarios, EMAIL_SUBJECT, htmlTemplate);
-            JavaMailSender emailSender = this.getJavaMailSender();
-            emailSender.send(message);
-        } catch (Exception ex) {
-
+    public void sendConvocatoriaEspEmail(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicioCurso, String fechaFinCurso, String cupos, Set<Requisito> requisitos, String link)
+            throws MessagingException, IOException {
+        String Path = RUTA_PLANTILLAS + "templates-especializacion/template-convocatoria.html";
+        String htmlTemplate = readFile(Path);
+        htmlTemplate = htmlTemplate.replace("${descripcionCurso}", descripcion);
+        htmlTemplate = htmlTemplate.replace("${fechaInicioConvocatoria}", fechaInicioConvocatoria);
+        htmlTemplate = htmlTemplate.replace("${fechaInicioCurso}", fechaInicioCurso);
+        htmlTemplate = htmlTemplate.replace("${fechaFinCurso}", fechaFinCurso);
+        htmlTemplate = htmlTemplate.replace("${cupos}", cupos);
+        htmlTemplate = htmlTemplate.replace("${link}", link);
+        StringBuilder requisitosHtml = new StringBuilder("<ul>");
+        for (Requisito requisito : requisitos) {
+            requisitosHtml.append("<li>").append(requisito.getNombre()).append("</li>");
         }
+        requisitosHtml.append("</ul>");
+        htmlTemplate = htmlTemplate.replace("${requisitos}", requisitosHtml.toString());
+
+        MimeMessage message = this.createEmailHtml(destinatarios, subject, htmlTemplate);
+        JavaMailSender emailSender = this.getJavaMailSender();
+        emailSender.send(message);
+    }
+
+
+    //PROFESIONALIZACIÓN
+    public void sendConvocatoriaProEmail(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicio, String fechaFin, List<ProConvocatoriaRequisitoDto> requisitos, String mensajes, String link)
+            throws MessagingException, IOException {
+        String Path = RUTA_PLANTILLAS + "templates-profesionalizacion/template-convocatoria.html";
+        String htmlTemplate = readFile(Path);
+        htmlTemplate = htmlTemplate.replace("${descripcion}", descripcion);
+        htmlTemplate = htmlTemplate.replace("${fechaInicioConvocatoria}", fechaInicioConvocatoria);
+        htmlTemplate = htmlTemplate.replace("${fechaInicio}", fechaInicio);
+        htmlTemplate = htmlTemplate.replace("${fechaFin}", fechaFin);
+        htmlTemplate = htmlTemplate.replace("${link}", link);
+        htmlTemplate = htmlTemplate.replace("${linkInscripcion}", link);
+
+        StringBuilder requisitosHtml = new StringBuilder("<ul>");
+        for (ProConvocatoriaRequisitoDto requisito : requisitos) {
+            requisitosHtml.append("<li>").append(requisito.getNombreRequisito()).append("</li>");
+        }
+        requisitosHtml.append("</ul>");
+        htmlTemplate = htmlTemplate.replace("${requisitos}", requisitosHtml.toString());
+
+        MimeMessage message = this.createEmailHtml(destinatarios, subject, htmlTemplate);
+        JavaMailSender emailSender = this.getJavaMailSender();
+        emailSender.send(message);
+    }
+
+
+    public void sendInscripcionProEmail(String toEmail, ProConvocatoria convocatoria, ProInscripcionDto proInscripcion) throws IOException, MessagingException {
+        String[] emails = {toEmail};
+        if (toEmail.contains(",") || toEmail.contains(";")) {
+            emails = toEmail.split(",|;");
+        }
+        String Path = RUTA_PLANTILLAS + "templates-profesionalizacion/template-inscripcion.html";
+
+        String htmlTemplate = readFile(Path);
+        htmlTemplate = htmlTemplate.replace("${numeroConvocatoria}", convocatoria.getCodigoUnicoConvocatoria());
+        htmlTemplate = htmlTemplate.replace("${usuario}", proInscripcion.getApellido() + " " + proInscripcion.getNombre());
+        MimeMessage message = this.createEmailHtml(emails, EMAIL_SUBJECT, htmlTemplate);
+        JavaMailSender emailSender = this.getJavaMailSender();
+        emailSender.send(message);
+
+
     }
 
     public void sendAprobadoValidacionProEmail(String toEmail) {
@@ -282,8 +333,9 @@ public class EmailService {
 
         }
     }
+
     public String htmlTemplateRenderAprobacionInscripcion() throws IOException {
-        String Path = RUTA_PLANTILLAS + "templateAprobacionInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
+        String Path = RUTA_PLANTILLAS + "templateAprobacionInscripcion.html";
         String htmlTemplate = readFile(Path);
         return htmlTemplate;
     }
@@ -305,41 +357,17 @@ public class EmailService {
         }
     }
 
-    public String htmlTemplateRenderConvocatoriaProfesionalizacion() throws IOException {
-        String Path = RUTA_PLANTILLAS + "templateNotificacionConvocatoria.html"; //"src\\main\\resources\\templateCorreo.html";
-        String htmlTemplate = readFile(Path);
-        return htmlTemplate;
-    }
-
-
     public String htmlTemplateRenderRechazoInscripcion() throws IOException {
-        String Path = RUTA_PLANTILLAS + "templateRechazoInscripcion.html"; //"src\\main\\resources\\templateCorreo.html";
+        String Path = RUTA_PLANTILLAS + "templateRechazoInscripcion.html";
         String htmlTemplate = readFile(Path);
         return htmlTemplate;
     }
 
-    private String getHtmlGeneric(String template)
-            throws IOException {
-        String Path = RUTA_PLANTILLAS + template;
-        //"templateCorreo.html";
-        String htmlTemplate = readFile(Path);
-        return htmlTemplate;
-    }
 
     private String readFile(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         byte[] bytes = Files.readAllBytes(path);
         return new String(bytes, StandardCharsets.UTF_8);
-    }
-
-    private Session getEmailSession() {
-        Properties properties = System.getProperties();
-        properties.put(PROP_SMTP_HOST, EMAIL_SMTP_SERVER);
-        properties.put(PROP_SMTP_AUTH, "true");
-        properties.put(PROP_SMTP_PORT, DEFAULT_PORT);
-        properties.put(PROP_SMTP_STARTTLS_ENABLE, "true");
-        properties.put(PROP_SMTP_STARTTLS_REQUIRED, "true");
-        return Session.getInstance(properties, null);
     }
 
     @Bean
@@ -360,46 +388,6 @@ public class EmailService {
         return mailSender;
     }
 
-
-    public MimeMessage sendEmailHtmlToList(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicioCurso, String fechaFinCurso, String cupos, String requisitos, String link)
-            throws MessagingException, IOException {
-        JavaMailSender emailSender = this.getJavaMailSender();
-        MimeMessage message = this.getJavaMailSender().createMimeMessage();
-        InternetAddress fromAddress = new InternetAddress(USERNAME);
-        message.setFrom(fromAddress);
-        message.setSubject(subject);
-        for (String destinatario : destinatarios) {
-            message.setRecipients(MimeMessage.RecipientType.TO, destinatario);
-        }
-        message.setSubject(subject);
-        String htmlTemplate = this.getHtmlGeneric("convocatoriaEsp.html");
-        htmlTemplate = htmlTemplate.replace("${descripcionCurso}", descripcion);
-        htmlTemplate = htmlTemplate.replace("${fechaInicioConvocatoria}", fechaInicioConvocatoria);
-        htmlTemplate = htmlTemplate.replace("${fechaInicioCurso}", fechaInicioCurso);
-        htmlTemplate = htmlTemplate.replace("${fechaFinCurso}", fechaFinCurso);
-        htmlTemplate = htmlTemplate.replace("${cupos}", cupos);
-        htmlTemplate = htmlTemplate.replace("${requisitos}", requisitos);
-        htmlTemplate = htmlTemplate.replace("${link}", link);
-        message.setContent(htmlTemplate, "text/html; charset=utf-8");
-        emailSender.send(message);
-        return message;
-    }
-
-    public MimeMessage sendEmailHtmlToListPro(String[] destinatarios, String subject, String descripcion, String fechaInicioConvocatoria, String fechaInicio, String fechaFin, String requisitos, String mensajes, String link)
-            throws MessagingException, IOException {
-        String Path = RUTA_PLANTILLAS + "\\templates-profesionalizacion\\template-convocatoria.html"; //"src\\main\\resources\\templateCorreo.html";
-        String htmlTemplate = readFile(Path);
-        htmlTemplate = htmlTemplate.replace("${descripcion}", descripcion);
-        htmlTemplate = htmlTemplate.replace("${fechaInicioConvocatoria}", fechaInicioConvocatoria);
-        htmlTemplate = htmlTemplate.replace("${fechaInicio}", fechaInicio);
-        htmlTemplate = htmlTemplate.replace("${fechaFin}", fechaFin);
-        htmlTemplate = htmlTemplate.replace("${requisitos}", requisitos);
-        htmlTemplate = htmlTemplate.replace("${link}", link);
-        MimeMessage message = this.createEmailHtml(destinatarios, EMAIL_SUBJECT, htmlTemplate);
-        JavaMailSender emailSender = this.getJavaMailSender();
-        emailSender.send(message);
-        return message;
-    }
 
     private MimeMessage createEmailHtml(String[] destinatarios, String subject, String textoHtml)
             throws MessagingException {
