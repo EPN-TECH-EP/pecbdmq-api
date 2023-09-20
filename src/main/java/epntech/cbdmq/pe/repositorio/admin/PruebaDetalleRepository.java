@@ -32,6 +32,7 @@ public interface PruebaDetalleRepository extends JpaRepository<PruebaDetalle, In
 
 	Optional<PruebaDetalle> findByCodCursoEspecializacionAndCodSubtipoPrueba(Integer codCursoEspecializacion, Integer codSubtipoPrueba);
 
+
 	@Query(nativeQuery = true, name = "PruebaDetalle.findDatosPrueba")
 	Optional<PruebaDetalleData> getPruebaDetalleDatos(@Param("codCursoEspecializacion") Long codCursoEspecializacion, @Param("codSubTipoPrueba") Long codSubTipoPrueba);
 

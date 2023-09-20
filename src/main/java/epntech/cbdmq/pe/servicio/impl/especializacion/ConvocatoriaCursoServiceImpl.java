@@ -3,8 +3,6 @@ package epntech.cbdmq.pe.servicio.impl.especializacion;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CONVOCATORIA;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.CONVOCATORIA_CURSO_EXISTE;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.CURSO_NO_APROBADO;
-import static epntech.cbdmq.pe.constante.EspecializacionConst.FECHA_INVALIDA;
-import static epntech.cbdmq.pe.constante.MensajesConst.NO_PARAMETRO;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
 
@@ -21,14 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.especializacion.ConvocatoriaCurso;
-import epntech.cbdmq.pe.dominio.admin.especializacion.ConvocatoriaCursoData;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.util.ListaRequisitos;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
@@ -194,14 +188,9 @@ public class ConvocatoriaCursoServiceImpl implements ConvocatoriaCursoService {
         String[] destinatarios = convocatoriaCurso.getCorreo().split(",");
         String link = URLINCSCRIPCION +curso.getCodCursoEspecializacion();
 
-        // texto de requisitos nombre y descripcion en líneas separadas. iterar curso.getRequisitos()
-        String textoRequisitos = "";
-        for (Requisito requisito : curso.getRequisitos()) {
-            textoRequisitos += requisito.getNombre() + ": " + requisito.getDescripcion() + "<br>";
-        }
 
 
-        emailService.sendEmailHtmlToList(destinatarios, EMAIL_SUBJECT_CONVOCATORIA, curso.getNombre(),convocatoriaCurso.getFechaInicioConvocatoria().toString(),curso.getFechaInicioCurso().toString(),curso.getFechaFinCurso().toString(),curso.getNumeroCupo().toString(),textoRequisitos,link);
+        emailService.sendConvocatoriaEspEmail(destinatarios, EMAIL_SUBJECT_CONVOCATORIA, curso.getNombre(),convocatoriaCurso.getFechaInicioConvocatoria().toString(),curso.getFechaInicioCurso().toString(),curso.getFechaFinCurso().toString(),curso.getNumeroCupo().toString(),curso.getRequisitos(),link);
 
     }
 

@@ -177,18 +177,19 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
             codPruebaDetalle = pp.get().getCodPruebaDetalle();
             String detallePrueba = pp.get().getDescripcionPrueba() + " " + pActive;
             nombreArchivo = prefijo + detallePrueba;
-        String nombre1 = nombreArchivo + ".pdf";
-        String nombre2 = nombreArchivo + ".xlsx";
-        if (esAprobado) {
+            String nombre1 = nombreArchivo + ".pdf";
+            String nombre2 = nombreArchivo + ".xlsx";
+            if (esAprobado) {
                 this.generarPDFFormacion(response, ruta + nombre1, nombre1, codSubtipoPrueba, codCurso, columnas, true);
                 this.generarExcelFormacion(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, true);
-        } else {
+            } else {
                 this.generarPDFFormacion(response, ruta + nombre1, nombre1, codSubtipoPrueba, codCurso, columnas, false);
                 this.generarExcelFormacion(ruta + nombre2, nombre2, codSubtipoPrueba, columnas, codCurso, false);
             }
         }
 
         return true;
+
     }
 
     @Override
@@ -223,7 +224,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
         if (esAprobado) {
-        exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
+            exporter.exportar(response, headers, obtenerDatosEsp(subTipoPrueba, codCurso), widths, ruta);
         } else {
             exporter.exportar(response, headers, obtenerDatosEspDesaprobados(subTipoPrueba, codCurso), widths, ruta);
         }
@@ -248,16 +249,6 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
     public void generarPDFFormacion(HttpServletResponse response, String ruta, String nombre, Integer subTipoPrueba, Integer codCurso, String[] headers, Boolean esAprobado)
             throws DocumentException, IOException, DataException {
 
-        //TODO el response no tiene ninguna funcionalidad
-        /*
-                response.setContentType("application/pdf");
-                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-                String fechaActual = dateFormatter.format(new Date());
-                String cabecera = "Cuerpo-Bomberos";
-                String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
-                response.addHeader(cabecera, valor);
-
-         */
         ExporterPdf exporter = new ExporterPdf();
         //anchos de las columnas
         float[] widths = new float[]{2.5f, 2.5f, 2.5f, 2.5f, 2.5f};
@@ -360,6 +351,7 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
 
         return entityToArrayListEsp(datos);
     }
+
     public ArrayList<ArrayList<String>> obtenerDatosEspDesaprobados(Integer prueba, Integer codCurso) throws DataException {
 
         List<DatosInscripcionEsp> datos;
@@ -428,8 +420,8 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         Optional<PruebaDetalle> pruebaDetalleOpt = null;
         if (codCurso != null) {
             pruebaDetalleOpt = pruebaDetalleRepository.findByCodCursoEspecializacionAndCodSubtipoPrueba(
-                codCurso,
-                codSubtipo);
+                    codCurso,
+                    codSubtipo);
         } else {
             pruebaDetalleOpt = pruebaDetalleRepository.findByCodSubtipoPruebaAndCodPeriodoAcademico(
                     codSubtipo,

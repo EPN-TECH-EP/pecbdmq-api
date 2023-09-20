@@ -47,7 +47,7 @@ public class InstructorResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Integer codigo, @RequestBody Instructor obj)
+	public ResponseEntity<Instructor> actualizarDatos(@PathVariable("id") Long codigo, @RequestBody InstructorDatos obj)
 			throws DataException {
 		obj.setCodInstructor(codigo);
 		return new ResponseEntity<>(objService.update(obj), HttpStatus.OK);

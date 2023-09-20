@@ -48,6 +48,7 @@ public class ResultadoPruebasTodoServiceImpl implements ResultadoPruebasTodoServ
     public ByteArrayOutputStream generarExcel(Integer prueba) throws IOException {
         // obtener datos transformados
         ArrayList<ArrayList<String>> datos = this.obtenerDatosTransformados(prueba);
+        
 
         // generar excel
         return ExcelHelper.generarExcelFOS(datos, "ResultadosRegistrados.xlsx", this.getHeaders());

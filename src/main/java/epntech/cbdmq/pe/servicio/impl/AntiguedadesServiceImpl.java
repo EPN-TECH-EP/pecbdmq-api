@@ -42,18 +42,18 @@ import static epntech.cbdmq.pe.constante.MensajesConst.NO_PARAMETRO;
 @Service
 public class AntiguedadesServiceImpl implements AntiguedadesService {
 
-	@Autowired
-	private AntiguedadesRepository antiguedadesRepository;
-	@Autowired
-	private DocumentoRepository documentoRepo;
-	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
-	@Autowired
-	private AntiguedadesFormacionRepository antiguedadesFormacionRepository;
-	@Autowired
-	private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
-	@Autowired
-	private CursoDocumentoService cursoDocumentoSvc;
+    @Autowired
+    private AntiguedadesRepository antiguedadesRepository;
+    @Autowired
+    private DocumentoRepository documentoRepo;
+    @Autowired
+    private PeriodoAcademicoRepository periodoAcademicoRepository;
+    @Autowired
+    private AntiguedadesFormacionRepository antiguedadesFormacionRepository;
+    @Autowired
+    private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
+    @Autowired
+    private CursoDocumentoService cursoDocumentoSvc;
     @Autowired
     private ParametroRepository parametroRepository;
     @Autowired
@@ -67,84 +67,85 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
     @Autowired
     private CatalogoCursoRepository catalogoCursoRepository;
 
-	@Value("${pecb.archivos.ruta}")
-	private String ARCHIVOS_RUTA;
+    @Value("${pecb.archivos.ruta}")
+    private String ARCHIVOS_RUTA;
 
-	@Override
-	public Set<AntiguedadesDatos> getAntiguedadesMasculino() {
+    @Override
+    public Set<AntiguedadesDatos> getAntiguedadesMasculino() {
 
-		return antiguedadesRepository.getAntiguedadesMasculino();
-	}
+        return antiguedadesRepository.getAntiguedadesMasculino();
+    }
 
-	@Override
-	public Set<AntiguedadesDatos> getAntiguedadesFemenino() {
-		return antiguedadesRepository.getAntiguedadesFemenino();
-	}
+    @Override
+    public Set<AntiguedadesDatos> getAntiguedadesFemenino() {
+        return antiguedadesRepository.getAntiguedadesFemenino();
+    }
 
-	@Override
-	public void generarExcel(String filePath, String nombre, int genero, Integer codTipoDocumento) throws IOException, DataException {
+    @Override
+    public void generarExcel(String filePath, String nombre, int genero, Integer codTipoDocumento) throws IOException, DataException {
         String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
-		try {
-			ExcelHelper.generarExcel(obtenerDatos(genero), filePath, HEADERs);
+        try {
+            ExcelHelper.generarExcel(obtenerDatos(genero), filePath, HEADERs);
 
-			generaDocumento(filePath, nombre);
+            generaDocumento(filePath, nombre);
 
-		} catch (IOException ex) {
-			System.out.println("error: " + ex.getMessage());
-		}
+        } catch (IOException ex) {
+            System.out.println("error: " + ex.getMessage());
+        }
 
-	}
+    }
 
-	@Override
-	public void generarPDF(HttpServletResponse response, String filePath, String nombre, int genero, Integer codTipoDocumento)
-			throws DocumentException, IOException, DataException {
-		response.setContentType("application/pdf");
+    @Override
+    public void generarPDF(HttpServletResponse response, String filePath, String nombre, int genero, Integer codTipoDocumento)
+            throws DocumentException, IOException, DataException {
+        response.setContentType("application/pdf");
 
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String fechaActual = dateFormatter.format(new Date());
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
 
-		String cabecera = "Cuerpo-Bomberos";
-		String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+        String cabecera = "Cuerpo-Bomberos";
+        String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
 
-		response.addHeader(cabecera, valor);
+        response.addHeader(cabecera, valor);
 
-		ExporterPdf exporter = new ExporterPdf();
+        ExporterPdf exporter = new ExporterPdf();
         String[] columnas = {"Codigo", "id", "Cedula", "Nombre", "Apellido", "Nota"};
         float[] widths = new float[]{2f, 3f, 6f, 6f, 2.5f, 2.5f};
 
-		//Genera el pdf
-		exporter.setArchivosRuta(ARCHIVOS_RUTA);
-		exporter.exportar(response, columnas, obtenerDatos(genero), widths, filePath);
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        exporter.exportar(response, columnas, obtenerDatos(genero), widths, filePath);
 
-		generaDocumento(filePath, nombre);
+        generaDocumento(filePath, nombre);
 
-	}
+    }
 
-	public ArrayList<ArrayList<String>> obtenerDatos(int genero) {
-		Set<AntiguedadesDatos> datos = new HashSet<>();
+    public ArrayList<ArrayList<String>> obtenerDatos(int genero) {
+        Set<AntiguedadesDatos> datos = new HashSet<>();
         if (genero == 1) {
-			datos = antiguedadesRepository.getAntiguedadesFemenino();
+            datos = antiguedadesRepository.getAntiguedadesFemenino();
         } else if (genero == 0) {
-			datos = antiguedadesRepository.getAntiguedadesMasculino();
-		}
-		
-		return entityToArrayList(datos);
-	}
+            datos = antiguedadesRepository.getAntiguedadesMasculino();
+        }
 
-	public ArrayList<ArrayList<String>> obtenerDatos() {
-		Set<AntiguedadesFormacion> datos = new HashSet<>();
-		
-		datos = antiguedadesFormacionRepository.getAntiguedadesFormacion();
-		
-		return entityToArrayListAntiguedades(datos);
-	}
-	public ArrayList<ArrayList<String>> obtenerDatosEsp(Long codCurso) {
-		Set<AntiguedadesFormacion> datos = new HashSet<>();
+        return entityToArrayList(datos);
+    }
 
-		datos = antiguedadesFormacionRepository.getAntiguedadesEspecializacion(codCurso);
+    public ArrayList<ArrayList<String>> obtenerDatos() {
+        Set<AntiguedadesFormacion> datos = new HashSet<>();
 
-		return entityToArrayListAntiguedades(datos);
-	}
+        datos = antiguedadesFormacionRepository.getAntiguedadesFormacion();
+
+        return entityToArrayListAntiguedades(datos);
+    }
+
+    public ArrayList<ArrayList<String>> obtenerDatosEsp(Long codCurso) {
+        Set<AntiguedadesFormacion> datos = new HashSet<>();
+
+        datos = antiguedadesFormacionRepository.getAntiguedadesEspecializacion(codCurso);
+
+        return entityToArrayListAntiguedades(datos);
+    }
 
     public ArrayList<ArrayList<String>> obtenerDatosReprobadosEsp(Long codCurso) {
         Set<AntiguedadesFormacion> datos = new HashSet<>();
@@ -154,111 +155,112 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
         return entityToArrayListAntiguedades(datos);
     }
 
-	public static String[] entityToStringArray(AntiguedadesDatos entity) {
+    public static String[] entityToStringArray(AntiguedadesDatos entity) {
         return new String[]{entity.getCodPostulante().toString(), entity.getIdPostulante().toString(),
-				entity.getCedula(), entity.getNombre(), entity.getApellido(),
+                entity.getCedula(), entity.getNombre(), entity.getApellido(),
                 entity.getNotaPromedioFinal().toString()};
-	}
+    }
 
-	public static ArrayList<ArrayList<String>> entityToArrayList(Set<AntiguedadesDatos> datos) {
-		ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
-		for (AntiguedadesDatos dato : datos) {
+    public static ArrayList<ArrayList<String>> entityToArrayList(Set<AntiguedadesDatos> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+        for (AntiguedadesDatos dato : datos) {
 
-			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
-		}
-		return arrayMulti;
-	}
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArray(dato))));
+        }
+        return arrayMulti;
+    }
 
-	public static String[] entityToStringArrayAntiguedades(AntiguedadesFormacion entity) {
+    public static String[] entityToStringArrayAntiguedades(AntiguedadesFormacion entity) {
         return new String[]{entity.getCodigoUnicoEstudiante(), entity.getCedula(),
-				entity.getNombre(), entity.getApellido(), entity.getCorreoPersonal(), 
+                entity.getNombre(), entity.getApellido(), entity.getCorreoPersonal(),
                 entity.getNotaFinal().toString()};
-	}
+    }
 
-	public static ArrayList<ArrayList<String>> entityToArrayListAntiguedades(Set<AntiguedadesFormacion> datos) {
-		ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
-		for (AntiguedadesFormacion dato : datos) {
+    public static ArrayList<ArrayList<String>> entityToArrayListAntiguedades(Set<AntiguedadesFormacion> datos) {
+        ArrayList<ArrayList<String>> arrayMulti = new ArrayList<ArrayList<String>>();
+        for (AntiguedadesFormacion dato : datos) {
 
-			arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayAntiguedades(dato))));
-		}
-		return arrayMulti;
-	}
+            arrayMulti.add(new ArrayList<String>(Arrays.asList(entityToStringArrayAntiguedades(dato))));
+        }
+        return arrayMulti;
+    }
 
-	private void generaDocumento(String ruta, String nombre) {
-		Documento documento = new Documento();
+    private void generaDocumento(String ruta, String nombre) {
+        Documento documento = new Documento();
         Optional<Documento> documento2 = documentoRepo.findByNombre(nombre);
         if (documento2.isPresent()) {
-			documento = documento2.get();
-		}
-		documento.setEstado(ACTIVO);
-		documento.setNombre(nombre);
-		documento.setRuta(ruta);
+            documento = documento2.get();
+        }
+        documento.setEstado(ACTIVO);
+        documento.setNombre(nombre);
+        documento.setRuta(ruta);
 
-		documento = documentoRepo.save(documento);
+        documento = documentoRepo.save(documento);
 
-		PeriodoAcademicoDocumentoFor doc = new PeriodoAcademicoDocumentoFor();
+        PeriodoAcademicoDocumentoFor doc = new PeriodoAcademicoDocumentoFor();
         doc.setCodPeriodoAcademico(periodoAcademicoRepository.getPAActive());
         ;
-		doc.setCodDocumento(documento.getCodDocumento());		
-		periodoAcademicoDocForRepository.save(doc);
+        doc.setCodDocumento(documento.getCodDocumento());
+        periodoAcademicoDocForRepository.save(doc);
 
-		// System.out.println("documento.getCodigo(): " + documento.getCodigo());
-	}
+        // System.out.println("documento.getCodigo(): " + documento.getCodigo());
+    }
 
-	@Override
-	public Set<AntiguedadesFormacion> getAntiguedadesFormacion() {
-		// TODO Auto-generated method stub
-		return antiguedadesFormacionRepository.getAntiguedadesFormacion();
-	}
+    @Override
+    public Set<AntiguedadesFormacion> getAntiguedadesFormacion() {
+        // TODO Auto-generated method stub
+        return antiguedadesFormacionRepository.getAntiguedadesFormacion();
+    }
 
-	@Override
-	public Set<AntiguedadesFormacion> getAntiguedadesEspecializacion(Long codCurso) {
-		return antiguedadesFormacionRepository.getAntiguedadesEspecializacion(codCurso);
-	}
+    @Override
+    public Set<AntiguedadesFormacion> getAntiguedadesEspecializacion(Long codCurso) {
+        return antiguedadesFormacionRepository.getAntiguedadesEspecializacion(codCurso);
+    }
 
-	@Override
-	public void generarExcel(String filePath, String nombre)
-			throws IOException, DataException {
+    @Override
+    public void generarExcel(String filePath, String nombre)
+            throws IOException, DataException {
         String[] HEADERs = {"Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota"};
-		try {
-			ExcelHelper.generarExcel(obtenerDatos(), filePath, HEADERs);
+        try {
+            ExcelHelper.generarExcel(obtenerDatos(), filePath, HEADERs);
 
-			generaDocumento(filePath, nombre);
+            generaDocumento(filePath, nombre);
 
-		} catch (IOException ex) {
-			System.out.println("error: " + ex.getMessage());
-		}
-		
-	}
+        } catch (IOException ex) {
+            System.out.println("error: " + ex.getMessage());
+        }
 
-	@Override
-	public void generarPDF(HttpServletResponse response, String filePath, String nombre)
-			throws DocumentException, IOException, DataException {
-		response.setContentType("application/pdf");
+    }
 
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String fechaActual = dateFormatter.format(new Date());
+    @Override
+    public void generarPDF(HttpServletResponse response, String filePath, String nombre)
+            throws DocumentException, IOException, DataException {
+        response.setContentType("application/pdf");
 
-		String cabecera = "Cuerpo-Bomberos";
-		String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
 
-		response.addHeader(cabecera, valor);
+        String cabecera = "Cuerpo-Bomberos";
+        String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
 
-		ExporterPdf exporter = new ExporterPdf();
+        response.addHeader(cabecera, valor);
+
+        ExporterPdf exporter = new ExporterPdf();
         String[] columnas = {"Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota"};
         float[] widths = new float[]{2f, 2f, 6f, 6f, 2.5f, 2f};
 
-		//Genera el pdf
-		exporter.setArchivosRuta(ARCHIVOS_RUTA);
-		exporter.exportar(response, columnas, obtenerDatos(), widths, filePath);
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        exporter.exportar(response, columnas, obtenerDatos(), widths, filePath);
 
-		generaDocumento(filePath, nombre);
+        generaDocumento(filePath, nombre);
 
-		
-	}
 
-	@Override
-	public void generarExcelEsp(String filePath, String nombre, Long codCurso) throws IOException, DataException {
+
+    }
+
+    @Override
+    public void generarExcelEsp(String filePath, String nombre, Long codCurso) throws IOException, DataException {
         this.generarExcelEspGeneral(filePath, nombre, codCurso, true);
     }
 
@@ -288,29 +290,29 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
             }
             cursoDocumentoSvc.generaDocumento(filePath, nombre, codCurso);
 
-		} catch (IOException ex) {
-			System.out.println("error: " + ex.getMessage());
-		}
-	}
+        } catch (IOException ex) {
+            System.out.println("error: " + ex.getMessage());
+        }
+    }
 
-	@Override
+    @Override
     public void generarPDFEspGeneral(HttpServletResponse response, String filePath, String nombre, Long codCurso, Boolean aprobados) throws DocumentException, IOException, DataException {
-		response.setContentType("application/pdf");
+        response.setContentType("application/pdf");
 
-		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-		String fechaActual = dateFormatter.format(new Date());
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
 
-		String cabecera = "Cuerpo-Bomberos";
-		String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
+        String cabecera = "Cuerpo-Bomberos";
+        String valor = "attachment; filename=Datos" + fechaActual + ".pdf";
 
-		response.addHeader(cabecera, valor);
+        response.addHeader(cabecera, valor);
 
-		ExporterPdf exporter = new ExporterPdf();
+        ExporterPdf exporter = new ExporterPdf();
         String[] columnas = {"Codigo Unico", "Cedula", "Nombre", "Apellido", "Correo", "Nota"};
         float[] widths = new float[]{2f, 2f, 6f, 6f, 2.5f, 2f};
 
-		//Genera el pdf
-		exporter.setArchivosRuta(ARCHIVOS_RUTA);
+        //Genera el pdf
+        exporter.setArchivosRuta(ARCHIVOS_RUTA);
         if (aprobados)
             exporter.exportar(response, columnas, obtenerDatosEsp(codCurso), widths, filePath + "/" + nombre);
         else
@@ -351,7 +353,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
                 String nombres = dato.getNombre() + " " + dato.getApellido();
                 String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso);
                 String[] destinatarios = {resultadosPruebasDatos.getCorreoPersonal()};
-                emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
+                emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
 
             } catch (Exception e) {
                 String errorMessage = e.getMessage();
@@ -391,14 +393,14 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
                 String nombres = dato.getNombre() + " " + dato.getApellido();
                 String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso);
                 String[] destinatarios = {resultadosPruebasDatos.getCorreoPersonal()};
-                emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_APROBADO, cuerpoHtml);
+                emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_APROBADO, cuerpoHtml);
 
             } catch (Exception e) {
                 String errorMessage = e.getMessage();
                 errorMessageBuilder.append(errorMessage).append("\n");
             }
         }
-	}
+    }
 
 }
 

@@ -196,7 +196,7 @@ public class InscripcionForResource {
 		InscripcionFor datosActualizados = new InscripcionFor();
 		try {
 			datosActualizados = objService.reenvioPin(obj);
-		} catch (DataException | MessagingException e) {
+		} catch (DataException | MessagingException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return response(HttpStatus.BAD_REQUEST, e.getMessage());

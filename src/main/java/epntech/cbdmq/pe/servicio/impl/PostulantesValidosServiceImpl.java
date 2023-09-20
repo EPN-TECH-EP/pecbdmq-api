@@ -34,16 +34,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostulantesValidosServiceImpl implements PostulantesValidosService {
 
-	@Autowired
-	private PostulantesValidosRepository repo;
-	@Autowired
-	private EmailService emailService;
-	@Autowired
-	private ResultadoPruebasRepository resultadoPruebasRepository;
-	@Autowired
-	private PruebaDetalleRepository pruebaDetalleRepository;
-	@Autowired
-	private PeriodoAcademicoRepository periodoAcademicoRepository;
+    @Autowired
+    private PostulantesValidosRepository repo;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private ResultadoPruebasRepository resultadoPruebasRepository;
+    @Autowired
+    private PruebaDetalleRepository pruebaDetalleRepository;
+    @Autowired
+    private PeriodoAcademicoRepository periodoAcademicoRepository;
     @Autowired
     private PeriodoAcademicoDocForRepository periodoAcademicoDocForRepository;
     @Value("${pecb.archivos.ruta}")
@@ -52,150 +52,149 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
     private DocumentoRepository documentoRepo;
 
     @Override
-	public List<PostulantesValidos> getPostulantesValidos() {
-		return repo.getPostulantesValidos();
-	}
+    public List<PostulantesValidos> getPostulantesValidos() {
+        return repo.getPostulantesValidos();
+    }
 
-	@Override
-	public List<PostulantesValidos> getPostulantesValidosDiferentBaja() {
-		return repo.getPostulantesValidosDiferentBaja();
-	}
+    @Override
+    public List<PostulantesValidos> getPostulantesValidosDiferentBaja() {
+        return repo.getPostulantesValidosDiferentBaja();
+    }
 
-	@Override
-	public List<PostulantesValidos> getAllPostulantesValidos() {
-		return repo.getAllPostulantesValidos();
-	}
+    @Override
+    public List<PostulantesValidos> getAllPostulantesValidos() {
+        return repo.getAllPostulantesValidos();
+    }
     @Override
     public List<PostulantesValidos> getAllPostulantesNoValidos() {
         return repo.getAllPostulantesNoValidos();
     }
-	
-	@Override
+
+    @Override
     public Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable) {
-		return this.repo.getAllPostulantesValidosPaginado(pageable);
-	}
-	
-	@Override
-	public List<PostulantesValidos> getAllPostulantesValidosOrderApellido() {
-		return this.repo.getAllPostulantesValidosOrderApellido();
-	}
+        return this.repo.getAllPostulantesValidosPaginado(pageable);
+    }
 
-	@Override
-	public Page<PostulantesValidos> getAllPostulantesValidosPaginadoOrderApellido(Pageable pageable) {
-		return this.repo.getAllPostulantesValidosPaginadoOrderApellido(pageable);
-	}
+    @Override
+    public List<PostulantesValidos> getAllPostulantesValidosOrderApellido() {
+        return this.repo.getAllPostulantesValidosOrderApellido();
+    }
 
-	@Override
-	@Async
-	public void notificar(String mensaje, String prueba, Date fechaIni, Date fechaFin, LocalTime hora,
-			Integer codPrueba) throws MessagingException, Exception {
-		List<PostulantesValidos> lista = new ArrayList<>();
-		// try {
+    @Override
+    public Page<PostulantesValidos> getAllPostulantesValidosPaginadoOrderApellido(Pageable pageable) {
+        return this.repo.getAllPostulantesValidosPaginadoOrderApellido(pageable);
+    }
 
-		Optional<PruebaDetalle> pruebaDetalle = pruebaDetalleRepository
-				.findByCodSubtipoPruebaAndCodPeriodoAcademico(codPrueba, periodoAcademicoRepository.getPAActive());
-		if (pruebaDetalle.isPresent() && pruebaDetalle.get().getOrdenTipoPrueba().equals(1)) {
-			lista = repo.getAllPostulantesValidos();
-		} else if (pruebaDetalle.isPresent()) {
-			lista = repo.get_approved_by_test(codPrueba);
-		}
-		System.out.println("lista: " + lista.size());
-		for (PostulantesValidos postulantesValidos : lista) {
-			String msg = String.format(mensaje, postulantesValidos.getIdPostulante(), prueba, fechaIni, fechaFin, hora);
+    @Override
+    @Async
+    public void notificar(String mensaje, String prueba, Date fechaIni, Date fechaFin, LocalTime hora,
+                          Integer codPrueba) throws MessagingException, Exception {
+        List<PostulantesValidos> lista = new ArrayList<>();
+        // try {
 
-			emailService.enviarEmail(postulantesValidos.getCorreoPersonal(), EMAIL_SUBJECT_PRUEBAS, msg);
-		}
-		/*
-		 * }catch(Exception ex) { System.out.println("error: " + ex.getMessage()); throw
-		 * new Exception(ex.getMessage()); }
-		 */
-	}
+        Optional<PruebaDetalle> pruebaDetalle = pruebaDetalleRepository
+                .findByCodSubtipoPruebaAndCodPeriodoAcademico(codPrueba, periodoAcademicoRepository.getPAActive());
+        if (pruebaDetalle.isPresent() && pruebaDetalle.get().getOrdenTipoPrueba().equals(1)) {
+            lista = repo.getAllPostulantesValidos();
+        } else if (pruebaDetalle.isPresent()) {
+            lista = repo.get_approved_by_test(codPrueba);
+        }
+        System.out.println("lista: " + lista.size());
+        for (PostulantesValidos postulantesValidos : lista) {
+            String msg = String.format(mensaje, postulantesValidos.getIdPostulante(), prueba, fechaIni, fechaFin, hora);
 
-	@Override
-	public void onInitResultado(List<PostulantesValidos> obj, Integer prueba) {
-		List<ResultadoPruebas> resultadoPruebas = new ArrayList<>();
+            emailService.sendMensajeGeneral(postulantesValidos.getCorreoPersonal(), EMAIL_SUBJECT_PRUEBAS, msg);
+        }
+        /*
+         * }catch(Exception ex) { System.out.println("error: " + ex.getMessage()); throw
+         * new Exception(ex.getMessage()); }
+         */
+    }
 
-		for (PostulantesValidos postulantesValidos : obj) {
+    @Override
+    public void onInitResultado(List<PostulantesValidos> obj, Integer prueba) {
+        List<ResultadoPruebas> resultadoPruebas = new ArrayList<>();
 
-			ResultadoPruebas pruebas = new ResultadoPruebas();
-			pruebas.setCodPostulante(postulantesValidos.getCodPostulante());
-			pruebas.setCodPruebaDetalle(prueba);
-			pruebas.setEstado("ACTIVO");
-			resultadoPruebas.add(pruebas);
-		}
+        for (PostulantesValidos postulantesValidos : obj) {
 
-		resultadoPruebasRepository.saveAll(resultadoPruebas);
-	}
+            ResultadoPruebas pruebas = new ResultadoPruebas();
+            pruebas.setCodPostulante(postulantesValidos.getCodPostulante());
+            pruebas.setCodPruebaDetalle(prueba);
+            pruebas.setEstado("ACTIVO");
+            resultadoPruebas.add(pruebas);
+        }
 
-	@Override
-	public Page<PostulantesValidos> getAllPaginado(Pageable pageable, Integer codPrueba) throws Exception {
-		// return repo.getPostulantesValidosPaginado(pageable);
-		return repo.get_approved_by_test(pageable, codPrueba);
-	}
+        resultadoPruebasRepository.saveAll(resultadoPruebas);
+    }
 
-	@Override
-	public List<PostulantesValidos> getPostulantesAprovadosPrueba(Integer prueba) {
-		return repo.get_approved_by_test(prueba);
-	}
+    @Override
+    public Page<PostulantesValidos> getAllPaginado(Pageable pageable, Integer codPrueba) throws Exception {
+        // return repo.getPostulantesValidosPaginado(pageable);
+        return repo.get_approved_by_test(pageable, codPrueba);
+    }
 
-	@Override
-	public List<PostulantesValidos> getPostulantesValidosFiltro(String tipoFiltro, String valorFiltro) {
-		List<PostulantesValidos> lista = new ArrayList<>();
-		switch (tipoFiltro) {
-		case "cedula":
-			lista = repo.getPostulantesValidosFiltroCedula(valorFiltro);
-			break;
-		case "idPostulante":
-			lista = repo.getPostulantesValidosFiltroIdPostulante(valorFiltro);
-			break;
-		case "apellido":
-			lista = repo.getPostulantesValidosFiltroApellido(valorFiltro);
-			break;
-		default:
-			lista = repo.getAllPostulantesValidos();
-			break;
-		}
-		return lista;
-	}
+    @Override
+    public List<PostulantesValidos> getPostulantesAprovadosPrueba(Integer prueba) {
+        return repo.get_approved_by_test(prueba);
+    }
 
-	/////////////////////////////////////////////////////////
-	// listado postulantes para seguimiento de inscripciones
+    @Override
+    public List<PostulantesValidos> getPostulantesValidosFiltro(String tipoFiltro, String valorFiltro) {
+        List<PostulantesValidos> lista = new ArrayList<>();
+        switch (tipoFiltro) {
+            case "cedula":
+                lista = repo.getPostulantesValidosFiltroCedula(valorFiltro);
+                break;
+            case "idPostulante":
+                lista = repo.getPostulantesValidosFiltroIdPostulante(valorFiltro);
+                break;
+            case "apellido":
+                lista = repo.getPostulantesValidosFiltroApellido(valorFiltro);
+                break;
+            default:
+                lista = repo.getAllPostulantesValidos();
+                break;
+        }
+        return lista;
+    }
 
-	@Override
-	public List<PostulantesValidos> getPostulantesTodoFiltro(String tipoFiltro, String valorFiltro) {
-		List<PostulantesValidos> lista = new ArrayList<>();
-		switch (tipoFiltro) {
-			case "cedula":
-				lista = repo.getPostulantesTodoFiltroCedula(valorFiltro);
-				break;
-			case "idPostulante":
-				lista = repo.getPostulantesTodoFiltroIdPostulante(valorFiltro);
-				break;
-			case "apellido":
-				lista = repo.getPostulantesTodoFiltroApellido(valorFiltro);
-				break;
-			default:
-				lista = repo.getAllPostulantesTodo();
-				break;
-		}
-		return lista;
-	}
+    /////////////////////////////////////////////////////////
+    // listado postulantes para seguimiento de inscripciones
 
-	@Override
+    @Override
+    public List<PostulantesValidos> getPostulantesTodoFiltro(String tipoFiltro, String valorFiltro) {
+        List<PostulantesValidos> lista = new ArrayList<>();
+        switch (tipoFiltro) {
+            case "cedula":
+                lista = repo.getPostulantesTodoFiltroCedula(valorFiltro);
+                break;
+            case "idPostulante":
+                lista = repo.getPostulantesTodoFiltroIdPostulante(valorFiltro);
+                break;
+            case "apellido":
+                lista = repo.getPostulantesTodoFiltroApellido(valorFiltro);
+                break;
+            default:
+                lista = repo.getAllPostulantesTodo();
+                break;
+        }
+        return lista;
+    }
+
+    @Override
     public Page<PostulantesValidos> getAllPostulantesTodoPaginado(Pageable pageable) {
-		return this.repo.getAllPostulantesTodoPaginado(pageable);
-	}
+        return this.repo.getAllPostulantesTodoPaginado(pageable);
+    }
 
 
-
-	@Override
-	public Page<PostulantesValidos> getAllPostulantesTodoPaginadoOrderApellido(Pageable pageable) {
-		return this.repo.getAllPostulantesTodoPaginadoOrderApellido(pageable);
-	}
+    @Override
+    public Page<PostulantesValidos> getAllPostulantesTodoPaginadoOrderApellido(Pageable pageable) {
+        return this.repo.getAllPostulantesTodoPaginadoOrderApellido(pageable);
+    }
 
     @Override
     public Boolean generarArchivos(HttpServletResponse response, Boolean esAprobado) throws DataException, DocumentException, IOException {
-        String[] columnas = {"C骴igo 趎ico", "Correo", "Cedula", "Nombre", "Apellido"};
+        String[] columnas = {"C贸digo 脷nico", "Correo", "Cedula", "Nombre", "Apellido"};
 
         String ruta = ARCHIVOS_RUTA + PATH_RESULTADO_VALIDACION
                 + periodoAcademicoRepository.getPAActive().toString()
@@ -217,17 +216,17 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
         return null;
     }
 
-	@Override
-	public Boolean generarArchivosAprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
-		return this.generarArchivos(response, true);
-	}
+    @Override
+    public Boolean generarArchivosAprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
+        return this.generarArchivos(response, true);
+    }
 
-	@Override
-	public Boolean generarArchivosReprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
-		return this.generarArchivos(response, false);
-	}
+    @Override
+    public Boolean generarArchivosReprobados(HttpServletResponse response) throws DataException, DocumentException, IOException {
+        return this.generarArchivos(response, false);
+    }
 
-	public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer codCurso, String[] headers, Boolean esAprobado)
+    public void generarPDF(HttpServletResponse response, String ruta, String nombre, Integer codCurso, String[] headers, Boolean esAprobado)
             throws DocumentException, IOException, DataException {
 
         ExporterPdf exporter = new ExporterPdf();
@@ -241,7 +240,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
         } else {
             exporter.exportar(response, headers, obtenerDatosReprobados(codCurso), widths, ruta);
         }
-		generaDocumento(ruta, nombre, codCurso, esAprobado);
+        generaDocumento(ruta, nombre, codCurso, esAprobado);
 
 
 
@@ -278,7 +277,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
         List<PostulantesValidos> datos;
 
         if (codCurso != null) {
-            //TODO reprobados despues de validaci髇 en especializaci髇
+            //TODO reprobados despues de validaci贸n en especializaci贸n
             datos = null;
         } else {
             datos = this.getAllPostulantesNoValidos();
@@ -319,7 +318,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
 
         documento = documentoRepo.save(documento);
 
-        // si es curso, guarda en repo del curso, caso contrario guarda en repo de formaci髇
+        // si es curso, guarda en repo del curso, caso contrario guarda en repo de formaci贸n
         if (codCurso != null) {
             //TODO
 			/*

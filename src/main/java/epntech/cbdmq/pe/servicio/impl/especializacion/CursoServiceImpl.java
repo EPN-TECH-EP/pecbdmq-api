@@ -215,7 +215,7 @@ public class CursoServiceImpl implements CursoService {
         Usuario usuario= usuarioService.getById(cc.getCodUsuarioCreacion()).get();
         String mensaje="Se ha creado el curso " + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora "+ formattedDate;
 
-        emailService.enviarEmail(cc.getEmailNotificacion(), "Creación de curso", mensaje);
+        emailService.sendMensajeGeneral(cc.getEmailNotificacion(), "Creación de curso", mensaje);
 
         return cc;
     }
@@ -243,7 +243,7 @@ public class CursoServiceImpl implements CursoService {
         String mensaje="Se ha editado el curso " + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
                 "El curso fue editado con fecha y hora "+ formattedDate;
 
-        emailService.enviarEmail(curso.getEmailNotificacion(), "Edición de curso", mensaje);
+        emailService.sendMensajeGeneral(curso.getEmailNotificacion(), "Edición de curso", mensaje);
 
 
         return cursoRepository.save(objActualizado);
@@ -278,10 +278,11 @@ public class CursoServiceImpl implements CursoService {
         }else{
             mensaje="Se ha rechazado el curso " +curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
         }
-        emailService.enviarEmail(curso.getEmailNotificacion(), "Validación de curso",mensaje );
+        emailService.sendMensajeGeneral(curso.getEmailNotificacion(), "Validación de curso",mensaje );
 
         return curso;
     }
+
 
 
     @Override
@@ -348,7 +349,7 @@ public class CursoServiceImpl implements CursoService {
         String nombres = instructoresCurso.getNombre() + " " + instructoresCurso.getApellido();
         String cuerpoHtml = String.format(parametro.getValor(), nombres, instructoresCurso.getNombreCatalogoCurso(), documento.getNombre(), observaciones);
         String[] destinatarios = {instructoresCurso.getCorreoInstitucional(), instructoresCurso.getCorreoPersonal()};
-        emailService.enviarEmailHtml(destinatarios, EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO, cuerpoHtml);
+        emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO, cuerpoHtml);
     }
 
     @Override

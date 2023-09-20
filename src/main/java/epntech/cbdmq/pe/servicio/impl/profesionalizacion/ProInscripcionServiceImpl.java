@@ -21,10 +21,12 @@ import epntech.cbdmq.pe.repositorio.profesionalizacion.ProDocumentosRepository;
 import epntech.cbdmq.pe.repositorio.profesionalizacion.ProInscripcionRepository;
 import epntech.cbdmq.pe.servicio.EmailService;
 import epntech.cbdmq.pe.servicio.profesionalizacion.ProInscripcionService;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_INSCRIPCION_FOR;
@@ -104,7 +106,7 @@ public class ProInscripcionServiceImpl extends ProfesionalizacionServiceImpl<Pro
         return requisitosByInscripcion;
     }
 
-    public ProInscripcion insertarInscripcionConDocumentos(ProInscripcion proInscripcion, List<MultipartFile> docsInscripcion) throws DataException {
+    public ProInscripcion insertarInscripcionConDocumentos(ProInscripcion proInscripcion, List<MultipartFile> docsInscripcion) throws DataException, MessagingException, IOException {
         //Si no existe codigo estudiante se debe crear
         if(proInscripcion.getCodEstudiante() == null) {
             setEstudiante(proInscripcion);
@@ -148,7 +150,7 @@ public class ProInscripcionServiceImpl extends ProfesionalizacionServiceImpl<Pro
         var con = proConvocatoriaRepository.findById(proInscripcion.getCodConvocatoria()).get();
         var correoPersonal = insp.getCorreoPersonal();
 
-        emailService.sendInscripcionFormacionEmail(proInscripcion.getEmail(), con, insp);
+        emailService.sendInscripcionProEmail(proInscripcion.getEmail(), con, insp);
         return proInscripcion1;
     }
 

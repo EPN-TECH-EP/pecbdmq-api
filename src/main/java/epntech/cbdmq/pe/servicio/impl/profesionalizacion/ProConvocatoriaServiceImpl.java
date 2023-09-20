@@ -158,9 +158,9 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
             Parametro parametro2 = parametroRepository.findById(proConvocatoria.getCodigoParametro2().longValue()).orElseThrow(() -> new BusinessException(""));
             mensajes += parametro2.getNombreParametro() + ": " + parametro2.getValor() + "<br>";
 
-            emailService.sendEmailHtmlToListPro(destinatarios, EMAIL_SUBJECT_CONVOCATORIA_PRO, proConvocatoria.getNombre(),
+            emailService.sendConvocatoriaProEmail(destinatarios, EMAIL_SUBJECT_CONVOCATORIA_PRO, proConvocatoria.getNombre(),
                     formatDate(proConvocatoria.getFechaActual()), formatDate(proConvocatoria.getFechaInicio()),
-                    formatDate(proConvocatoria.getFechaFin()), textoRequisitos, mensajes, URL_INSCRIPCION);
+                    formatDate(proConvocatoria.getFechaFin()), requisitos, mensajes, URL_INSCRIPCION);
         } catch (MessagingException | IOException e) {
             throw new BusinessException("Error al enviar correo");
         }

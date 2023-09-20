@@ -43,7 +43,7 @@ public class ResultadoPruebasHelper {
     static String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
     static String SHEET = "Hoja1";
 
-    public static boolean hasExcelFormat(MultipartFile file) {
+		public static boolean hasExcelFormat(MultipartFile file) {
 
         if (!TYPE.equals(file.getContentType())) {
             return false;
@@ -117,7 +117,7 @@ public class ResultadoPruebasHelper {
 		try {
 			Workbook workbook = new XSSFWorkbook(is);
 
-            Sheet sheet = workbook.getSheet(SHEET);
+			Sheet sheet = workbook.getSheet(SHEET);
 			if(sheet == null) {
 				throw new RuntimeException("No se encontró ninguna hoja con el nombre: " + SHEET+". Asegúrese de tener una");
 			}

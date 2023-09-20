@@ -83,16 +83,14 @@ public class InstructorServiceImpl implements InstructorService {
 	}
 
 	@Override
-	public Instructor update(Instructor objActualizado) {
-		Instructor instructor = repo.findById(objActualizado.getCodInstructor())
+	public Instructor update(InstructorDatos objActualizado) {
+		Instructor instructor = repo.findById(objActualizado.getCodInstructor().intValue())
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
 
-		instructor.setCodDatosPersonales(objActualizado.getCodDatosPersonales());
 		instructor.setCodTipoProcedencia(objActualizado.getCodTipoProcedencia());
 		instructor.setCodEstacion(objActualizado.getCodEstacion());
 		instructor.setCodUnidadGestion(objActualizado.getCodUnidadGestion());
 		instructor.setCodTipoContrato(objActualizado.getCodTipoContrato());
-		instructor.setEstado(objActualizado.getEstado());
 
 		return repo.save(instructor);
 	}

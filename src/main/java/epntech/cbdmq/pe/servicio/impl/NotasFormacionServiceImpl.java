@@ -170,8 +170,9 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 					.findById(estudiante.get().getCodDatosPersonales());
 			Optional<Materia> materia = materiaRepository.findById(materiaPe.getCodMateria());
 
-			emailService.enviarEmail(datoPersonal.get().getCorreoPersonal(), EMAIL_SUBJECT_REG_NOTA,
-					"Se ha registrado una nota en la materia: " + materia.get().getNombre());
+			emailService.sendMensajeGeneral(datoPersonal.get().getCorreoPersonal(), EMAIL_SUBJECT_REG_NOTA,
+					"Se ha registrado una nota en la materia: " + materia.get().getNombre()+"\n"+
+							"Periodo Academico: "+periodoAcademicoService.getPAActivo()+"\n"+"Nota: "+notasFormacion.getNotaMateria());
 		}
 	}
 
