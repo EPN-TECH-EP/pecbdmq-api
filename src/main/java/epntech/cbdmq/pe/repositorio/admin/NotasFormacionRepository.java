@@ -51,7 +51,7 @@ public interface NotasFormacionRepository extends JpaRepository<NotasFormacion, 
 	@Query(nativeQuery = true, name = "EstudianteDatos.getNotasEstudiantesMateria")
 	List<EstudianteDatos> getEstudianteMateriaParalelo(@Param("codMateria") Integer codMateria, @Param("codPA") Integer codPA);
 	@Query(nativeQuery = true, name = "NotaMateriaByEstudiante.get")
-	List<NotaMateriaByEstudiante> get(@Param("codEstudiante") Integer codEstudiante, @Param("tipoInstructor") String tipoInstructor, @Param("codPA") Integer codPA );
+	List<NotaMateriaByEstudiante> get(@Param("codEstudiante") Integer codEstudiante, @Param("tipoInstructor") String tipoInstructor);
 	@Query(nativeQuery = true, name = "NotaMateriaByEstudianteFormacion.get")
 	NotaMateriaByEstudiante getMateriaByEstudianteNotaFormacion(@Param("codEstudiante") Integer codEstudiante, @Param("tipoInstructor") String tipoInstructor, @Param("codPA") Integer codPA, @Param("notaFormacion") Integer codNotaFormacion );
 
