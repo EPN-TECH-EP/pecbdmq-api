@@ -659,5 +659,20 @@ public class CursoServiceImpl implements CursoService {
         return false;
     }
 
+    @Override
+    public List<Curso> listarPorEstudianteAndEstado(Integer codigoEstudiante, String estado) {
+        return cursoRepository.findByEstudianteAndEstado(codigoEstudiante, estado);
+    }
+
+    @Override
+    public List<Curso> listarCerradosPorEstudiante(Integer codigoEstudiante) {
+        return this.listarPorEstudianteAndEstado(codigoEstudiante, "cierre%");
+    }
+
+    @Override
+    public List<Curso> listarAllPorEstudiante(Integer codigoEstudiante) {
+        return this.listarPorEstudianteAndEstado(codigoEstudiante, "%");
+    }
+
 
 }

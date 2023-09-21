@@ -60,4 +60,7 @@ public interface CursoService {
 
     Curso updateEstadoAprobadoObservaciones(long codigo, Boolean aprobadoCurso, String Observaciones, long codigoUserAprueba) throws MessagingException;
 	public Boolean reabrirCurso(Integer idCurso) throws DataException;
+	List<Curso> listarPorEstudianteAndEstado(Integer codigoEstudiante, String estado);
+	List<Curso> listarCerradosPorEstudiante(Integer codigoEstudiante);
+	List<Curso> listarAllPorEstudiante(Integer codigoEstudiante);
 }
