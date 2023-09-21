@@ -162,6 +162,15 @@ public class CursoResource {
 			return response(HttpStatus.CONFLICT, "Hubo un error");
 		}
 	}
+	@GetMapping("/listarCerradosPorEstudiante")
+	public List<Curso> listarCerradosPorEstudiante(@RequestParam Integer codigoEstudiante) {
+		return cursoServiceImpl.listarCerradosPorEstudiante(codigoEstudiante);
+	}
+	@GetMapping("/listarAllPorEstudiante")
+	public List<Curso> listarAllPorEstudiante(@RequestParam Integer codigoEstudiante) {
+		return cursoServiceImpl.listarAllPorEstudiante(codigoEstudiante);
+	}
+
 
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
 		return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),

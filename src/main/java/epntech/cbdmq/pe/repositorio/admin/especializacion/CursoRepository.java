@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
+import org.springframework.data.repository.query.Param;
 
 public interface CursoRepository extends JpaRepository<Curso, Long> {
 
@@ -54,6 +55,12 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 	List<Curso> findAllByEstadoContainsIgnoreCase(String estado, Sort sort);
 	@Query("SELECT c FROM Curso c ORDER BY c.nombre ASC")
 	List<Curso> findAllOrderedByName();
+
+	@Query(value = "select ec.* from cbdmq.esp_curso ec \n" +
+			"left join cbdmq.esp_inscripcion ei on ec.cod_curso_especializacion = ei.cod_curso_especializacion \n" +
+			"where ei.cod_estudiante = :codEstudiante\n" +
+			"and ec.estado ilike :estado\n", nativeQuery = true)
+	List<Curso> findByEstudianteAndEstado(@Param("codEstudiante") Integer codEstudiante, @Param("estado")String estado);
 
 
 }

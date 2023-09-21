@@ -11,8 +11,9 @@ public class NotaMateriaByEstudiante {
     private Double notaSupletorio;
     private Integer codInstructor;
     private String nombreCompletoInstructor;
+    private String nombrePeriodoFormacion;
 
-    public NotaMateriaByEstudiante(Integer codNotaFormacion, String nombreMateria, Double notaMateria, Double notaDisciplina, Double notaSupletorio, Integer codInstructor, String nombreCompletoInstructor) {
+    public NotaMateriaByEstudiante(Integer codNotaFormacion, String nombreMateria, Double notaMateria, Double notaDisciplina, Double notaSupletorio, Integer codInstructor, String nombreCompletoInstructor, String nombrePeriodoFormacion) {
         this.codNotaFormacion = codNotaFormacion;
         this.nombreMateria = nombreMateria;
         this.notaMateria = notaMateria;
@@ -20,5 +21,6 @@ public class NotaMateriaByEstudiante {
         this.notaSupletorio = notaSupletorio;
         this.codInstructor = codInstructor;
         this.nombreCompletoInstructor = nombreCompletoInstructor;
+        this.nombrePeriodoFormacion = nombrePeriodoFormacion;
     }
 }
