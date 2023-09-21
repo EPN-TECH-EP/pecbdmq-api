@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.NotasEspecializacion;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dto.especializacion.NotasEspecializacionDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,8 @@ public interface NotasEspecializacionRepository extends JpaRepository<NotasEspec
 
     @Query(nativeQuery = true, name = "NotasEspecializacion.findAprobadosCurso")
     List<NotasEspecializacionDTO> findAprobadosCurso(@Param("codCurso") Integer codCurso);
+    @Query(nativeQuery = true, name = "NotaCursoByEstudiante.get")
+    List<NotaMateriaByEstudiante> findNotasByCursoAndEstudiante(@Param("curso") Integer codCurso, @Param("estudiante") Integer codEstudiante);
 
     Optional<NotasEspecializacion> findByCodInscripcion(Integer codInscripcion);
 
