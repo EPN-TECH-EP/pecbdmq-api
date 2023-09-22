@@ -42,7 +42,8 @@ public class SeguridadConst {
 			"/grado/listarRangos",
 			"/postulantesValidos/resultadoPostulantes",
 			"/pruebadetalle/listarConDatos",
-			"/resultadoPruebaTodo/resultadoPostulantes/**",
+			"/postulantesValidos/resultadoPostulantes/**",
+			"/postulantesValidos/resultadoPostulantes",
 	};
 	
 	@Value("${pecb.app-key}")
