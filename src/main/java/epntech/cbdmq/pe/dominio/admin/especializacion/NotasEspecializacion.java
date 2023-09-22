@@ -74,6 +74,7 @@ import java.time.LocalTime;
 @NamedNativeQuery(name = "NotaCursoByEstudiante.get",
         query = "select\n" +
                 "\tnes.cod_nota_especializacion as cod_nota,\n" +
+                "\tcur.cod_curso_especializacion as cod_materia_curso,\n" +
                 "\tcur.nombre ,\n" +
                 "\tnes.nota_final_especializacion as nota,\n" +
                 "\tnull as nota_disciplina,\n" +
@@ -100,6 +101,7 @@ import java.time.LocalTime;
         targetClass = NotaMateriaByEstudiante.class,
         columns = {
                 @ColumnResult(name = "cod_nota", type = Integer.class),
+                @ColumnResult(name = "cod_materia_curso", type = Integer.class),
                 @ColumnResult(name = "nombre", type = String.class),
                 @ColumnResult(name = "nota", type = Double.class),
                 @ColumnResult(name = "nota_disciplina", type = Double.class),
