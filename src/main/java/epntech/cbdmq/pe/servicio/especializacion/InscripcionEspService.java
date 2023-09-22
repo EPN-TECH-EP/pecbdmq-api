@@ -6,8 +6,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import epntech.cbdmq.pe.dominio.admin.DatoPersonal;
+import epntech.cbdmq.pe.dominio.admin.llamamiento.RequisitosVerificados;
 import epntech.cbdmq.pe.dominio.util.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
@@ -66,5 +68,6 @@ public interface InscripcionEspService {
 	void notificarPruebaAprobada(Long codCursoEspecializacion, Long codSubTipoPrueba);
 	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula, Long codCurso) throws Exception;
 	DatoPersonalEstudianteDto colocarMasInformacion(DatoPersonal datoPersonal) throws Exception;
+	List<RequisitosVerificados> findRequisitosForEspByDp(Integer codDp);
 
 }

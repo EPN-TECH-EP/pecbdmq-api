@@ -22,6 +22,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import epntech.cbdmq.pe.dominio.Usuario;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.*;
+import epntech.cbdmq.pe.dominio.admin.llamamiento.RequisitosVerificados;
 import epntech.cbdmq.pe.dominio.util.*;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.admin.*;
@@ -743,6 +744,11 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
 
         return datoPersonalEstudianteDto;
+    }
+
+    @Override
+    public List<RequisitosVerificados> findRequisitosForEspByDp(Integer codDp) {
+        return validaRequisitosRepository.findRequisitosForEspByDp(codDp);
     }
 
 

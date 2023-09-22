@@ -203,5 +203,19 @@ public class InscripcionEspResource {
         }
     }
 
+    @GetMapping("/llamamientoII/{codDatoPersonal}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> findRequisitosForEspByDp(
+            @PathVariable("codDatoPersonal") Integer codDatoPersonal
+    ) throws Exception {
+
+        try {
+            return new ResponseEntity<>(inscripcionEspServiceImpl.findRequisitosForEspByDp(codDatoPersonal), HttpStatus.OK);
+        } catch (Exception ex) {
+
+            return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
+    }
+
 
 }
