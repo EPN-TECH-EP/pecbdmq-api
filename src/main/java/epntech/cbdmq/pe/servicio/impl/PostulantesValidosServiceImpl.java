@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
+import epntech.cbdmq.pe.dominio.util.PostulantesAprobadosReprobados;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
@@ -69,6 +70,45 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
     public List<PostulantesValidos> getAllPostulantesNoValidos() {
         return repo.getAllPostulantesNoValidos();
     }
+
+    @Override
+    public List<PostulantesAprobadosReprobados> getPospulantesAprobadosReprobados() {
+        List<PostulantesValidos> listaValidos = getAllPostulantesValidos();
+        List<PostulantesValidos> listaNoValidos = getAllPostulantesNoValidos();
+
+        List<PostulantesAprobadosReprobados> listaAprobados = listaValidos.stream()
+                .map(this::transformToAprobado)
+                .collect(Collectors.toList());
+
+        List<PostulantesAprobadosReprobados> listaNoAprobados = listaNoValidos.stream()
+                .map(this::transformToNoAprobado)
+                .collect(Collectors.toList());
+
+        listaAprobados.addAll(listaNoAprobados);
+
+        return listaAprobados;
+    }
+    // Método para transformar un PostulantesValidos a PostulantesAprobadosReprobados con esAprobado = true
+    private PostulantesAprobadosReprobados transformToAprobado(PostulantesValidos postulanteValido) {
+        PostulantesAprobadosReprobados postulante = new PostulantesAprobadosReprobados();
+        postulante.setCodPostulante(postulanteValido.getCodPostulante());
+        postulante.setIdPostulante(postulanteValido.getIdPostulante());
+        postulante.setCedula(postulanteValido.getCedula());
+        postulante.setCorreoPersonal(postulanteValido.getCorreoPersonal());
+        postulante.setNombre(postulanteValido.getNombre());
+        postulante.setApellido(postulanteValido.getApellido());
+        postulante.setEsAprobado(true);
+        return postulante;
+    }
+
+    // Método similar pero con esAprobado = false
+    private PostulantesAprobadosReprobados transformToNoAprobado(PostulantesValidos postulanteValido) {
+        PostulantesAprobadosReprobados postulante = transformToAprobado(postulanteValido);
+        postulante.setEsAprobado(false);
+        return postulante;
+    }
+
+
 
     @Override
     public Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable) {

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.lowagie.text.DocumentException;
+import epntech.cbdmq.pe.dominio.util.PostulantesAprobadosReprobados;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.postgresql.util.PSQLException;
@@ -24,6 +25,7 @@ public interface PostulantesValidosService {
 
 	List<PostulantesValidos> getAllPostulantesValidos();
 	List<PostulantesValidos> getAllPostulantesNoValidos();
+	List<PostulantesAprobadosReprobados> getPospulantesAprobadosReprobados();
 	
 	Page<PostulantesValidos> getAllPostulantesValidosPaginado(Pageable pageable);
 	
