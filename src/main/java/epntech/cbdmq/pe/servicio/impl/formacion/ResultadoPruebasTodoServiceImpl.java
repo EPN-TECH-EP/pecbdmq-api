@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.servicio.impl.formacion;
 import epntech.cbdmq.pe.dominio.util.InscritosEspecializacion;
 import epntech.cbdmq.pe.dominio.util.PostulantesValidos;
 import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
+import epntech.cbdmq.pe.dominio.util.ResultadosPruebasTodoReprobadosAprobados;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.formacion.ResultadoPruebasTodoRepository;
 import epntech.cbdmq.pe.servicio.PostulantesValidosService;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ResultadoPruebasTodoServiceImpl implements ResultadoPruebasTodoService {
@@ -178,6 +180,50 @@ public class ResultadoPruebasTodoServiceImpl implements ResultadoPruebasTodoServ
         // lista de resultados transformados
         return this.entityToArrayList(resultados);
     }
+
+    @Override
+    public List<ResultadosPruebasTodoReprobadosAprobados> getResultadosReprobadosAprobados(Integer prueba) {
+        List<ResultadosPruebasDatos> listaAprobadosDatos = resultadoPruebasTodoRepository.get_approved_applicants(prueba);
+        List<ResultadosPruebasDatos> listaNoAprobadosDatos = resultadoPruebasTodoRepository.get_desapproved_applicants(prueba);
+
+        List<ResultadosPruebasTodoReprobadosAprobados> listaAprobados = listaAprobadosDatos.stream()
+                .map(this::transformToAprobado)
+                .collect(Collectors.toList());
+
+        List<ResultadosPruebasTodoReprobadosAprobados> listaNoAprobados = listaNoAprobadosDatos.stream()
+                .map(this::transformToNoAprobado)
+                .collect(Collectors.toList());
+
+        listaAprobados.addAll(listaNoAprobados);
+
+        return listaAprobados;
+    }
+    // Método para transformar un ResultadosPruebasDatos a ResultadosPruebasTodoReprobadosAprobados con esAprobado = true
+    private ResultadosPruebasTodoReprobadosAprobados transformToAprobado(ResultadosPruebasDatos resultado) {
+        ResultadosPruebasTodoReprobadosAprobados postulante = new ResultadosPruebasTodoReprobadosAprobados();
+        postulante.setCodPostulante(resultado.getCodPostulante());
+        postulante.setIdPostulante(resultado.getIdPostulante());
+        postulante.setCedula(resultado.getCedula());
+        postulante.setNombre(resultado.getNombre());
+        postulante.setApellido(resultado.getApellido());
+        postulante.setCorreoPersonal(resultado.getCorreoPersonal());
+        postulante.setResultado(resultado.getResultado());
+        postulante.setResultadoTiempo(resultado.getResultadoTiempo());
+        postulante.setCumplePrueba(resultado.getCumplePrueba());
+        postulante.setNotaPromedioFinal(resultado.getNotaPromedioFinal());
+        postulante.setEsAprobado(true);
+        return postulante;
+    }
+
+    // Método similar pero con esAprobado = false
+    private ResultadosPruebasTodoReprobadosAprobados transformToNoAprobado(ResultadosPruebasDatos resultado) {
+        ResultadosPruebasTodoReprobadosAprobados postulante = transformToAprobado(resultado);
+        postulante.setEsAprobado(false);
+        return postulante;
+    }
+
+
+
 
     private List<ResultadosPruebasDatos> getResultados(Integer prueba, Integer codCurso) {
         return resultadoPruebasTodoRepository.getResultados(prueba, codCurso);

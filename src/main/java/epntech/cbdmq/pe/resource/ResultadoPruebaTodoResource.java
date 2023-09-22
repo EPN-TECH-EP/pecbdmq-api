@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.resource;
 
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.util.ResultadosPruebasTodoReprobadosAprobados;
 import epntech.cbdmq.pe.excepcion.GestorExcepciones;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.servicio.impl.formacion.ResultadoPruebasTodoServiceImpl;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_NO_EXISTE;
 import static epntech.cbdmq.pe.constante.ResponseMessage.ERROR_GENERAR_ARCHIVO;
@@ -136,6 +138,14 @@ public class ResultadoPruebaTodoResource {
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nombre + ".xlsx\"")
 				.contentType(MediaType.parseMediaType(contentType))
 				.body(fos.toByteArray());
+	}
+	@GetMapping("/resultadoPostulantes/{codSubtipoPrueba}")
+	public ResponseEntity<?> getResultadosReprobadosAprobados(@PathVariable("codSubtipoPrueba") Integer codSubtipoPrueba) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(resultadoPruebasTodoServiceImpl.getResultadosReprobadosAprobados(codSubtipoPrueba));
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
 	}
 
 	// generaPdf de resultados por prueba
