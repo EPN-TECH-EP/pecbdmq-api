@@ -14,7 +14,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
+import epntech.cbdmq.pe.dominio.admin.llamamiento.DatosSincronizados;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +107,22 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 	@Override
 	public Optional<DatoPersonal> getByCedula(String cedula) {
 		return repo.findOneByCedula(cedula);
+	}
+
+	@Override
+	public List<DatosSincronizados> getDatosSincronizados() {
+		List<DatoPersonal> filteredDatosPersonales = repo.findByCodEstacionIsNotNullOrCodUnidadGestionIsNotNullOrCorreoInstitucionalIsNotNullOrCodCargoIsNotNullOrCodRangoIsNotNullOrCodGradoIsNotNull();
+
+		return filteredDatosPersonales.stream()
+				.map(this::convertToDatosSincronizados)
+				.collect(Collectors.toList());
+	}
+
+	private DatosSincronizados convertToDatosSincronizados(DatoPersonal datoPersonal) {
+		DatosSincronizados datos = new DatosSincronizados();
+		datos.setDatoPersonal(datoPersonal);
+		datos.setDeApiFuncionario(new Random().nextBoolean());
+		return datos;
 	}
 
 	@Override

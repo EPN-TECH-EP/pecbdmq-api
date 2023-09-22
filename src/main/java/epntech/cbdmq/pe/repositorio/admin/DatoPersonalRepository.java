@@ -32,7 +32,7 @@ public interface DatoPersonalRepository extends JpaRepository<DatoPersonal, Inte
 			"on ge.codDatosPersonales = gd.codDatosPersonales\n" +
 			"where ge.codEstudiante= :codEstudiante")
 	DatoPersonal getDatoPersonalByEstudiante(@Param("codEstudiante") Integer codEstudiante);
-	
+	List<DatoPersonal> findByCodEstacionIsNotNullOrCodUnidadGestionIsNotNullOrCorreoInstitucionalIsNotNullOrCodCargoIsNotNullOrCodRangoIsNotNullOrCodGradoIsNotNull();
 	/*@EntityGraph(attributePaths = "documentos")
 	List<DatoPersonal> findAll();*/
 	
