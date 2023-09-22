@@ -5,6 +5,7 @@ import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import java.io.IOException;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.admin.llamamiento.DatosSincronizados;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,10 @@ public class DatoPersonalResource {
 	@GetMapping("/listar")
 	public List<DatoPersonal> listarDatos() {
 		return objService.getAllDatosPersonales();
+	}
+	@GetMapping("/listarSincronizados")
+	public List<DatosSincronizados> listarDatosSincronizados() {
+		return objService.getDatosSincronizados();
 	}
 
 	@GetMapping("/paginado")
