@@ -1,5 +1,10 @@
 package epntech.cbdmq.pe.dto.especializacion;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
+import jakarta.persistence.ColumnResult;
+import jakarta.persistence.ConstructorResult;
+import jakarta.persistence.NamedNativeQuery;
+import jakarta.persistence.SqlResultSetMapping;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.especializacion;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.NotasEspecializacion;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dto.especializacion.NotasEspecializacionDTO;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public interface NotasEspecializacionService {
 	List<NotasEspecializacionDTO> getAllAprobadosByCurso(Integer codCurso);
 
 	NotasEspecializacion getById(int id);
+	List<NotaMateriaByEstudiante> getHistoricosByCursoAndEstudiante(Integer codCurso, Integer codEstudiante);
 
 }
 

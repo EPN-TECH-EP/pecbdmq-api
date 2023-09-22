@@ -28,146 +28,159 @@ import epntech.cbdmq.pe.servicio.impl.PeriodoAcademicoServiceimpl;
 //@CrossOrigin(origins = "${cors.urls}")
 public class PeriodoAcademicoResource {
 
-	@Autowired
-	private PeriodoAcademicoServiceimpl objService;
-	@Autowired
-	private DocumentoServiceimpl documentoServiceimpl;
+    @Autowired
+    private PeriodoAcademicoServiceimpl objService;
+    @Autowired
+    private DocumentoServiceimpl documentoServiceimpl;
 
-	@PostMapping("/crear")
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException, ParseException {
-		Date date = new Date();
-		SimpleDateFormat formato1 = new SimpleDateFormat("yyyy-MM-dd");
-		Date fecha = formato1.parse(formato1.format(date));
+    @PostMapping("/crear")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardar(@RequestBody PeriodoAcademico obj) throws DataException, ParseException {
+        Date date = new Date();
+        SimpleDateFormat formato1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date fecha = formato1.parse(formato1.format(date));
 
-		obj.setFechaInicio(fecha);
-		return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
+        obj.setFechaInicio(fecha);
+        return new ResponseEntity<>(objService.save(obj), HttpStatus.OK);
 
-	}
+    }
 
-	@GetMapping("/listar")
-	public List<PeriodoAcademico> listar() {
-		return objService.getAll();
-	}
-	
-	@GetMapping("/listarActivos")
-	public List<PeriodoAcademico> listarActivos() {
-		return objService.getAllActive();
-	}
+    @GetMapping("/listar")
+    public List<PeriodoAcademico> listar() {
+        return objService.getAll();
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<PeriodoAcademico> obtenerPorId(@PathVariable("id") int codigo) {
-		return objService.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping("/listarActivos")
+    public List<PeriodoAcademico> listarActivos() {
+        return objService.getAllActive();
+    }
 
-	@SuppressWarnings("unchecked")
-	@PutMapping("/{id}")
-	public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo,
-			@RequestBody PeriodoAcademico obj) throws DataException {
-		return (ResponseEntity<PeriodoAcademico>) objService.getById(codigo).map(datosGuardados -> {
-			datosGuardados.setModuloEstados(obj.getModuloEstados());
-			datosGuardados.setFechaInicio(obj.getFechaInicio());
-			datosGuardados.setFechaFin(obj.getFechaFin());
-			datosGuardados.setDescripcion(obj.getDescripcion());
-			datosGuardados.setEstado(obj.getEstado());
+    @GetMapping("/{id}")
+    public ResponseEntity<PeriodoAcademico> obtenerPorId(@PathVariable("id") int codigo) {
+        return objService.getById(codigo).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-			PeriodoAcademico datosActualizados = null;
-			try {
-				datosActualizados = objService.update(datosGuardados);
-			} catch (DataException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
-			}
-			return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
-		}).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @SuppressWarnings("unchecked")
+    @PutMapping("/{id}")
+    public ResponseEntity<PeriodoAcademico> actualizarDatos(@PathVariable("id") int codigo,
+                                                            @RequestBody PeriodoAcademico obj) throws DataException {
+        return (ResponseEntity<PeriodoAcademico>) objService.getById(codigo).map(datosGuardados -> {
+            datosGuardados.setModuloEstados(obj.getModuloEstados());
+            datosGuardados.setFechaInicio(obj.getFechaInicio());
+            datosGuardados.setFechaFin(obj.getFechaFin());
+            datosGuardados.setDescripcion(obj.getDescripcion());
+            datosGuardados.setEstado(obj.getEstado());
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
-		objService.deleteById(codigo);
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
-	}
+            PeriodoAcademico datosActualizados = null;
+            try {
+                datosActualizados = objService.update(datosGuardados);
+            } catch (DataException e) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace();
+                return response(HttpStatus.BAD_REQUEST, e.getMessage().toString());
+            }
+            return new ResponseEntity<>(datosActualizados, HttpStatus.OK);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
-		return new ResponseEntity<>(
-				new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
-				httpStatus);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpResponse> eliminarDatos(@PathVariable("id") int codigo) throws DataException {
+        objService.deleteById(codigo);
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
+    }
 
-	}
+    private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
+        return new ResponseEntity<>(
+                new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message),
+                httpStatus);
+
+    }
 
 
-	@GetMapping("/listartodo")
-	public List<PeriodoAcademicoSemestreModulo> listarTodo() {
-		return objService.getAllPeriodoAcademico();
-	}
-	@GetMapping("/formacion/listar")
-	public List<PeriodoAcademico> listarPeriodo() {
-		return objService.getAllPeriodosFormacion();
-	}
+    @GetMapping("/listartodo")
+    public List<PeriodoAcademicoSemestreModulo> listarTodo() {
+        return objService.getAllPeriodoAcademico();
+    }
 
-	@GetMapping("/validaestado")
-	public ResponseEntity<HttpResponse> getEstado() {
-		String result = objService.getEstado();
+    @GetMapping("/formacion/listar")
+    public List<PeriodoAcademico> listarPeriodo() {
+        return objService.getAllPeriodosFormacion();
+    }
 
-		if (result == null) {
-			result = "SIN PERIODO";
-		}
+    @GetMapping("/validaestado")
+    public ResponseEntity<HttpResponse> getEstado() {
+        String result = objService.getEstado();
 
-		return response(HttpStatus.OK, result);
-	}
+        if (result == null) {
+            result = "SIN PERIODO";
+        }
 
-	@GetMapping("/siguienteEstado")
-	public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id,
-			@RequestParam("proceso") String proceso) {
-		String result = objService.updateNextState(id, proceso).toString();
+        return response(HttpStatus.OK, result);
+    }
 
-		return response(HttpStatus.OK, result);
-	}
-	
-	@PostMapping("/actualizaEstado")
-	public ResponseEntity<HttpResponse> validState(@RequestParam("estado") Integer estado, @RequestParam("proceso") String proceso) {
-		Integer result = objService.validState(estado, proceso);
-		String r;
+    @GetMapping("/siguienteEstado")
+    public ResponseEntity<HttpResponse> nextState(@RequestParam("id") Integer id,
+                                                  @RequestParam("proceso") String proceso) {
+        String result = objService.updateNextState(id, proceso).toString();
 
-		if (result == 1)
-			return response(HttpStatus.OK, REGISTRO_ACTUALIZADO);
-		else
-			return response(HttpStatus.BAD_REQUEST, ESTADO_INCORRECTO);
-	}
+        return response(HttpStatus.OK, result);
+    }
 
-	@GetMapping("/documentos")
-	public Set<Documento> listarDocumentos() {
-		return objService.getDocumentosPActive();
-	}
-	@GetMapping("/documentosByPA")
-	public Set<Documento> listarDocumentosByPeriodo(@RequestParam("codigoPeriodo") Integer codPAcademico) {
-		return objService.getDocumentosByPeriodo(codPAcademico);
-	}
-	@GetMapping("/cerrarPeriodo")
-	public Boolean cerrarPeriodo() throws ParseException {
-		return objService.cerrarPeriodoAcademico();
-	}
+    @PostMapping("/actualizaEstado")
+    public ResponseEntity<HttpResponse> validState(@RequestParam("estado") Integer estado, @RequestParam("proceso") String proceso) {
+        Integer result = objService.validState(estado, proceso);
+        String r;
 
-	@GetMapping("/")
-	public ResponseEntity<PeriodoAcademico> getPeriodo() {
-		return objService.getActive().map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-	}
+        if (result == 1)
+            return response(HttpStatus.OK, REGISTRO_ACTUALIZADO);
+        else
+            return response(HttpStatus.BAD_REQUEST, ESTADO_INCORRECTO);
+    }
 
-	@PostMapping("/cargarDocs")
-	public ResponseEntity<?> guardarArchivo(@RequestParam List<MultipartFile> archivos,@RequestParam String descripcion,@RequestParam String observacion) throws Exception {
-		objService.cargarDocs(archivos,descripcion,observacion);
-		return response(HttpStatus.OK, EXITO);
-	}
+    @GetMapping("/documentos")
+    public Set<Documento> listarDocumentos() {
+        return objService.getDocumentosPActive();
+    }
 
-	@DeleteMapping("/eliminarDocs")
-	public ResponseEntity<?> eliminarDocs(@RequestBody List<DocsUtil> documentos) throws Exception {
-		for (DocsUtil docsUtil : documentos) {
-			documentoServiceimpl.eliminarArchivo(docsUtil.getId());
-		}
-		objService.eliminar(documentos);
+    @GetMapping("/documentosByPA")
+    public Set<Documento> listarDocumentosByPeriodo(@RequestParam("codigoPeriodo") Integer codPAcademico) {
+        return objService.getDocumentosByPeriodo(codPAcademico);
+    }
 
-		return response(HttpStatus.OK, REGISTRO_ELIMINADO);
-	}
+    @GetMapping("/cerrarPeriodo")
+    public Boolean cerrarPeriodo() throws ParseException {
+        return objService.cerrarPeriodoAcademico();
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<PeriodoAcademico> getPeriodo() {
+        return objService.getActive().map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/traerPeriodoActivo")
+    public ResponseEntity<PeriodoAcademico> getPeriodoActivo() {
+        PeriodoAcademico periodoAcademico = objService.getPeriodoAcademicoByActivo();
+        if (periodoAcademico == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(periodoAcademico);
+    }
+
+
+    @PostMapping("/cargarDocs")
+    public ResponseEntity<?> guardarArchivo(@RequestParam List<MultipartFile> archivos, @RequestParam String descripcion, @RequestParam String observacion) throws Exception {
+        objService.cargarDocs(archivos, descripcion, observacion);
+        return response(HttpStatus.OK, EXITO);
+    }
+
+    @DeleteMapping("/eliminarDocs")
+    public ResponseEntity<?> eliminarDocs(@RequestBody List<DocsUtil> documentos) throws Exception {
+        for (DocsUtil docsUtil : documentos) {
+            documentoServiceimpl.eliminarArchivo(docsUtil.getId());
+        }
+        objService.eliminar(documentos);
+
+        return response(HttpStatus.OK, REGISTRO_ELIMINADO);
+    }
 
 }

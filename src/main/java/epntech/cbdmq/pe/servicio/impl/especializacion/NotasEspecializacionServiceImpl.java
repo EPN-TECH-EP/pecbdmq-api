@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import epntech.cbdmq.pe.dominio.admin.especializacion.NotasEspecializacion;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dto.especializacion.NotasEspecializacionDTO;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.NotasEspecializacionRepository;
@@ -73,6 +74,11 @@ public class NotasEspecializacionServiceImpl implements NotasEspecializacionServ
 	public NotasEspecializacion getById(int id) {
 		return notasEspecializacionRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
+	}
+
+	@Override
+	public List<NotaMateriaByEstudiante> getHistoricosByCursoAndEstudiante(Integer codCurso, Integer codEstudiante) {
+		return notasEspecializacionRepository.findNotasByCursoAndEstudiante(codCurso, codEstudiante);
 	}
 
 	@Override

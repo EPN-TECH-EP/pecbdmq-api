@@ -47,6 +47,14 @@ public class PostulantesValidosResource {
 			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
 		}
 	}
+	@GetMapping("/resultadoPostulantes")
+	public ResponseEntity<?> listarPostulantes() {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(service.getPospulantesAprobadosReprobados());
+		} catch (Exception e) {
+			return response(HttpStatus.NOT_FOUND, GestorExcepciones.ERROR_INTERNO_SERVIDOR);
+		}
+	}
 	
 	@GetMapping("/postulantesValidosPaginado")
 	public ResponseEntity<?> listarAllValidoPaginado(Pageable pageable) {

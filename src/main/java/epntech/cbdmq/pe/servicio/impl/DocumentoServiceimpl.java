@@ -180,6 +180,24 @@ public class DocumentoServiceimpl implements DocumentoService {
 	}
 
 	@Override
+	public List<Integer> guardarArchivoCompleto(String proceso, String id, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion {
+		List<DocumentoRuta> listaDocRuta=this.guardarArchivo(proceso, id, archivo);
+		List<Integer> listaIdsDocs = new ArrayList<Integer>();
+		for (DocumentoRuta documentoRuta : listaDocRuta) {
+			Documento documento = new Documento();
+
+			documento.setEstado("ACTIVO");
+			documento.setRuta(documentoRuta.getRuta());
+			documento.setNombre(documentoRuta.getNombre());
+
+			Documento newDocumento = this.repo.save(documento);
+
+			listaIdsDocs.add(newDocumento.getCodDocumento());
+		}
+		return listaIdsDocs;
+	}
+
+	@Override
 	public void eliminarArchivo(int codDocumento) throws IOException {
 
 		Documento documento = new Documento();

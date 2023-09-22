@@ -15,6 +15,7 @@ public interface EstudianteMateriaParaleloService {
     public Boolean asignarEstudiantesParalelo(List<EstudianteDto> estudiantes, Integer codParalelo) throws DataException;
     public Boolean asignarEstudianteMateriaParalelo(Integer codMateria, Integer codParalelo, Estudiante[] estudiantes);
     Optional<EstudianteMateriaParalelo> findByNotaFormacion(Integer codNotaFormacion);
+    Optional<EstudianteMateriaParalelo> findByCodEstudianteAndCodMateriaParalelo(Integer codEstudiante, Integer codMateriaParalelo);
 
 
 }

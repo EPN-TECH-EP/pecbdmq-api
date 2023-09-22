@@ -243,4 +243,9 @@ public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 		return repo.getAllPeriodosFormacion();
 	}
 
+	@Override
+	public PeriodoAcademico getPeriodoAcademicoByActivo() {
+		return this.getById(this.getPAActivo()).get();
+	}
+
 }
