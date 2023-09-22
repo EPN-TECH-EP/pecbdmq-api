@@ -43,6 +43,7 @@ import lombok.Data;
 		targetClass = NotaMateriaByEstudiante.class,
 		columns = {
 				@ColumnResult(name = "cod_nota", type= Integer.class),
+				@ColumnResult(name = "cod_nota", type= Integer.class),
 				@ColumnResult(name = "nombre", type= String.class),
 				@ColumnResult(name = "nota", type = Double.class),
 				@ColumnResult(name = "nota_disciplina", type = Double.class),

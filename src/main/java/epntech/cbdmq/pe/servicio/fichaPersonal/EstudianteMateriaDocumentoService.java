@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio.fichaPersonal;
 
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaDocumento;
+import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.EstudianteMateriaDocumentoDto;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,7 @@ public interface EstudianteMateriaDocumentoService {
     List <EstudianteMateriaDocumento> getAllByEstudianteAndMateriaParalelo(Integer codEstudiante, Integer codMateriaParalelo);
     Optional<EstudianteMateriaDocumento> getEstudianteMateriaDocumentoById(Integer id);
     EstudianteMateriaDocumento saveOrUpdate(EstudianteMateriaDocumento estudianteMateriaDocumento);
-    EstudianteMateriaDocumento saveConArchivo(EstudianteMateriaDocumento estudianteMateriaDocumento, List<MultipartFile> archivos) throws ArchivoMuyGrandeExcepcion, IOException;
+    EstudianteMateriaDocumento saveConArchivo(EstudianteMateriaDocumentoDto estudianteMateriaDocumento, List<MultipartFile> archivos) throws ArchivoMuyGrandeExcepcion, IOException;
     void deleteEstudianteMateriaDocumento(Integer id);
 
 }

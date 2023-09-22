@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import epntech.cbdmq.pe.dominio.HttpResponse;
 import epntech.cbdmq.pe.dominio.admin.ConvocatoriaFor;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteMateriaDocumento;
+import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.EstudianteMateriaDocumentoDto;
 import epntech.cbdmq.pe.dominio.util.PeriodoAcademicoFor;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
@@ -43,7 +44,7 @@ public class EstudianteMateriaDocumentoResource {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        EstudianteMateriaDocumento convocatoria = objectMapper.readValue(datosEstudianteMateriaDocumento, EstudianteMateriaDocumento.class);
+        EstudianteMateriaDocumentoDto convocatoria = objectMapper.readValue(datosEstudianteMateriaDocumento, EstudianteMateriaDocumentoDto.class);
         EstudianteMateriaDocumento pa = estudianteMateriaDocumentoSvc.saveConArchivo(convocatoria, docsPeriodoAcademico);
 
         if (pa == null)

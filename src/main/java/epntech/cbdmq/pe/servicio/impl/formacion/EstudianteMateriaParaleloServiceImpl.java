@@ -85,5 +85,10 @@ public class EstudianteMateriaParaleloServiceImpl implements EstudianteMateriaPa
         return repoObj.findByNotaFormacion(codNotaFormacion);
     }
 
+    @Override
+    public Optional<EstudianteMateriaParalelo> findByCodEstudianteAndCodMateriaParalelo(Integer codEstudiante, Integer codMateriaParalelo) {
+        return repoObj.findByCodMateriaParaleloAndAndCodEstudiante(codMateriaParalelo, codEstudiante);
+    }
+
 
 }
