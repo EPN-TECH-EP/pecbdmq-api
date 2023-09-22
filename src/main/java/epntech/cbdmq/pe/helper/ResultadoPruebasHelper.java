@@ -162,6 +162,11 @@ public class ResultadoPruebasHelper {
 							}
 							if (tipoResultado.equals("NOTA")) {
 								Double nota = Double.parseDouble(getCellValueAsString(currentCell));
+								//TODO nota>=notaMáxima de prueba
+								if (nota < 0 || nota >= 1000) {
+									// Manejar el error según lo que desees hacer, por ejemplo:
+									throw new IllegalArgumentException("La nota no es válida: " + nota);
+								}
 								dato.setNotaPromedioFinal(nota);
 
 							}
