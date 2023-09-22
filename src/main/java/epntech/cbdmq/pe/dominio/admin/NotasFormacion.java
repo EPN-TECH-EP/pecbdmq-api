@@ -43,7 +43,7 @@ import lombok.Data;
 		targetClass = NotaMateriaByEstudiante.class,
 		columns = {
 				@ColumnResult(name = "cod_nota", type= Integer.class),
-				@ColumnResult(name = "cod_nota", type= Integer.class),
+				@ColumnResult(name = "cod_materia_curso", type= Integer.class),
 				@ColumnResult(name = "nombre", type= String.class),
 				@ColumnResult(name = "nota", type = Double.class),
 				@ColumnResult(name = "nota_disciplina", type = Double.class),
@@ -54,7 +54,7 @@ import lombok.Data;
 		}))
 @NamedNativeQuery(name = "NotaMateriaByEstudiante.get",
 		query =	"select \n" +
-				"gnf.cod_nota_formacion as cod_nota, gm.nombre_materia as nombre, gnf.nota_materia as nota, gnf.nota_disciplina , gnf.nota_supletorio, gimp.cod_instructor, gdp.nombre || ' ' || gdp.apellido as nombre_completo_instructor ,pp.descripcion as nombre_periodo_formacion  \n" +
+				"gnf.cod_nota_formacion as cod_nota,gmp.cod_materia_paralelo as cod_materia_curso, gm.nombre_materia as nombre, gnf.nota_materia as nota, gnf.nota_disciplina , gnf.nota_supletorio, gimp.cod_instructor, gdp.nombre || ' ' || gdp.apellido as nombre_completo_instructor ,pp.descripcion as nombre_periodo_formacion  \n" +
 				"from cbdmq.gen_nota_formacion gnf\n" +
 				"left join cbdmq.gen_estudiante_materia_paralelo gemp on gnf.cod_estudiante_materia_paralelo = gemp.cod_estudiante_materia_paralelo\n" +
 				"left join cbdmq.gen_estudiante ge on gemp.cod_estudiante = ge.cod_estudiante\n" +
