@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.servicio;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ public interface DocumentoService {
 	void delete(int id);
 
 	List<DocumentoRuta> guardarArchivo(String proceso, String id, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion;
+	List<Integer> guardarArchivoCompleto(String proceso, String id, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion;
 
 	void eliminarArchivo(int id) throws IOException;
 	
