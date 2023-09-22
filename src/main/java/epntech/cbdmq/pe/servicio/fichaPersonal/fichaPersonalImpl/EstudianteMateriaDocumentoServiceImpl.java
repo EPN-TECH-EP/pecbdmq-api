@@ -55,8 +55,8 @@ public class EstudianteMateriaDocumentoServiceImpl implements EstudianteMateriaD
     public EstudianteMateriaDocumento saveConArchivo(EstudianteMateriaDocumentoDto estudianteMateriaDocumento, List<MultipartFile> archivos) throws ArchivoMuyGrandeExcepcion, IOException {
         List<Integer> idsDocumento = documentoService.guardarArchivoCompleto("FORMACION", estudianteMateriaDocumento.getCodEstudiante().toString(), archivos);
         EstudianteMateriaDocumento estudianteMateriaDocumento1 = new EstudianteMateriaDocumento();
-        EstudianteMateriaParalelo estudianteMateriaParalelo= estudianteMateriaParaleloService.findByCodEstudianteAndCodMateriaParalelo(estudianteMateriaDocumento.getCodEstudiante(), estudianteMateriaDocumento.getCodMateriaParalelo()).get();
-        if(estudianteMateriaParalelo==null){
+        EstudianteMateriaParalelo estudianteMateriaParalelo = estudianteMateriaParaleloService.findByCodEstudianteAndCodMateriaParalelo(estudianteMateriaDocumento.getCodEstudiante(), estudianteMateriaDocumento.getCodMateriaParalelo()).get();
+        if (estudianteMateriaParalelo == null) {
             return null;
         }
         estudianteMateriaDocumento1.setCodEstudianteMateriaParalelo(estudianteMateriaParalelo.getCodEstudianteMateriaParalelo());
@@ -73,6 +73,12 @@ public class EstudianteMateriaDocumentoServiceImpl implements EstudianteMateriaD
 
     @Override
     public void deleteEstudianteMateriaDocumento(Integer id) {
-        repo.deleteById(id);
+        EstudianteMateriaDocumento estudianteMateriaDocumento = repo.findById(id).get();
+        if (estudianteMateriaDocumento.getCodDocumento() != null) {
+            repo.deleteById(id);
+            documentoService.delete(estudianteMateriaDocumento.getCodDocumento());
+        }
+
+
     }
 }
