@@ -43,15 +43,6 @@ public class ResultadoPruebasHelper {
     static String[] HEADERs = {"Codigo", "id", "Cedula", "Nombre", "Apellido"};
     static String SHEET = "Hoja1";
 
-		public static boolean hasExcelFormat(MultipartFile file) {
-
-        if (!TYPE.equals(file.getContentType())) {
-            return false;
-        }
-
-        return true;
-    }
-
     public static ByteArrayInputStream datosToExcel(List<ResultadoPruebas> datos) {
 
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
@@ -162,6 +153,11 @@ public class ResultadoPruebasHelper {
 							}
 							if (tipoResultado.equals("NOTA")) {
 								Double nota = Double.parseDouble(getCellValueAsString(currentCell));
+								//TODO nota>=notaMáxima de prueba
+								if (nota < 0 || nota >= 1000) {
+									// Manejar el error según lo que desees hacer, por ejemplo:
+									throw new IllegalArgumentException("La nota no es válida: " + nota);
+								}
 								dato.setNotaPromedioFinal(nota);
 
 							}
@@ -263,38 +259,6 @@ public class ResultadoPruebasHelper {
 		} catch (IOException | DataException e) {
 			throw new RuntimeException(FALLA_PROCESAR_EXCEL + " " + e.getMessage());
 		}
-	}
-
-	public static void generateExcel(List<ResultadosPruebasDatos> datos, String filePath) throws IOException {
-		XSSFWorkbook workbook = new XSSFWorkbook();
-		Sheet sheet = workbook.createSheet(SHEET);
-
-		// Header
-		Row headerRow = sheet.createRow(0);
-
-		for (int col = 0; col < HEADERs.length; col++) {
-			Cell cell = headerRow.createCell(col);
-			cell.setCellValue(HEADERs[col]);
-		}
-
-		int rowIndex = 1;
-
-		for (ResultadosPruebasDatos dato : datos) {
-			Row row = sheet.createRow(rowIndex++);
-
-			row.createCell(0).setCellValue(dato.getCodPostulante());
-			row.createCell(1).setCellValue(dato.getIdPostulante());
-			row.createCell(2).setCellValue(dato.getCedula());
-			row.createCell(3).setCellValue(dato.getNombre());
-			row.createCell(4).setCellValue(dato.getApellido());
-
-		}
-
-		File file = new File(filePath);
-		file.getParentFile().mkdirs();
-		FileOutputStream outputStream = new FileOutputStream(file);
-		workbook.write(outputStream);
-		workbook.close();
 	}
 
 	public static void generarExcel(ArrayList<ArrayList<String>> lista, String filePath) throws IOException {

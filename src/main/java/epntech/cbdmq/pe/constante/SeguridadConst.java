@@ -42,6 +42,7 @@ public class SeguridadConst {
 			"/grado/listarRangos",
 			"/postulantesValidos/resultadoPostulantes",
 			"/pruebadetalle/listarConDatos",
+			"/pruebadetalle/listarConDatos/**",
 			"/postulantesValidos/resultadoPostulantes/**",
 			"/postulantesValidos/resultadoPostulantes",
 	};

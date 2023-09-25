@@ -31,37 +31,6 @@ public class ProvinciaHelper {
 
 		return true;
 	}
-
-	public static ByteArrayInputStream datosToExcel(List<Excel> datos) {
-
-		try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream();) {
-			Sheet sheet = workbook.createSheet(SHEET);
-
-			// Header
-			Row headerRow = sheet.createRow(0);
-
-			for (int col = 0; col < HEADERs.length; col++) {
-				Cell cell = headerRow.createCell(col);
-				cell.setCellValue(HEADERs[col]);
-			}
-
-			int rowIdx = 1;
-			for (Excel dato : datos) {
-				Row row = sheet.createRow(rowIdx++);
-
-				row.createCell(0).setCellValue(dato.getId());
-				row.createCell(1).setCellValue(dato.getNombre());
-				row.createCell(2).setCellValue(dato.getApellido());
-				row.createCell(3).setCellValue(dato.getCedula());
-			}
-
-			workbook.write(out);
-			return new ByteArrayInputStream(out.toByteArray());
-		} catch (IOException e) {
-			throw new RuntimeException("fail to import data to Excel file: " + e.getMessage());
-		}
-	}
-
 	public static List<Provincia> excelToDatos(InputStream is) {
 		try {
 			Workbook workbook = new XSSFWorkbook(is);
