@@ -6,6 +6,9 @@ import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.profesionalizacion.ProPeriodos;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
+import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
+import epntech.cbdmq.pe.dominio.util.reportes.PeriodoAcademicoDuracionDto;
+import epntech.cbdmq.pe.dominio.util.reportes.ProPeriodosDuracionDto;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
@@ -22,6 +25,10 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 
 import java.io.InputStream;
 import java.util.*;
@@ -81,7 +88,7 @@ public class ReporteImpl implements ReporteService {
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
-            parameters.put("academia","Formacion");
+            parameters.put("academia", "Formacion");
             jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsSubObservaciones);
             if (filetype.equalsIgnoreCase("PDF")) {
                 response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
@@ -105,6 +112,7 @@ public class ReporteImpl implements ReporteService {
             e.printStackTrace();
         }
     }
+
     public void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
         JasperPrint jasperPrint;
@@ -140,7 +148,7 @@ public class ReporteImpl implements ReporteService {
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
-            parameters.put("academia","Especializacion");
+            parameters.put("academia", "Especializacion");
             jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsSubObservaciones);
             if (filetype.equalsIgnoreCase("PDF")) {
                 response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
@@ -164,6 +172,7 @@ public class ReporteImpl implements ReporteService {
             e.printStackTrace();
         }
     }
+
     //TODO en profesionalizacion no tenemos aprobados
     public void exportAprobadosProfesionalizacion(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
@@ -229,7 +238,7 @@ public class ReporteImpl implements ReporteService {
         JasperPrint jasperPrint;
         ServletOutputStream outputStream;
         List<Materia> materias = materiaService.getAllByPeriodoAcademicoActivo();
-        List<CatalogoCurso> cursos= catalogoCursoService.getAll();
+        List<CatalogoCurso> cursos = catalogoCursoService.getAll();
         List<Materia> materiaProfesionalizacion = materiaService.getAllByPeriodoProfesionalizacionActivo();
         try {
 
@@ -265,11 +274,45 @@ public class ReporteImpl implements ReporteService {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
         JasperPrint jasperPrint;
         ServletOutputStream outputStream;
-        List<PeriodoAcademico> periodos = periodoAcademicoSvc.findByFechaInicioPeriodoAcadBetween(starDate,endDate);
+        List<PeriodoAcademicoDuracionDto> periodos = periodoAcademicoSvc.findByFechaInicioPeriodoAcadBetween(starDate, endDate).stream().map(periodo -> {
+            PeriodoAcademicoDuracionDto dto = new PeriodoAcademicoDuracionDto();
+            dto.setCodigo(periodo.getCodigo());
+            dto.setDescripcion(periodo.getDescripcion());
+
+            // Convertir java.util.Date a java.time.LocalDate
+            LocalDate fechaInicio = periodo.getFechaInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate fechaFin = periodo.getFechaFin().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            // Calcular duración
+            dto.setDuracion((int) java.time.temporal.ChronoUnit.DAYS.between(fechaInicio, fechaFin));
+
+            return dto;
+        }).collect(Collectors.toList());
         //TODO poner cuantos periodos y restar cuanto duro cuanto uno
-        List<ProPeriodos>periodosPro = proPeriodoSvc.findByFechaInicioBetween(starDate,endDate);
+        List<ProPeriodosDuracionDto> periodosPro = proPeriodoSvc.findByFechaInicioBetween(starDate, endDate).stream().map(periodo -> {
+            ProPeriodosDuracionDto dto = new ProPeriodosDuracionDto();
+            dto.setCodigoPeriodo(periodo.getCodigoPeriodo());
+            dto.setNombrePeriodo(periodo.getNombrePeriodo());
+
+            // Convertir java.util.Date a java.time.LocalDate
+            LocalDate fechaInicio = periodo.getFechaInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate fechaFin = periodo.getFechaFin().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            // Calcular duración
+            dto.setDuracion((int) java.time.temporal.ChronoUnit.DAYS.between(fechaInicio, fechaFin));
+
+            return dto;
+        }).collect(Collectors.toList());
         //TODO poner cuantos periodos de profesioanlizacion y cuanto duro cada uno
-        List<Curso> cursos= cursoService.findByFechaInicioBetween(starDate,endDate);
+        List<CursoDuracionDto> cursos = cursoService.findByFechaInicioBetween(starDate, endDate).stream().map(curso -> {
+            CursoDuracionDto dto = new CursoDuracionDto();
+            dto.setCodCursoEspecializacion(curso.getCodCursoEspecializacion());
+            dto.setNombre(curso.getNombre());
+
+            // Convertir java.util.Date a java.time.LocalDate
+            dto.setDuracion((int) java.time.temporal.ChronoUnit.DAYS.between(curso.getFechaInicioCurso(), curso.getFechaFinCurso()));
+            return dto;
+        }).collect(Collectors.toList());
         //TODO restar curso fecha inicio y fecha fin
         try {
 
