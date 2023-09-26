@@ -2,6 +2,8 @@ package epntech.cbdmq.pe.dominio.util;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class FuncionarioApiDto {
         private String apellidos;
@@ -22,10 +24,10 @@ public class FuncionarioApiDto {
         private String codigoProvinciaTercerNivel;
         private String codigoUnidadGestion;
         private String correoInstitucional;
-        private String correoPersonal;
         private String descripcionMeridoDeportivo;
         private String descripcionMeritoAcademico;
         private String fechaNacimiento;
+        private Date fechaIngreso;
         private String grado;
         private String grupoOcupacional;
         private String institucionSegundoNivel;

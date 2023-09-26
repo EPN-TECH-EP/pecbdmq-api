@@ -3,6 +3,7 @@ package epntech.cbdmq.pe.resource;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.servicio.ApiCBDMQFuncionariosService;
+import epntech.cbdmq.pe.servicio.ApiCBDMQOperativosService;
 import epntech.cbdmq.pe.servicio.ApiCBDMQService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,8 @@ public class ApiCBDMQResource {
 	private ApiCBDMQService objService;
 	@Autowired
 	private ApiCBDMQFuncionariosService objFuncionariosService;
+	@Autowired
+	private ApiCBDMQOperativosService objOperativosService;
 
 	@GetMapping("/ciudadanos/{cedula}")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -56,6 +59,17 @@ public class ApiCBDMQResource {
 
 		try {
 			return new ResponseEntity<>(objFuncionariosService.servicioFuncionarios(cedula), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
+	@GetMapping("/operativos")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getDataFuncionarios() throws Exception{
+
+		try {
+			return new ResponseEntity<>(objOperativosService.servicioOperativos(), HttpStatus.OK);
 		}catch(Exception ex) {
 
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());

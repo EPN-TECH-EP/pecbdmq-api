@@ -658,7 +658,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
             else {
                 Optional<Usuario> usuarioObj = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonalObj.get().getCodDatosPersonales());
                 Optional<FuncionarioApiDto> funcionario = apiFuncionarioCBDMQSvc.servicioFuncionarios(cedula);
-                Boolean esFuncionario= funcionario.isPresent()?true:false;
+                Boolean esFuncionario = funcionario.isPresent() ? true : false;
                 //NO EXISTE USUARIO
                 if (usuarioObj.isEmpty()) {
                     Usuario newUser = new Usuario();
@@ -735,12 +735,11 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
             datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
         } else {
             DatoPersonal datoPersonal1 = datoPersonalSvc.updateDatosPersonales(datoPersonal);
-            Usuario usuario= usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonal1.getCodDatosPersonales()).get();
-            Estudiante estudiante= estudianteRepository.getEstudianteByUsuario(usuario.getCodUsuario().toString());
+            Usuario usuario = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonal1.getCodDatosPersonales()).get();
+            Estudiante estudiante = estudianteRepository.getEstudianteByUsuario(usuario.getCodUsuario().toString());
             datoPersonalEstudianteDto.setEstudiante(estudiante);
             datoPersonalEstudianteDto.setDatoPersonal(datoPersonal1);
         }
-
 
 
         return datoPersonalEstudianteDto;
@@ -757,11 +756,9 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         newDatoPersonal.setApellido(funcionario.getApellidos());
         //TODO no esta tomando cedula
         newDatoPersonal.setCedula(funcionario.getCedula());
-        String correo = funcionario.getCorreoPersonal();
-        String correoInstitucional = funcionario.getCorreoInstitucional();
-        if (correo == null || correo.isEmpty()) {
-            correo = correoInstitucional;
-        }
+
+        String correo = funcionario.getCorreoInstitucional();
+
         newDatoPersonal.setCorreoPersonal(correo);
         newDatoPersonal.setEstado(ACTIVO);
         newDatoPersonal.setNombre(funcionario.getNombres());
