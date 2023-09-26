@@ -78,6 +78,10 @@ public class MateriaResource {
 		List<Materia> materias = objService.getAllByCoordinadorPA(codInstructor);
 		return new ResponseEntity<>(materias, OK);
 	}
+	@GetMapping("/listarByPAActivo")
+	public List<Materia> listarByPeriodoAcademicoActivo() {
+		return objService.getAllByPeriodoAcademicoActivo();
+	}
 	
 	private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),

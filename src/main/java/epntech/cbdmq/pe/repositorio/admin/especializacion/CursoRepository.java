@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,5 +63,5 @@ public interface CursoRepository extends JpaRepository<Curso, Long> {
 			"and ec.estado ilike :estado\n", nativeQuery = true)
 	List<Curso> findByEstudianteAndEstado(@Param("codEstudiante") Integer codEstudiante, @Param("estado")String estado);
 
-
+	List<Curso> findByFechaInicioCursoBetween(Date fechaInicio, Date fechaFin);
 }
