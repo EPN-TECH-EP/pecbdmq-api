@@ -13,8 +13,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ApiCBDMQOperativosServiceImpl implements ApiCBDMQOperativosService {
@@ -27,7 +29,7 @@ public class ApiCBDMQOperativosServiceImpl implements ApiCBDMQOperativosService 
     private String apiFuncionarios;
 
     @Override
-    public List<OperativoApiDto> servicioOperativos() throws Exception {
+    public List<OperativoApiDto> servicioOperativosAndNoOperativos() throws Exception {
         ApiBaseOperativos base;
         String url = apiFuncionarios;
 
@@ -48,6 +50,20 @@ public class ApiCBDMQOperativosServiceImpl implements ApiCBDMQOperativosService 
             return null;
         }
 
+    }
+
+    @Override
+    public List<OperativoApiDto> servicioOperativos() throws Exception {
+        return this.servicioOperativosAndNoOperativos().stream().filter(dto -> Boolean.TRUE.equals(dto.getOperativo()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OperativoApiDto> servicioOperativosOrderByAntiguedad() throws Exception {
+        return this.servicioOperativosAndNoOperativos().stream()
+                .filter(dto -> Boolean.TRUE.equals(dto.getOperativo()))
+                .sorted(Comparator.comparing(OperativoApiDto::getFechaIngreso))
+                .collect(Collectors.toList());
     }
 
 }

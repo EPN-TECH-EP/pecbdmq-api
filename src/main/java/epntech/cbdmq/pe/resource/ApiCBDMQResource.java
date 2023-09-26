@@ -1,7 +1,5 @@
 package epntech.cbdmq.pe.resource;
 
-import java.util.Optional;
-
 import epntech.cbdmq.pe.servicio.ApiCBDMQFuncionariosService;
 import epntech.cbdmq.pe.servicio.ApiCBDMQOperativosService;
 import epntech.cbdmq.pe.servicio.ApiCBDMQService;
@@ -15,10 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import epntech.cbdmq.pe.dominio.HttpResponse;
-import epntech.cbdmq.pe.dominio.util.ApiBase;
-import epntech.cbdmq.pe.dominio.util.ApiEducacionMedia;
-import epntech.cbdmq.pe.dominio.util.ApiEducacionSuperior;
-import epntech.cbdmq.pe.servicio.impl.APICBDMQServiceImpl;
 
 @RestController
 @RequestMapping("/apicbdmq")
@@ -64,12 +58,34 @@ public class ApiCBDMQResource {
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
 		}
 	}
-	@GetMapping("/operativos")
+	@GetMapping("/listarFuncionarios")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> getDataFuncionarios() throws Exception{
 
 		try {
+			return new ResponseEntity<>(objOperativosService.servicioOperativosAndNoOperativos(), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
+	@GetMapping("/operativos")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getDataOperativos() throws Exception{
+
+		try {
 			return new ResponseEntity<>(objOperativosService.servicioOperativos(), HttpStatus.OK);
+		}catch(Exception ex) {
+
+			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+		}
+	}
+	@GetMapping("/operativosOrderByAntiguedad")
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<?> getDataOperativosOrderByAntiguedad() throws Exception{
+
+		try {
+			return new ResponseEntity<>(objOperativosService.servicioOperativosOrderByAntiguedad(), HttpStatus.OK);
 		}catch(Exception ex) {
 
 			return response(HttpStatus.BAD_REQUEST, ex.getMessage());
