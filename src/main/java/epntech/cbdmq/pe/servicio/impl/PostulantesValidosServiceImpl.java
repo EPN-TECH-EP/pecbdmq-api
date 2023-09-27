@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.servicio.impl;
 
-import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_PRUEBAS;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_RESULTADO_VALIDACION;
 import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_PRUEBAS;
 
@@ -11,9 +10,7 @@ import java.util.stream.Collectors;
 
 import com.lowagie.text.DocumentException;
 import epntech.cbdmq.pe.dominio.admin.*;
-import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
 import epntech.cbdmq.pe.dominio.util.PostulantesAprobadosReprobados;
-import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.helper.ExcelHelper;
 import epntech.cbdmq.pe.repositorio.admin.*;
@@ -143,7 +140,7 @@ public class PostulantesValidosServiceImpl implements PostulantesValidosService 
         for (PostulantesValidos postulantesValidos : lista) {
             String msg = String.format(mensaje, postulantesValidos.getIdPostulante(), prueba, fechaIni, fechaFin, hora);
 
-            emailService.sendMensajeGeneral(postulantesValidos.getCorreoPersonal(), EMAIL_SUBJECT_PRUEBAS, msg);
+            emailService.sendMensajeTextGenerico(postulantesValidos.getCorreoPersonal(), EMAIL_SUBJECT_PRUEBAS, msg);
         }
         /*
          * }catch(Exception ex) { System.out.println("error: " + ex.getMessage()); throw

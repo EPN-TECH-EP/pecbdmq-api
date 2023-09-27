@@ -1,7 +1,7 @@
 package epntech.cbdmq.pe.servicio.impl.especializacion;
 
 import static epntech.cbdmq.pe.constante.ArchivoConst.*;
-import static epntech.cbdmq.pe.constante.EmailConst.EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO;
+import static epntech.cbdmq.pe.constante.EmailConst.*;
 import static epntech.cbdmq.pe.constante.MensajesConst.*;
 import static epntech.cbdmq.pe.constante.EspecializacionConst.*;
 
@@ -215,7 +215,7 @@ public class CursoServiceImpl implements CursoService {
         Usuario usuario= usuarioService.getById(cc.getCodUsuarioCreacion()).get();
         String mensaje="Se ha creado el curso " + cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+"El curso fue creado por "+usuario.getCodDatosPersonales().getNombre()+" "+ usuario.getCodDatosPersonales().getApellido()+" con fecha y hora "+ formattedDate;
 
-        emailService.sendMensajeGeneral(cc.getEmailNotificacion(), "Creación de curso", mensaje);
+        emailService.sendMensajeTextGenerico(cc.getEmailNotificacion(), EMAIL_SUBJECT_CURSO_CREADO, mensaje);
 
         return cc;
     }
@@ -243,7 +243,7 @@ public class CursoServiceImpl implements CursoService {
         String mensaje="Se ha editado el curso " + curso.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ " con éxito."+"\n"+
                 "El curso fue editado con fecha y hora "+ formattedDate;
 
-        emailService.sendMensajeGeneral(curso.getEmailNotificacion(), "Edición de curso", mensaje);
+        emailService.sendMensajeTextGenerico(curso.getEmailNotificacion(), EMAIL_SUBJECT_CURSO_EDITADO, mensaje);
 
 
         return cursoRepository.save(objActualizado);
@@ -278,7 +278,7 @@ public class CursoServiceImpl implements CursoService {
         }else{
             mensaje="Se ha rechazado el curso " +curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
         }
-        emailService.sendMensajeGeneral(curso.getEmailNotificacion(), "Validación de curso",mensaje );
+        emailService.sendMensajeTextGenerico(curso.getEmailNotificacion(), EMAIL_SUBJECT_CURSO_VALIDADO,mensaje );
 
         return curso;
     }
@@ -349,7 +349,7 @@ public class CursoServiceImpl implements CursoService {
         String nombres = instructoresCurso.getNombre() + " " + instructoresCurso.getApellido();
         String cuerpoHtml = String.format(parametro.getValor(), nombres, instructoresCurso.getNombreCatalogoCurso(), documento.getNombre(), observaciones);
         String[] destinatarios = {instructoresCurso.getCorreoInstitucional(), instructoresCurso.getCorreoPersonal()};
-        emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO, cuerpoHtml);
+        emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_CURSO_RECHAZO_DOCUMENTO, cuerpoHtml);
     }
 
     @Override

@@ -3,22 +3,18 @@ package epntech.cbdmq.pe.servicio.impl;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import epntech.cbdmq.pe.dominio.Parametro;
 import epntech.cbdmq.pe.dominio.admin.*;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
-import epntech.cbdmq.pe.dominio.util.ResultadosPruebasDatos;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.repositorio.ParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.*;
 import epntech.cbdmq.pe.repositorio.admin.especializacion.TipoCursoRepository;
 import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.EmailService;
-import epntech.cbdmq.pe.servicio.EstudianteService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoDocumentoService;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -353,7 +349,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
                 String nombres = dato.getNombre() + " " + dato.getApellido();
                 String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso);
                 String[] destinatarios = {resultadosPruebasDatos.getCorreoPersonal()};
-                emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
+                emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
 
             } catch (Exception e) {
                 String errorMessage = e.getMessage();
@@ -393,7 +389,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
                 String nombres = dato.getNombre() + " " + dato.getApellido();
                 String cuerpoHtml = String.format(parametro.getValor(), nombres,mensajeCurso);
                 String[] destinatarios = {resultadosPruebasDatos.getCorreoPersonal()};
-                emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_APROBADO, cuerpoHtml);
+                emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_CURSO_APROBADO, cuerpoHtml);
 
             } catch (Exception e) {
                 String errorMessage = e.getMessage();

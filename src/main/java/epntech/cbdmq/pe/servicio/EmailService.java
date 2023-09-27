@@ -220,7 +220,7 @@ public class EmailService {
 
     }
 
-    public void sendMensajeGeneral(String email, String subject, String mensaje) {
+    public void sendMensajeTextGenerico(String email, String subject, String mensaje) {
         try {
             String[] emails = {email};
             if (email.contains(",") || email.contains(";")) {
@@ -238,7 +238,7 @@ public class EmailService {
         }
     }
 
-    public void sendMensajeGeneralList(String[] email, String subject, String mensaje) {
+    public void sendMensajeHtmlGenerico(String[] email, String subject, String mensaje) {
         try {
 
             String Path = RUTA_PLANTILLAS + "template-pecbdmq-general-html.html";

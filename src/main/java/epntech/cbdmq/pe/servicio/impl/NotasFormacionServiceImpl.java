@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.*;
-import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.servicio.*;
@@ -32,7 +31,6 @@ import epntech.cbdmq.pe.repositorio.admin.MateriaPeriodoDataRepository;
 import epntech.cbdmq.pe.repositorio.admin.MateriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasDatosFormacionRepository;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionRepository;
-import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -170,7 +168,7 @@ public class NotasFormacionServiceImpl implements NotasFormacionService {
 					.findById(estudiante.get().getCodDatosPersonales());
 			Optional<Materia> materia = materiaRepository.findById(materiaPe.getCodMateria());
 
-			emailService.sendMensajeGeneral(datoPersonal.get().getCorreoPersonal(), EMAIL_SUBJECT_REG_NOTA,
+			emailService.sendMensajeTextGenerico(datoPersonal.get().getCorreoPersonal(), EMAIL_SUBJECT_REG_NOTA,
 					"Se ha registrado una nota en la materia: " + materia.get().getNombre()+"\n"+
 							"Periodo Academico: "+periodoAcademicoService.getPAActivo()+"\n"+"Nota: "+notasFormacion.getNotaMateria());
 		}

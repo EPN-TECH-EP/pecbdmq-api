@@ -340,7 +340,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         String[] destinatarios = {inscripcion.getCorreoPersonal()};
 
-        emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+        emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
     }
 
     @Override
@@ -433,7 +433,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         String[] destinatarios = {inscripcion.getCorreoPersonal()};
 
-        emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+        emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
     }
 
     @Override
@@ -479,7 +479,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
             String[] destinatarios = {inscritosEspecializacion.getCorreoPersonal()};
 
-            emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT2, cuerpoHtml);
+            emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT2, cuerpoHtml);
         }
 
     }
@@ -505,7 +505,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
             String[] destinatarios = {inscritosValidos.getCorreoPersonal()};
 
-            emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_PRUEBAS, cuerpoHtml);
+            emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_PRUEBAS, cuerpoHtml);
         }
     }
 
