@@ -8,4 +8,6 @@ public interface ApiCBDMQOperativosService {
     List<OperativoApiDto> servicioOperativosAndNoOperativos() throws Exception;
     List<OperativoApiDto> servicioOperativos() throws Exception;
     List<OperativoApiDto> servicioOperativosOrderByAntiguedad() throws Exception;
+    void notificarMejoresProspectos(int numeroLimite) throws Exception;
+    void  notificarOperativoComoMejorProspecto(String correo);
 }
