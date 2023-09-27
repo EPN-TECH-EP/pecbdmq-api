@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.resource;
 
 import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.servicio.ReporteService;
-import epntech.cbdmq.pe.servicio.reporteria.ReporteServiceLocal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class ReporteResource {
     private final ReporteService service;
-    private final ReporteServiceLocal reporteService;
 
     @GetMapping("/listar")
     public List<Reporte> listar(@RequestParam("modulo") String modulo) {
@@ -39,7 +37,7 @@ public class ReporteResource {
             @PathVariable String fileType,
             @Autowired HttpServletResponse response
     ) {
-        reporteService.exportAprobadosFormacion(fileName, fileType, response);
+        service.exportAprobadosFormacion(fileName, fileType, response);
     }
 
     @PostMapping(value = "/generarReporteAprobadosReprobados/{codCurso}/{fileName}/{fileType}")
@@ -49,7 +47,7 @@ public class ReporteResource {
             @PathVariable Integer codCurso,
             @Autowired HttpServletResponse response
     ) {
-        reporteService.exportAprobadosEspecializacion(fileName, fileType, response, codCurso);
+        service.exportAprobadosEspecializacion(fileName, fileType, response, codCurso);
     }
 
     @PostMapping(value = "/generarMallaCurricular/{fileName}/{fileType}")
@@ -58,7 +56,7 @@ public class ReporteResource {
             @PathVariable String fileType,
             @Autowired HttpServletResponse response
     ) {
-        reporteService.exportMallaCurricular(fileName, fileType, response);
+        service.exportMallaCurricular(fileName, fileType, response);
     }
 
     @PostMapping(value = "/reporteGeneral/{fileName}/{fileType}")
@@ -68,15 +66,15 @@ public class ReporteResource {
             @Param("year") int year,
             @Autowired HttpServletResponse response
     ) {
-        reporteService.exporPeriodosAcademicosPeriodosProfesionalesCursosByYear(fileName, fileType, response, year);
+        service.exporPeriodosAcademicosPeriodosProfesionalesCursosByYear(fileName, fileType, response, year);
     }
 
-    @PostMapping(value = "/generarPrueba/{fileName}/{fileType}")
+    @PostMapping(value = "/generarAntiguedades/{fileName}/{fileType}")
     public void downloadPrueba(
             @PathVariable String fileName,
             @PathVariable String fileType,
             @Autowired HttpServletResponse response
-    ) {
-        reporteService.exportarPrueba(fileName, fileType, response);
+    ) throws Exception {
+        service.exportAntiguedadesOperativos(fileName, fileType, response);
     }
 }
