@@ -23,6 +23,8 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -57,16 +59,19 @@ public class ReporteImplLocal implements ReporteServiceLocal {
         JasperPrint jasperPrint;
         ServletOutputStream outputStream;
         List<AntiguedadesFormacion> lista = service.getAntiguedadesFormacion().stream().collect(Collectors.toList());
-        AntiguedadesFormacion observacionDto1 = new AntiguedadesFormacion();
-        observacionDto1.setNombre("Total");
-        observacionDto1.setApellido("Hola");
-        observacionDto1.setCorreoPersonal("Jair");
+        AntiguedadesFormacion antiguedad = new AntiguedadesFormacion();
+        antiguedad.setNombre("Total");
+        antiguedad.setApellido("Hola");
+        antiguedad.setCorreoPersonal("Jair");
+        antiguedad.setNotaFinal(BigDecimal.valueOf(0.0f));
+        antiguedad.setCedula("0");
+        antiguedad.setCodigoUnicoEstudiante("0");
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
-            aprobados.add(observacionDto1);
+            aprobados.add(antiguedad);
             aprobados.addAll(lista);
 
-            JRBeanCollectionDataSource dsSubObservaciones = new JRBeanCollectionDataSource(lista);
+            JRBeanCollectionDataSource dsAprobados = new JRBeanCollectionDataSource(aprobados);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
             Integer numeroEstudiantes = notasFormacionFinalService.getNotasFinalCodPeriodoAcademico().size();
@@ -81,41 +86,45 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             }
 
 
-            parameters.put("listaAprobados", dsSubObservaciones);
+            parameters.put("listaAprobados", dsAprobados);
             parameters.put("numeroEstudiantes", numeroEstudiantes);
             parameters.put("numeroAprobados", numeroAprobados);
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
             parameters.put("academia", "Formacion");
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsSubObservaciones);
-            if (filetype.equalsIgnoreCase("PDF")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRPdfExporter exporter = new JRPdfExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-            if (filetype.equalsIgnoreCase("EXCEL")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRXlsxExporter exporter = new JRXlsxExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
+            imprimir(filename, filetype, response, dsAprobados, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso) {
-        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
+    private void imprimir(String filename, String filetype, HttpServletResponse response, JRBeanCollectionDataSource dsAprobados, JasperReport jasperReport, Map<String, Object> parameters) throws JRException, IOException {
         JasperPrint jasperPrint;
         ServletOutputStream outputStream;
+        jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsAprobados);
+        if (filetype.equalsIgnoreCase("PDF")) {
+            response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
+            response.setContentType("application/octet-stream");
+            outputStream = response.getOutputStream();
+            JRPdfExporter exporter = new JRPdfExporter();
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            exporter.exportReport();
+        }
+        if (filetype.equalsIgnoreCase("EXCEL")) {
+            response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
+            response.setContentType("application/octet-stream");
+            outputStream = response.getOutputStream();
+            JRXlsxExporter exporter = new JRXlsxExporter();
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            exporter.exportReport();
+        }
+    }
+
+    public void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso) {
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
         List<AntiguedadesFormacion> lista = service.getAntiguedadesEspecializacion(codCurso.longValue()).stream().collect(Collectors.toList());
         AntiguedadesFormacion observacionDto1 = new AntiguedadesFormacion();
         observacionDto1.setNombre("Total");
@@ -139,8 +148,6 @@ public class ReporteImplLocal implements ReporteServiceLocal {
                 porcentajeAprobados = (float) (numeroAprobados * 100) / numeroEstudiantes;
                 porcentajeReprobados = (float) (numeroReprobados * 100) / numeroEstudiantes;
             }
-
-
             parameters.put("listaAprobados", dsSubObservaciones);
             parameters.put("numeroEstudiantes", numeroEstudiantes);
             parameters.put("numeroAprobados", numeroAprobados);
@@ -148,25 +155,7 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
             parameters.put("academia", "Especializacion");
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsSubObservaciones);
-            if (filetype.equalsIgnoreCase("PDF")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRPdfExporter exporter = new JRPdfExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-            if (filetype.equalsIgnoreCase("EXCEL")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRXlsxExporter exporter = new JRXlsxExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
+            imprimir(filename, filetype, response, dsSubObservaciones, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -255,25 +244,7 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsSubObservaciones);
-            if (filetype.equalsIgnoreCase("PDF")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRPdfExporter exporter = new JRPdfExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-            if (filetype.equalsIgnoreCase("EXCEL")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRXlsxExporter exporter = new JRXlsxExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
+            imprimir(filename, filetype, response, dsSubObservaciones, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -389,6 +360,7 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             e.printStackTrace();
         }
     }
+
     public void exportAntiguedades(String filename, String filetype, HttpServletResponse response) throws Exception {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
         JasperPrint jasperPrint;
