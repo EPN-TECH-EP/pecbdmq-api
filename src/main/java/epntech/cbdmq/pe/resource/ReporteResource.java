@@ -4,6 +4,7 @@ import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.servicio.ReporteService;
 import epntech.cbdmq.pe.servicio.reporteria.ReporteServiceLocal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +59,16 @@ public class ReporteResource {
             @Autowired HttpServletResponse response
     ) {
         reporteService.exportMallaCurricular(fileName, fileType, response);
+    }
+
+    @PostMapping(value = "/reporteGeneral/{fileName}/{fileType}")
+    public void downloadReporteGeneral(
+            @PathVariable String fileName,
+            @PathVariable String fileType,
+            @Param("year") int year,
+            @Autowired HttpServletResponse response
+    ) {
+        reporteService.exporPeriodosAcademicosPeriodosProfesionalesCursosByYear(fileName, fileType, response, year);
     }
 
     @PostMapping(value = "/generarPrueba/{fileName}/{fileType}")

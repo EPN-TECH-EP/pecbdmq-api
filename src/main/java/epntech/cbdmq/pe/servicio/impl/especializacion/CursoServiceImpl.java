@@ -675,7 +675,7 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public List<Curso> findByFechaInicioBetween(Date startDate, Date endDate) {
+    public List<Curso> findByFechaInicioBetween(LocalDate startDate, LocalDate endDate) {
         return cursoRepository.findByFechaInicioCursoBetween(startDate, endDate);
     }
 

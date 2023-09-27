@@ -99,7 +99,6 @@ public class ReporteImplLocal implements ReporteServiceLocal {
         }
     }
 
-
     public void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
         List<AntiguedadesFormacion> lista = service.getAntiguedadesEspecializacion(codCurso.longValue()).stream().collect(Collectors.toList());
@@ -161,26 +160,41 @@ public class ReporteImplLocal implements ReporteServiceLocal {
         }
     }
 
-    public void exporPeriodosAcademicosPeriodosProfesionalesCursosByYear(String filename, String filetype, HttpServletResponse response, Date starDate, Date endDate) {
-        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
-        List<PeriodoAcademicoDuracionDto> periodos = periodoAcademicoSvc.findByFechaInicioPeriodoAcadBetween(starDate, endDate).stream().map(periodo -> {
+    public void exporPeriodosAcademicosPeriodosProfesionalesCursosByYear(String filename, String filetype, HttpServletResponse response, int inputYear) {
+        LocalDate localStartDate = LocalDate.of(inputYear, 1, 1); // 01-01-2023
+        LocalDate localEndDate = LocalDate.of(inputYear, 12, 31); // 31-12-2023
+        Date startDate = Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteGeneral.jrxml");
+        List<PeriodoAcademicoDuracionDto> periodos = periodoAcademicoSvc.findByFechaInicioPeriodoAcadBetween(startDate, endDate).stream().map(periodo -> {
             PeriodoAcademicoDuracionDto dto = new PeriodoAcademicoDuracionDto();
             dto.setCodigo(periodo.getCodigo());
             dto.setDescripcion(periodo.getDescripcion());
 
-            // Convertir java.util.Date a java.time.LocalDate
-            LocalDate fechaInicio = periodo.getFechaInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate fechaFin = periodo.getFechaFin().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate fechaInicio = null;
+            LocalDate fechaFin = null;
+            int duracion = 0;
 
-            // Calcular duración
-            dto.setDuracion((int) java.time.temporal.ChronoUnit.DAYS.between(fechaInicio, fechaFin));
+            if (periodo.getFechaInicio() != null) {
+                fechaInicio = periodo.getFechaInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            }
+
+            if (periodo.getFechaFin() != null) {
+                fechaFin = periodo.getFechaFin().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            } else {
+                fechaFin = LocalDate.now();  // Si fechaFin es null, toma la fecha actual
+            }
+
+            if (fechaInicio != null) {
+                duracion = (int) java.time.temporal.ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+            }
+
+            dto.setDuracion(duracion);
 
             return dto;
         }).collect(Collectors.toList());
-        //TODO poner cuantos periodos y restar cuanto duro cuanto uno
-        List<ProPeriodosDuracionDto> periodosPro = proPeriodoSvc.findByFechaInicioBetween(starDate, endDate).stream().map(periodo -> {
+        List<ProPeriodosDuracionDto> periodosPro = proPeriodoSvc.findByFechaInicioBetween(startDate, endDate).stream().map(periodo -> {
             ProPeriodosDuracionDto dto = new ProPeriodosDuracionDto();
             dto.setCodigoPeriodo(periodo.getCodigoPeriodo());
             dto.setNombrePeriodo(periodo.getNombrePeriodo());
@@ -194,8 +208,7 @@ public class ReporteImplLocal implements ReporteServiceLocal {
 
             return dto;
         }).collect(Collectors.toList());
-        //TODO poner cuantos periodos de profesioanlizacion y cuanto duro cada uno
-        List<CursoDuracionDto> cursos = cursoService.findByFechaInicioBetween(starDate, endDate).stream().map(curso -> {
+        List<CursoDuracionDto> cursos = cursoService.findByFechaInicioBetween(localStartDate, localEndDate).stream().map(curso -> {
             CursoDuracionDto dto = new CursoDuracionDto();
             dto.setCodCursoEspecializacion(curso.getCodCursoEspecializacion());
             dto.setNombre(curso.getNombre());
@@ -204,31 +217,21 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             dto.setDuracion((int) java.time.temporal.ChronoUnit.DAYS.between(curso.getFechaInicioCurso(), curso.getFechaFinCurso()));
             return dto;
         }).collect(Collectors.toList());
-        //TODO restar curso fecha inicio y fecha fin
         try {
-
-
+            JRBeanCollectionDataSource dsPeriodos = new JRBeanCollectionDataSource(periodos);
+            JRBeanCollectionDataSource dsPeriodosPro = new JRBeanCollectionDataSource(periodosPro);
+            JRBeanCollectionDataSource dsCursos = new JRBeanCollectionDataSource(cursos);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
-            if (filetype.equalsIgnoreCase("PDF")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRPdfExporter exporter = new JRPdfExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-            if (filetype.equalsIgnoreCase("EXCEL")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRXlsxExporter exporter = new JRXlsxExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
+            parameters.put("listaPeriodosFormacion", dsPeriodos);
+            parameters.put("listaPeriodosPro", dsPeriodosPro);
+            parameters.put("listaCusos", dsCursos);
+            parameters.put("numeroPeriodosFormacion", periodos.size());
+            parameters.put("numeroPeriodosPro", periodosPro.size());
+            parameters.put("numeroCursos", cursos.size());
+            JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
+
+            imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
 
         } catch (Exception e) {
             e.printStackTrace();

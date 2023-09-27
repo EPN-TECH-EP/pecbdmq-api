@@ -10,7 +10,7 @@ public interface ReporteServiceLocal {
 
     void exportMallaCurricular(String fileName, String fileType, HttpServletResponse response);
 
-    void exporPeriodosAcademicosPeriodosProfesionalesCursosByYear(String fileName, String fileType, HttpServletResponse response, Date startDate, Date endDate);
+    void exporPeriodosAcademicosPeriodosProfesionalesCursosByYear(String fileName, String fileType, HttpServletResponse response, int year);
 
     public void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso);
     public void exportarPrueba(String filename, String filetype, HttpServletResponse response);
