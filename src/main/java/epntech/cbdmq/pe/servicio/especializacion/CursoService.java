@@ -2,6 +2,8 @@ package epntech.cbdmq.pe.servicio.especializacion;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -63,4 +65,5 @@ public interface CursoService {
 	List<Curso> listarPorEstudianteAndEstado(Integer codigoEstudiante, String estado);
 	List<Curso> listarCerradosPorEstudiante(Integer codigoEstudiante);
 	List<Curso> listarAllPorEstudiante(Integer codigoEstudiante);
+	List<Curso> findByFechaInicioBetween(LocalDate startDate, LocalDate endDate);
 }

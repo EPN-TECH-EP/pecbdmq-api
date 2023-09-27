@@ -2,6 +2,7 @@ package epntech.cbdmq.pe.servicio;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -52,4 +53,5 @@ public interface PeriodoAcademicoService {
     public Set<Documento> getDocumentosByPeriodo(Integer codPA);
     List<PeriodoAcademico> getAllPeriodosFormacion();
 	PeriodoAcademico getPeriodoAcademicoByActivo();
+	List<PeriodoAcademico> findByFechaInicioPeriodoAcadBetween(Date startDate, Date endDate);
 }

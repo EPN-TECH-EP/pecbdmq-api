@@ -674,5 +674,10 @@ public class CursoServiceImpl implements CursoService {
         return this.listarPorEstudianteAndEstado(codigoEstudiante, "%");
     }
 
+    @Override
+    public List<Curso> findByFechaInicioBetween(LocalDate startDate, LocalDate endDate) {
+        return cursoRepository.findByFechaInicioCursoBetween(startDate, endDate);
+    }
+
 
 }

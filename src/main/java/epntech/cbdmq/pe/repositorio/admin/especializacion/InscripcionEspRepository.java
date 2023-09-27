@@ -25,10 +25,6 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionesByCursoAndUsuario")
 	List<InscripcionDatosEspecializacion> getAllInscripcionesByCursoAndUsuario(@Param("codCurso") Long codCurso, @Param("codUsuario") Long codUsuario, Pageable pageable);
-	
-	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcion")
-	Optional<InscripcionDatosEspecializacion> getInscripcion(@Param("codInscripcion") Long codInscripcion);
-	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionDatos")
 	Optional<InscripcionEstudianteDatosEspecializacion> getInscripcionEstudiante(@Param("codInscripcion") Long codInscripcion);
 	
@@ -36,10 +32,6 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
 	@Procedure(value = "cbdmq.cumple_porcentaje_min_aprobados_pruebas_curso_esp")
 	Boolean cumplePorcentajeMinimoAprobadosPruebasCurso(long codCurso);
-	
-	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionPorCurso")
-	List<InscripcionDatosEspecializacion> getInscripcionByCurso(@Param("codCurso") Long codCurso);
-	
 	@Query(nativeQuery = true, name = "InscripcionEsp.findInscripcionValidaPorCurso")
 	List<InscritosEspecializacion> getInscripcionesValidasByCurso(@Param("codCurso") Long codCurso);
 
@@ -56,15 +48,7 @@ public interface InscripcionEspRepository extends JpaRepository<InscripcionEsp, 
 	List<DatosInscripcionEsp> getDesAprobadosPruebas(@Param("codCurso") Integer codCurso);
 	@Query(nativeQuery = true, name = "DatosInscripcionEsp.aprobadosPruebasBySubtipoPrueba")
 	List<DatosInscripcionEsp> getAprobadosPruebasBySubtipoPrueba(@Param("codCurso") Integer codCurso, @Param("codSubtipoPrueba") Integer codSubtipoPrueba);
-	
-	@Query(value = "select i.* "
-			+ "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.esp_curso c "
-			+ "where i.cod_estudiante = e.cod_estudiante "
-			+ "and i.cod_curso_especializacion = c.cod_curso_especializacion "
-			+ "and upper(c.estado) = 'ACTIVO' "
-			+ "and upper(e.estado) = 'ACTIVO' "
-			+ "and upper(i.estado) = 'VALIDO' "
-			+ "and i.cod_inscripcion = :codInscripcion", nativeQuery = true)
-	Optional<InscripcionEsp> getByCodInscripcion(Long codInscripcion);
+	List<InscripcionEsp> findByCodCursoEspecializacionAndEstado(Long codCursoEspecializacion, String estado);
+
 }
 

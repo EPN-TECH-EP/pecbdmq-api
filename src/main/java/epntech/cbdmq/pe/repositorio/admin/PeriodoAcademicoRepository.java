@@ -86,4 +86,6 @@ public interface PeriodoAcademicoRepository extends JpaRepository<PeriodoAcademi
     @Query("UPDATE gen_periodo_academico pa SET pa.estado = 'CIERRE', pa.fechaFin = :fecha WHERE pa.codigo = :pActivo")
     int cerrarPeriodoAndUpdateFecha(@Param("pActivo") Integer codPA, @Param("fecha") Date fecha);
     List<PeriodoAcademico> findAllByEstado(String estado);
+    List<PeriodoAcademico> findByFechaInicioBetween(Date startDate, Date endDate);
+
 }

@@ -8,6 +8,7 @@ import epntech.cbdmq.pe.repositorio.profesionalizacion.ProPeriodosRepository;
 import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +57,11 @@ public class ProPeriodoServiceImpl extends ProfesionalizacionServiceImpl<ProPeri
     @Override
     public List<ProPeriodos> findByEstado(String estado) {
         return repository.findByEstado(estado);
+    }
+
+    @Override
+    public List<ProPeriodos> findByFechaInicioBetween(Date startDate, Date endDate) {
+        return repository.findByFechaInicioBetween(startDate, endDate);
     }
 
     @Override

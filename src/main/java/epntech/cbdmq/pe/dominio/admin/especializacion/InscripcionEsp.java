@@ -148,28 +148,6 @@ import lombok.Data;
         @ColumnResult(name = "fechaFinCurso", type = LocalDate.class),
         @ColumnResult(name = "fechaInscripcion", type = LocalDate.class),}))
 
-@NamedNativeQuery(name = "InscripcionEsp.findInscripcionPorCurso",
-        query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso "
-                + "from cbdmq.esp_inscripcion i, cbdmq.gen_estudiante e, cbdmq.gen_dato_personal dp, cbdmq.esp_curso c, cbdmq.esp_catalogo_cursos cc "
-                + "where i.cod_estudiante = e.cod_estudiante "
-                + "and e.cod_datos_personales = dp.cod_datos_personales "
-                + "and i.cod_curso_especializacion = c.cod_curso_especializacion "
-                + "and c.cod_catalogo_cursos = cc.cod_catalogo_cursos "
-                + "and upper(e.estado) = 'ACTIVO' "
-                + "and upper(dp.estado) = 'ACTIVO' "
-                + "and upper(c.estado) <> 'ELIMINADO' "
-                + "and upper(cc.estado) = 'ACTIVO' "
-                + "and i.cod_curso_especializacion = :codCurso",
-        resultSetMapping = "findInscripcionPorCurso")
-@SqlResultSetMapping(name = "findInscripcionPorCurso", classes = @ConstructorResult(targetClass = InscripcionDatosEspecializacion.class, columns = {
-        @ColumnResult(name = "codInscripcion"),
-        @ColumnResult(name = "cedula"),
-        @ColumnResult(name = "nombre"),
-        @ColumnResult(name = "apellido"),
-        @ColumnResult(name = "nombreCatalogoCurso"),
-        @ColumnResult(name = "codUsuario"),
-        @ColumnResult(name = "correoUsuario"),
-        @ColumnResult(name = "nombreUsuario"),}))
 
 @NamedNativeQuery(name = "InscripcionEsp.findInscripcionValidaPorCurso",
         query = "select i.cod_inscripcion as codInscripcion, dp.cedula, dp.nombre, dp.apellido, cc.nombre_catalogo_curso as nombreCatalogoCurso, dp.correo_personal as correoPersonal, e.codigo_unico_estudiante as codigoUnicoEstudiante "

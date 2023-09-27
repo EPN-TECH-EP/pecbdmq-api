@@ -44,208 +44,214 @@ import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 @Service
 public class PeriodoAcademicoServiceimpl implements PeriodoAcademicoService {
 
-	@Autowired
-	private PeriodoAcademicoRepository repo;
-	@Autowired
-	private PeriodoAcademicoMSRepository repo1;
-	@Autowired
-	private PeriodoAcademicoDocRepository repo2;
-	@Autowired
-	private PADocumentoRepository pADocumentoRepository;
-	
-	@Value("${pecb.archivos.ruta}")
-	private String ARCHIVOS_RUTA;
-	@Value("${spring.servlet.multipart.max-file-size}")
-	public DataSize TAMAÑO_MÁXIMO;
-	@Autowired
-	private DocumentoRepository documentoRepository;
-	
-	@Override
-	public PeriodoAcademico save(PeriodoAcademico obj) throws DataException {
-		if(obj.getDescripcion().trim().isEmpty())
-			throw new DataException(REGISTRO_VACIO);
-		Optional<PeriodoAcademico> objGuardado = repo.findByDescripcion(obj.getDescripcion());
-		if (objGuardado.isPresent()) {
-			throw new DataException(REGISTRO_YA_EXISTE);
-		}
-		Optional<PeriodoAcademico> objGuardado1 = repo.findByFechaInicioAndFechaFin(obj.getFechaInicio(), obj.getFechaFin());
-		if (objGuardado1.isPresent()) {
-			throw new DataException(FECHAS_YA_EXISTE);
-		}
-		return repo.save(obj);
-	}
+    @Autowired
+    private PeriodoAcademicoRepository repo;
+    @Autowired
+    private PeriodoAcademicoMSRepository repo1;
+    @Autowired
+    private PeriodoAcademicoDocRepository repo2;
+    @Autowired
+    private PADocumentoRepository pADocumentoRepository;
 
-	@Override
-	public List<PeriodoAcademico> getAll() {
-		return repo.findAll();
-	}
-	
-	
-	public List<PeriodoAcademico> getAllActive() {
-		return repo.findAllByEstado(EstadosConst.ACTIVO);
-	}
-	
+    @Value("${pecb.archivos.ruta}")
+    private String ARCHIVOS_RUTA;
+    @Value("${spring.servlet.multipart.max-file-size}")
+    public DataSize TAMAÑO_MÁXIMO;
+    @Autowired
+    private DocumentoRepository documentoRepository;
 
-	@Override
-	public Optional<PeriodoAcademico> getById(int id) {
-		return repo.findById(id);
-	}
+    @Override
+    public PeriodoAcademico save(PeriodoAcademico obj) throws DataException {
+        if (obj.getDescripcion().trim().isEmpty())
+            throw new DataException(REGISTRO_VACIO);
+        Optional<PeriodoAcademico> objGuardado = repo.findByDescripcion(obj.getDescripcion());
+        if (objGuardado.isPresent()) {
+            throw new DataException(REGISTRO_YA_EXISTE);
+        }
+        Optional<PeriodoAcademico> objGuardado1 = repo.findByFechaInicioAndFechaFin(obj.getFechaInicio(), obj.getFechaFin());
+        if (objGuardado1.isPresent()) {
+            throw new DataException(FECHAS_YA_EXISTE);
+        }
+        return repo.save(obj);
+    }
 
-	@Override
-	public PeriodoAcademico update(PeriodoAcademico objActualizado) throws DataException {
-		
-		return repo.save(objActualizado);
-	}
+    @Override
+    public List<PeriodoAcademico> getAll() {
+        return repo.findAll();
+    }
 
-	@Override
-	public void deleteById(int id) throws DataException {
-		Optional<?> objGuardado = repo.findById(id);
-		if (objGuardado.isEmpty()) {
-			throw new DataException(REGISTRO_NO_EXISTE);
-		}
-		try {
-			repo.deleteById(id);
-		} catch (Exception e) {
-			if (e.getMessage().contains("constraint")) {
-				throw new DataException(DATOS_RELACIONADOS);
-			}
-		}
-	}
 
-	@Override
-	public List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico() {
-		return repo1.getPeriodoAcademico();
-	}
+    public List<PeriodoAcademico> getAllActive() {
+        return repo.findAllByEstado(EstadosConst.ACTIVO);
+    }
 
-	@Override
-	public String getEstado() {
-		return repo.getEstado();
-	}
 
-	@Override
-	public Integer updateNextState(Integer id, String proceso) {
-		return repo.updateNextState(id, proceso);
-	}
+    @Override
+    public Optional<PeriodoAcademico> getById(int id) {
+        return repo.findById(id);
+    }
 
-	@Override
-	public Integer validState(Integer id, String proceso) {
-		return repo.validState(id, proceso);
-	}
+    @Override
+    public PeriodoAcademico update(PeriodoAcademico objActualizado) throws DataException {
 
-	@Override
-	public Set<Documento> getDocumentosPActive() {
-		return repo2.getDocumentos(this.getPAActivo());
-	}
+        return repo.save(objActualizado);
+    }
 
-	@Override
-	public Optional<PeriodoAcademico> getActive() {
-		return repo.getPeriodoActivo();
-	}
+    @Override
+    public void deleteById(int id) throws DataException {
+        Optional<?> objGuardado = repo.findById(id);
+        if (objGuardado.isEmpty()) {
+            throw new DataException(REGISTRO_NO_EXISTE);
+        }
+        try {
+            repo.deleteById(id);
+        } catch (Exception e) {
+            if (e.getMessage().contains("constraint")) {
+                throw new DataException(DATOS_RELACIONADOS);
+            }
+        }
+    }
 
-	@Override
-	public Integer getPAActivo() {
-		return repo.getPAActive();
-	}
+    @Override
+    public List<PeriodoAcademicoSemestreModulo> getAllPeriodoAcademico() {
+        return repo1.getPeriodoAcademico();
+    }
 
-	@Override
-	public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+    @Override
+    public String getEstado() {
+        return repo.getEstado();
+    }
 
-		String resultado;
-		Integer periodo = repo.getPAActive();
-		
-		if(periodo == null)
-			throw new DataException(NO_PERIODO_ACTIVO);
+    @Override
+    public Integer updateNextState(Integer id, String proceso) {
+        return repo.updateNextState(id, proceso);
+    }
 
-		resultado = ruta();
-		Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
+    @Override
+    public Integer validState(Integer id, String proceso) {
+        return repo.validState(id, proceso);
+    }
 
-		if (!Files.exists(ruta)) {
-			Files.createDirectories(ruta);
-		}
+    @Override
+    public Set<Documento> getDocumentosPActive() {
+        return repo2.getDocumentos(this.getPAActivo());
+    }
 
-		List<DocumentoRuta> lista = new ArrayList<>();
-		DocumentoRuta documentos = new DocumentoRuta();
-		// Files.copy(archivo.getInputStream(),
-		// ruta.resolve(archivo.getOriginalFilename()),
-		// StandardCopyOption.REPLACE_EXISTING);
-		for (Iterator iterator = archivos.iterator(); iterator.hasNext();) {
-			MultipartFile multipartFile = (MultipartFile) iterator.next();
-			if (multipartFile.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
-				throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
-			}
+    @Override
+    public Optional<PeriodoAcademico> getActive() {
+        return repo.getPeriodoActivo();
+    }
 
-			Files.copy(multipartFile.getInputStream(), ruta.resolve(multipartFile.getOriginalFilename()),
-					StandardCopyOption
-					.REPLACE_EXISTING);
-			//LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
-			documentos.setRuta(resultado + multipartFile.getOriginalFilename());
-			lista.add(documentos);
-			
-			Documento documento = new Documento();
-			documento.setEstado("ACTIVO");
-			documento.setDescripcion(descripcion);
-			documento.setObservaciones(observacion);
-			documento.setNombre(multipartFile.getOriginalFilename());
-			documento.setRuta(resultado + multipartFile.getOriginalFilename());
-			documento = documentoRepository.save(documento);
+    @Override
+    public Integer getPAActivo() {
+        return repo.getPAActive();
+    }
 
-			
-			//System.out.println("documento.getCodigo(): " + documento.getCodigo());
-			//System.out.println("periodo: " + periodo);
-			PADocumento docsPA = new PADocumento(); 
-			docsPA.setCodDocumento(documento.getCodDocumento());
-			docsPA.setCodPeriodoAcademico(periodo); 
-			pADocumentoRepository.save(docsPA);
+    @Override
+    public void cargarDocs(List<MultipartFile> archivos, String descripcion, String observacion) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
 
-		}
-		
-	}
+        String resultado;
+        Integer periodo = repo.getPAActive();
 
-	private String ruta() {
+        if (periodo == null)
+            throw new DataException(NO_PERIODO_ACTIVO);
 
-		String resultado = null;
-		PeriodoAcademico periodo = repo.getPeriodoAcademicoActivo();
+        resultado = ruta();
+        Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
 
-		resultado = ARCHIVOS_RUTA + PATH_PROCESO_PERIODO_ACADEMICO + periodo.getCodigo() + "/";
+        if (!Files.exists(ruta)) {
+            Files.createDirectories(ruta);
+        }
 
-		return resultado;
-	}
+        List<DocumentoRuta> lista = new ArrayList<>();
+        DocumentoRuta documentos = new DocumentoRuta();
+        // Files.copy(archivo.getInputStream(),
+        // ruta.resolve(archivo.getOriginalFilename()),
+        // StandardCopyOption.REPLACE_EXISTING);
+        for (Iterator iterator = archivos.iterator(); iterator.hasNext(); ) {
+            MultipartFile multipartFile = (MultipartFile) iterator.next();
+            if (multipartFile.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
+                throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
+            }
 
-	@Override
-	public void eliminar(List<DocsUtil> docs) {
-		for (DocsUtil docsUtil : docs) {
-			documentoRepository.deleteById(docsUtil.getId());
-			
-			PADocumento docsPA = new PADocumento();
-			docsPA = pADocumentoRepository.findByCodDocumentoAndCodPeriodoAcademico(docsUtil.getId(), repo.getPAActive());
+            Files.copy(multipartFile.getInputStream(), ruta.resolve(multipartFile.getOriginalFilename()),
+                    StandardCopyOption
+                            .REPLACE_EXISTING);
+            //LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
+            documentos.setRuta(resultado + multipartFile.getOriginalFilename());
+            lista.add(documentos);
 
-			pADocumentoRepository.deleteById(docsPA.getCodPeriodoAcademicoDocumento());
-		}
-	}
+            Documento documento = new Documento();
+            documento.setEstado("ACTIVO");
+            documento.setDescripcion(descripcion);
+            documento.setObservaciones(observacion);
+            documento.setNombre(multipartFile.getOriginalFilename());
+            documento.setRuta(resultado + multipartFile.getOriginalFilename());
+            documento = documentoRepository.save(documento);
 
-	@Override
-	@Transactional
-	public Boolean cerrarPeriodoAcademico() throws ParseException {
-		Date fechaActual = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String fechaFormateada = sdf.format(fechaActual);
-		Date date = sdf.parse(fechaFormateada);
-		int rowsUpdated=repo.cerrarPeriodoAndUpdateFecha(this.getPAActivo(),date);
-		return rowsUpdated>0;
-	}
-	@Override
-	public Set<Documento> getDocumentosByPeriodo(Integer codPA) {
-		return repo2.getDocumentos(codPA);
-	}
 
-	@Override
-	public List<PeriodoAcademico> getAllPeriodosFormacion() {
-		return repo.getAllPeriodosFormacion();
-	}
+            //System.out.println("documento.getCodigo(): " + documento.getCodigo());
+            //System.out.println("periodo: " + periodo);
+            PADocumento docsPA = new PADocumento();
+            docsPA.setCodDocumento(documento.getCodDocumento());
+            docsPA.setCodPeriodoAcademico(periodo);
+            pADocumentoRepository.save(docsPA);
 
-	@Override
-	public PeriodoAcademico getPeriodoAcademicoByActivo() {
-		return this.getById(this.getPAActivo()).get();
-	}
+        }
+
+    }
+
+    private String ruta() {
+
+        String resultado = null;
+        PeriodoAcademico periodo = repo.getPeriodoAcademicoActivo();
+
+        resultado = ARCHIVOS_RUTA + PATH_PROCESO_PERIODO_ACADEMICO + periodo.getCodigo() + "/";
+
+        return resultado;
+    }
+
+    @Override
+    public void eliminar(List<DocsUtil> docs) {
+        for (DocsUtil docsUtil : docs) {
+            documentoRepository.deleteById(docsUtil.getId());
+
+            PADocumento docsPA = new PADocumento();
+            docsPA = pADocumentoRepository.findByCodDocumentoAndCodPeriodoAcademico(docsUtil.getId(), repo.getPAActive());
+
+            pADocumentoRepository.deleteById(docsPA.getCodPeriodoAcademicoDocumento());
+        }
+    }
+
+    @Override
+    @Transactional
+    public Boolean cerrarPeriodoAcademico() throws ParseException {
+        Date fechaActual = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaFormateada = sdf.format(fechaActual);
+        Date date = sdf.parse(fechaFormateada);
+        int rowsUpdated = repo.cerrarPeriodoAndUpdateFecha(this.getPAActivo(), date);
+        return rowsUpdated > 0;
+    }
+
+    @Override
+    public Set<Documento> getDocumentosByPeriodo(Integer codPA) {
+        return repo2.getDocumentos(codPA);
+    }
+
+    @Override
+    public List<PeriodoAcademico> getAllPeriodosFormacion() {
+        return repo.getAllPeriodosFormacion();
+    }
+
+    @Override
+    public PeriodoAcademico getPeriodoAcademicoByActivo() {
+        return this.getById(this.getPAActivo()).get();
+    }
+
+    @Override
+    public List<PeriodoAcademico> findByFechaInicioPeriodoAcadBetween(Date startDate, Date endDate) {
+        return repo.findByFechaInicioBetween(startDate, endDate);
+    }
 
 }

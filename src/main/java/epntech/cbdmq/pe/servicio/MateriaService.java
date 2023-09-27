@@ -19,4 +19,7 @@ public interface MateriaService {
 	void delete(int id) throws DataException;
 	List<Materia> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico);
 	List<Materia> getAllByCoordinadorPA(Integer codInstructor);
+	List<Materia> getAllByPeriodoAcademico(Integer codPeriodoAcademico);
+	List<Materia> getAllByPeriodoAcademicoActivo();
+	List<Materia> getAllByPeriodoProfesionalizacionActivo();
 }
