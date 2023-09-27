@@ -115,11 +115,6 @@ public class InscripcionEspResource {
         return response(HttpStatus.OK, inscripcionEspServiceImpl.cumplePorcentajeMinimoInscritosCurso(codigo).toString());
     }
 
-    @GetMapping("/porCurso/{id}")
-    public List<InscripcionDatosEspecializacion> obtenerPorCurso(@PathVariable("id") long codigo) throws DataException {
-        return inscripcionEspServiceImpl.getByCurso(codigo);
-    }
-
     @GetMapping("/porCurso&Estado")
     public Set<InscripcionDatosEspecializacion> obtenerPorCursoEstado(@RequestParam("id") long codigo, @RequestParam("estado") String estado) throws DataException {
         return inscripcionEspServiceImpl.getByCursoEstado(codigo, estado);

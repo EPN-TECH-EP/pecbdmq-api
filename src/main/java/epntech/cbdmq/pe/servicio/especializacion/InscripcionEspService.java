@@ -45,7 +45,6 @@ public interface InscripcionEspService {
 	
 	Boolean cumplePorcentajeMinimoInscritosCurso(long codCurso);
 	
-	List<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException;
 	Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException;
 	List<DatosInscripcionEsp> getAprobadosPruebas(Integer codCurso) throws DataException;
 	List<DatosInscripcionEsp> getDesAprobadosPruebas(Integer codCurso) throws DataException;

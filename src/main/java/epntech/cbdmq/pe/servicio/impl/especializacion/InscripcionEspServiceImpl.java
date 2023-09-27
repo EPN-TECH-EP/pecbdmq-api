@@ -349,11 +349,6 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     }
 
     @Override
-    public List<InscripcionDatosEspecializacion> getByCurso(Long codCurso) throws DataException {
-        return inscripcionEspRepository.getInscripcionByCurso(codCurso);
-    }
-
-    @Override
     public Set<InscripcionDatosEspecializacion> getByCursoEstado(Long codCurso, String Estado) throws DataException {
         return inscripcionEspRepository.getInscripcionesByCursoEstado(codCurso, Estado);
     }
@@ -516,108 +511,6 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
     @Override
     @Transactional
-       /* public DatoPersonalEstudianteDto confirmacionInscripcion(String cedula) throws Exception {
-
-        DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
-        Boolean isValid = util.validadorDeCedula(cedula);
-        if (isValid) {
-            try {
-                Optional<DatoPersonal> datoPersonalObj = datoPersonalSvc.getByCedula(cedula);
-                if (datoPersonalObj.isEmpty()) {
-                    //TODO APIS FUNCIONARIOS Y CIUDADANOS
-                    Optional<FuncionarioApiDto> funcionarioSinRegistrar = apiFuncionarioCBDMQSvc.servicioFuncionarios(cedula);
-                    if (funcionarioSinRegistrar.isPresent()) {
-                        DatoPersonal newDatoPersonal = new DatoPersonal();
-                        newDatoPersonal.setApellido(funcionarioSinRegistrar.get().getApellidos());
-                        newDatoPersonal.setCedula(funcionarioSinRegistrar.get().getCedula());
-                        newDatoPersonal.setCorreoPersonal(funcionarioSinRegistrar.get().getCorreoPersonal());
-                        newDatoPersonal.setEstado(ACTIVO);
-                        newDatoPersonal.setNombre(funcionarioSinRegistrar.get().getNombres());
-                        newDatoPersonal.setNumTelefConvencional(funcionarioSinRegistrar.get().getTelefonoConvencional());
-                        newDatoPersonal.setTipoSangre(funcionarioSinRegistrar.get().getTipoSangre());
-                        newDatoPersonal.setCodProvinciaNacimiento(Integer.valueOf(funcionarioSinRegistrar.get().getCodigoProvinciaNacimiento()));
-                        newDatoPersonal.setCodUnidadGestion(unidadGestionSvc.getUnidadGestionByNombre(funcionarioSinRegistrar.get().getCodigoUnidadGestion()).get().getCodigo());
-                        newDatoPersonal.setSexo(funcionarioSinRegistrar.get().getSexo().toUpperCase());
-                        newDatoPersonal.setNumTelefCelular(funcionarioSinRegistrar.get().getTelefonoCelular());
-                        newDatoPersonal.setResidePais(funcionarioSinRegistrar.get().getPaisResidencia().toUpperCase().equals("ECUADOR") ? true : false);
-                        newDatoPersonal.setCodProvinciaResidencia(Long.valueOf(funcionarioSinRegistrar.get().getCodigoProvinciaResidencia()));
-                        newDatoPersonal.setCallePrincipalResidencia(funcionarioSinRegistrar.get().getCallePrincipalResidencia());
-                        newDatoPersonal.setCalleSecundariaResidencia(funcionarioSinRegistrar.get().getCalleSecundariaResidencia());
-                        newDatoPersonal.setNumeroCasa(funcionarioSinRegistrar.get().getNumeroCasaResidencia());
-                        newDatoPersonal.setColegio(funcionarioSinRegistrar.get().getInstitucionSegundoNivel());
-                        newDatoPersonal = datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
-                        Usuario newUser = new Usuario();
-                        newUser.setCodDatosPersonales(newDatoPersonal);
-                        usuarioSvc.registrar(newUser);
-                        Estudiante newEstudiante = new Estudiante();
-                        newEstudiante.setCodDatosPersonales(newDatoPersonal.getCodDatosPersonales());
-                        newEstudiante.setEstado(ACTIVO);
-                        newEstudiante = estudianteRepository.save(newEstudiante);
-                        datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-                        datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
-                        return datoPersonalEstudianteDto;
-
-                    } else {
-                        Optional<?> ciudadanoSinRegistrar = apiCiudadanoCBDMQSvc.servicioCiudadanos(cedula);
-                        if (ciudadanoSinRegistrar.isEmpty()) {
-                            throw new DataException(REGISTRO_NO_EXISTE);
-                        }
-                        DatoPersonal newDatoPersonal = new DatoPersonal();
-                        //newDatoPersonal.setApellido(((CiudadanoApiDto) ciudadanoSinRegistrar.get()).getApellidos());
-                        newDatoPersonal = (DatoPersonal) ciudadanoSinRegistrar.get();
-                        newDatoPersonal = datoPersonalSvc.saveDatosPersonales(newDatoPersonal);
-                        Usuario newUser = new Usuario();
-                        newUser.setCodDatosPersonales(newDatoPersonal);
-                        usuarioSvc.registrar(newUser);
-                        Estudiante newEstudiante = new Estudiante();
-                        newEstudiante.setCodDatosPersonales(newDatoPersonal.getCodDatosPersonales());
-                        newEstudiante.setEstado(ACTIVO);
-                        newEstudiante = estudianteRepository.save(newEstudiante);
-                        datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-                        datoPersonalEstudianteDto.setDatoPersonal(newDatoPersonal);
-                        return datoPersonalEstudianteDto;
-                    }
-                } else {
-                    Optional<Usuario> usuarioObj = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonalObj.get().getCodDatosPersonales());
-                    if (usuarioObj.isEmpty()) {
-                        //TODO CREATE USER AND STUDENT
-
-                        Usuario newUser = new Usuario();
-                        newUser.setCodDatosPersonales(datoPersonalObj.get());
-                        usuarioSvc.registrar(newUser);
-                        Estudiante newEstudiante = new Estudiante();
-                        newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
-                        newEstudiante.setEstado(ACTIVO);
-                        newEstudiante = estudianteRepository.save(newEstudiante);
-                        datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-                        datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
-                        return datoPersonalEstudianteDto;
-                    } else {
-                        Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getNombreUsuario());
-                        if (estudianteObj == null) {
-                            Estudiante newEstudiante = new Estudiante();
-                            newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
-                            newEstudiante.setEstado(ACTIVO);
-                            newEstudiante = estudianteRepository.save(newEstudiante);
-                            datoPersonalEstudianteDto.setEstudiante(newEstudiante);
-                            datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
-                            return datoPersonalEstudianteDto;
-
-                        } else {
-                            datoPersonalEstudianteDto.setEstudiante(estudianteObj);
-                            datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
-                            return datoPersonalEstudianteDto;
-                        }
-                    }
-                }
-
-            } catch (Exception ex) {
-                throw ex;
-            }
-        }
-        return datoPersonalEstudianteDto;
-
-    }*/
     public DatoPersonalEstudianteDto confirmacionInscripcion(String cedula, Long codCurso) throws Exception {
         DatoPersonalEstudianteDto datoPersonalEstudianteDto = new DatoPersonalEstudianteDto();
         Boolean isValid = util.validadorDeCedula(cedula);
