@@ -503,6 +503,9 @@ public class ResultadoPruebaServiceImpl implements ResultadoPruebaService {
         if (nombre.toLowerCase().contains("aprobados")) {
             documento.setDescripcion("APROBADOS");
         }
+        if (nombre.toLowerCase().contains("reprobados")) {
+            documento.setDescripcion("REPROBADOS");
+        }
 
         documento = documentoRepo.save(documento);
 
