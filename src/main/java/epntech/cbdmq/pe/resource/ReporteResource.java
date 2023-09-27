@@ -13,10 +13,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.FileNotFoundException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/reporte")
@@ -37,12 +33,22 @@ public class ReporteResource {
     }
 
     @PostMapping(value = "/generarReporteAprobadosReprobados/{fileName}/{fileType}")
-    public void downloadII(
+    public void downloadFormacion(
             @PathVariable String fileName,
             @PathVariable String fileType,
             @Autowired HttpServletResponse response
     ) {
         reporteService.exportAprobadosFormacion(fileName, fileType, response);
+    }
+
+    @PostMapping(value = "/generarReporteAprobadosReprobados/{codCurso}/{fileName}/{fileType}")
+    public void downloadEspecializacion(
+            @PathVariable String fileName,
+            @PathVariable String fileType,
+            @PathVariable Integer codCurso,
+            @Autowired HttpServletResponse response
+    ) {
+        reporteService.exportAprobadosEspecializacion(fileName, fileType, response, codCurso);
     }
 
     @PostMapping(value = "/generarMallaCurricular/{fileName}/{fileType}")
@@ -53,6 +59,7 @@ public class ReporteResource {
     ) {
         reporteService.exportMallaCurricular(fileName, fileType, response);
     }
+
     @PostMapping(value = "/generarPrueba/{fileName}/{fileType}")
     public void downloadPrueba(
             @PathVariable String fileName,

@@ -21,7 +21,10 @@ import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -110,7 +113,8 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             JRBeanCollectionDataSource dsSubObservaciones = new JRBeanCollectionDataSource(lista);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
-            Integer numeroEstudiantes = inscripcionEspService.getByCurso(codCurso.longValue()).size();
+            Pageable unlimitedPageable = PageRequest.of(0, Integer.MAX_VALUE);
+            Integer numeroEstudiantes = inscripcionEspService.getAllByCursoPaginado(codCurso.longValue(),unlimitedPageable).size();
             Integer numeroAprobados = lista.size();
             Integer numeroReprobados = numeroEstudiantes - numeroAprobados;
             Float porcentajeAprobados = 0.0f;
