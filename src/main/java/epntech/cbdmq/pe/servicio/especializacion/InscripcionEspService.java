@@ -68,5 +68,6 @@ public interface InscripcionEspService {
 	DatoPersonalEstudianteDto confirmacionInscripcion(String Cedula, Long codCurso) throws Exception;
 	DatoPersonalEstudianteDto colocarMasInformacion(DatoPersonal datoPersonal) throws Exception;
 	List<RequisitosVerificados> findRequisitosForEspByDp(Integer codDp);
+	List<InscripcionEsp> findByCodCursoEspecializacionAndEstado(Long codCursoEspecializacion, String estado);
 
 }

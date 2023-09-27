@@ -643,6 +643,11 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         return validaRequisitosRepository.findRequisitosForEspByDp(codDp);
     }
 
+    @Override
+    public List<InscripcionEsp> findByCodCursoEspecializacionAndEstado(Long codCursoEspecializacion, String estado) {
+        return inscripcionEspRepository.findByCodCursoEspecializacionAndEstado(codCursoEspecializacion, estado);
+    }
+
 
     private DatoPersonal createDatoPersonalFromFuncionario(FuncionarioApiDto funcionario) {
         DatoPersonal newDatoPersonal = new DatoPersonal();

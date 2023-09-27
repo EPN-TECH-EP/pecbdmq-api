@@ -36,6 +36,8 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static epntech.cbdmq.pe.constante.EspecializacionConst.VALIDACION;
+
 @Service
 public class ReporteImplLocal implements ReporteServiceLocal {
     @Autowired
@@ -101,20 +103,19 @@ public class ReporteImplLocal implements ReporteServiceLocal {
     public void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
         List<AntiguedadesFormacion> lista = service.getAntiguedadesEspecializacion(codCurso.longValue()).stream().collect(Collectors.toList());
-        AntiguedadesFormacion observacionDto1 = new AntiguedadesFormacion();
-        observacionDto1.setNombre("Total");
-        observacionDto1.setApellido("Hola");
-        observacionDto1.setCorreoPersonal("Jair");
+        AntiguedadesFormacion aprobado = new AntiguedadesFormacion();
+        aprobado.setNombre("Total");
+        aprobado.setApellido("Hola");
+        aprobado.setCorreoPersonal("Jair");
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
-            aprobados.add(observacionDto1);
+            aprobados.add(aprobado);
             aprobados.addAll(lista);
 
-            JRBeanCollectionDataSource dsSubObservaciones = new JRBeanCollectionDataSource(lista);
+            JRBeanCollectionDataSource dsAprobados = new JRBeanCollectionDataSource(aprobados);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
-            Pageable unlimitedPageable = PageRequest.of(0, Integer.MAX_VALUE);
-            Integer numeroEstudiantes = inscripcionEspService.getAllByCursoPaginado(codCurso.longValue(),unlimitedPageable).size();
+            Integer numeroEstudiantes = inscripcionEspService.findByCodCursoEspecializacionAndEstado(codCurso.longValue(), VALIDACION).size();
             Integer numeroAprobados = lista.size();
             Integer numeroReprobados = numeroEstudiantes - numeroAprobados;
             Float porcentajeAprobados = 0.0f;
@@ -124,14 +125,14 @@ public class ReporteImplLocal implements ReporteServiceLocal {
                 porcentajeAprobados = (float) (numeroAprobados * 100) / numeroEstudiantes;
                 porcentajeReprobados = (float) (numeroReprobados * 100) / numeroEstudiantes;
             }
-            parameters.put("listaAprobados", dsSubObservaciones);
+            parameters.put("listaAprobados", dsAprobados);
             parameters.put("numeroEstudiantes", numeroEstudiantes);
             parameters.put("numeroAprobados", numeroAprobados);
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
             parameters.put("academia", "Especializacion");
-            imprimir(filename, filetype, response, dsSubObservaciones, jasperReport, parameters);
+            imprimir(filename, filetype, response, dsAprobados, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
