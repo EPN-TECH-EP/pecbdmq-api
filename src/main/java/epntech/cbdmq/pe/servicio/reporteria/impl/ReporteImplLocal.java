@@ -56,8 +56,6 @@ public class ReporteImplLocal implements ReporteServiceLocal {
 
     public void exportAprobadosFormacion(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
         List<AntiguedadesFormacion> lista = service.getAntiguedadesFormacion().stream().collect(Collectors.toList());
         AntiguedadesFormacion antiguedad = new AntiguedadesFormacion();
         antiguedad.setNombre("Total");
@@ -70,7 +68,6 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
             aprobados.add(antiguedad);
             aprobados.addAll(lista);
-
             JRBeanCollectionDataSource dsAprobados = new JRBeanCollectionDataSource(aprobados);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
@@ -84,8 +81,6 @@ public class ReporteImplLocal implements ReporteServiceLocal {
                 porcentajeAprobados = (float) (numeroAprobados * 100) / numeroEstudiantes;
                 porcentajeReprobados = (float) (numeroReprobados * 100) / numeroEstudiantes;
             }
-
-
             parameters.put("listaAprobados", dsAprobados);
             parameters.put("numeroEstudiantes", numeroEstudiantes);
             parameters.put("numeroAprobados", numeroAprobados);
@@ -99,29 +94,6 @@ public class ReporteImplLocal implements ReporteServiceLocal {
         }
     }
 
-    private void imprimir(String filename, String filetype, HttpServletResponse response, JRBeanCollectionDataSource dsAprobados, JasperReport jasperReport, Map<String, Object> parameters) throws JRException, IOException {
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
-        jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsAprobados);
-        if (filetype.equalsIgnoreCase("PDF")) {
-            response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-            response.setContentType("application/octet-stream");
-            outputStream = response.getOutputStream();
-            JRPdfExporter exporter = new JRPdfExporter();
-            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-            exporter.exportReport();
-        }
-        if (filetype.equalsIgnoreCase("EXCEL")) {
-            response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-            response.setContentType("application/octet-stream");
-            outputStream = response.getOutputStream();
-            JRXlsxExporter exporter = new JRXlsxExporter();
-            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-            exporter.exportReport();
-        }
-    }
 
     public void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
@@ -394,6 +366,30 @@ public class ReporteImplLocal implements ReporteServiceLocal {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void imprimir(String filename, String filetype, HttpServletResponse response, JRBeanCollectionDataSource dsAprobados, JasperReport jasperReport, Map<String, Object> parameters) throws JRException, IOException {
+        JasperPrint jasperPrint;
+        ServletOutputStream outputStream;
+        jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsAprobados);
+        if (filetype.equalsIgnoreCase("PDF")) {
+            response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
+            response.setContentType("application/octet-stream");
+            outputStream = response.getOutputStream();
+            JRPdfExporter exporter = new JRPdfExporter();
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            exporter.exportReport();
+        }
+        if (filetype.equalsIgnoreCase("EXCEL")) {
+            response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
+            response.setContentType("application/octet-stream");
+            outputStream = response.getOutputStream();
+            JRXlsxExporter exporter = new JRXlsxExporter();
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            exporter.exportReport();
         }
     }
 
