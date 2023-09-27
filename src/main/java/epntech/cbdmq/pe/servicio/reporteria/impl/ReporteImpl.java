@@ -6,6 +6,7 @@ import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.profesionalizacion.ProPeriodos;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
+import epntech.cbdmq.pe.dominio.util.OperativoApiDto;
 import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.PeriodoAcademicoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.ProPeriodosDuracionDto;
@@ -52,6 +53,8 @@ public class ReporteImpl implements ReporteService {
     private CursoService cursoService;
     @Autowired
     private InscripcionEspService inscripcionEspService;
+    @Autowired
+    private ApiCBDMQOperativosService apiCBDMQOperativosService;
 
     public void exportAprobadosFormacion(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
@@ -343,6 +346,40 @@ public class ReporteImpl implements ReporteService {
             e.printStackTrace();
         }
     }
+    public void exportAntiguedades(String filename, String filetype, HttpServletResponse response) throws Exception {
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
+        JasperPrint jasperPrint;
+        ServletOutputStream outputStream;
 
+        List<OperativoApiDto> operativoApiDtoList = apiCBDMQOperativosService.servicioOperativosOrderByAntiguedad();
+        try {
+
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
+            Map<String, Object> parameters = new HashMap<>();
+            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
+            if (filetype.equalsIgnoreCase("PDF")) {
+                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
+                response.setContentType("application/octet-stream");
+                outputStream = response.getOutputStream();
+                JRPdfExporter exporter = new JRPdfExporter();
+                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                exporter.exportReport();
+            }
+            if (filetype.equalsIgnoreCase("EXCEL")) {
+                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
+                response.setContentType("application/octet-stream");
+                outputStream = response.getOutputStream();
+                JRXlsxExporter exporter = new JRXlsxExporter();
+                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                exporter.exportReport();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
