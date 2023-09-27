@@ -232,7 +232,7 @@
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="160" height="30" uuid="bfa9b684-daed-48f8-be79-c00509147ff5"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" markup="">
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 									<font isBold="true"/>
 								</textElement>
 								<text><![CDATA[Código materia]]></text>
@@ -251,7 +251,7 @@
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="402" height="30" uuid="1b0942b3-2ca9-484b-ad20-0783817b58ae"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle" markup="">
+								<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 									<font isBold="true"/>
 								</textElement>
 								<text><![CDATA[Nombre materia]]></text>

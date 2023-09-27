@@ -92,7 +92,7 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
-            parameters.put("academia", "Formacion");
+            parameters.put("academia", "Formación");
             imprimir(filename, filetype, response, dsAprobados, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,97 +131,8 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
-            parameters.put("academia", "Especializacion");
+            parameters.put("academia", "Especialización");
             imprimir(filename, filetype, response, dsAprobados, jasperReport, parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void exportarPrueba(String filename, String filetype, HttpServletResponse response) {
-        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/PruebaJair.jrxml");
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
-
-        try {
-            // Compilamos el informe
-            JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
-
-            // Llenamos el informe sin parámetros y sin fuente de datos
-            jasperPrint = JasperFillManager.fillReport(jasperReport, null, new JREmptyDataSource());
-
-            // Configuramos la exportación según el tipo de archivo deseado
-            switch (filetype.toUpperCase()) {
-                case "PDF":
-                    response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                    response.setContentType("application/octet-stream");
-                    outputStream = response.getOutputStream();
-                    JRPdfExporter pdfExporter = new JRPdfExporter();
-                    pdfExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                    pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                    pdfExporter.exportReport();
-                    break;
-
-                case "EXCEL":
-                    response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                    response.setContentType("application/octet-stream");
-                    outputStream = response.getOutputStream();
-                    JRXlsxExporter xlsxExporter = new JRXlsxExporter();
-                    xlsxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                    xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                    xlsxExporter.exportReport();
-                    break;
-
-                // ... puedes agregar otros formatos de la misma manera ...
-
-                default:
-                    throw new IllegalArgumentException("Formato de archivo no soportado: " + filetype);
-            }
-
-        } catch (Exception e) {
-            // Aquí deberías manejar la excepción de manera adecuada
-            e.printStackTrace();
-        }
-    }
-
-    //TODO en profesionalizacion no tenemos aprobados
-    public void exportAprobadosProfesionalizacion(String filename, String filetype, HttpServletResponse response) {
-        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
-        List<AntiguedadesFormacion> lista = service.getAntiguedadesFormacion().stream().collect(Collectors.toList());
-        AntiguedadesFormacion observacionDto1 = new AntiguedadesFormacion();
-        observacionDto1.setNombre("Total");
-        observacionDto1.setApellido("Hola");
-        observacionDto1.setCorreoPersonal("Jair");
-        try {
-            List<AntiguedadesFormacion> aprobados = new ArrayList<>();
-            aprobados.add(observacionDto1);
-            aprobados.addAll(lista);
-
-            JRBeanCollectionDataSource dsSubObservaciones = new JRBeanCollectionDataSource(lista);
-            JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
-            Map<String, Object> parameters = new HashMap<>();
-            Integer numeroEstudiantes = notasFormacionFinalService.getNotasFinalCodPeriodoAcademico().size();
-            Integer numeroAprobados = lista.size();
-            Integer numeroReprobados = numeroEstudiantes - numeroAprobados;
-            Float porcentajeAprobados = 0.0f;
-            Float porcentajeReprobados = 0.0f;
-
-            if (numeroEstudiantes != 0) {
-                porcentajeAprobados = (float) (numeroAprobados * 100) / numeroEstudiantes;
-                porcentajeReprobados = (float) (numeroReprobados * 100) / numeroEstudiantes;
-            }
-
-
-            parameters.put("listaAprobados", dsSubObservaciones);
-            parameters.put("numeroEstudiantes", numeroEstudiantes);
-            parameters.put("numeroAprobados", numeroAprobados);
-            parameters.put("numeroReprobados", numeroReprobados);
-            parameters.put("porcentajeAprobados", porcentajeAprobados);
-            parameters.put("porcentajeReprobados", porcentajeReprobados);
-            imprimir(filename, filetype, response, dsSubObservaciones, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -229,36 +140,22 @@ public class ReporteImplLocal implements ReporteServiceLocal {
 
     public void exportMallaCurricular(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
         List<Materia> materias = materiaService.getAllByPeriodoAcademicoActivo();
         List<CatalogoCurso> cursos = catalogoCursoService.getAll();
         List<Materia> materiaProfesionalizacion = materiaService.getAllByPeriodoProfesionalizacionActivo();
+
         try {
-
-
+            JRBeanCollectionDataSource dsMaterias = new JRBeanCollectionDataSource(materias);
+            JRBeanCollectionDataSource dsCursos = new JRBeanCollectionDataSource(cursos);
+            JRBeanCollectionDataSource dsMateriasPro = new JRBeanCollectionDataSource(materiaProfesionalizacion);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
-            if (filetype.equalsIgnoreCase("PDF")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRPdfExporter exporter = new JRPdfExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-            if (filetype.equalsIgnoreCase("EXCEL")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRXlsxExporter exporter = new JRXlsxExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
+            parameters.put("listaMateriasFormacion", dsMaterias);
+            parameters.put("listaCursos", dsCursos);
+            parameters.put("listaMateriasPro", dsMateriasPro);
+            JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
 
+            imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -374,10 +271,100 @@ public class ReporteImplLocal implements ReporteServiceLocal {
         }
     }
 
-    private void imprimir(String filename, String filetype, HttpServletResponse response, JRBeanCollectionDataSource dsAprobados, JasperReport jasperReport, Map<String, Object> parameters) throws JRException, IOException {
+    @Override
+    public void exportarPrueba(String filename, String filetype, HttpServletResponse response) {
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/PruebaJair.jrxml");
         JasperPrint jasperPrint;
         ServletOutputStream outputStream;
-        jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dsAprobados);
+
+        try {
+            // Compilamos el informe
+            JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
+
+            // Llenamos el informe sin parámetros y sin fuente de datos
+            jasperPrint = JasperFillManager.fillReport(jasperReport, null, new JREmptyDataSource());
+
+            // Configuramos la exportación según el tipo de archivo deseado
+            switch (filetype.toUpperCase()) {
+                case "PDF":
+                    response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
+                    response.setContentType("application/octet-stream");
+                    outputStream = response.getOutputStream();
+                    JRPdfExporter pdfExporter = new JRPdfExporter();
+                    pdfExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                    pdfExporter.exportReport();
+                    break;
+
+                case "EXCEL":
+                    response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
+                    response.setContentType("application/octet-stream");
+                    outputStream = response.getOutputStream();
+                    JRXlsxExporter xlsxExporter = new JRXlsxExporter();
+                    xlsxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                    xlsxExporter.exportReport();
+                    break;
+
+                // ... puedes agregar otros formatos de la misma manera ...
+
+                default:
+                    throw new IllegalArgumentException("Formato de archivo no soportado: " + filetype);
+            }
+
+        } catch (Exception e) {
+            // Aquí deberías manejar la excepción de manera adecuada
+            e.printStackTrace();
+        }
+    }
+
+    //TODO en profesionalizacion no tenemos aprobados
+    public void exportAprobadosProfesionalizacion(String filename, String filetype, HttpServletResponse response) {
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
+        JasperPrint jasperPrint;
+        ServletOutputStream outputStream;
+        List<AntiguedadesFormacion> lista = service.getAntiguedadesFormacion().stream().collect(Collectors.toList());
+        AntiguedadesFormacion observacionDto1 = new AntiguedadesFormacion();
+        observacionDto1.setNombre("Total");
+        observacionDto1.setApellido("Hola");
+        observacionDto1.setCorreoPersonal("Jair");
+        try {
+            List<AntiguedadesFormacion> aprobados = new ArrayList<>();
+            aprobados.add(observacionDto1);
+            aprobados.addAll(lista);
+
+            JRBeanCollectionDataSource dsSubObservaciones = new JRBeanCollectionDataSource(lista);
+            JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
+            Map<String, Object> parameters = new HashMap<>();
+            Integer numeroEstudiantes = notasFormacionFinalService.getNotasFinalCodPeriodoAcademico().size();
+            Integer numeroAprobados = lista.size();
+            Integer numeroReprobados = numeroEstudiantes - numeroAprobados;
+            Float porcentajeAprobados = 0.0f;
+            Float porcentajeReprobados = 0.0f;
+
+            if (numeroEstudiantes != 0) {
+                porcentajeAprobados = (float) (numeroAprobados * 100) / numeroEstudiantes;
+                porcentajeReprobados = (float) (numeroReprobados * 100) / numeroEstudiantes;
+            }
+
+
+            parameters.put("listaAprobados", dsSubObservaciones);
+            parameters.put("numeroEstudiantes", numeroEstudiantes);
+            parameters.put("numeroAprobados", numeroAprobados);
+            parameters.put("numeroReprobados", numeroReprobados);
+            parameters.put("porcentajeAprobados", porcentajeAprobados);
+            parameters.put("porcentajeReprobados", porcentajeReprobados);
+            imprimir(filename, filetype, response, dsSubObservaciones, jasperReport, parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void imprimir(String filename, String filetype, HttpServletResponse response, JRDataSource fuenteDatosPrincipal, JasperReport jasperReport, Map<String, Object> parameters) throws JRException, IOException {
+        JasperPrint jasperPrint;
+        ServletOutputStream outputStream;
+        jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, fuenteDatosPrincipal);
         if (filetype.equalsIgnoreCase("PDF")) {
             response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
             response.setContentType("application/octet-stream");
