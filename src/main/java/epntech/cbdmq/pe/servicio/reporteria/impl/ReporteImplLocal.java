@@ -115,7 +115,7 @@ public class ReporteImplLocal implements ReporteServiceLocal {
             JRBeanCollectionDataSource dsAprobados = new JRBeanCollectionDataSource(aprobados);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
-            Integer numeroEstudiantes = inscripcionEspService.findByCodCursoEspecializacionAndEstado(codCurso.longValue(), VALIDACION).size();
+            Integer numeroEstudiantes = inscripcionEspService.getAprobadosPruebas(codCurso).size();
             Integer numeroAprobados = lista.size();
             Integer numeroReprobados = numeroEstudiantes - numeroAprobados;
             Float porcentajeAprobados = 0.0f;
