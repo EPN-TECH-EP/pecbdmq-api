@@ -2,9 +2,6 @@ package epntech.cbdmq.pe.servicio.reporteria.impl;
 
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.Materia;
-import epntech.cbdmq.pe.dominio.admin.PeriodoAcademico;
-import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.profesionalizacion.ProPeriodos;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
 import epntech.cbdmq.pe.dominio.util.OperativoApiDto;
 import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
@@ -14,7 +11,7 @@ import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
 import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
-import epntech.cbdmq.pe.servicio.reporteria.ReporteService;
+import epntech.cbdmq.pe.servicio.reporteria.ReporteServiceLocal;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.*;
@@ -23,7 +20,6 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class ReporteImpl implements ReporteService {
+public class ReporteImplLocal implements ReporteServiceLocal {
     @Autowired
     private AntiguedadesService service;
     @Autowired
@@ -172,6 +168,53 @@ public class ReporteImpl implements ReporteService {
                 exporter.exportReport();
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void exportarPrueba(String filename, String filetype, HttpServletResponse response) {
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/PruebaJair.jrxml");
+        JasperPrint jasperPrint;
+        ServletOutputStream outputStream;
+
+        try {
+            // Compilamos el informe
+            JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
+
+            // Llenamos el informe sin parámetros y sin fuente de datos
+            jasperPrint = JasperFillManager.fillReport(jasperReport, null, new JREmptyDataSource());
+
+            // Configuramos la exportación según el tipo de archivo deseado
+            switch (filetype.toUpperCase()) {
+                case "PDF":
+                    response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
+                    response.setContentType("application/octet-stream");
+                    outputStream = response.getOutputStream();
+                    JRPdfExporter pdfExporter = new JRPdfExporter();
+                    pdfExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                    pdfExporter.exportReport();
+                    break;
+
+                case "EXCEL":
+                    response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
+                    response.setContentType("application/octet-stream");
+                    outputStream = response.getOutputStream();
+                    JRXlsxExporter xlsxExporter = new JRXlsxExporter();
+                    xlsxExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                    xlsxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+                    xlsxExporter.exportReport();
+                    break;
+
+                // ... puedes agregar otros formatos de la misma manera ...
+
+                default:
+                    throw new IllegalArgumentException("Formato de archivo no soportado: " + filetype);
+            }
+
+        } catch (Exception e) {
+            // Aquí deberías manejar la excepción de manera adecuada
             e.printStackTrace();
         }
     }
