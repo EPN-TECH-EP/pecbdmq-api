@@ -82,8 +82,8 @@ public class ReporteServiceImpl implements ReporteService {
             JasperPrint print = JasperFillManager.fillReport(ruta, parametros, con);
             return JasperExportManager.exportReportToPdf(print);
         } catch (Exception ex) {
-            log.error("Error al generar el reporte [" + nombre +"]: ", ex);
-            throw new BusinessException("Error al generar el reporte [" + nombre +"]");
+            log.error("Error al generar el reporte [" + nombre + "]: ", ex);
+            throw new BusinessException("Error al generar el reporte [" + nombre + "]");
         }
     }
 
@@ -166,6 +166,7 @@ public class ReporteServiceImpl implements ReporteService {
             e.printStackTrace();
         }
     }
+
     public void exportMallaCurricular(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
         List<Materia> materias = materiaService.getAllByPeriodoAcademicoActivo();
@@ -266,42 +267,23 @@ public class ReporteServiceImpl implements ReporteService {
             e.printStackTrace();
         }
     }
+
     @Override
     public void exportAntiguedadesOperativos(String filename, String filetype, HttpServletResponse response) throws Exception {
-        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
-
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/Antiguedades.jrxml");
         List<OperativoApiDto> operativoApiDtoList = apiCBDMQOperativosService.servicioOperativosOrderByAntiguedad();
         try {
-
-
+            JRBeanCollectionDataSource antiguedades = new JRBeanCollectionDataSource(operativoApiDtoList);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
-            if (filetype.equalsIgnoreCase("PDF")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRPdfExporter exporter = new JRPdfExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-            if (filetype.equalsIgnoreCase("EXCEL")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRXlsxExporter exporter = new JRXlsxExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-
+            parameters.put("listaAntiguedades", antiguedades);
+            JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
+            imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //TODO en profesionalizacion no tenemos aprobados
     public void exportAprobadosProfesionalizacion(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");
