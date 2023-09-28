@@ -259,27 +259,18 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public Estudiante getEstudianteFormacionByUser(String codUsuario) throws DataException {
         Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "F%");
-        if(estudiante == null){
-            throw new DataException("No se encontro el estudiante");
-        }
         return estudiante;
     }
 
     @Override
     public Estudiante getEstudianteEspecializacionByUser(String codUsuario) throws DataException {
         Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "E%");
-        if(estudiante == null){
-            throw new DataException("No se encontro el estudiante");
-        }
         return estudiante;
     }
 
     @Override
     public Estudiante getEstudianteProfesionalizacionByUser(String codUsuario) throws DataException {
         Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "P%");
-        if(estudiante == null){
-            throw new DataException("No se encontro el estudiante");
-        }
         return estudiante;
     }
 
