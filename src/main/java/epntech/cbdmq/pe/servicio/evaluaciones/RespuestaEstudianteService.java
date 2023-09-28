@@ -18,6 +18,8 @@ public interface RespuestaEstudianteService {
 
     List<RespuestaEstudiante> saveAllRespuestas(List<RespuestaEstudiante> respuestasEstudiante);
 
+    Boolean esEncuestaContestada(Long codEstudiante, Long codEvaluacion);
+
     void delete(Long codRespuestaEstudiante);
 
 }

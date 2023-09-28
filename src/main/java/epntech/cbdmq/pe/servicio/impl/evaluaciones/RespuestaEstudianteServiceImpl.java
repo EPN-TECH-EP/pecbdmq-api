@@ -49,4 +49,10 @@ public class RespuestaEstudianteServiceImpl implements RespuestaEstudianteServic
     public void delete(Long codRespuestaEstudiante) {
         respuestaEstudianteRepository.deleteById(codRespuestaEstudiante);
     }
+
+    @Override
+    public Boolean esEncuestaContestada(Long codEstudiante, Long codEvaluacion) {
+        List<RespuestaEstudiante> respuestasEstudiante = respuestaEstudianteRepository.findByCodEstudianteAndCodEvaluacion(codEstudiante, codEvaluacion);
+        return respuestasEstudiante.size() > 0;
+    }
 }

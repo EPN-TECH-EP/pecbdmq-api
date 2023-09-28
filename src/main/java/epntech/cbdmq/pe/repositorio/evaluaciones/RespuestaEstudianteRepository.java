@@ -12,4 +12,6 @@ public interface RespuestaEstudianteRepository extends JpaRepository<RespuestaEs
     List<RespuestaEstudiante> findByCodEstudiante(Long codEstudiante);
 
     List<RespuestaEstudiante> findByCodEvaluacionAndCodEstudiante(Long codEvaluacion, Long codEstudiante);
+
+    List<RespuestaEstudiante> findByCodEstudianteAndCodEvaluacion(Long codEstudiante, Long codEvaluacion);
 }

@@ -21,10 +21,14 @@ public class RespuestaEstudianteResource {
         return respuestaEstudianteServiceImpl.getAll();
     }
 
+    @GetMapping("/{codEstudiante}/{codEvaluacion}")
+    public Boolean esEncuestaContestada(@PathVariable("codEstudiante") Long codEstudiante, @PathVariable("codEvaluacion") Long codEvaluacion) {
+        return respuestaEstudianteServiceImpl.esEncuestaContestada(codEstudiante, codEvaluacion);
+    }
+
     @PostMapping
     public List<RespuestaEstudiante> saveRespuestaEstudiante(@RequestBody List<RespuestaEstudiante> respuestasEstudiante) {
         return respuestaEstudianteServiceImpl.saveAllRespuestas(respuestasEstudiante);
-
     }
 
 }
