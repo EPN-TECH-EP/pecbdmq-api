@@ -40,13 +40,9 @@ public class ApiCBDMQOperativosServiceImpl implements ApiCBDMQOperativosService 
         try {
             base = restTemplate.getForObject(url, ApiBaseOperativos.class);
 
-            if ("error".equals(base.getStatus()) && "cedula incorrecta".equals(base.getMessage())) {
-                // Si la cédula no es correcta, devolvemos Optional.empty()
-                return null;
-            } else {
+
                 List<OperativoApiDto> funcionario = base.getData();
                 return funcionario;
-            }
         } catch (HttpClientErrorException | HttpServerErrorException ex) {
             // Capturamos la excepción y devolvemos Optional.empty() cuando hay un error HTTP
             return null;
