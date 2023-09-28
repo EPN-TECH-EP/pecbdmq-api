@@ -1,7 +1,5 @@
 package epntech.cbdmq.pe.dominio.util;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.util.Date;
@@ -30,11 +28,11 @@ public class ApelacionEstudiante {
 
     private String nombreMateria;
 
-    private String nombreCompleto;
+    private String nombreEstudiante;
 
     private String codigoUnico;
 
-    public ApelacionEstudiante(Integer codApelacion, Date fechaSolicitud, String observacionEstudiante, String observacionInstructor, Boolean aprobacion, Double notaActual, Double notaNueva, String estado, Integer codNotaFormacion, Integer codNotaProfesionalizacion, String nombreMateria, String nombreCompleto, String codigoUnico) {
+    public ApelacionEstudiante(Integer codApelacion, Date fechaSolicitud, String observacionEstudiante, String observacionInstructor, Boolean aprobacion, Double notaActual, Double notaNueva, String estado, Integer codNotaFormacion, Integer codNotaProfesionalizacion, String nombreMateria, String nombreEstudiante, String codigoUnico) {
         this.codApelacion = codApelacion;
         this.fechaSolicitud = fechaSolicitud;
         this.observacionEstudiante = observacionEstudiante;
@@ -46,7 +44,7 @@ public class ApelacionEstudiante {
         this.codNotaFormacion = codNotaFormacion;
         this.codNotaProfesionalizacion = codNotaProfesionalizacion;
         this.nombreMateria = nombreMateria;
-        this.nombreCompleto = nombreCompleto;
+        this.nombreEstudiante = nombreEstudiante;
         this.codigoUnico = codigoUnico;
     }
 }
