@@ -444,7 +444,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     // monitoreo inscripciones curso
     @Override
     public List<InscritosEspecializacion> getInscritosTodoCurso(Long codCursoEspecializacion) {
-        return inscripcionEspRepository.getInscripcionesTodoByCurso(codCursoEspecializacion);
+        return inscripcionEspRepository.getInscripcionesValidasByCurso(codCursoEspecializacion);
     }
 
     @Override
