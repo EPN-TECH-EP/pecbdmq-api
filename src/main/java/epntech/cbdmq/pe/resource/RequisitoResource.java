@@ -54,9 +54,6 @@ public class RequisitoResource {
 	public ResponseEntity<?> actualizarDatos(@PathVariable("id") int codigo, @RequestBody Requisito obj)  throws DataException{
 		return (ResponseEntity<Requisito>) objService.getById(codigo).map(datosGuardados -> {
 			datosGuardados.setNombre(obj.getNombre().toUpperCase());
-			//datosGuardados.setCodConvocatoria(obj.getCodConvocatoria());
-			//datosGuardados.setCodFuncionario(obj.getCodFuncionario());
-
 			datosGuardados.setDescripcion(obj.getDescripcion());
 			datosGuardados.setEstado(obj.getEstado());
 			datosGuardados.setEsDocumento(obj.getEsDocumento());

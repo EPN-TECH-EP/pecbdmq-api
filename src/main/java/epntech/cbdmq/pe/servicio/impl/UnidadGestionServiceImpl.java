@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import epntech.cbdmq.pe.constante.EstadosConst;
-import epntech.cbdmq.pe.dominio.admin.SubTipoPrueba;
-import epntech.cbdmq.pe.dominio.admin.TipoFuncionario;
 import epntech.cbdmq.pe.dominio.admin.UnidadGestion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.UnidadGestionRepository;
