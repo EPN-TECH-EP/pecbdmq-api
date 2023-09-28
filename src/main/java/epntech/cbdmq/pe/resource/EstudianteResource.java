@@ -92,8 +92,20 @@ public class EstudianteResource {
     }
 	
     @GetMapping("/byUser")
-    public Estudiante listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
-        return objService.getEstudianteByUsuario(codUsuario);
+    public Boolean listarEstudianteByUsuario(@RequestParam("codUsuario") String codUsuario) throws DataException {
+        return objService.isEstudianteByUsuario(codUsuario);
+    }
+	@GetMapping("/byUserEsp")
+    public Estudiante getEstudianteEsp(@RequestParam("codUsuario") String codUsuario) throws DataException {
+        return objService.getEstudianteEspecializacionByUser(codUsuario);
+    }
+	@GetMapping("/byUserFor")
+    public Estudiante getEstudianteFor(@RequestParam("codUsuario") String codUsuario) throws DataException {
+        return objService.getEstudianteFormacionByUser(codUsuario);
+    }
+	@GetMapping("/byUserPro")
+    public Estudiante getEstudiantePro(@RequestParam("codUsuario") String codUsuario) throws DataException {
+        return objService.getEstudianteProfesionalizacionByUser(codUsuario);
     }
 
 	@GetMapping("/byCodUsuario")

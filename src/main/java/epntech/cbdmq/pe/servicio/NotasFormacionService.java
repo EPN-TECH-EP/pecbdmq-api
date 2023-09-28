@@ -30,6 +30,6 @@ public interface NotasFormacionService {
 	void insertarEstudiantesNotas();
 	List<NotaMateriaByEstudiante> getNotaMateriasByEstudiante(Integer codEstudiante,String tipoInstructor);
 	List<NotaMateriaByEstudiante> getNotaMateriasWithCoordinadorByEstudiante(Integer codEstudiante);
-	public NotaMateriaByEstudiante getMateriaWithCoordinadorByEstudianteNotaFormacion(Integer codEstudiante,Integer codNotaFormacion);
+	NotaMateriaByEstudiante getMateriaWithCoordinadorByEstudianteNotaFormacion(Integer codEstudiante,Integer codNotaFormacion);
 }
 

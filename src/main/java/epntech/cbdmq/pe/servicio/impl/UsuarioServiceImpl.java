@@ -529,25 +529,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 		return this.userRepository.findUsuariosByCorreo(correo);
 	}
 
-	@Override
-	public UsuarioInfoDto getUsuarioInfo(String codUser) throws DataException {
-		Instructor instructor = instructorService.getInstructorByUser(codUser);
-		Estudiante estudianteDto = estudianteService.getEstudianteByUsuario(codUser);
 
-		if (instructor == null && estudianteDto == null) {
-			throw new DataException(NO_ENCUENTRA);
-		}
-		UsuarioInfoDto usuarioInfo = new UsuarioInfoDto();
-		if (instructor != null) {
-			usuarioInfo.setCodInstructor(instructor.getCodInstructor());
-		}
-		if (estudianteDto != null) {
-			usuarioInfo.setCodUnicoEstudiante(estudianteDto.getCodUnicoEstudiante());
-		}
-
-		return usuarioInfo;
-
-	}
 
 	@Override
 	public Optional<Usuario> getUsuarioByCodDatoPersonal(Integer codDatoPersonal) {

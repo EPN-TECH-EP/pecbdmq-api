@@ -30,7 +30,7 @@ public interface EstudianteService {
 	
 	void saveEstudiantes() throws DataException;
 	
-	Estudiante getEstudianteByUsuario(String codUsuario) throws DataException;
+	Boolean isEstudianteByUsuario(String codUsuario) throws DataException;
 	UsuarioEstudiante getEstudianteByCodUsuario(Integer codUsuario);
 	Estudiante getEstudianteByCodigoUnico(String codUnico);
 	DatoPersonal getDatoPersonalByEstudiante(Integer Estudiante);
@@ -39,6 +39,9 @@ public interface EstudianteService {
 	List<EstudianteDto> getEstudiantesBaja();
 	Estudiante getEstudianteByNotaFormacion(Integer codNotaFormacion);
 	List<Estudiante> getEstudiantesIs(String Estado);
+	Estudiante getEstudianteFormacionByUser(String codUsuario) throws DataException;
+	Estudiante getEstudianteEspecializacionByUser(String codUsuario) throws DataException;
+	Estudiante getEstudianteProfesionalizacionByUser(String codUsuario) throws DataException;
 
 
 }
