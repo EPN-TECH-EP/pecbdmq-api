@@ -1,18 +1,20 @@
 package epntech.cbdmq.pe.servicio.evaluaciones;
 
+import epntech.cbdmq.pe.dominio.evaluaciones.PreguntaTipoEvaluacion;
+
 import java.util.List;
 
 public interface PreguntaEvaluacionService {
 
-    List<PreguntaEvaluacionService> getAll();
+    List<PreguntaTipoEvaluacion> getAll();
 
-    List<PreguntaEvaluacionService> getByCodEvaluacion(Long codEvaluacion);
+    List<PreguntaTipoEvaluacion> getByCodTipoEvaluacion(Long codTipoEvaluacion);
 
-    PreguntaEvaluacionService getById(Long codPreguntaEvaluacion);
+    PreguntaTipoEvaluacion getById(Long codPreguntaEvaluacion);
 
-    PreguntaEvaluacionService save(PreguntaEvaluacionService preguntaEvaluacion);
+    PreguntaTipoEvaluacion save(PreguntaTipoEvaluacion preguntaTipoEvaluacion);
 
-    PreguntaEvaluacionService update(PreguntaEvaluacionService preguntaEvaluacionActualizado);
+    PreguntaTipoEvaluacion update(Long codPreguntaEvaluacion, PreguntaTipoEvaluacion preguntaTipoEvaluacionActualizado);
 
     void delete(Long codPreguntaEvaluacion);
 
