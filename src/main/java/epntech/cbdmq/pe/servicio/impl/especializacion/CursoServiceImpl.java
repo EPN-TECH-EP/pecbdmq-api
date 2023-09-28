@@ -273,10 +273,10 @@ public class CursoServiceImpl implements CursoService {
         CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(curso.getCodCatalogoCursos().intValue()).get();
         TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();
         if(aprobadoCurso) {
-            mensaje="Se ha aprobado el curso " + curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+" con éxito." + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
+            mensaje="Se ha aprobado el curso " + curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+" con éxito. \n Observación:" + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
 
         }else{
-            mensaje="Se ha rechazado el curso " +curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ ". Verifique los datos y documentos registrados. " + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
+            mensaje="Se ha rechazado el curso " +curso.getNombre() + "-"+catalogoCurso.getNombreCatalogoCurso()+" de tipo "+tipoCurso.getNombreTipoCurso()+ ". Verifique los datos y documentos registrados.\n Observación:" + (curso.getObservacionesValidacion() != null ? curso.getObservacionesValidacion() : "");
         }
         emailService.sendMensajeTextGenerico(curso.getEmailNotificacion(), EMAIL_SUBJECT_CURSO_VALIDADO,mensaje );
 
