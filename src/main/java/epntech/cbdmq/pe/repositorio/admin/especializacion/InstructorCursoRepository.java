@@ -11,5 +11,7 @@ public interface InstructorCursoRepository extends JpaRepository<CursoInstructor
 
 	@Procedure("cbdmq.get_instructores_curso")
 	List<CursoInstructorResponse> findInstructoresCurso(@Param("p_cod_curso") Long codCurso);
+	@Procedure("cbdmq.get_instructor_tipo_curso")
+	CursoInstructorResponse getInstructorByTipoInsCurso(@Param("p_cod_curso") Long codCurso, @Param("nombre_tipo") String nombreTipoInstructor);
 
 }
