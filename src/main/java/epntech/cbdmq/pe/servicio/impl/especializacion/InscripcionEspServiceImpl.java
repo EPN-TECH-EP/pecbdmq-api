@@ -572,7 +572,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                 }
                 //EXISTE USUARIO
                 else {
-                    Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getCodUsuario().toString());
+                    Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getNombreUsuario());
                     //NO ES ESTUDIANTE
                     if (estudianteObj == null) {
                         Estudiante newEstudiante = new Estudiante();
@@ -629,7 +629,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         } else {
             DatoPersonal datoPersonal1 = datoPersonalSvc.updateDatosPersonales(datoPersonal);
             Usuario usuario = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonal1.getCodDatosPersonales()).get();
-            Estudiante estudiante = estudianteRepository.getEstudianteByUsuario(usuario.getCodUsuario().toString());
+            Estudiante estudiante = estudianteRepository.getEstudianteByUsuario(usuario.getNombreUsuario().toString());
             datoPersonalEstudianteDto.setEstudiante(estudiante);
             datoPersonalEstudianteDto.setDatoPersonal(datoPersonal1);
         }
