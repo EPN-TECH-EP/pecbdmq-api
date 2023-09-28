@@ -63,6 +63,10 @@ public class CursoInstructorResource {
 	public List<InstructoresCurso> listarCursosInstructor(@PathVariable("idInstructor") long codigo) {
 		return cursoInstructorServiceImpl.listCursosInstructor(codigo);
 	}
+	@GetMapping("/getCoordinadorCurso/{idCurso}")
+	public CursoInstructorResponse getInstructorCoordinadorCurso(@PathVariable("idCurso") long codigo) {
+		return cursoInstructorServiceImpl.getInstructorCoordinadorCurso(codigo);
+	}
 
 	@GetMapping("/byUser")
 	public List<CursoInstructor> userEsInstructor(@RequestParam("codUsuario") Integer codUsuario) {
