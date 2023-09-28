@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "respuestas_estudiantes_anonimos")
+@Table(name = "respuestas_estudiantes")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -21,11 +21,11 @@ public class RespuestaEstudiante {
     @Column(name = "cod_respuesta")
     private Long codRespuesta;
 
-    @Column(name = "cod_estudiante_anonimo")
-    private Long codEstudianteAnonimo;
+    @Column(name = "cod_estudiante")
+    private Long codEstudiante;
 
     @Column(name = "cod_pregunta")
-    private Long codPregunta;
+    private Long codPreguntaTipoEvaluacion;
 
     @Column(name = "cod_evaluacion")
     private Long codEvaluacion;

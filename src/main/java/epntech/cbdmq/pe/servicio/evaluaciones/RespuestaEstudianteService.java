@@ -1,18 +1,22 @@
 package epntech.cbdmq.pe.servicio.evaluaciones;
 
+import epntech.cbdmq.pe.dominio.evaluaciones.RespuestaEstudiante;
+
 import java.util.List;
 
 public interface RespuestaEstudianteService {
 
-    List<RespuestaEstudianteService> getAll();
+    List<RespuestaEstudiante> getAll();
 
-    List<RespuestaEstudianteService> getByCodEvaluacion(Long codEvaluacion);
+    List<RespuestaEstudiante> getByCodEvaluacion(Long codEvaluacion);
 
-    List<RespuestaEstudianteService> getByCodEstudianteAnonimo(Long codEstudianteAnonimo);
+    List<RespuestaEstudiante> getByCodEstudiante(Long codEstudiante);
 
-    RespuestaEstudianteService getById(Long codRespuestaEstudiante);
+    List<RespuestaEstudiante> getByCodEvaluacionAndCodEstudiante(Long codEvaluacion, Long codEstudiante);
 
-    RespuestaEstudianteService save(RespuestaEstudianteService respuestaEstudiante);
+    RespuestaEstudiante getById(Long codRespuestaEstudiante);
+
+    List<RespuestaEstudiante> saveAllRespuestas(List<RespuestaEstudiante> respuestasEstudiante);
 
     void delete(Long codRespuestaEstudiante);
 
