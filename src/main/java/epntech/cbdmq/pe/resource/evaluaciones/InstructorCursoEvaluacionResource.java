@@ -1,13 +1,10 @@
 package epntech.cbdmq.pe.resource.evaluaciones;
 
-import epntech.cbdmq.pe.dominio.HttpResponse;
+import epntech.cbdmq.pe.dominio.evaluaciones.Evaluacion;
 import epntech.cbdmq.pe.dominio.evaluaciones.InstructorCursoEvaluacion;
 import epntech.cbdmq.pe.repositorio.evaluaciones.InstructorCursoEvaluacionRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import epntech.cbdmq.pe.servicio.impl.evaluaciones.EvaluacionServiceImpl;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -16,17 +13,29 @@ import java.util.Optional;
 public class InstructorCursoEvaluacionResource {
 
     InstructorCursoEvaluacionRepository instructorCursoEvaluacionRepository;
+    EvaluacionServiceImpl evaluacionServiceImpl;
 
     public InstructorCursoEvaluacionResource(
-            InstructorCursoEvaluacionRepository instructorCursoEvaluacionRepository
+            InstructorCursoEvaluacionRepository instructorCursoEvaluacionRepository,
+            EvaluacionServiceImpl evaluacionServiceImpl
     ) {
         this.instructorCursoEvaluacionRepository = instructorCursoEvaluacionRepository;
+        this.evaluacionServiceImpl = evaluacionServiceImpl;
+
     }
 
     @PostMapping
     public InstructorCursoEvaluacion saveInstructorCursoEvaluacion(@RequestBody InstructorCursoEvaluacion instructorCursoEvaluacion) {
-        Optional<InstructorCursoEvaluacion> instructorCursoEvaluacionOptional = instructorCursoEvaluacionRepository.findById(instructorCursoEvaluacion.getId());
-        return instructorCursoEvaluacionOptional.orElseGet(() -> instructorCursoEvaluacionRepository.save(instructorCursoEvaluacion));
+        return this.instructorCursoEvaluacionRepository.save(instructorCursoEvaluacion);
+    }
+
+    @GetMapping("/{id}")
+    public Evaluacion existeInstructorCursoEvaluacion(@PathVariable("id") Long codCursoInstructor) {
+        InstructorCursoEvaluacion instructorCursoEvaluacion = this.instructorCursoEvaluacionRepository.findByCodCursoInstructor(codCursoInstructor);
+        if (instructorCursoEvaluacion != null) {
+            return this.evaluacionServiceImpl.getById(instructorCursoEvaluacion.getId().getCodEvaluacion());
+        }
+        return null;
     }
 
 }
