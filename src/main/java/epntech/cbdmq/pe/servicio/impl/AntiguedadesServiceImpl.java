@@ -365,7 +365,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
                 .orElseThrow(() -> new BusinessException(NO_PARAMETRO));
         Set<AntiguedadesFormacion> aprobados;
         // llama a procedimiento cbdmq.get_approved_by_test_esp(p_sub_tipo_prueba bigint, p_cod_curso bigint)
-        aprobados = antiguedadesFormacionRepository.getReprobadosEspecializacion(codCurso);
+        aprobados = antiguedadesFormacionRepository.getAntiguedadesEspecializacion(codCurso);
         Curso curso= cursoSc.getById(codCurso);
         CatalogoCurso catalogoCurso= catalogoCursoRepository.findById(curso.getCodCatalogoCursos().intValue()).get();
         TipoCurso tipoCurso= tipoCursoRepository.findById(catalogoCurso.getCodTipoCurso().longValue()).get();

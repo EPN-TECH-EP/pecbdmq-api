@@ -27,7 +27,7 @@ public interface AntiguedadesFormacionRepository extends JpaRepository<Antigueda
 			"left join cbdmq.gen_dato_personal gdp on ge.cod_datos_personales = gdp.cod_datos_personales \n" +
 			"left join cbdmq.esp_curso ec on ei.cod_curso_especializacion = ec.cod_curso_especializacion \n" +
 			"where ec.cod_curso_especializacion = :codCurso\n" +
-			"AND (ene.nota_final_especializacion > ec.nota_minima OR COALESCE(ene.nota_supletorio, 0) > ec.nota_minima)" +
+			"AND (ene.nota_final_especializacion >= ec.nota_minima OR COALESCE(ene.nota_supletorio, 0) >= ec.nota_minima)" +
 			"order by ene.nota_final_especializacion desc", nativeQuery=true)
 	Set<AntiguedadesFormacion> getAntiguedadesEspecializacion(@Param("codCurso") Long codCurso);
 	@Query(value = "select ge.codigo_unico_estudiante, gdp.cedula, gdp.nombre, gdp.apellido, gdp.correo_personal, ene.nota_final_especializacion as nota_final\n" +
@@ -37,7 +37,7 @@ public interface AntiguedadesFormacionRepository extends JpaRepository<Antigueda
 			"left join cbdmq.gen_dato_personal gdp on ge.cod_datos_personales = gdp.cod_datos_personales \n" +
 			"left join cbdmq.esp_curso ec on ei.cod_curso_especializacion = ec.cod_curso_especializacion \n" +
 			"where ec.cod_curso_especializacion = :codCurso\n" +
-			"AND (ene.nota_final_especializacion < ec.nota_minima OR COALESCE(ene.nota_supletorio, 0) < ec.nota_minima)" +
+			"AND (ene.nota_final_especializacion < ec.nota_minima AND COALESCE(ene.nota_supletorio, 0) < ec.nota_minima)" +
 			"order by ene.nota_final_especializacion desc", nativeQuery=true)
 	Set<AntiguedadesFormacion> getReprobadosEspecializacion(@Param("codCurso") Long codCurso);
 
