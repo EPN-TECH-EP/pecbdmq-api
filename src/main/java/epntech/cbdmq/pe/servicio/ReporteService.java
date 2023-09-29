@@ -18,5 +18,6 @@ public interface ReporteService {
 
     void exportAprobadosEspecializacion(String filename, String filetype, HttpServletResponse response, Integer codCurso);
     void exportAntiguedadesOperativos(String filename, String filetype, HttpServletResponse response) throws Exception;
+    void exportReporteEncuestasESP(String filename, String filetype, HttpServletResponse response,Integer codCurso) throws Exception;
 
 }

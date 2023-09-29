@@ -51,6 +51,17 @@ public class RespuestaEstudianteServiceImpl implements RespuestaEstudianteServic
     }
 
     @Override
+    public List<RespuestaEstudiante> findByPreguntaAndCursoAndRespuesta(Long codPregunta, Long codCurso, Boolean respuesta) {
+        return respuestaEstudianteRepository.findByPreguntaAndCursoAndRespuesta(codPregunta, codCurso, respuesta);
+    }
+
+    @Override
+    public List<RespuestaEstudiante> findByPreguntaAndCurso(Long codPregunta, Long codCurso) {
+        return respuestaEstudianteRepository.findByPreguntaAndCurso(codPregunta, codCurso);
+
+    }
+
+    @Override
     public Boolean esEncuestaContestada(Long codEstudiante, Long codEvaluacion) {
         List<RespuestaEstudiante> respuestasEstudiante = respuestaEstudianteRepository.findByCodEstudianteAndCodEvaluacion(codEstudiante, codEvaluacion);
         return respuestasEstudiante.size() > 0;
