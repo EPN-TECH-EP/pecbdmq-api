@@ -4,6 +4,7 @@ import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.dominio.admin.ReporteParametro;
+import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
 import epntech.cbdmq.pe.dominio.util.OperativoApiDto;
 import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
@@ -271,7 +272,7 @@ public class ReporteServiceImpl implements ReporteService {
     @Override
     public void exportAntiguedadesOperativos(String filename, String filetype, HttpServletResponse response) throws Exception {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/Antiguedades.jrxml");
-        List<OperativoApiDto> operativoApiDtoList = apiCBDMQOperativosService.servicioOperativosOrderByAntiguedad();
+        List<Funcionario> operativoApiDtoList = apiCBDMQOperativosService.servicioOperativosOrderByAntiguedad();
         try {
             JRBeanCollectionDataSource antiguedades = new JRBeanCollectionDataSource(operativoApiDtoList);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);

@@ -1,12 +1,18 @@
 package epntech.cbdmq.pe.servicio.impl;
 
 import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
+import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.FuncionarioRepository;
 import epntech.cbdmq.pe.servicio.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_VACIO;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_YA_EXISTE;
+
 @Service
 public class FuncionarioServiceImpl implements FuncionarioService {
     @Autowired
@@ -17,7 +23,7 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     @Override
-    public Funcionario save(Funcionario funcionario) {
+    public Funcionario save(Funcionario funcionario) throws DataException {
         return repo.save(funcionario);
     }
 
