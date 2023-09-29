@@ -39,5 +39,6 @@ public interface DatoPersonalService {
 	DatoPersonal getDatoPersonalByEstudiante(Integer codEstudiante);
 	Optional<DatoPersonal> getByCedula(String cedula);
 	List<DatosSincronizados> getDatosSincronizados();
+	List<DatoPersonal> saveAll(List<DatoPersonal> datosPersonales);
 
 }
