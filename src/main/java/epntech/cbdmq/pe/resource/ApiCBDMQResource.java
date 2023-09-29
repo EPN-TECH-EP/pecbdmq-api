@@ -133,6 +133,20 @@ public class ApiCBDMQResource {
         }
     }
 
+    @PostMapping("/guardarDatosFuncionarios")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> guardarDatosFuncionarios() throws Exception {
+
+        try {
+            objOperativosService.guardarInBD();
+            return response(OK, "Registros guardados");
+
+        } catch (Exception ex) {
+
+            return response(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
+    }
+
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
                 message), httpStatus);
