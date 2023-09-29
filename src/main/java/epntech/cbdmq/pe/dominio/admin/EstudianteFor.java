@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dominio.fichaPersonal.formacion.DatosEstudianteParaCrearUsuario;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ResultCheckStyle;

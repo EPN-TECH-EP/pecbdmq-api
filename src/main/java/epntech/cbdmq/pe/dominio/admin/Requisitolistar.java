@@ -34,14 +34,7 @@ public class Requisitolistar {
 	@GeneratedValue(strategy  = GenerationType.IDENTITY)
 	@Column(name = "cod_requisito")
 	private Integer codigo;
-	
-	
-	
-	//@Column(name = "cod_funcionario")
-	//private Integer codFuncionario;
-	
-	
-	
+
 	@Column(name = "nombre_requisito")
 	private String nombre;
 	

@@ -318,7 +318,7 @@ public class PruebaDetalleServiceImpl implements PruebaDetalleService {
 					}
 
 					String[] destinatarios = destinatariosList.toArray(new String[0]);
-					emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
+					emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_CURSO_REPROBADO, cuerpoHtml);
 
 				} catch (Exception e) {
 				}

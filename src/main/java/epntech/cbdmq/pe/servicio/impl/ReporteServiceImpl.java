@@ -4,8 +4,8 @@ import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.dominio.admin.ReporteParametro;
+import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
-import epntech.cbdmq.pe.dominio.util.OperativoApiDto;
 import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.PeriodoAcademicoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.ProPeriodosDuracionDto;
@@ -26,7 +26,6 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -56,7 +55,7 @@ public class ReporteServiceImpl implements ReporteService {
     private final ProPeriodoService proPeriodoSvc;
     private final CursoService cursoService;
     private final InscripcionEspService inscripcionEspService;
-    private final ApiCBDMQOperativosService apiCBDMQOperativosService;
+    private final FuncionarioService funcionarioService;
 
     @Override
     public List<Reporte> getByModulo(String modulo) {
@@ -82,8 +81,8 @@ public class ReporteServiceImpl implements ReporteService {
             JasperPrint print = JasperFillManager.fillReport(ruta, parametros, con);
             return JasperExportManager.exportReportToPdf(print);
         } catch (Exception ex) {
-            log.error("Error al generar el reporte [" + nombre +"]: ", ex);
-            throw new BusinessException("Error al generar el reporte [" + nombre +"]");
+            log.error("Error al generar el reporte [" + nombre + "]: ", ex);
+            throw new BusinessException("Error al generar el reporte [" + nombre + "]");
         }
     }
 
@@ -166,6 +165,7 @@ public class ReporteServiceImpl implements ReporteService {
             e.printStackTrace();
         }
     }
+
     public void exportMallaCurricular(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
         List<Materia> materias = materiaService.getAllByPeriodoAcademicoActivo();
@@ -266,42 +266,23 @@ public class ReporteServiceImpl implements ReporteService {
             e.printStackTrace();
         }
     }
+
     @Override
     public void exportAntiguedadesOperativos(String filename, String filetype, HttpServletResponse response) throws Exception {
-        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/MallaCurricular.jrxml");
-        JasperPrint jasperPrint;
-        ServletOutputStream outputStream;
-
-        List<OperativoApiDto> operativoApiDtoList = apiCBDMQOperativosService.servicioOperativosOrderByAntiguedad();
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/Antiguedades.jrxml");
+        List<Funcionario> operativoApiDtoList = funcionarioService.servicioOperativosOrderByAntiguedad();
         try {
-
-
+            JRBeanCollectionDataSource antiguedades = new JRBeanCollectionDataSource(operativoApiDtoList);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
-            jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
-            if (filetype.equalsIgnoreCase("PDF")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".pdf;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRPdfExporter exporter = new JRPdfExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-            if (filetype.equalsIgnoreCase("EXCEL")) {
-                response.addHeader("Content-Disposition", "inline; filename=" + filename + ".xlsx;");
-                response.setContentType("application/octet-stream");
-                outputStream = response.getOutputStream();
-                JRXlsxExporter exporter = new JRXlsxExporter();
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-                exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
-                exporter.exportReport();
-            }
-
+            parameters.put("listaAntiguedades", antiguedades);
+            JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
+            imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     //TODO en profesionalizacion no tenemos aprobados
     public void exportAprobadosProfesionalizacion(String filename, String filetype, HttpServletResponse response) {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/ReporteAprobadosReprobados.jrxml");

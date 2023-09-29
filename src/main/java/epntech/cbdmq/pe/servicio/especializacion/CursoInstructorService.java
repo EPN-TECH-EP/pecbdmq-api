@@ -21,10 +21,13 @@ public interface CursoInstructorService {
 	void delete(Long codInstructorCurso);
 	
 	List<CursoInstructorResponse> listInstructoresCurso(Long codCurso);
+	CursoInstructorResponse getInstructorByTipoInsCurso(Long codCurso, String nombreTipoInstructor);
+	CursoInstructorResponse getInstructorCoordinadorCurso(Long codInstructorCurso);
 	
 	List<InstructoresCurso> listCursosInstructor(Long codInstructor);
 
 	List<CursoInstructor> getByusuario(int codUsuario);
+
 
 	
 }

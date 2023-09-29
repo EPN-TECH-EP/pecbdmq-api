@@ -107,10 +107,6 @@ public class ConvocatoriaForResource {
 		for (RequisitoFor r : requisitos) {
 			RequisitoFor requisito = new RequisitoFor();
 			requisito.setCodigoRequisito(r.getCodigoRequisito());
-			//requisito.setCodFuncionario(r.getCodFuncionario());
-			//requisito.setDescripcion(r.getDescripcion());
-			//requisito.setNombre(r.getNombre());
-			//requisito.setEstado(r.getEstado());
 			reqs.add(requisito);
 		}
 

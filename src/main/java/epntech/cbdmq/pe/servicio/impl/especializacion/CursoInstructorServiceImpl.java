@@ -154,6 +154,16 @@ public class CursoInstructorServiceImpl implements CursoInstructorService {
 	public List<CursoInstructorResponse> listInstructoresCurso(Long codCurso) {
 		return instructorCursoRepository.findInstructoresCurso(codCurso);
 	}
+	@Transactional(readOnly = true)
+	@Override
+	public CursoInstructorResponse getInstructorByTipoInsCurso(Long codCurso,String nombreTipoCurso) {
+		return instructorCursoRepository.getInstructorByTipoInsCurso(codCurso,nombreTipoCurso);
+	}
+	@Transactional(readOnly = true)
+	@Override
+	public CursoInstructorResponse getInstructorCoordinadorCurso(Long codInstructorCurso) {
+		return this.getInstructorByTipoInsCurso(codInstructorCurso,"COORDINADOR");
+	}
 
 	@Transactional(readOnly = true)
 	@Override

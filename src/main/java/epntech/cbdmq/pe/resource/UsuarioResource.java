@@ -327,10 +327,6 @@ public class UsuarioResource extends GestorExcepciones {
 			return -1;
 		}
 	}
-	@PostMapping("/buscarUsuarioInfo")
-	public ResponseEntity<UsuarioInfoDto> getUsuarioInfo(@RequestParam String codUser) throws DataException {
-		UsuarioInfoDto user = usuarioService.getUsuarioInfo(codUser);
-		return new ResponseEntity<>(user, OK);
-	}
+
 
 }

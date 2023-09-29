@@ -60,7 +60,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
     @Autowired
     private InscripcionEspRepository inscripcionEspRepository;
     @Autowired
-    private EstudianteRepository estudianteRepository;
+    private EstudianteService estudianteService;
     @Autowired
     private CursoRepository cursoRepository;
     @Autowired
@@ -133,7 +133,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
         if (inscripcionEspRepositoryOptional.isPresent())
             throw new BusinessException(REGISTRO_YA_EXISTE);
 
-        Optional<Estudiante> estudianteOptional = estudianteRepository.findById(inscripcionEsp.getCodEstudiante().intValue());
+        Optional<Estudiante> estudianteOptional = estudianteService.getById(inscripcionEsp.getCodEstudiante().intValue());
         Optional<Curso> cursoOptional = cursoRepository.findById(inscripcionEsp.getCodCursoEspecializacion());
 
         if (estudianteOptional.isEmpty() || cursoOptional.isEmpty())
@@ -340,7 +340,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         String[] destinatarios = {inscripcion.getCorreoPersonal()};
 
-        emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+        emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
     }
 
     @Override
@@ -433,7 +433,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
         String[] destinatarios = {inscripcion.getCorreoPersonal()};
 
-        emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
+        emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_INSCRIPCION, cuerpoHtml);
     }
 
     @Override
@@ -479,7 +479,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
             String[] destinatarios = {inscritosEspecializacion.getCorreoPersonal()};
 
-            emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT2, cuerpoHtml);
+            emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT2, cuerpoHtml);
         }
 
     }
@@ -505,7 +505,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
 
             String[] destinatarios = {inscritosValidos.getCorreoPersonal()};
 
-            emailService.sendMensajeGeneralList(destinatarios, EMAIL_SUBJECT_PRUEBAS, cuerpoHtml);
+            emailService.sendMensajeHtmlGenerico(destinatarios, EMAIL_SUBJECT_PRUEBAS, cuerpoHtml);
         }
     }
 
@@ -564,7 +564,7 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                     newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                     newEstudiante.setEstado(ACTIVO);
                     newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
-                    newEstudiante = estudianteRepository.save(newEstudiante);
+                    newEstudiante = estudianteService.save(newEstudiante);
 
                     datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                     datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
@@ -572,14 +572,14 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
                 }
                 //EXISTE USUARIO
                 else {
-                    Estudiante estudianteObj = estudianteRepository.getEstudianteByUsuario(usuarioObj.get().getCodUsuario().toString());
+                    Estudiante estudianteObj = estudianteService.getEstudianteEspecializacionByUser(usuarioObj.get().getNombreUsuario());
                     //NO ES ESTUDIANTE
                     if (estudianteObj == null) {
                         Estudiante newEstudiante = new Estudiante();
                         newEstudiante.setCodDatosPersonales(datoPersonalObj.get().getCodDatosPersonales());
                         newEstudiante.setEstado(ACTIVO);
                         newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
-                        newEstudiante = estudianteRepository.save(newEstudiante);
+                        newEstudiante = estudianteService.save(newEstudiante);
 
                         datoPersonalEstudianteDto.setEstudiante(newEstudiante);
                         datoPersonalEstudianteDto.setDatoPersonal(datoPersonalObj.get());
@@ -622,14 +622,14 @@ public class InscripcionEspServiceImpl implements InscripcionEspService {
             newEstudiante.setCodDatosPersonales(newUser.getCodDatosPersonales().getCodDatosPersonales());
             newEstudiante.setEstado(ACTIVO);
             newEstudiante.setCodUnicoEstudiante(this.postulanteRepository.getIdPostulante("E"));
-            newEstudiante = estudianteRepository.save(newEstudiante);
+            newEstudiante = estudianteService.save(newEstudiante);
 
             datoPersonalEstudianteDto.setEstudiante(newEstudiante);
             datoPersonalEstudianteDto.setDatoPersonal(newUser.getCodDatosPersonales());
         } else {
             DatoPersonal datoPersonal1 = datoPersonalSvc.updateDatosPersonales(datoPersonal);
             Usuario usuario = usuarioSvc.getUsuarioByCodDatoPersonal(datoPersonal1.getCodDatosPersonales()).get();
-            Estudiante estudiante = estudianteRepository.getEstudianteByUsuario(usuario.getCodUsuario().toString());
+            Estudiante estudiante = estudianteService.getEstudianteEspecializacionByUser(usuario.getNombreUsuario().toString());
             datoPersonalEstudianteDto.setEstudiante(estudiante);
             datoPersonalEstudianteDto.setDatoPersonal(datoPersonal1);
         }

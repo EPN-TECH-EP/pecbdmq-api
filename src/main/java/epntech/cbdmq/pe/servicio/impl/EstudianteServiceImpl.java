@@ -161,12 +161,12 @@ public class EstudianteServiceImpl implements EstudianteService {
     }
 
     @Override
-    public Estudiante getEstudianteByUsuario(String codUsuario) throws DataException {
-        Estudiante estudiante =repo.getEstudianteByUsuario(codUsuario);
-        if(estudiante == null){
-            throw new DataException("No se encontro el estudiante");
+    public Boolean isEstudianteByUsuario(String codUsuario) throws DataException {
+        List<Estudiante> estudiante =repo.getEstudianteByUsuario(codUsuario);
+        if(estudiante.isEmpty()){
+            return false;
         }
-        return estudiante;
+        return true;
     }
 
     @Override
@@ -254,6 +254,24 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Override
     public List<Estudiante> getEstudiantesIs(String Estado) {
         return repo.getAllByEstadoIsIgnoreCase(Estado);
+    }
+
+    @Override
+    public Estudiante getEstudianteFormacionByUser(String codUsuario) throws DataException {
+        Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "F%");
+        return estudiante;
+    }
+
+    @Override
+    public Estudiante getEstudianteEspecializacionByUser(String codUsuario) throws DataException {
+        Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "E%");
+        return estudiante;
+    }
+
+    @Override
+    public Estudiante getEstudianteProfesionalizacionByUser(String codUsuario) throws DataException {
+        Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "P%");
+        return estudiante;
     }
 
     private String encodePassword(String password) {

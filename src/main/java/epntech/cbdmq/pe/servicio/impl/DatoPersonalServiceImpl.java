@@ -118,6 +118,11 @@ public class DatoPersonalServiceImpl implements DatoPersonalService {
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public List<DatoPersonal> saveAll(List<DatoPersonal> datosPersonales) {
+		return repo.saveAll(datosPersonales);
+	}
+
 	private DatosSincronizados convertToDatosSincronizados(DatoPersonal datoPersonal) {
 		DatosSincronizados datos = new DatosSincronizados();
 		datos.setDatoPersonal(datoPersonal);
