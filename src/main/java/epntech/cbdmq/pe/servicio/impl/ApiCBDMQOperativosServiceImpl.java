@@ -33,10 +33,6 @@ public class ApiCBDMQOperativosServiceImpl implements ApiCBDMQOperativosService 
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
-    private EmailService emailService;
-    @Autowired
-    private DatoPersonalService datoPersonalService;
-    @Autowired
     private FuncionarioService funcionarioService;
 
     @Value("${api.cbdmq.operativos}")
@@ -60,41 +56,6 @@ public class ApiCBDMQOperativosServiceImpl implements ApiCBDMQOperativosService 
         } catch (Exception ex) {
             return null;
         }
-
-    }
-
-    @Override
-    public List<Funcionario> servicioOperativos() throws Exception {
-        return this.servicioOperativosAndNoOperativos().stream().filter(dto -> Boolean.TRUE.equals(dto.getOperativo()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Funcionario> servicioOperativosOrderByAntiguedad() throws Exception {
-        return this.servicioOperativosAndNoOperativos().stream()
-                .filter(dto -> Boolean.TRUE.equals(dto.getOperativo()))
-                .sorted(Comparator.comparing(Funcionario::getFechaIngreso))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void notificarMejoresProspectos(int numeroLimite) throws Exception {
-        List<Funcionario> result = this.servicioOperativosAndNoOperativos().stream()
-                .filter(dto -> Boolean.TRUE.equals(dto.getOperativo()))
-                .sorted(Comparator.comparing(Funcionario::getFechaIngreso))
-                .limit(numeroLimite)
-                .collect(Collectors.toList());
-        for (Funcionario dto : result) {
-            emailService.sendMensajeTextGenerico(dto.getEmail(), EMAIL_SUBJECT_PROSPECTO, "Usted ha sido seleccionado como uno de los mejores prospectos de la institución para ganar un curso de ascenso. Comuníquese con la dirección de comunicación para mayor información.");
-        }
-
-
-    }
-
-    @Override
-    public void notificarOperativoComoMejorProspecto(String correo) {
-        emailService.sendMensajeTextGenerico(correo, EMAIL_SUBJECT_PROSPECTO, "Usted ha sido seleccionado como uno de los mejores prospectos de la institución para ganar un curso de ascenso. Comuníquese con la dirección de comunicación para mayor información.");
-
 
     }
 

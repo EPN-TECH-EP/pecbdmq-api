@@ -72,44 +72,6 @@ public class ApiCBDMQResource {
         }
     }
 
-    @GetMapping("/operativos")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> getDataOperativos() throws Exception {
-
-        try {
-            return new ResponseEntity<>(objOperativosService.servicioOperativos(), HttpStatus.OK);
-        } catch (Exception ex) {
-
-            return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-        }
-    }
-
-    @GetMapping("/operativosOrderByAntiguedad")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> getDataOperativosOrderByAntiguedad() throws Exception {
-
-        try {
-            return new ResponseEntity<>(objOperativosService.servicioOperativosOrderByAntiguedad(), HttpStatus.OK);
-        } catch (Exception ex) {
-
-            return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-        }
-    }
-
-    @PostMapping("/enviarNotificacionProspecto")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> enviarNotificacionOperativo(@Param("limiteProspectos") int limiteProspectos) throws Exception {
-
-        try {
-            objOperativosService.notificarMejoresProspectos(limiteProspectos);
-            return response(OK, "Notificacion enviada a cada uno de los mejores prospectos");
-
-        } catch (Exception ex) {
-
-            return response(HttpStatus.BAD_REQUEST, ex.getMessage());
-        }
-    }
-
     @GetMapping("/educacionMedia/{cedula}")
     public ResponseEntity<?> getEducacionMedia(@PathVariable("cedula") String cedula) throws Exception {
         try {

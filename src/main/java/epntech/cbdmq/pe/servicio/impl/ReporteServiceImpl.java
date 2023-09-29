@@ -6,7 +6,6 @@ import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.dominio.admin.ReporteParametro;
 import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
-import epntech.cbdmq.pe.dominio.util.OperativoApiDto;
 import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.PeriodoAcademicoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.ProPeriodosDuracionDto;
@@ -27,7 +26,6 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -57,7 +55,7 @@ public class ReporteServiceImpl implements ReporteService {
     private final ProPeriodoService proPeriodoSvc;
     private final CursoService cursoService;
     private final InscripcionEspService inscripcionEspService;
-    private final ApiCBDMQOperativosService apiCBDMQOperativosService;
+    private final FuncionarioService funcionarioService;
 
     @Override
     public List<Reporte> getByModulo(String modulo) {
@@ -272,7 +270,7 @@ public class ReporteServiceImpl implements ReporteService {
     @Override
     public void exportAntiguedadesOperativos(String filename, String filetype, HttpServletResponse response) throws Exception {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/Antiguedades.jrxml");
-        List<Funcionario> operativoApiDtoList = apiCBDMQOperativosService.servicioOperativosOrderByAntiguedad();
+        List<Funcionario> operativoApiDtoList = funcionarioService.servicioOperativosOrderByAntiguedad();
         try {
             JRBeanCollectionDataSource antiguedades = new JRBeanCollectionDataSource(operativoApiDtoList);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
