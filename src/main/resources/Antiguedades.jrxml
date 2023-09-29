@@ -114,6 +114,7 @@
 		<field name="apellidos" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="listaAntiguedades" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="imagen" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -122,10 +123,6 @@
 	</background>
 	<title>
 		<band height="88" splitType="Stretch">
-			<image hAlign="Center" vAlign="Bottom" onErrorType="Blank">
-				<reportElement x="101" y="10" width="360" height="40" uuid="62518cd3-c3df-40d2-b5a1-9e9dbf67e67a"/>
-				<imageExpression><![CDATA["C:/temp/logo-bomberos.png"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="160" y="65" width="270" height="20" uuid="c38a56c4-5a77-4561-ae49-3ab4d98dd6d5"/>
 				<textElement textAlignment="Center">
@@ -133,12 +130,21 @@
 				</textElement>
 				<text><![CDATA[REPORTE DE ANTIGÜEDADES ]]></text>
 			</staticText>
+			<image onErrorType="Blank">
+				<reportElement style="Table 1_CH" x="190" y="10" width="180" height="30" backcolor="#FCD4B3" uuid="9038096a-8f1a-452c-8e98-fc32a454d243">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<detail>
 		<band height="802" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="20" width="100" height="50" backcolor="rgba(252, 212, 179, 0.9607843)" uuid="446745a5-2e7a-4443-aed6-8a492a9dcec2">
+				<reportElement mode="Opaque" x="0" y="8" width="100" height="50" backcolor="rgba(252, 212, 179, 0.9607843)" uuid="446745a5-2e7a-4443-aed6-8a492a9dcec2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -154,7 +160,7 @@
 				<text><![CDATA[Unidad Requirente ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="320" y="20" width="234" height="20" backcolor="#FCD4B3" uuid="7d05344f-829e-49ef-a08d-7d73b7cab373">
+				<reportElement mode="Opaque" x="320" y="8" width="234" height="20" backcolor="#FCD4B3" uuid="7d05344f-829e-49ef-a08d-7d73b7cab373">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -169,7 +175,7 @@
 				<text><![CDATA[Resultados generado el:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="80" width="554" height="30" forecolor="#0A0A0A" backcolor="#FF0101" uuid="df54e260-d9c9-419e-a2d3-9afb1227a99a">
+				<reportElement mode="Opaque" x="0" y="58" width="554" height="30" forecolor="#0A0A0A" backcolor="#FF0101" uuid="df54e260-d9c9-419e-a2d3-9afb1227a99a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -178,24 +184,24 @@
 				<text><![CDATA[LISTA DE FUNCIONARIOS OPERATIVOS POR ANTIGÜEDAD]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="100" y="20" width="220" height="50" uuid="cca39c42-e81d-4b12-9215-57aa6474bbf2"/>
+				<reportElement x="100" y="8" width="220" height="50" uuid="cca39c42-e81d-4b12-9215-57aa6474bbf2"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="320" y="40" width="234" height="30" uuid="ce3fae5c-2ab1-4806-9000-3bdc1ac6f5c6"/>
+				<reportElement x="320" y="28" width="234" height="30" uuid="ce3fae5c-2ab1-4806-9000-3bdc1ac6f5c6"/>
 			</rectangle>
 			<textField pattern="HH:mm">
-				<reportElement x="440" y="40" width="114" height="30" uuid="7a23db90-0055-45c2-b06e-e31232b5018f">
+				<reportElement x="440" y="28" width="114" height="30" uuid="7a23db90-0055-45c2-b06e-e31232b5018f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="320" y="40" width="110" height="30" uuid="c4c4b9e0-2541-4380-a821-987f8c4044bb"/>
+				<reportElement x="320" y="28" width="110" height="30" uuid="c4c4b9e0-2541-4380-a821-987f8c4044bb"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="100" y="20" width="220" height="50" uuid="a95c420c-3ad3-4b42-b07d-9b4d444b5889">
+				<reportElement x="100" y="8" width="220" height="50" uuid="a95c420c-3ad3-4b42-b07d-9b4d444b5889">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -205,7 +211,7 @@
 				<text><![CDATA[TODAS]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="0" y="110" width="554" height="200" uuid="a1f008fd-fdb2-41a4-b0cd-72ab63f95026">
+				<reportElement x="0" y="88" width="554" height="80" uuid="a1f008fd-fdb2-41a4-b0cd-72ab63f95026">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
