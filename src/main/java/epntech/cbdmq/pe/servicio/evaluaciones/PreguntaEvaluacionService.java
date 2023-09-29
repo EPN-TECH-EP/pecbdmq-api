@@ -9,6 +9,8 @@ public interface PreguntaEvaluacionService {
     List<PreguntaTipoEvaluacion> getAll();
 
     List<PreguntaTipoEvaluacion> getByCodTipoEvaluacion(Long codTipoEvaluacion);
+    List<PreguntaTipoEvaluacion> getByNombreTipEvaluacion(String nomnbreTipoEvaluacion);
+    List<PreguntaTipoEvaluacion> getPreguntasToInstructor();
 
     PreguntaTipoEvaluacion getById(Long codPreguntaEvaluacion);
 

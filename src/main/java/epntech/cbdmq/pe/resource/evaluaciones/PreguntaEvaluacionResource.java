@@ -25,6 +25,10 @@ public class PreguntaEvaluacionResource {
     public List<PreguntaTipoEvaluacion> getPreguntaEvaluacionByCodTipoEvaluacion(@PathVariable("id") Long codTipoEvaluacion) {
         return preguntaEvaluacionServiceImpl.getByCodTipoEvaluacion(codTipoEvaluacion);
     }
+    @GetMapping("/preguntasDeInstructor")
+    public List<PreguntaTipoEvaluacion> getPreguntasToInstructor() {
+        return preguntaEvaluacionServiceImpl.getPreguntasToInstructor();
+    }
 
     @PostMapping
     public PreguntaTipoEvaluacion savePreguntaEvaluacion(@RequestBody PreguntaTipoEvaluacion preguntaTipoEvaluacion) {

@@ -30,6 +30,16 @@ public class PreguntaEvaluacionServiceImpl implements PreguntaEvaluacionService 
     }
 
     @Override
+    public List<PreguntaTipoEvaluacion> getByNombreTipEvaluacion(String nomnbreTipoEvaluacion) {
+        return preguntaTipoEvaluacionRepository.findByNombreTipoEvaluacion(nomnbreTipoEvaluacion);
+    }
+
+    @Override
+    public List<PreguntaTipoEvaluacion> getPreguntasToInstructor() {
+        return this.getByNombreTipEvaluacion("%INSTRUCTOR%");
+    }
+
+    @Override
     public PreguntaTipoEvaluacion getById(Long codPreguntaEvaluacion) {
         return preguntaTipoEvaluacionRepository.findById(codPreguntaEvaluacion)
                 .orElseThrow(() -> new BusinessException(REGISTRO_NO_EXISTE));
