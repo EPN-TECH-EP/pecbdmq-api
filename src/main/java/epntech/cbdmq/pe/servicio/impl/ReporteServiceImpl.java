@@ -6,6 +6,7 @@ import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.dominio.admin.ReporteParametro;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
 import epntech.cbdmq.pe.dominio.evaluaciones.PreguntaTipoEvaluacion;
 import epntech.cbdmq.pe.dominio.evaluaciones.ReporteEvaluacion;
@@ -20,6 +21,7 @@ import epntech.cbdmq.pe.repositorio.admin.ReporteRepository;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
+import epntech.cbdmq.pe.servicio.especializacion.NotasEspecializacionService;
 import epntech.cbdmq.pe.servicio.evaluaciones.PreguntaEvaluacionService;
 import epntech.cbdmq.pe.servicio.evaluaciones.RespuestaEstudianteService;
 import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
@@ -65,6 +67,8 @@ public class ReporteServiceImpl implements ReporteService {
     private final FuncionarioService funcionarioService;
     private final RespuestaEstudianteService respuestaEstudianteService;
     private final PreguntaEvaluacionService preguntaEvaluacionService;
+    private final NotasFormacionService notasFormacionService;
+    private final NotasEspecializacionService notasEspecializacionService;
 
     @Override
     public List<Reporte> getByModulo(String modulo) {
@@ -337,6 +341,27 @@ public class ReporteServiceImpl implements ReporteService {
         }
 
 
+    }
+
+    @Override
+    public void exportReporteFichaPersonal(String filename, String filetype, HttpServletResponse response,Integer codEstudianteFor, Integer codEstudianteEsp) throws Exception{
+    InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/NotasEstudiante.jrxml");
+    List<NotaMateriaByEstudiante> notasFormacion = notasFormacionService.getNotaMateriasWithCoordinadorByEstudiante(codEstudianteFor);
+    List<NotaMateriaByEstudiante> notasEspecializacion = notasEspecializacionService.getHistoricosEstudiante(codEstudianteEsp);
+    InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        try {
+        JRBeanCollectionDataSource notasFormacionValid = new JRBeanCollectionDataSource(notasFormacion);
+        JRBeanCollectionDataSource notasEspecializacionValid = new JRBeanCollectionDataSource(notasEspecializacion);
+        JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("notasFormacion", notasFormacionValid);
+        parameters.put("notasEspecializacion", notasEspecializacionValid);
+        parameters.put("imagen", imagen);
+        JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
+        imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     }
 
     //TODO en profesionalizacion no tenemos aprobados

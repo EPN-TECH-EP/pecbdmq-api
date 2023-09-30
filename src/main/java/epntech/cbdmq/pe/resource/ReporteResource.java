@@ -86,6 +86,16 @@ public class ReporteResource {
     ) throws Exception {
         service.exportReporteEncuestasESP(fileName, fileType, response, codCurso);
     }
+    @PostMapping(value = "/generarNotas/{codEstudianteFor}/{codEstudianteEsp}/{fileName}/{fileType}")
+    public void downloadEvaluacionEspecializacion(
+            @PathVariable String fileName,
+            @PathVariable String fileType,
+            @PathVariable Integer codEstudianteFor,
+            @PathVariable Integer codEstudianteEsp,
+            @Autowired HttpServletResponse response
+    ) throws Exception {
+        service.exportReporteFichaPersonal(fileName, fileType, response, codEstudianteFor, codEstudianteEsp);
+    }
 
 
 }
