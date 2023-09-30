@@ -311,7 +311,7 @@ public class EmailService {
         String htmlTemplate = readFile(Path);
         htmlTemplate = htmlTemplate.replace("${numeroConvocatoria}", convocatoria.getCodigoUnicoConvocatoria());
         htmlTemplate = htmlTemplate.replace("${usuario}", proInscripcion.getApellido() + " " + proInscripcion.getNombre());
-        MimeMessage message = this.createEmailHtml(emails, EMAIL_SUBJECT, htmlTemplate);
+        MimeMessage message = this.createEmailHtml(emails, EMAIL_SUBJECT_INSCRIPCION, htmlTemplate);
         JavaMailSender emailSender = this.getJavaMailSender();
         emailSender.send(message);
 
