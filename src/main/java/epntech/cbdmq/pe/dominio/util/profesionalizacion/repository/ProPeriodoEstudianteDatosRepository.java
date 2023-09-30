@@ -10,7 +10,7 @@ public interface ProPeriodoEstudianteDatosRepository extends JpaRepository<ProPe
     @Query(value = "select pe.cod_periodo_estudiante, pe.cod_datos_personales, pe.cod_periodo, gdp.cedula, gdp.nombre, gdp.apellido, gdp.correo_personal, e.cod_estudiante " +
             "from cbdmq.pro_periodo_estudiante pe inner join cbdmq.gen_dato_personal gdp on gdp.cod_datos_personales = pe.cod_datos_personales " +
             "inner join cbdmq.pro_periodo pp on pe.cod_periodo = pp.cod_periodo inner join cbdmq.gen_estudiante e on gdp.cod_datos_personales = e.cod_datos_personales " +
-            "where pe.cod_periodo=:codPeriodo and pe.estado='ACTIVO'", nativeQuery = true)
+            "where pe.cod_periodo=:codPeriodo and pe.estado='ACTIVO' and e.codigo_unico_estudiante ilike '%P%'", nativeQuery = true)
     List<ProPeriodoEstudianteDto> getAllByCodPeriodo(Integer codPeriodo);
 
 
