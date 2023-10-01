@@ -52,4 +52,6 @@ public class MensajesConst {
     
     public static final String DOCUMENTO_NO_EXISTE = "El id del documento no existe";
     public static final String AULA_NO_EXISTE = "El aula no existe";
+	public static final String REPORTE_NO_EXISTE = "El reporte no existe";
+	public static final String REPORTE_ERROR = "Error al generar el reporte ";
 }
