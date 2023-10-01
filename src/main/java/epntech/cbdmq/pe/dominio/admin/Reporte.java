@@ -2,17 +2,10 @@ package epntech.cbdmq.pe.dominio.admin;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.ResultCheckStyle;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 @Data
-@Entity(name = "gen_reporte")
+@Entity
 @Table(name = "gen_reporte")
-@SQLDelete(sql = "UPDATE {h-schema}gen_reporte SET estado = 'ELIMINADO' WHERE codigo = ?", check = ResultCheckStyle.COUNT)
-@Where(clause = "estado <> 'ELIMINADO'")
 public class Reporte {
 
     @Id
@@ -26,13 +19,25 @@ public class Reporte {
     @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(name = "modulo")
-    private String modulo;
+    @Column(name = "codigo_reporte")
+    private String codigoReporte;
 
     @Column(name = "ruta")
     private String ruta;
 
-    @Column(name = "estado")
-    private String estado;
+    @Column(name = "modulo")
+    private String modulo;
+
+    @Column(name = "ver_fechas")
+    private Boolean verFechas;
+
+    @Column(name = "ver_select_promocion")
+    private Boolean verSelectPromocion;
+
+    @Column(name = "ver_select_periodo")
+    private Boolean verSelectPeriodo;
+
+    @Column(name = "ver_select_curso")
+    private Boolean verSelectCurso;
 
 }

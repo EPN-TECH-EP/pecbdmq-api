@@ -1,15 +1,17 @@
 package epntech.cbdmq.pe.servicio;
 
-import epntech.cbdmq.pe.dominio.admin.Reporte;
+import epntech.cbdmq.pe.dto.ReporteRequest;
+import epntech.cbdmq.pe.dto.ReporteResponse;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.List;
 
 public interface ReporteService {
 
-    List<Reporte> getByModulo(String modulo);
+    ReporteResponse getReporte(String codigo);
 
-    byte[] getReportePDF(Long codigo);
+    byte[] getReportePDF(ReporteRequest request);
+
+    byte[] getReporteExcel(ReporteRequest request);
+
     void exportAprobadosFormacion(String fileName, String fileType, HttpServletResponse response);
 
     void exportMallaCurricular(String fileName, String fileType, HttpServletResponse response);

@@ -1,6 +1,7 @@
 package epntech.cbdmq.pe.resource;
 
-import epntech.cbdmq.pe.dominio.admin.Reporte;
+import epntech.cbdmq.pe.dto.ReporteRequest;
+import epntech.cbdmq.pe.dto.ReporteResponse;
 import epntech.cbdmq.pe.servicio.ReporteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -9,25 +10,29 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/reporte")
+@RequestMapping("/reportes")
 @RequiredArgsConstructor
 public class ReporteResource {
     private final ReporteService service;
 
-    @GetMapping("/listar")
-    public List<Reporte> listar(@RequestParam("modulo") String modulo) {
-        return service.getByModulo(modulo);
+    @GetMapping
+    public ResponseEntity<ReporteResponse> getReporte(@RequestParam("codigo") String codigo) {
+        return new ResponseEntity<>(service.getReporte(codigo), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{codigo}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<byte[]> getReporte(@PathVariable("type") Long codigo) {
-        byte[] data = service.getReportePDF(codigo);
+    @PostMapping(value = "/generar-pdf", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getReportePdf(@RequestBody ReporteRequest request) {
+        byte[] data = service.getReportePDF(request);
+        return new ResponseEntity<>(data, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/generar-excel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> getReporteExcel(@RequestBody ReporteRequest request) {
+        byte[] data = service.getReporteExcel(request);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 

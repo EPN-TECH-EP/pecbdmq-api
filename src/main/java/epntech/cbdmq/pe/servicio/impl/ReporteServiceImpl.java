@@ -15,8 +15,9 @@ import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
 import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.PeriodoAcademicoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.ProPeriodosDuracionDto;
+import epntech.cbdmq.pe.dto.ReporteRequest;
+import epntech.cbdmq.pe.dto.ReporteResponse;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
-import epntech.cbdmq.pe.repositorio.ReporteParametroRepository;
 import epntech.cbdmq.pe.repositorio.admin.ReporteRepository;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
@@ -28,6 +29,7 @@ import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -35,9 +37,12 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -47,14 +52,17 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static epntech.cbdmq.pe.constante.MensajesConst.REPORTE_ERROR;
+import static epntech.cbdmq.pe.constante.MensajesConst.REPORTE_NO_EXISTE;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ReporteServiceImpl implements ReporteService {
 
     private final ReporteRepository reporteRepository;
-    private final ReporteParametroRepository reporteParametroRepository;
     private final DataSource dataSource;
+    private final ResourceLoader resourceLoader;
 
     private final AntiguedadesService service;
     private final NotasFormacionFinalService notasFormacionFinalService;
@@ -71,32 +79,77 @@ public class ReporteServiceImpl implements ReporteService {
     private final NotasEspecializacionService notasEspecializacionService;
 
     @Override
-    public List<Reporte> getByModulo(String modulo) {
-        return reporteRepository.findByModulo(modulo);
+    public ReporteResponse getReporte(String codigo) {
+        Reporte reporte = reporteRepository.findByCodigoReporte(codigo)
+                .orElseThrow(() -> new BusinessException(REPORTE_NO_EXISTE));
+
+        return ReporteResponse.builder()
+                .nombre(reporte.getNombre())
+                .descripcion(reporte.getDescripcion())
+                .verFechas(reporte.getVerFechas())
+                .verSelectPromocion(reporte.getVerSelectPromocion())
+                .verSelectPeriodo(reporte.getVerSelectPeriodo())
+                .verSelectCurso(reporte.getVerSelectCurso())
+                .build();
     }
 
     @Override
-    public byte[] getReportePDF(Long codigo) {
-        Reporte reporte = reporteRepository.findById(codigo).orElseThrow(() -> new BusinessException("No existe el reporte"));
-        List<ReporteParametro> listaParametros = reporteParametroRepository.findByCodigoReporte(codigo);
+    public byte[] getReportePDF(ReporteRequest request) {
+        Reporte reporte = reporteRepository.findByCodigoReporte(request.getCodigoReporte())
+                .orElseThrow(() -> new BusinessException(REPORTE_NO_EXISTE));
 
-        Map<String, Object> parametros = new HashMap<>();
-        for (ReporteParametro parametro : listaParametros) {
-            parametros.put(parametro.getNombre(), parametro.getValor());
-        }
-
-        parametros.put("id", codigo);
-        return getReporte(parametros, reporte.getRuta(), reporte.getNombre());
+        return generarPDF(setParametros(request, reporte), reporte);
     }
 
-    private byte[] getReporte(Map<String, Object> parametros, String ruta, String nombre) {
+    @Override
+    public byte[] getReporteExcel(ReporteRequest request) {
+        Reporte reporte = reporteRepository.findByCodigoReporte(request.getCodigoReporte())
+                .orElseThrow(() -> new BusinessException(REPORTE_NO_EXISTE));
+
+        return generarExcel(setParametros(request, reporte), reporte);
+    }
+
+    private byte[] generarPDF(Map<String, Object> parametros, Reporte reporte) {
         try (Connection con = dataSource.getConnection()) {
-            JasperPrint print = JasperFillManager.fillReport(ruta, parametros, con);
+            JasperPrint print = JasperFillManager.fillReport(getRutaReporte(reporte), parametros, con);
             return JasperExportManager.exportReportToPdf(print);
         } catch (Exception ex) {
-            log.error("Error al generar el reporte [" + nombre + "]: ", ex);
-            throw new BusinessException("Error al generar el reporte [" + nombre + "]");
+            log.error(REPORTE_ERROR, ex);
+            throw new BusinessException(REPORTE_ERROR + reporte.getCodigoReporte());
         }
+    }
+
+    private byte[] generarExcel(Map<String, Object> parametros, Reporte reporte) {
+        try (Connection con = dataSource.getConnection()) {
+            JasperPrint print = JasperFillManager.fillReport(getRutaReporte(reporte), parametros, con);
+            JRXlsxExporter exporter = new JRXlsxExporter();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            exporter.setExporterInput(new SimpleExporterInput(print));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
+            exporter.exportReport();
+            return outputStream.toByteArray();
+        } catch (Exception ex) {
+            log.error(REPORTE_ERROR, ex);
+            throw new BusinessException(REPORTE_ERROR + reporte.getCodigoReporte());
+        }
+    }
+
+    private Map<String, Object> setParametros(ReporteRequest request, Reporte reporte) {
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("fechaInicio", request.getFechaInicio());
+        parametros.put("fechaFin", request.getFechaFin());
+        parametros.put("codigoConvocatoria", request.getFechaInicio());
+        parametros.put("codigoCurso", request.getFechaInicio());
+        parametros.put("modulo", reporte.getModulo());
+        parametros.put("titulo", reporte.getDescripcion());
+
+        return parametros;
+    }
+
+    @SneakyThrows
+    private String getRutaReporte(Reporte reporte) {
+        Resource resource = resourceLoader.getResource("classpath:" + reporte.getRuta());
+        return resource.getURI().getPath();
     }
 
     public void exportAprobadosFormacion(String filename, String filetype, HttpServletResponse response) {
