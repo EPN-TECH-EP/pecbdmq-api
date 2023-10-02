@@ -4,7 +4,6 @@ import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
 import epntech.cbdmq.pe.dominio.evaluaciones.PreguntaTipoEvaluacion;
@@ -137,8 +136,9 @@ public class ReporteServiceImpl implements ReporteService {
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("fechaInicio", request.getFechaInicio());
         parametros.put("fechaFin", request.getFechaFin());
-        parametros.put("codigoConvocatoria", request.getFechaInicio());
-        parametros.put("codigoCurso", request.getFechaInicio());
+        parametros.put("codigoConvocatoria", request.getCodigoPeriodoFormacion());
+        parametros.put("codigoPromocion", request.getCodigoPeriodoProfesionalizacion());
+        parametros.put("codigoCurso", request.getCodigoCurso());
         parametros.put("modulo", reporte.getModulo());
         parametros.put("titulo", reporte.getDescripcion());
 
