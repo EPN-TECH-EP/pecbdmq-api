@@ -3,7 +3,6 @@ package epntech.cbdmq.pe.servicio.impl;
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.Reporte;
-import epntech.cbdmq.pe.dominio.admin.ReporteParametro;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
