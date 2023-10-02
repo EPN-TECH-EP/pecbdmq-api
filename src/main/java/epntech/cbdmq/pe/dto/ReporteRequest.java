@@ -10,5 +10,6 @@ public class ReporteRequest {
     private Date fechaInicio;
     private Date fechaFin;
     private Long codigoCurso;
-    private Long codigoConvocatoria;
+    private Long codigoPeriodoFormacion;
+    private Long codigoPeriodoProfesionalizacion;
 }
