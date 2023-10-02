@@ -30,5 +30,6 @@ public interface CursoDocumentoService {
     Boolean generarDocListadoInscripcion(HttpServletResponse response,Long codCurso);
     Boolean generarDocListadoValidacion(HttpServletResponse response,Long codCurso);
     Boolean generarDocListadoPruebas(HttpServletResponse response,Long codCurso);
+    Set<Documento> getTareas(Long codCurso) throws IOException;
 
 }

@@ -30,5 +30,23 @@ public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
 			"where ec.cod_curso_especializacion=:codCurso\n" +
 			"and UPPER(d.estado) = 'ACTIVO' order by d.cod_documento ", nativeQuery=true)
 	Set<Documento> getDocumentosEspecializacion(@Param("codCurso") Integer codCurso);
+	@Query(value="select d.* \n" +
+			"from cbdmq.esp_curso_documento ec \n" +
+			"left join cbdmq.gen_documento d on ec.cod_documento = d.cod_documento \n" +
+			"where ec.cod_curso_especializacion=:codCurso\n" +
+			"and UPPER(d.estado) = 'ACTIVO' and ec.es_tarea =:esTarea " +
+			"order by d.cod_documento" , nativeQuery=true)
+	Set<Documento> getTareasEspecializacion(@Param("codCurso") Integer codCurso, @Param("esTarea") Boolean esTarea);
+
+	@Query(value="select gd.* from cbdmq.gen_materia_paralelo_documento gmpd \n" +
+			"left join cbdmq.gen_documento gd on gmpd.cod_documento = gd.cod_documento \n" +
+			"where gmpd.cod_materia_paralelo =:codMateriaParalelo\n" +
+			"order by gd.cod_documento", nativeQuery=true)
+	Set<Documento> getDocumentosMateriaFormacion(@Param("codMateriaParalelo") Integer codMateriaParalelo);
+	@Query(value="select gd.* from cbdmq.gen_materia_paralelo_documento gmpd \n" +
+			"left join cbdmq.gen_documento gd on gmpd.cod_documento = gd.cod_documento \n" +
+			"where gmpd.cod_materia_paralelo =:codMateriaParalelo and gmpd.es_tarea =:esTarea \n" +
+			"order by gd.cod_documento", nativeQuery=true)
+	Set<Documento> getTareasMateriaFormacion(@Param("codMateriaParalelo") Integer codMateriaParalelo, @Param("esTarea") Boolean esTarea);
 
 }

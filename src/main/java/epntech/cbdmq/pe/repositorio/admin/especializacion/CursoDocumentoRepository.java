@@ -15,7 +15,7 @@ public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, 
 
 	@Transactional
 	@Modifying
-	@Query("update CursoDocumento a set a.aprobado = ?1, a.validado = ?2, a.observaciones = ?3 where a.codCursoEspecializacion = ?4 and a.codDocumento = ?5")
+	@Query("update CursoDocumento a set a.aprobado = ?1, a.esTarea = ?2, a.observaciones = ?3 where a.codCursoEspecializacion = ?4 and a.codDocumento = ?5")
 	void updateEstadoAprobado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento);
 	
 	CursoDocumento findByCodCursoEspecializacionAndCodDocumento(Long codCursoEspecializacion, Long codDocumento);
