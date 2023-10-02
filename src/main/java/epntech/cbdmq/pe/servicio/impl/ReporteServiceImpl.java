@@ -27,7 +27,6 @@ import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -35,7 +34,6 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +58,6 @@ public class ReporteServiceImpl implements ReporteService {
 
     private final ReporteRepository reporteRepository;
     private final DataSource dataSource;
-    private final ResourceLoader resourceLoader;
 
     private final AntiguedadesService service;
     private final NotasFormacionFinalService notasFormacionFinalService;
