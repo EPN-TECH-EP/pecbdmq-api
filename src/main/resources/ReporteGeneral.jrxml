@@ -133,6 +133,7 @@
 	<parameter name="listaCusos" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="numeroPeriodosPro" class="java.lang.Integer"/>
 	<parameter name="numeroCursos" class="java.lang.Integer"/>
+	<parameter name="imagen" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -141,10 +142,6 @@
 	</background>
 	<title>
 		<band height="88" splitType="Stretch">
-			<image hAlign="Center" vAlign="Bottom" onErrorType="Blank">
-				<reportElement x="101" y="10" width="360" height="40" uuid="62518cd3-c3df-40d2-b5a1-9e9dbf67e67a"/>
-				<imageExpression><![CDATA["C:/temp/logo-bomberos.png"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="160" y="65" width="270" height="20" uuid="c38a56c4-5a77-4561-ae49-3ab4d98dd6d5"/>
 				<textElement textAlignment="Center">
@@ -152,6 +149,15 @@
 				</textElement>
 				<text><![CDATA[REPORTE GENERAL]]></text>
 			</staticText>
+			<image onErrorType="Blank">
+				<reportElement style="Table 1_CH" x="190" y="10" width="180" height="30" backcolor="#FCD4B3" uuid="9038096a-8f1a-452c-8e98-fc32a454d243">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagen}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<detail>

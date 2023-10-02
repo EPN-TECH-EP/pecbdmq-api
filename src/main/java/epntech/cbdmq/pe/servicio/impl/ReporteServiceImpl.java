@@ -3,7 +3,14 @@ package epntech.cbdmq.pe.servicio.impl;
 import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.Reporte;
+import epntech.cbdmq.pe.dominio.admin.ReporteParametro;
+import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
+import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
+import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
+import epntech.cbdmq.pe.dominio.evaluaciones.PreguntaTipoEvaluacion;
+import epntech.cbdmq.pe.dominio.evaluaciones.ReporteEvaluacion;
+import epntech.cbdmq.pe.dominio.evaluaciones.RespuestaEstudiante;
 import epntech.cbdmq.pe.dominio.util.AntiguedadesFormacion;
 import epntech.cbdmq.pe.dominio.util.reportes.CursoDuracionDto;
 import epntech.cbdmq.pe.dominio.util.reportes.PeriodoAcademicoDuracionDto;
@@ -15,6 +22,9 @@ import epntech.cbdmq.pe.repositorio.admin.ReporteRepository;
 import epntech.cbdmq.pe.servicio.*;
 import epntech.cbdmq.pe.servicio.especializacion.CursoService;
 import epntech.cbdmq.pe.servicio.especializacion.InscripcionEspService;
+import epntech.cbdmq.pe.servicio.especializacion.NotasEspecializacionService;
+import epntech.cbdmq.pe.servicio.evaluaciones.PreguntaEvaluacionService;
+import epntech.cbdmq.pe.servicio.evaluaciones.RespuestaEstudianteService;
 import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,6 +73,10 @@ public class ReporteServiceImpl implements ReporteService {
     private final CursoService cursoService;
     private final InscripcionEspService inscripcionEspService;
     private final FuncionarioService funcionarioService;
+    private final RespuestaEstudianteService respuestaEstudianteService;
+    private final PreguntaEvaluacionService preguntaEvaluacionService;
+    private final NotasFormacionService notasFormacionService;
+    private final NotasEspecializacionService notasEspecializacionService;
 
     @Override
     public ReporteResponse getReporte(String codigo) {
@@ -149,6 +163,7 @@ public class ReporteServiceImpl implements ReporteService {
         antiguedad.setNotaFinal(BigDecimal.valueOf(0.0f));
         antiguedad.setCedula("0");
         antiguedad.setCodigoUnicoEstudiante("0");
+        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
             aprobados.add(antiguedad);
@@ -173,6 +188,7 @@ public class ReporteServiceImpl implements ReporteService {
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
             parameters.put("academia", "Formación");
+            parameters.put("imagen", imagen);
             imprimir(filename, filetype, response, dsAprobados, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,6 +203,7 @@ public class ReporteServiceImpl implements ReporteService {
         aprobado.setNombre("Total");
         aprobado.setApellido("Hola");
         aprobado.setCorreoPersonal("Jair");
+        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
             aprobados.add(aprobado);
@@ -212,6 +229,7 @@ public class ReporteServiceImpl implements ReporteService {
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
             parameters.put("academia", "Especialización");
+            parameters.put("imagen", imagen);
             imprimir(filename, filetype, response, dsAprobados, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
@@ -223,7 +241,7 @@ public class ReporteServiceImpl implements ReporteService {
         List<Materia> materias = materiaService.getAllByPeriodoAcademicoActivo();
         List<CatalogoCurso> cursos = catalogoCursoService.getAll();
         List<Materia> materiaProfesionalizacion = materiaService.getAllByPeriodoProfesionalizacionActivo();
-
+        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
         try {
             JRBeanCollectionDataSource dsMaterias = new JRBeanCollectionDataSource(materias);
             JRBeanCollectionDataSource dsCursos = new JRBeanCollectionDataSource(cursos);
@@ -233,6 +251,7 @@ public class ReporteServiceImpl implements ReporteService {
             parameters.put("listaMateriasFormacion", dsMaterias);
             parameters.put("listaCursos", dsCursos);
             parameters.put("listaMateriasPro", dsMateriasPro);
+            parameters.put("imagen", imagen);
             JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
 
             imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
@@ -298,6 +317,7 @@ public class ReporteServiceImpl implements ReporteService {
             dto.setDuracion((int) java.time.temporal.ChronoUnit.DAYS.between(curso.getFechaInicioCurso(), curso.getFechaFinCurso()));
             return dto;
         }).collect(Collectors.toList());
+        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
         try {
             JRBeanCollectionDataSource dsPeriodos = new JRBeanCollectionDataSource(periodos);
             JRBeanCollectionDataSource dsPeriodosPro = new JRBeanCollectionDataSource(periodosPro);
@@ -310,6 +330,7 @@ public class ReporteServiceImpl implements ReporteService {
             parameters.put("numeroPeriodosFormacion", periodos.size());
             parameters.put("numeroPeriodosPro", periodosPro.size());
             parameters.put("numeroCursos", cursos.size());
+            parameters.put("imagen", imagen);
             JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
 
             imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
@@ -323,16 +344,77 @@ public class ReporteServiceImpl implements ReporteService {
     public void exportAntiguedadesOperativos(String filename, String filetype, HttpServletResponse response) throws Exception {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/Antiguedades.jrxml");
         List<Funcionario> operativoApiDtoList = funcionarioService.servicioOperativosOrderByAntiguedad();
+        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
         try {
             JRBeanCollectionDataSource antiguedades = new JRBeanCollectionDataSource(operativoApiDtoList);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("listaAntiguedades", antiguedades);
+            parameters.put("imagen", imagen);
             JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
             imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void exportReporteEncuestasESP(String filename, String filetype, HttpServletResponse response, Integer codCurso) throws Exception {
+        InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/Encuestas.jrxml");
+        List<PreguntaTipoEvaluacion> preguntas = preguntaEvaluacionService.getPreguntasToInstructor();
+        List<ReporteEvaluacion> reporteEvaluaciones= new ArrayList<>();
+        for(PreguntaTipoEvaluacion pregunta : preguntas){
+            ReporteEvaluacion reporteEvaluacion = new ReporteEvaluacion();
+            List<RespuestaEstudiante> respuestas = respuestaEstudianteService.findByPreguntaAndCursoAndRespuesta(pregunta.getCodPregunta(),codCurso.longValue(),true);
+            List<RespuestaEstudiante> respuestasNo = respuestaEstudianteService.findByPreguntaAndCursoAndRespuesta(pregunta.getCodPregunta(),codCurso.longValue(),false);
+            reporteEvaluacion.setPregunta(pregunta.getPregunta());
+            reporteEvaluacion.setRespuestaSi(respuestas.size());
+            reporteEvaluacion.setRespuestaNo(respuestasNo.size());
+            reporteEvaluaciones.add(reporteEvaluacion);
+        }
+        Integer totalRespuestas = respuestaEstudianteService.findByPreguntaAndCurso(preguntas.get(0).getCodPregunta(),codCurso.longValue()).size();
+        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        Curso cc = cursoService.getById(codCurso.longValue());
+        CatalogoCurso catalogoCurso= catalogoCursoService.getById(cc.getCodCatalogoCursos().intValue()).get();
+        Integer numeroEstudiantes = inscripcionEspService.getAprobadosPruebas(codCurso).size();
+        try {
+            JRBeanCollectionDataSource preguntasCollection = new JRBeanCollectionDataSource(reporteEvaluaciones);
+            JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("preguntas", preguntasCollection);
+            parameters.put("academia", "Especialización");
+            parameters.put("numeroRespuestas",totalRespuestas);
+            parameters.put("curso", cc.getNombre() +"-"+catalogoCurso.getNombreCatalogoCurso());
+            parameters.put("numeroEstudiantes", numeroEstudiantes);
+            parameters.put("imagen", imagen);
+            JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
+            imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    public void exportReporteFichaPersonal(String filename, String filetype, HttpServletResponse response,Integer codEstudianteFor, Integer codEstudianteEsp) throws Exception{
+    InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/NotasEstudiante.jrxml");
+    List<NotaMateriaByEstudiante> notasFormacion = notasFormacionService.getNotaMateriasWithCoordinadorByEstudiante(codEstudianteFor);
+    List<NotaMateriaByEstudiante> notasEspecializacion = notasEspecializacionService.getHistoricosEstudiante(codEstudianteEsp);
+    InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        try {
+        JRBeanCollectionDataSource notasFormacionValid = new JRBeanCollectionDataSource(notasFormacion);
+        JRBeanCollectionDataSource notasEspecializacionValid = new JRBeanCollectionDataSource(notasEspecializacion);
+        JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("notasFormacion", notasFormacionValid);
+        parameters.put("notasEspecializacion", notasEspecializacionValid);
+        parameters.put("imagen", imagen);
+        JREmptyDataSource noExisteFuentePrincipal = new JREmptyDataSource();
+        imprimir(filename, filetype, response, noExisteFuentePrincipal, jasperReport, parameters);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     }
 
     //TODO en profesionalizacion no tenemos aprobados
@@ -345,6 +427,7 @@ public class ReporteServiceImpl implements ReporteService {
         observacionDto1.setNombre("Total");
         observacionDto1.setApellido("Hola");
         observacionDto1.setCorreoPersonal("Jair");
+        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
             aprobados.add(observacionDto1);
@@ -371,6 +454,7 @@ public class ReporteServiceImpl implements ReporteService {
             parameters.put("numeroReprobados", numeroReprobados);
             parameters.put("porcentajeAprobados", porcentajeAprobados);
             parameters.put("porcentajeReprobados", porcentajeReprobados);
+            parameters.put("imagen", imagen);
             imprimir(filename, filetype, response, dsSubObservaciones, jasperReport, parameters);
         } catch (Exception e) {
             e.printStackTrace();

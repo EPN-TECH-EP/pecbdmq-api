@@ -21,6 +21,8 @@ public interface NotasEspecializacionRepository extends JpaRepository<NotasEspec
     List<NotasEspecializacionDTO> findAprobadosCurso(@Param("codCurso") Integer codCurso);
     @Query(nativeQuery = true, name = "NotaCursoByEstudiante.get")
     List<NotaMateriaByEstudiante> findNotasByCursoAndEstudiante(@Param("curso") Integer codCurso, @Param("estudiante") Integer codEstudiante);
+    @Query(nativeQuery = true, name = "NotasByEstudiante.get")
+    List<NotaMateriaByEstudiante> findNotasByEstudiante(@Param("estudiante") Integer codEstudiante);
 
     Optional<NotasEspecializacion> findByCodInscripcion(Integer codInscripcion);
 

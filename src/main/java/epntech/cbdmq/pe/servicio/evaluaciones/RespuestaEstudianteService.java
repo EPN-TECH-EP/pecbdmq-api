@@ -21,5 +21,8 @@ public interface RespuestaEstudianteService {
     Boolean esEncuestaContestada(Long codEstudiante, Long codEvaluacion);
 
     void delete(Long codRespuestaEstudiante);
+    List<RespuestaEstudiante> findByPreguntaAndCursoAndRespuesta(Long codPregunta, Long codCurso, Boolean respuesta);
+    List<RespuestaEstudiante> findByPreguntaAndCurso(Long codPregunta, Long codCurso);
+
 
 }

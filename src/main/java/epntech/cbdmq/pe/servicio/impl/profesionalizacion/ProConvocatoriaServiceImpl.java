@@ -146,12 +146,6 @@ public class ProConvocatoriaServiceImpl extends ProfesionalizacionServiceImpl<Pr
 
             String[] destinatarios = proConvocatoria.getCorreo().split(",");
             System.out.println(destinatarios);
-
-            String textoRequisitos = "";
-            for (ProConvocatoriaRequisitoDto requisito : requisitos) {
-                textoRequisitos += requisito.getNombreRequisito() + ": " + requisito.getDescripcionRequisito() + "<br>";
-            }
-
             String mensajes = "";
             Parametro parametro1 = parametroRepository.findById(proConvocatoria.getCodigoParametro().longValue()).orElseThrow(() -> new BusinessException(""));
             mensajes += parametro1.getNombreParametro() + ": " + parametro1.getValor() + "<br>";

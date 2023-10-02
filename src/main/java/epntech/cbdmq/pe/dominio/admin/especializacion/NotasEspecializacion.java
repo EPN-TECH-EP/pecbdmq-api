@@ -110,6 +110,44 @@ import java.time.LocalTime;
                 @ColumnResult(name = "nombre_completo_instructor", type = String.class),
                 @ColumnResult(name = "nombre_periodo_formacion", type = String.class),
         }))
+@NamedNativeQuery(name = "NotasByEstudiante.get",
+        query = "select\n" +
+                "\tnes.cod_nota_especializacion as cod_nota,\n" +
+                "\tcur.cod_curso_especializacion as cod_materia_curso,\n" +
+                "\tcur.nombre ,\n" +
+                "\tnes.nota_final_especializacion as nota,\n" +
+                "\tnull as nota_disciplina,\n" +
+                "\tnes.nota_supletorio,\n" +
+                "\tnes.cod_instructor,\n" +
+                "\tgdp.nombre || ' ' || gdp.apellido as nombre_completo_instructor,\n" +
+                "\tcur.descripcion as nombre_periodo_formacion\n" +
+                "from\n" +
+                "\tcbdmq.esp_nota_especializacion nes\n" +
+                "left join cbdmq.esp_inscripcion ins on\n" +
+                "\tnes.cod_inscripcion = ins.cod_inscripcion\n" +
+                "left join cbdmq.esp_curso cur on\n" +
+                "\tins.cod_curso_especializacion = cur.cod_curso_especializacion\n" +
+                "left join cbdmq.gen_instructor gii on\n" +
+                "\tnes.cod_instructor = gii.cod_instructor\n" +
+                "left join cbdmq.gen_dato_personal gdp on\n" +
+                "\tgii.cod_datos_personales = gdp.cod_datos_personales\n" +
+                "where\n" +
+                "\t ins.cod_estudiante = :estudiante\n", resultSetMapping = "NotaByEstudiante"
+)
+@SqlResultSetMapping(name = "NotaByEstudiante", classes =
+@ConstructorResult(
+        targetClass = NotaMateriaByEstudiante.class,
+        columns = {
+                @ColumnResult(name = "cod_nota", type = Integer.class),
+                @ColumnResult(name = "cod_materia_curso", type = Integer.class),
+                @ColumnResult(name = "nombre", type = String.class),
+                @ColumnResult(name = "nota", type = Double.class),
+                @ColumnResult(name = "nota_disciplina", type = Double.class),
+                @ColumnResult(name = "nota_supletorio", type = Double.class),
+                @ColumnResult(name = "cod_instructor", type = Integer.class),
+                @ColumnResult(name = "nombre_completo_instructor", type = String.class),
+                @ColumnResult(name = "nombre_periodo_formacion", type = String.class),
+        }))
 
 public class NotasEspecializacion {
 

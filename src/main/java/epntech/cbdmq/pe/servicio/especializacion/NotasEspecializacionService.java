@@ -16,6 +16,7 @@ public interface NotasEspecializacionService {
 
 	NotasEspecializacion getById(int id);
 	List<NotaMateriaByEstudiante> getHistoricosByCursoAndEstudiante(Integer codCurso, Integer codEstudiante);
+	List<NotaMateriaByEstudiante> getHistoricosEstudiante(Integer codEstudiante);
 
 }
 
