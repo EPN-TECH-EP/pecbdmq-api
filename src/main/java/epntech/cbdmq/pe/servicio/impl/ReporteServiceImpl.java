@@ -144,11 +144,8 @@ public class ReporteServiceImpl implements ReporteService {
 
         return parametros;
     }
-
-    @SneakyThrows
-    private String getRutaReporte(Reporte reporte) {
-        Resource resource = resourceLoader.getResource("classpath:" + reporte.getRuta());
-        return resource.getURI().getPath();
+    private InputStream getRutaReporte(Reporte reporte) {
+        return getClass().getClassLoader().getResourceAsStream(reporte.getRuta());
     }
 
     public void exportAprobadosFormacion(String filename, String filetype, HttpServletResponse response) {
