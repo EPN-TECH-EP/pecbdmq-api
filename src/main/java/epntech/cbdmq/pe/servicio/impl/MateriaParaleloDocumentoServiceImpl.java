@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
 import epntech.cbdmq.pe.servicio.MateriaParaleloDocumentoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,12 +53,14 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
     @Autowired
     PeriodoAcademicoRepository periodoAcademicoRepository;
 
-    @Autowired
-    MateriaRepository repo3;
-
     @Override
     public List<MateriaParaleloDocumento> getAll() {
         return repo.findAll();
+    }
+
+    @Override
+    public List<MateriaDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo) {
+        return repo.finDocumentoRutaByCodMateriaParalelo(codMateriaParalelo);
     }
 
     @Override
@@ -112,13 +115,12 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
             LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
             documentos.setNombre(multipartFile.getOriginalFilename());
             documentos.setRuta(resultado + multipartFile.getOriginalFilename());
-            lista.add(documentos);
-
             Documento documento = new Documento();
             documento.setEstado(ACTIVO);
             documento.setNombre(multipartFile.getOriginalFilename());
             documento.setRuta(resultado + multipartFile.getOriginalFilename());
             documento = documentoRepository.save(documento);
+            lista.add(documentos);
             MateriaParaleloDocumento matdoc = new MateriaParaleloDocumento();
             matdoc.setCodDocumento(documento.getCodDocumento());
             matdoc.setCodMateriaParalelo(materia);

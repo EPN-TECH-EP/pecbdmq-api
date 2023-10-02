@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
 import epntech.cbdmq.pe.dominio.util.MateriaParaleloDocumento;
 import epntech.cbdmq.pe.servicio.MateriaParaleloDocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class MateriaParaleloDocumentoResource {
     @GetMapping("/listar")
     public List<MateriaParaleloDocumento> listar() throws Exception {
         return objService.getAll();
+    }
+    @GetMapping("/listarByCodMateriaParalelo/{id}")
+    public List<MateriaDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
+        return objService.getAllByCodMateriaParalelo(codMateriaParalelo);
     }
 
 
