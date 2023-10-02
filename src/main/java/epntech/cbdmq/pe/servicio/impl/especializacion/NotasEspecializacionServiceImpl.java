@@ -82,6 +82,11 @@ public class NotasEspecializacionServiceImpl implements NotasEspecializacionServ
 	}
 
 	@Override
+	public List<NotaMateriaByEstudiante> getHistoricosEstudiante(Integer codEstudiante) {
+		return notasEspecializacionRepository.findNotasByEstudiante(codEstudiante);
+	}
+
+	@Override
 	public List<NotasEspecializacionDTO> getAllByCurso(Integer codCurso) {
 		return notasEspecializacionRepository.findNotasCurso(codCurso);
 	}
