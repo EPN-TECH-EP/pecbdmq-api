@@ -28,7 +28,7 @@ import epntech.cbdmq.pe.servicio.impl.MateriaEstudianteServiceImpl;
 import java.util.List;
 
 @RestController
-@RequestMapping("/estudiante")
+	@RequestMapping("/estudiante")
 public class EstudianteResource {
 
 	@Autowired

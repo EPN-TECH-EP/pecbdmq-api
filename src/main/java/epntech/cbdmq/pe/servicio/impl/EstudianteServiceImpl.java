@@ -257,7 +257,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public Estudiante getEstudianteFormacionByUser(String codUsuario) throws DataException {
-        Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "F%");
+        Estudiante estudiante = repo.getEstudianteByUsuarioLike(codUsuario, "%F%");
         return estudiante;
     }
 
