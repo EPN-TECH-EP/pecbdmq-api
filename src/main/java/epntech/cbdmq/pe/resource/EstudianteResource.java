@@ -109,7 +109,7 @@ public class EstudianteResource {
     }
 
 	@GetMapping("/byCodUsuario")
-	public UsuarioEstudiante listarEstudianteByCodUsuario(@RequestParam("codUsuario") Integer codUsuario) {
+	public UsuarioEstudiante listarEstudianteProByCodUsuario(@RequestParam("codUsuario") Integer codUsuario) {
 		return objService.getEstudianteByCodUsuario(codUsuario);
 	}
     
