@@ -171,8 +171,7 @@ public class EstudianteServiceImpl implements EstudianteService {
 
     @Override
     public UsuarioEstudiante getEstudianteByCodUsuario(Integer codUsuario) {
-        return repo.getEstudianteByCodUsuario(codUsuario)
-                .orElseThrow(() -> new BusinessException("No se encontro el estudiante"));
+        return repo.getEstudianteByCodUsuario(codUsuario).orElse(null);
     }
 
     @Override

@@ -284,7 +284,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
             } else {
                 ExcelHelper.generarExcel(obtenerDatosReprobadosEsp(codCurso), filePath + "/" + nombre, HEADERs);
             }
-            cursoDocumentoSvc.generaDocumento(filePath, nombre, codCurso);
+            cursoDocumentoSvc.generaDocumento(filePath, nombre, codCurso,null,null);
 
         } catch (IOException ex) {
             System.out.println("error: " + ex.getMessage());
@@ -313,7 +313,7 @@ public class AntiguedadesServiceImpl implements AntiguedadesService {
             exporter.exportar(response, columnas, obtenerDatosEsp(codCurso), widths, filePath + "/" + nombre);
         else
             exporter.exportar(response, columnas, obtenerDatosReprobadosEsp(codCurso), widths, filePath + "/" + nombre);
-        cursoDocumentoSvc.generaDocumento(filePath, nombre, codCurso);
+        cursoDocumentoSvc.generaDocumento(filePath, nombre, codCurso,null,null);
 
     }
 

@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaCursoDocumentoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +16,7 @@ public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, 
 
 	@Transactional
 	@Modifying
-	@Query("update CursoDocumento a set a.aprobado = ?1, a.validado = ?2, a.observaciones = ?3 where a.codCursoEspecializacion = ?4 and a.codDocumento = ?5")
+	@Query("update CursoDocumento a set a.aprobado = ?1, a.esTarea = ?2, a.observaciones = ?3 where a.codCursoEspecializacion = ?4 and a.codDocumento = ?5")
 	void updateEstadoAprobado(Boolean estadoAprobado, Boolean estadoValidado, String observaciones, Long codCursoEspecializacion, Long codDocumento);
 	
 	CursoDocumento findByCodCursoEspecializacionAndCodDocumento(Long codCursoEspecializacion, Long codDocumento);
@@ -29,4 +30,6 @@ public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, 
 	void deleteByCodCursoEspecializacionAndCodDocumento(Long codCursoEspecializacion, Long codDocumento);
 
 	List<CursoDocumento> findAllByCodCursoEspecializacion(Long codCursoEspecializacion);
+	@Query(name = "CursoDocumentoDto.findByCodCurso", nativeQuery = true)
+	List<MateriaCursoDocumentoDto> findByCodCurso(@Param("codCurso") Long codCurso);
 }

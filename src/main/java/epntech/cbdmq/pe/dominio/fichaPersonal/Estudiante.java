@@ -205,7 +205,8 @@ import java.time.LocalDate;
 				"from cbdmq.gen_usuario gu " +
 				"inner join cbdmq.gen_dato_personal gdp on gu.cod_datos_personales = gdp.cod_datos_personales " +
 				"left join cbdmq.gen_estudiante ge on gdp.cod_datos_personales = ge.cod_datos_personales " +
-				"where gu.cod_usuario = :codUsuario"
+				"where gu.cod_usuario = :codUsuario " +
+				"and ge.codigo_unico_estudiante like 'P%'"
 		,
 		resultSetMapping = "UsuarioEstudiante"
 )

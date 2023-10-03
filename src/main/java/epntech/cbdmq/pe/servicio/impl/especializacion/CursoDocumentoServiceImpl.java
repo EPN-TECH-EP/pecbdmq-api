@@ -5,6 +5,7 @@ import epntech.cbdmq.pe.dominio.admin.Documento;
 import epntech.cbdmq.pe.dominio.admin.Estados;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
 import epntech.cbdmq.pe.dominio.admin.especializacion.CursoDocumento;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaCursoDocumentoDto;
 import epntech.cbdmq.pe.dominio.util.InscripcionDatosEspecializacion;
 import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.unit.DataSize;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -54,8 +56,6 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     private CursoEstadoService cursoEstadoService;
     @Autowired
     private InscripcionEspRepository inscripcionEspRepository;
-    @Autowired
-    private EstadosService estadosService;
 
     @Value("${pecb.archivos.ruta}")
     private String ARCHIVOS_RUTA;
@@ -67,6 +67,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Override
     public Set<Documento> getDocumentos(Long codCurso) throws IOException {
         return documentoRepository.getDocumentosEspecializacion(codCurso.intValue());
+    }
+
+    @Override
+    public List<MateriaCursoDocumentoDto> getDocumentosDtoByCurso(Long codCurso) throws IOException {
+        return cursoDocumentoRepository.findByCodCurso(codCurso);
     }
 
     @Override
@@ -105,11 +110,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     }
 
     @Override
-    public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+    public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos,  String descripcion, Boolean esTarea) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
         Curso curso = cursoService.getById(codCursoEspecializacion);
         if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
-        guardarDocumentos(archivos, curso.getCodCursoEspecializacion());
+        guardarDocumentos(archivos, curso.getCodCursoEspecializacion(), descripcion, esTarea);
         return curso;
     }
 
@@ -138,7 +143,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     }
 
-    public void guardarDocumentos(List<MultipartFile> archivos, Long codCursoEspecializacion)
+    public void guardarDocumentos(List<MultipartFile> archivos, Long codCursoEspecializacion, String descripcion, Boolean esTarea)
             throws IOException, ArchivoMuyGrandeExcepcion, DataException {
         String resultadoRuta;
 
@@ -158,7 +163,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
                     ruta.getParent().resolve(multipartFile.getOriginalFilename()),
                     StandardCopyOption.REPLACE_EXISTING);
             // LOGGER.info("Archivo guardado: " + resultado +
-            this.generaDocumento(resultadoRuta, multipartFile.getOriginalFilename(), codCursoEspecializacion);
+            this.generaDocumento(resultadoRuta, multipartFile.getOriginalFilename(), codCursoEspecializacion, descripcion, esTarea);
         }
 
     }
@@ -166,7 +171,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     @Override
     @Transactional
-    public void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion) throws DataException {
+    public void generaDocumento(String ruta, String nombre, Long codCursoEspecializacion, String descripcion, Boolean esTarea) throws DataException {
         ruta = ruta + nombre;
         // busca la pruebaDetalle. Si no encuentra hay un error de consistencia de datos
         Long codCursoEspecial = codCursoEspecializacion;
@@ -234,6 +239,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         documento.setEstado("ACTIVO");
         documento.setNombre(nombre);
         documento.setRuta(ruta);
+        documento.setDescripcion(descripcion);
 
 
         documento = documentoRepository.save(documento);
@@ -241,6 +247,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         CursoDocumento cursoActivoDocumento = new CursoDocumento();
         cursoActivoDocumento.setCodCursoEspecializacion(codCursoEspecial);
         cursoActivoDocumento.setCodDocumento(documento.getCodDocumento().longValue());
+        cursoActivoDocumento.setEsTarea(esTarea);
         cursoDocumentoRepository.save(cursoActivoDocumento);
 
     }
@@ -290,7 +297,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         try {
             ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath+"/"+nombre, HEADERs);
 
-            this.generaDocumento(filePath, nombre, codCurso);
+            this.generaDocumento(filePath, nombre, codCurso,null,null);
 
         } catch (IOException ex) {
             System.out.println("error: " + ex.getMessage());
@@ -317,7 +324,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
         exporter.exportar(response, columnas, obtenerDatos(codCurso, estado), widths, filePath+"/"+nombre);
 
-        this.generaDocumento(filePath, nombre, codCurso);
+        this.generaDocumento(filePath, nombre, codCurso,null,null);
     }
 
     @Override
@@ -358,6 +365,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     @Override
     public Boolean generarDocListadoPruebas(HttpServletResponse response, Long codCurso) {
         return this.generarDocListadoGeneral(response, codCurso, PRUEBAS);
+    }
+
+    @Override
+    public Set<Documento> getTareas(Long codCurso) throws IOException {
+        return documentoRepository.getTareasEspecializacion(codCurso.intValue(), true);
     }
 
     public ArrayList<ArrayList<String>> obtenerDatos(Long codCurso, String estado) {

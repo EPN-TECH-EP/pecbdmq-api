@@ -31,6 +31,14 @@ public class CursoDocumentoResource {
     public ResponseEntity<?> getDocumentos(@PathVariable("id") Long codCurso) throws IOException {
         return new ResponseEntity<>(cursoDocumentoService.getDocumentos(codCurso), HttpStatus.OK);
     }
+    @GetMapping("/getDocumentosByCurso/{id}")
+    public ResponseEntity<?> getDocumentosCurso(@PathVariable("id") Long codCurso) throws IOException {
+        return new ResponseEntity<>(cursoDocumentoService.getDocumentosDtoByCurso(codCurso), HttpStatus.OK);
+    }
+    @GetMapping("/getTareas/{id}")
+    public ResponseEntity<?> getTareas(@PathVariable("id") Long codCurso) throws IOException {
+        return new ResponseEntity<>(cursoDocumentoService.getTareas(codCurso), HttpStatus.OK);
+    }
     @PutMapping("/updateDocumento/{id}")
     public ResponseEntity<?> updateDocumento(
             @PathVariable("id") Long codDocumento,
@@ -41,8 +49,8 @@ public class CursoDocumentoResource {
     @PostMapping("/uploadDocumentos")
     public ResponseEntity<Curso> uploadFiles(
             @RequestParam("codCursoEspecializacion") Long codCursoEspecializacion,
-            @RequestParam("archivos") List<MultipartFile> archivos) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
-        return new ResponseEntity<>(cursoDocumentoService.uploadDocumentos(codCursoEspecializacion, archivos), HttpStatus.OK);
+            @RequestParam("archivos") List<MultipartFile> archivos,@RequestParam("descripcion") String descripcion, @RequestParam("esTarea") Boolean esTarea) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+        return new ResponseEntity<>(cursoDocumentoService.uploadDocumentos(codCursoEspecializacion, archivos, descripcion,esTarea), HttpStatus.OK);
     }
 
     @DeleteMapping("/eliminarDocumento")

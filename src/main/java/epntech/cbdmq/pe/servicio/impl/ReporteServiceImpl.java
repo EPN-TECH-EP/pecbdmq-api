@@ -4,7 +4,6 @@ import epntech.cbdmq.pe.dominio.admin.CatalogoCurso;
 import epntech.cbdmq.pe.dominio.admin.Materia;
 import epntech.cbdmq.pe.dominio.admin.Reporte;
 import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.admin.especializacion.TipoCurso;
 import epntech.cbdmq.pe.dominio.admin.formacion.NotaMateriaByEstudiante;
 import epntech.cbdmq.pe.dominio.admin.llamamiento.Funcionario;
 import epntech.cbdmq.pe.dominio.evaluaciones.PreguntaTipoEvaluacion;
@@ -28,7 +27,6 @@ import epntech.cbdmq.pe.servicio.profesionalizacion.ProPeriodoService;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -36,8 +34,6 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -61,7 +57,6 @@ public class ReporteServiceImpl implements ReporteService {
 
     private final ReporteRepository reporteRepository;
     private final DataSource dataSource;
-    private final ResourceLoader resourceLoader;
 
     private final AntiguedadesService service;
     private final NotasFormacionFinalService notasFormacionFinalService;
@@ -137,18 +132,16 @@ public class ReporteServiceImpl implements ReporteService {
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("fechaInicio", request.getFechaInicio());
         parametros.put("fechaFin", request.getFechaFin());
-        parametros.put("codigoConvocatoria", request.getFechaInicio());
-        parametros.put("codigoCurso", request.getFechaInicio());
+        parametros.put("codigoConvocatoria", request.getCodigoPeriodoFormacion());
+        parametros.put("codigoPromocion", request.getCodigoPeriodoProfesionalizacion());
+        parametros.put("codigoCurso", request.getCodigoCurso());
         parametros.put("modulo", reporte.getModulo());
         parametros.put("titulo", reporte.getDescripcion());
 
         return parametros;
     }
-
-    @SneakyThrows
-    private String getRutaReporte(Reporte reporte) {
-        Resource resource = resourceLoader.getResource("classpath:" + reporte.getRuta());
-        return resource.getURI().getPath();
+    private InputStream getRutaReporte(Reporte reporte) {
+        return getClass().getClassLoader().getResourceAsStream(reporte.getRuta());
     }
 
     public void exportAprobadosFormacion(String filename, String filetype, HttpServletResponse response) {
