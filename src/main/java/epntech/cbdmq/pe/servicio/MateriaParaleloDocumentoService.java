@@ -27,7 +27,7 @@ public interface MateriaParaleloDocumentoService {
 
     MateriaParaleloDocumento save(MateriaParaleloDocumento obj) throws DataException;
 
-    List<DocumentoRuta> guardarArchivo(Integer materia, Boolean esTarea, List<MultipartFile> archivo, String descripcion) throws IOException, ArchivoMuyGrandeExcepcion;
+    List<DocumentoRuta> guardarArchivo(Integer materia,Integer paralelo, Boolean esTarea, List<MultipartFile> archivo, String descripcion) throws IOException, ArchivoMuyGrandeExcepcion;
 
     void deleteDocumento(Integer codMateriaParaleloDocumento) throws DataException;
 

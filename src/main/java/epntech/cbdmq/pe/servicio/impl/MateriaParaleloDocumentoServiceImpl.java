@@ -89,11 +89,13 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
     }
 
     @Override
-    public List<DocumentoRuta> guardarArchivo(Integer materiaParalelo, Boolean esTarea, List<MultipartFile> archivo, String descripcion)
+    public List<DocumentoRuta> guardarArchivo(Integer materiaPeriodo, Integer paralelo,  Boolean esTarea, List<MultipartFile> archivo, String descripcion)
             throws IOException, ArchivoMuyGrandeExcepcion {
         String resultado;
+        Integer codMateriaParalelo= materiaParaleloService.findByCodMateriaPeriodoAndCodParalelo(materiaPeriodo,paralelo).get().getCodMateriaParalelo();
 
-        resultado = ruta(materiaParalelo.toString());
+
+        resultado = ruta(codMateriaParalelo.toString());
         Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
 
         if (!Files.exists(ruta)) {
@@ -122,7 +124,7 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
             lista.add(documentos);
             MateriaParaleloDocumento matdoc = new MateriaParaleloDocumento();
             matdoc.setCodDocumento(documento.getCodDocumento());
-            matdoc.setCodMateriaParalelo(materiaParalelo);
+            matdoc.setCodMateriaParalelo(codMateriaParalelo);
             matdoc.setEsTarea(esTarea);
             repo.save(matdoc);
 
