@@ -14,8 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
-import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaCursoDocumentoDto;
 import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.servicio.MateriaParaleloDocumentoService;
 import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
@@ -35,7 +34,6 @@ import epntech.cbdmq.pe.excepcion.dominio.ArchivoMuyGrandeExcepcion;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.DocumentoRepository;
 import epntech.cbdmq.pe.repositorio.admin.MateriaParaleloDocumentoRepository;
-import epntech.cbdmq.pe.repositorio.admin.MateriaRepository;
 import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 
 @Service
@@ -55,8 +53,8 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
 
     @Autowired
     PeriodoAcademicoRepository periodoAcademicoRepository;
-     @Autowired
-     MateriaParaleloService materiaParaleloService;
+    @Autowired
+    MateriaParaleloService materiaParaleloService;
 
     @Override
     public List<MateriaParaleloDocumento> getAll() {
@@ -64,7 +62,7 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
     }
 
     @Override
-    public List<MateriaDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo) {
+    public List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo) {
         return repo.finDocumentoRutaByCodMateriaParalelo(codMateriaParalelo);
     }
 
@@ -82,7 +80,7 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
 
     private String ruta(String codigo) {
 
-        String resultado = null;
+        String resultado;
         PeriodoAcademico periodo = periodoAcademicoRepository.getPeriodoAcademicoActivo();
 
         resultado = ARCHIVOS_RUTA + PATH_PROCESO_FORMACION + periodo.getCodigo() + "/Materia/" + codigo + "/";
@@ -91,7 +89,7 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
     }
 
     @Override
-    public List<DocumentoRuta> guardarArchivo(Integer materiaParalelo, Boolean esTarea, List<MultipartFile> archivo)
+    public List<DocumentoRuta> guardarArchivo(Integer materiaParalelo, Boolean esTarea, List<MultipartFile> archivo, String descripcion)
             throws IOException, ArchivoMuyGrandeExcepcion {
         String resultado;
 
@@ -119,6 +117,7 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
             documento.setEstado(ACTIVO);
             documento.setNombre(multipartFile.getOriginalFilename());
             documento.setRuta(resultado + multipartFile.getOriginalFilename());
+            documento.setDescripcion(descripcion);
             documento = documentoRepository.save(documento);
             lista.add(documentos);
             MateriaParaleloDocumento matdoc = new MateriaParaleloDocumento();
@@ -193,7 +192,6 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
         }
 
     }
-
 
 
 }

@@ -1,7 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin;
 
-import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
-import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaCursoDocumentoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,5 +13,5 @@ public interface MateriaParaleloDocumentoRepository extends JpaRepository<Materi
 	@Transactional
 	void deleteByCodMateriaParaleloAndCodDocumento(Integer materia, Integer codDocumento);
 	@Query(name = "MateriaDocumentoDto.findByCodMateriaParalelo", nativeQuery = true)
-	List<MateriaDocumentoDto> finDocumentoRutaByCodMateriaParalelo(Integer codMateriaParalelo);
+	List<MateriaCursoDocumentoDto> finDocumentoRutaByCodMateriaParalelo(Integer codMateriaParalelo);
 }

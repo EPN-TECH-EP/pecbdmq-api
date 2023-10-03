@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
-import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
-import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaCursoDocumentoDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import epntech.cbdmq.pe.dominio.admin.DocumentoRuta;
@@ -22,14 +20,14 @@ public interface MateriaParaleloDocumentoService {
 
     List<MateriaParaleloDocumento> getAll();
 
-    List<MateriaDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo);
+    List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo);
 
     Optional<MateriaParaleloDocumento> findById(Integer id);
 
 
     MateriaParaleloDocumento save(MateriaParaleloDocumento obj) throws DataException;
 
-    List<DocumentoRuta> guardarArchivo(Integer materia, Boolean esTarea, List<MultipartFile> archivo) throws IOException, ArchivoMuyGrandeExcepcion;
+    List<DocumentoRuta> guardarArchivo(Integer materia, Boolean esTarea, List<MultipartFile> archivo, String descripcion) throws IOException, ArchivoMuyGrandeExcepcion;
 
     void deleteDocumento(Integer codMateriaParaleloDocumento) throws DataException;
 

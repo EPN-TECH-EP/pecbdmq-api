@@ -3,12 +3,11 @@ package epntech.cbdmq.pe.resource;
 import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import epntech.cbdmq.pe.dominio.admin.Documento;
-import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaCursoDocumentoDto;
 import epntech.cbdmq.pe.dominio.util.MateriaParaleloDocumento;
 import epntech.cbdmq.pe.servicio.MateriaParaleloDocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class MateriaParaleloDocumentoResource {
         return objService.getAll();
     }
     @GetMapping("/listarByCodMateriaParalelo/{id}")
-    public List<MateriaDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
+    public List<MateriaCursoDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
         return objService.getAllByCodMateriaParalelo(codMateriaParalelo);
     }
     @GetMapping("/listarDocumentos/{id}")
@@ -48,9 +47,9 @@ public class MateriaParaleloDocumentoResource {
 
 
     @PostMapping("/guardarArchivo")
-    public List<DocumentoRuta> guardarArchivo( @RequestParam Integer materia,@RequestParam Boolean esTarea, @RequestParam List<MultipartFile> archivo) throws Exception {
+    public List<DocumentoRuta> guardarArchivo( @RequestParam Integer materia,@RequestParam Boolean esTarea, @RequestParam List<MultipartFile> archivo,@RequestParam String descripcion) throws Exception {
         List<DocumentoRuta> lista;
-        lista = objService.guardarArchivo( materia,esTarea, archivo);
+        lista = objService.guardarArchivo( materia,esTarea, archivo, descripcion);
         return lista;
     }
 

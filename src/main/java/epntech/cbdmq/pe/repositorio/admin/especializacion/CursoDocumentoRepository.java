@@ -1,5 +1,6 @@
 package epntech.cbdmq.pe.repositorio.admin.especializacion;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaCursoDocumentoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,4 +30,6 @@ public interface CursoDocumentoRepository extends JpaRepository<CursoDocumento, 
 	void deleteByCodCursoEspecializacionAndCodDocumento(Long codCursoEspecializacion, Long codDocumento);
 
 	List<CursoDocumento> findAllByCodCursoEspecializacion(Long codCursoEspecializacion);
+	@Query(name = "CursoDocumentoDto.findByCodCurso", nativeQuery = true)
+	List<MateriaCursoDocumentoDto> findByCodCurso(@Param("codCurso") Long codCurso);
 }
