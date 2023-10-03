@@ -1,11 +1,39 @@
 package epntech.cbdmq.pe.dominio.util;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "gen_materia_paralelo_documento")
+@NamedNativeQuery(name = "MateriaDocumentoDto.findByCodMateriaParalelo",
+		query = "select\n" +
+				"\tgmpd.cod_materia_paralelo_documento,\n" +
+				"\tgmpd.cod_documento,\n" +
+				"\tgmpd.cod_materia_paralelo,\n" +
+				"\tgmpd.es_tarea,\n" +
+				"\tgd.nombre_documento,\n" +
+				"\tgd.ruta\n" +
+				"from\n" +
+				"\tcbdmq.gen_materia_paralelo_documento gmpd\n" +
+				"left join cbdmq.gen_documento gd on\n" +
+				"\tgmpd.cod_documento = gd.cod_documento\n" +
+				"where\n" +
+				"\tgmpd.cod_materia_paralelo =:codMateriaParalelo"
+		,
+		resultSetMapping = "MateriaDocumentoDto"
+)
+
+@SqlResultSetMapping(name = "MateriaDocumentoDto", classes = @ConstructorResult(targetClass = MateriaDocumentoDto.class, columns = {
+		@ColumnResult(name = "cod_materia_paralelo_documento", type = Integer.class),
+		@ColumnResult(name = "cod_documento", type = Integer.class),
+		@ColumnResult(name = "cod_materia_paralelo", type = Integer.class),
+		@ColumnResult(name = "es_tarea", type = Boolean.class),
+		@ColumnResult(name = "ruta", type = String.class),
+		@ColumnResult(name = "nombre_documento", type = String.class),
+}))
+
 public class MateriaParaleloDocumento {
 
 	

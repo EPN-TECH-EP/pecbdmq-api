@@ -3,18 +3,22 @@ package epntech.cbdmq.pe.servicio.impl;
 import static epntech.cbdmq.pe.constante.ArchivoConst.PATH_PROCESO_FORMACION;
 import static epntech.cbdmq.pe.constante.ArchivoConst.ARCHIVO_MUY_GRANDE;
 import static epntech.cbdmq.pe.constante.EstadosConst.ACTIVO;
+import static epntech.cbdmq.pe.constante.MensajesConst.DOCUMENTO_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_NO_EXISTE;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import epntech.cbdmq.pe.dominio.admin.MateriaParalelo;
+import epntech.cbdmq.pe.dominio.admin.especializacion.Curso;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
+import epntech.cbdmq.pe.excepcion.dominio.BusinessException;
 import epntech.cbdmq.pe.servicio.MateriaParaleloDocumentoService;
+import epntech.cbdmq.pe.servicio.formacion.MateriaParaleloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +55,8 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
 
     @Autowired
     PeriodoAcademicoRepository periodoAcademicoRepository;
-
-    @Autowired
-    MateriaRepository repo3;
+     @Autowired
+     MateriaParaleloService materiaParaleloService;
 
     @Override
     public List<MateriaParaleloDocumento> getAll() {
@@ -61,18 +64,18 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
     }
 
     @Override
+    public List<MateriaDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo) {
+        return repo.finDocumentoRutaByCodMateriaParalelo(codMateriaParalelo);
+    }
+
+    @Override
     public Optional<MateriaParaleloDocumento> findById(Integer id) {
         return repo.findById(id);
     }
 
-    @Override
-    public MateriaParaleloDocumento saveConArchivo(MateriaParaleloDocumento obj, List<MultipartFile> archivos) throws ArchivoMuyGrandeExcepcion, IOException {
-        return null;
-    }
 
     @Override
     public MateriaParaleloDocumento save(MateriaParaleloDocumento obj) throws DataException {
-
 
         return repo.save(obj);
     }
@@ -88,11 +91,11 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
     }
 
     @Override
-    public List<DocumentoRuta> guardarArchivo(Integer materia, Boolean esTarea, List<MultipartFile> archivo)
+    public List<DocumentoRuta> guardarArchivo(Integer materiaParalelo, Boolean esTarea, List<MultipartFile> archivo)
             throws IOException, ArchivoMuyGrandeExcepcion {
         String resultado;
 
-        resultado = ruta(materia.toString());
+        resultado = ruta(materiaParalelo.toString());
         Path ruta = Paths.get(resultado).toAbsolutePath().normalize();
 
         if (!Files.exists(ruta)) {
@@ -112,16 +115,15 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
             LOGGER.info("Archivo guardado: " + resultado + multipartFile.getOriginalFilename());
             documentos.setNombre(multipartFile.getOriginalFilename());
             documentos.setRuta(resultado + multipartFile.getOriginalFilename());
-            lista.add(documentos);
-
             Documento documento = new Documento();
             documento.setEstado(ACTIVO);
             documento.setNombre(multipartFile.getOriginalFilename());
             documento.setRuta(resultado + multipartFile.getOriginalFilename());
             documento = documentoRepository.save(documento);
+            lista.add(documentos);
             MateriaParaleloDocumento matdoc = new MateriaParaleloDocumento();
             matdoc.setCodDocumento(documento.getCodDocumento());
-            matdoc.setCodMateriaParalelo(materia);
+            matdoc.setCodMateriaParalelo(materiaParalelo);
             matdoc.setEsTarea(esTarea);
             repo.save(matdoc);
 
@@ -156,5 +158,42 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
         }
 
     }
+
+    @Override
+    public Set<Documento> getDocumentosByMateriaParalelo(Long codMateriaParalelo) throws IOException {
+        return documentoRepository.getDocumentosMateriaFormacion(codMateriaParalelo.intValue());
+    }
+
+    @Override
+    public Set<Documento> getTareasByMateriaParalelo(Long codMateriaParalelo) throws IOException {
+        return documentoRepository.getTareasMateriaFormacion(codMateriaParalelo.intValue(), true);
+    }
+
+    @Override
+    public void deleteDocumentoI(Long codMateriaParalelo, Long codDocumento) throws DataException, IOException {
+        MateriaParalelo materiaParalelo = materiaParaleloService.getById(Integer.valueOf(codMateriaParalelo.intValue())).get();
+        if (materiaParalelo == null)
+            new BusinessException(REGISTRO_NO_EXISTE);
+
+        Documento documento = documentoRepository.findById(codDocumento.intValue())
+                .orElseThrow(() -> new BusinessException(DOCUMENTO_NO_EXISTE));
+
+
+        Path ruta;
+
+        ruta = Paths.get(documento.getRuta()).toAbsolutePath().normalize();
+
+        try {
+            Files.delete(ruta);
+            repo.deleteByCodMateriaParaleloAndCodDocumento(materiaParalelo.getCodMateriaParalelo(), codDocumento.intValue());
+            documentoRepository.deleteById(codDocumento.intValue());
+
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        }
+
+    }
+
+
 
 }

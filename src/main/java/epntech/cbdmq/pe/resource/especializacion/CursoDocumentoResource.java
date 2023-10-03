@@ -31,6 +31,10 @@ public class CursoDocumentoResource {
     public ResponseEntity<?> getDocumentos(@PathVariable("id") Long codCurso) throws IOException {
         return new ResponseEntity<>(cursoDocumentoService.getDocumentos(codCurso), HttpStatus.OK);
     }
+    @GetMapping("/getTareas/{id}")
+    public ResponseEntity<?> getTareas(@PathVariable("id") Long codCurso) throws IOException {
+        return new ResponseEntity<>(cursoDocumentoService.getTareas(codCurso), HttpStatus.OK);
+    }
     @PutMapping("/updateDocumento/{id}")
     public ResponseEntity<?> updateDocumento(
             @PathVariable("id") Long codDocumento,

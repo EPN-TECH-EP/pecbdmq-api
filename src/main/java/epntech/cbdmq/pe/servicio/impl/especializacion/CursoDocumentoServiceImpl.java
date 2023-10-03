@@ -360,6 +360,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         return this.generarDocListadoGeneral(response, codCurso, PRUEBAS);
     }
 
+    @Override
+    public Set<Documento> getTareas(Long codCurso) throws IOException {
+        return documentoRepository.getTareasEspecializacion(codCurso.intValue(), true);
+    }
+
     public ArrayList<ArrayList<String>> obtenerDatos(Long codCurso, String estado) {
         Set<InscripcionDatosEspecializacion> datos = new HashSet<>();
 

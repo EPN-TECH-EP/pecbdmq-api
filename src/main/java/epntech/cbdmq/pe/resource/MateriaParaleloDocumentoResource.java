@@ -5,7 +5,10 @@ import static epntech.cbdmq.pe.constante.MensajesConst.REGISTRO_ELIMINADO_EXITO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import epntech.cbdmq.pe.dominio.admin.Documento;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaDocumentoDto;
 import epntech.cbdmq.pe.dominio.util.MateriaParaleloDocumento;
 import epntech.cbdmq.pe.servicio.MateriaParaleloDocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,18 @@ public class MateriaParaleloDocumentoResource {
     public List<MateriaParaleloDocumento> listar() throws Exception {
         return objService.getAll();
     }
+    @GetMapping("/listarByCodMateriaParalelo/{id}")
+    public List<MateriaDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
+        return objService.getAllByCodMateriaParalelo(codMateriaParalelo);
+    }
+    @GetMapping("/listarDocumentos/{id}")
+    public Set<Documento> listarDocumentosByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
+        return objService.getDocumentosByMateriaParalelo(codMateriaParalelo.longValue());
+    }
+    @GetMapping("/listarTareas/{id}")
+    public Set<Documento>  listarTareasByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
+        return objService.getTareasByMateriaParalelo(codMateriaParalelo.longValue());
+    }
 
 
     @PostMapping("/guardarArchivo")
@@ -41,10 +56,10 @@ public class MateriaParaleloDocumentoResource {
 
 
     @DeleteMapping("/eliminarDocumento")
-    public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Integer codMateriaParaleloDocumento)
+    public ResponseEntity<HttpResponse> eliminarArchivo(@RequestParam Integer codMateriaParalelo, @RequestParam Integer codDocumento)
             throws IOException, DataException {
 
-        objService.deleteDocumento(codMateriaParaleloDocumento);
+        objService.deleteDocumentoI(codMateriaParalelo.longValue(),codDocumento.longValue());
 
         return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
     }
