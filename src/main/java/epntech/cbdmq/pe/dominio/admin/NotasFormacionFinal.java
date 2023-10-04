@@ -1,6 +1,5 @@
 package epntech.cbdmq.pe.dominio.admin;
 
-import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplina;
 import jakarta.persistence.*;
 import lombok.Data;

@@ -10,6 +10,7 @@ import lombok.Data;
 public class EstudianteDatos{
 
 	private Integer codNota;
+	private Integer codEstudiante;
 	private String codUnicoEstudiante;
 	private String cedula;
 	private String nombreCompleto;
@@ -20,8 +21,9 @@ public class EstudianteDatos{
 	private String nombreParalelo;
 
 
-	public EstudianteDatos(Integer codNota, String codUnicoEstudiante, String cedula, String nombreCompleto, Double notaFinal, Double notaDisciplina, Double notaSupletorio, Integer codParalelo, String nombreParalelo) {
+	public EstudianteDatos(Integer codNota,Integer codEstudiante, String codUnicoEstudiante, String cedula, String nombreCompleto, Double notaFinal, Double notaDisciplina, Double notaSupletorio, Integer codParalelo, String nombreParalelo) {
 		this.codNota = codNota;
+		this.codEstudiante = codEstudiante;
 		this.codUnicoEstudiante= codUnicoEstudiante;
 		this.cedula=cedula;
 		this.nombreCompleto = nombreCompleto;

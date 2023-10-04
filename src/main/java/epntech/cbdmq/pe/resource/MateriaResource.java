@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.OK;
 import java.util.List;
 
 import epntech.cbdmq.pe.dominio.Usuario;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaParaleloDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,8 +75,8 @@ public class MateriaResource {
 		return response(HttpStatus.OK, REGISTRO_ELIMINADO_EXITO);
 	}
 	@PostMapping("/coordinador")
-	public ResponseEntity<List<Materia>> getWhenCoordinador(@RequestParam("codInstructor") Integer codInstructor) {
-		List<Materia> materias = objService.getAllByCoordinadorPA(codInstructor);
+	public ResponseEntity<List<MateriaParaleloDto>> getWhenCoordinador(@RequestParam("codInstructor") Integer codInstructor) {
+		List<MateriaParaleloDto> materias = objService.getAllByCoordinadorPA(codInstructor);
 		return new ResponseEntity<>(materias, OK);
 	}
 	@GetMapping("/listarByPAActivo")
