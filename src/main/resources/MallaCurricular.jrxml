@@ -55,7 +55,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Table 2_CH" mode="Opaque" backcolor="#FCD4B3">
+	<style name="Table 2_CH" mode="Opaque" backcolor="#D9D9D8">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -82,7 +82,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Table 3_CH" mode="Opaque" backcolor="#FCD4B3">
+	<style name="Table 3_CH" mode="Opaque" backcolor="#D9D9D8">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -277,7 +277,7 @@
 		</band>
 		<band height="740">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="30" width="554" height="30" forecolor="#0A0A0A" backcolor="#FF0101" uuid="2ad637e2-24af-4b22-bbca-2d294697dd79">
+				<reportElement mode="Opaque" x="0" y="30" width="554" height="30" forecolor="#0A0A0A" backcolor="#D9D9D8" uuid="2ad637e2-24af-4b22-bbca-2d294697dd79">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -340,7 +340,7 @@
 		</band>
 		<band height="272">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="30" width="554" height="30" forecolor="#0A0A0A" backcolor="#FF0101" uuid="4a28615e-c54e-4193-9259-9ba9c867ad63">
+				<reportElement mode="Opaque" x="0" y="30" width="554" height="30" forecolor="#0A0A0A" backcolor="#D9D9D8" uuid="4a28615e-c54e-4193-9259-9ba9c867ad63">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
