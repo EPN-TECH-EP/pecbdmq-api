@@ -47,8 +47,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static epntech.cbdmq.pe.constante.MensajesConst.REPORTE_ERROR;
-import static epntech.cbdmq.pe.constante.MensajesConst.REPORTE_NO_EXISTE;
+import static epntech.cbdmq.pe.constante.MensajesConst.*;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +128,7 @@ public class ReporteServiceImpl implements ReporteService {
     }
 
     private Map<String, Object> setParametros(ReporteRequest request, Reporte reporte) {
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         Map<String, Object> parametros = new HashMap<>();
         parametros.put("fechaInicio", request.getFechaInicio());
         parametros.put("fechaFin", request.getFechaFin());
@@ -137,6 +137,7 @@ public class ReporteServiceImpl implements ReporteService {
         parametros.put("codigoCurso", request.getCodigoCurso());
         parametros.put("modulo", reporte.getModulo());
         parametros.put("titulo", reporte.getDescripcion());
+        parametros.put("imagen", imagen);
 
         return parametros;
     }
@@ -155,7 +156,7 @@ public class ReporteServiceImpl implements ReporteService {
         antiguedad.setNotaFinal(BigDecimal.valueOf(0.0f));
         antiguedad.setCedula("0");
         antiguedad.setCodigoUnicoEstudiante("0");
-        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
             aprobados.add(antiguedad);
@@ -195,7 +196,7 @@ public class ReporteServiceImpl implements ReporteService {
         aprobado.setNombre("Total");
         aprobado.setApellido("Hola");
         aprobado.setCorreoPersonal("Jair");
-        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
             aprobados.add(aprobado);
@@ -233,7 +234,7 @@ public class ReporteServiceImpl implements ReporteService {
         List<Materia> materias = materiaService.getAllByPeriodoAcademicoActivo();
         List<CatalogoCurso> cursos = catalogoCursoService.getAll();
         List<Materia> materiaProfesionalizacion = materiaService.getAllByPeriodoProfesionalizacionActivo();
-        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         try {
             JRBeanCollectionDataSource dsMaterias = new JRBeanCollectionDataSource(materias);
             JRBeanCollectionDataSource dsCursos = new JRBeanCollectionDataSource(cursos);
@@ -309,7 +310,7 @@ public class ReporteServiceImpl implements ReporteService {
             dto.setDuracion((int) java.time.temporal.ChronoUnit.DAYS.between(curso.getFechaInicioCurso(), curso.getFechaFinCurso()));
             return dto;
         }).collect(Collectors.toList());
-        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         try {
             JRBeanCollectionDataSource dsPeriodos = new JRBeanCollectionDataSource(periodos);
             JRBeanCollectionDataSource dsPeriodosPro = new JRBeanCollectionDataSource(periodosPro);
@@ -336,7 +337,7 @@ public class ReporteServiceImpl implements ReporteService {
     public void exportAntiguedadesOperativos(String filename, String filetype, HttpServletResponse response) throws Exception {
         InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/Antiguedades.jrxml");
         List<Funcionario> operativoApiDtoList = funcionarioService.servicioOperativosOrderByAntiguedad();
-        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         try {
             JRBeanCollectionDataSource antiguedades = new JRBeanCollectionDataSource(operativoApiDtoList);
             JasperReport jasperReport = JasperCompileManager.compileReport(sourceJrxmlFile);
@@ -365,7 +366,7 @@ public class ReporteServiceImpl implements ReporteService {
             reporteEvaluaciones.add(reporteEvaluacion);
         }
         Integer totalRespuestas = respuestaEstudianteService.findByPreguntaAndCurso(preguntas.get(0).getCodPregunta(),codCurso.longValue()).size();
-        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         Curso cc = cursoService.getById(codCurso.longValue());
         CatalogoCurso catalogoCurso= catalogoCursoService.getById(cc.getCodCatalogoCursos().intValue()).get();
         Integer numeroEstudiantes = inscripcionEspService.getAprobadosPruebas(codCurso).size();
@@ -393,7 +394,7 @@ public class ReporteServiceImpl implements ReporteService {
     InputStream sourceJrxmlFile = this.getClass().getResourceAsStream("/NotasEstudiante.jrxml");
     List<NotaMateriaByEstudiante> notasFormacion = notasFormacionService.getNotaMateriasWithCoordinadorByEstudiante(codEstudianteFor);
     List<NotaMateriaByEstudiante> notasEspecializacion = notasEspecializacionService.getHistoricosEstudiante(codEstudianteEsp);
-    InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+    InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         try {
         JRBeanCollectionDataSource notasFormacionValid = new JRBeanCollectionDataSource(notasFormacion);
         JRBeanCollectionDataSource notasEspecializacionValid = new JRBeanCollectionDataSource(notasEspecializacion);
@@ -419,7 +420,7 @@ public class ReporteServiceImpl implements ReporteService {
         observacionDto1.setNombre("Total");
         observacionDto1.setApellido("Hola");
         observacionDto1.setCorreoPersonal("Jair");
-        InputStream imagen = this.getClass().getResourceAsStream("/logo-bomberos.png");
+        InputStream imagen = this.getClass().getResourceAsStream(REPORTE_IMAGEN);
         try {
             List<AntiguedadesFormacion> aprobados = new ArrayList<>();
             aprobados.add(observacionDto1);
