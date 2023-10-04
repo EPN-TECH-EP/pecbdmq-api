@@ -49,7 +49,7 @@ public class CursoDocumentoResource {
     @PostMapping("/uploadDocumentos")
     public ResponseEntity<Curso> uploadFiles(
             @RequestParam("codCursoEspecializacion") Long codCursoEspecializacion,
-            @RequestParam("archivos") List<MultipartFile> archivos,@RequestParam("descripcion") String descripcion, @RequestParam("esTarea") Boolean esTarea) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+            @RequestParam("archivos") List<MultipartFile> archivos,@RequestParam(value = "descripcion",defaultValue = "") String descripcion, @RequestParam(value="esTarea",defaultValue = "") Boolean esTarea) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
         return new ResponseEntity<>(cursoDocumentoService.uploadDocumentos(codCursoEspecializacion, archivos, descripcion,esTarea), HttpStatus.OK);
     }
 
