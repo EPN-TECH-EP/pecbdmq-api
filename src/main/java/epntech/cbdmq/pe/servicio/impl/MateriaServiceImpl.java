@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaParaleloDto;
 import epntech.cbdmq.pe.servicio.MateriaPeriodoService;
 import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,12 +102,12 @@ public class MateriaServiceImpl implements MateriaService {
     }
 
     @Override
-    public List<Materia> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico) {
+    public List<MateriaParaleloDto> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico) {
         return repo.getAllByInstructorPA(codInstructor, nombreTipoInstructor, periodoAcademico);
     }
 
     @Override
-    public List<Materia> getAllByCoordinadorPA(Integer codInstructor) {
+    public List<MateriaParaleloDto> getAllByCoordinadorPA(Integer codInstructor) {
         return this.getAllByInstructorPA(codInstructor, "COORDINADOR", periodoAcSvc.getPAActivo());
     }
 

@@ -12,7 +12,6 @@ import epntech.cbdmq.pe.dominio.admin.Paralelo;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteNotaFinalDto;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplina;
 import epntech.cbdmq.pe.dominio.admin.formacion.EstudiantesNotaDisciplinaDto;
-import epntech.cbdmq.pe.dominio.admin.formacion.NotaEstudianteFormacionDto;
 import epntech.cbdmq.pe.servicio.DatoPersonalService;
 import epntech.cbdmq.pe.servicio.ParaleloService;
 import epntech.cbdmq.pe.servicio.PeriodoAcademicoService;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import epntech.cbdmq.pe.dominio.admin.NotasFormacionFinal;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 import epntech.cbdmq.pe.repositorio.admin.NotasFormacionFinalRepository;
-import epntech.cbdmq.pe.repositorio.admin.PeriodoAcademicoRepository;
 import epntech.cbdmq.pe.servicio.NotasFormacionFinalService;
 
 @Service

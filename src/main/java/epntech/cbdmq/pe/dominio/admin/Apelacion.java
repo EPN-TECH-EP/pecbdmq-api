@@ -2,7 +2,6 @@ package epntech.cbdmq.pe.dominio.admin;
 
 import java.util.Date;
 
-import epntech.cbdmq.pe.dominio.admin.formacion.EstudianteDatos;
 import epntech.cbdmq.pe.dominio.util.ApelacionEstudiante;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ResultCheckStyle;

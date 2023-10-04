@@ -28,7 +28,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Table_CH" mode="Opaque" backcolor="#FCD4B3">
+	<style name="Table_CH" mode="Opaque" backcolor="#D9D9D8">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -144,7 +144,7 @@
 				<text><![CDATA[REPORTE DE MALLA CURRICULAR]]></text>
 			</staticText>
 			<image onErrorType="Blank">
-				<reportElement style="Table 1_CH" x="190" y="10" width="180" height="30" backcolor="#FCD4B3" uuid="9038096a-8f1a-452c-8e98-fc32a454d243">
+				<reportElement style="Table 1_CH" x="190" y="10" width="180" height="30" backcolor="#D9D9D8" uuid="9038096a-8f1a-452c-8e98-fc32a454d243">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -157,7 +157,7 @@
 	<detail>
 		<band height="630" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="20" width="100" height="50" backcolor="rgba(252, 212, 179, 0.9607843)" uuid="446745a5-2e7a-4443-aed6-8a492a9dcec2">
+				<reportElement mode="Opaque" x="0" y="20" width="100" height="50" backcolor="#D9D9D8" uuid="446745a5-2e7a-4443-aed6-8a492a9dcec2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -173,7 +173,7 @@
 				<text><![CDATA[Unidad Requirente ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="320" y="20" width="234" height="20" backcolor="#FCD4B3" uuid="7d05344f-829e-49ef-a08d-7d73b7cab373">
+				<reportElement mode="Opaque" x="320" y="20" width="234" height="20" backcolor="#D9D9D8" uuid="7d05344f-829e-49ef-a08d-7d73b7cab373">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -188,7 +188,7 @@
 				<text><![CDATA[Resultados generado el:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="80" width="554" height="30" forecolor="#0A0A0A" backcolor="#FF0101" uuid="df54e260-d9c9-419e-a2d3-9afb1227a99a">
+				<reportElement mode="Opaque" x="0" y="80" width="554" height="30" forecolor="#0A0A0A" backcolor="#D9D9D8" uuid="df54e260-d9c9-419e-a2d3-9afb1227a99a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">

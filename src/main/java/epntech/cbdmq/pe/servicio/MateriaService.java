@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import epntech.cbdmq.pe.dominio.admin.Materia;
+import epntech.cbdmq.pe.dominio.admin.formacion.MateriaParaleloDto;
 import epntech.cbdmq.pe.excepcion.dominio.DataException;
 
 public interface MateriaService {
@@ -17,8 +18,8 @@ public interface MateriaService {
 	Materia update(Materia objActualizado) throws DataException;
 	
 	void delete(int id) throws DataException;
-	List<Materia> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico);
-	List<Materia> getAllByCoordinadorPA(Integer codInstructor);
+	List<MateriaParaleloDto> getAllByInstructorPA(Integer codInstructor, String nombreTipoInstructor, Integer periodoAcademico);
+	List<MateriaParaleloDto> getAllByCoordinadorPA(Integer codInstructor);
 	List<Materia> getAllByPeriodoAcademico(Integer codPeriodoAcademico);
 	List<Materia> getAllByPeriodoAcademicoActivo();
 	List<Materia> getAllByPeriodoProfesionalizacionActivo();
