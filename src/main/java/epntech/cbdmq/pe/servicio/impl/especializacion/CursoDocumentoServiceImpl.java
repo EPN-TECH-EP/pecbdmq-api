@@ -110,7 +110,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
     }
 
     @Override
-    public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos,  String descripcion, Boolean esTarea) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
+    public Curso uploadDocumentos(Long codCursoEspecializacion, List<MultipartFile> archivos, String descripcion, Boolean esTarea) throws IOException, ArchivoMuyGrandeExcepcion, DataException {
         Curso curso = cursoService.getById(codCursoEspecializacion);
         if (curso == null)
             new BusinessException(REGISTRO_NO_EXISTE);
@@ -148,7 +148,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         String resultadoRuta;
 
         resultadoRuta = ruta(codCursoEspecializacion);
-        Path ruta = Paths.get(resultadoRuta);
+        Path ruta = Paths.get(resultadoRuta).toAbsolutePath().normalize();
 
         if (!Files.exists(ruta)) {
             Files.createDirectories(ruta);
@@ -158,11 +158,8 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
             if (multipartFile.getSize() > TAMAÑO_MÁXIMO.toBytes()) {
                 throw new ArchivoMuyGrandeExcepcion(ARCHIVO_MUY_GRANDE);
             }
-
-            Files.copy(multipartFile.getInputStream(),
-                    ruta.getParent().resolve(multipartFile.getOriginalFilename()),
+            Files.copy(multipartFile.getInputStream(), ruta.resolve(multipartFile.getOriginalFilename()),
                     StandardCopyOption.REPLACE_EXISTING);
-            // LOGGER.info("Archivo guardado: " + resultado +
             this.generaDocumento(resultadoRuta, multipartFile.getOriginalFilename(), codCursoEspecializacion, descripcion, esTarea);
         }
 
@@ -279,7 +276,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
             case CURSO:
                 if (
                         inscripcionEspRepository.cumplePorcentajeMinimoAprobadosPruebasCurso(codigoCurso)
-                 ) {
+                ) {
                     return this.generarDocListadoPruebas(response, codigoCurso);
                 } else {
                     cursoService.updateEstado(codigoCurso, CIERRE_PRUEBAS);
@@ -293,11 +290,11 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
     @Override
     public void generarExcel(String filePath, String nombre, Long codCurso, String estado) throws IOException, DataException {
-        String[] HEADERs = {"Codigo", "Cedula", "Correo","Nombres","Apellidos"};
+        String[] HEADERs = {"Codigo", "Cedula", "Correo", "Nombres", "Apellidos"};
         try {
-            ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath+"/"+nombre, HEADERs);
+            ExcelHelper.generarExcel(obtenerDatos(codCurso, estado), filePath + "/" + nombre, HEADERs);
 
-            this.generaDocumento(filePath, nombre, codCurso,null,null);
+            this.generaDocumento(filePath, nombre, codCurso, null, null);
 
         } catch (IOException ex) {
             System.out.println("error: " + ex.getMessage());
@@ -317,14 +314,14 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
         response.addHeader(cabecera, valor);
 
         ExporterPdf exporter = new ExporterPdf();
-        String[] columnas = {"Codigo", "Cedula", "Correo","Nombres","Apellidos"};
-        float[] widths = new float[]{2f, 3f, 6f,4f,4f};
+        String[] columnas = {"Codigo", "Cedula", "Correo", "Nombres", "Apellidos"};
+        float[] widths = new float[]{2f, 3f, 6f, 4f, 4f};
 
         //Genera el pdf
         exporter.setArchivosRuta(ARCHIVOS_RUTA);
-        exporter.exportar(response, columnas, obtenerDatos(codCurso, estado), widths, filePath+"/"+nombre);
+        exporter.exportar(response, columnas, obtenerDatos(codCurso, estado), widths, filePath + "/" + nombre);
 
-        this.generaDocumento(filePath, nombre, codCurso,null,null);
+        this.generaDocumento(filePath, nombre, codCurso, null, null);
     }
 
     @Override
@@ -333,7 +330,7 @@ public class CursoDocumentoServiceImpl implements CursoDocumentoService {
 
             String nombreEstado = estado.compareToIgnoreCase("%") == 0 ? "Inscritos" : estado;
 
-            String nombre = LISTADOSESPECIALIZACION+nombreEstado ;
+            String nombre = LISTADOSESPECIALIZACION + nombreEstado;
 
             String ruta = ARCHIVOS_RUTA + PATH_PROCESO_ESPECIALIZACION + codCurso.toString() + "/";
 

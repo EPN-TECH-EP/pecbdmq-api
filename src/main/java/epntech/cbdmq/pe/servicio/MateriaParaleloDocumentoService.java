@@ -20,14 +20,14 @@ public interface MateriaParaleloDocumentoService {
 
     List<MateriaParaleloDocumento> getAll();
 
-    List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo);
+    List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo,Integer idParalelo);
 
     Optional<MateriaParaleloDocumento> findById(Integer id);
 
 
     MateriaParaleloDocumento save(MateriaParaleloDocumento obj) throws DataException;
 
-    List<DocumentoRuta> guardarArchivo(Integer materia, Boolean esTarea, List<MultipartFile> archivo, String descripcion) throws IOException, ArchivoMuyGrandeExcepcion;
+    List<DocumentoRuta> guardarArchivo(Integer materia,Integer paralelo, Boolean esTarea, List<MultipartFile> archivo, String descripcion) throws IOException, ArchivoMuyGrandeExcepcion;
 
     void deleteDocumento(Integer codMateriaParaleloDocumento) throws DataException;
 

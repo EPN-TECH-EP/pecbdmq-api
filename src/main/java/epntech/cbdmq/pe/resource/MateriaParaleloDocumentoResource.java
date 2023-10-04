@@ -32,9 +32,9 @@ public class MateriaParaleloDocumentoResource {
     public List<MateriaParaleloDocumento> listar() throws Exception {
         return objService.getAll();
     }
-    @GetMapping("/listarByCodMateriaParalelo/{id}")
-    public List<MateriaCursoDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
-        return objService.getAllByCodMateriaParalelo(codMateriaParalelo);
+    @GetMapping("/listarByCodMateriaParalelo/{id}/{idParalelo}")
+    public List<MateriaCursoDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo,@PathVariable("idParalelo") Integer idParalelo) throws Exception {
+        return objService.getAllByCodMateriaParalelo(codMateriaParalelo,idParalelo);
     }
     @GetMapping("/listarDocumentos/{id}")
     public Set<Documento> listarDocumentosByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
@@ -47,9 +47,9 @@ public class MateriaParaleloDocumentoResource {
 
 
     @PostMapping("/guardarArchivo")
-    public List<DocumentoRuta> guardarArchivo( @RequestParam Integer materia,@RequestParam Boolean esTarea, @RequestParam List<MultipartFile> archivo,@RequestParam String descripcion) throws Exception {
+    public List<DocumentoRuta> guardarArchivo( @RequestParam Integer materia,@RequestParam Integer paralelo,@RequestParam Boolean esTarea, @RequestParam List<MultipartFile> archivo,@RequestParam String descripcion) throws Exception {
         List<DocumentoRuta> lista;
-        lista = objService.guardarArchivo( materia,esTarea, archivo, descripcion);
+        lista = objService.guardarArchivo( materia,paralelo,esTarea, archivo, descripcion);
         return lista;
     }
 
