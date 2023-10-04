@@ -32,9 +32,9 @@ public class MateriaParaleloDocumentoResource {
     public List<MateriaParaleloDocumento> listar() throws Exception {
         return objService.getAll();
     }
-    @GetMapping("/listarByCodMateriaParalelo/{id}")
-    public List<MateriaCursoDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {
-        return objService.getAllByCodMateriaParalelo(codMateriaParalelo);
+    @GetMapping("/listarByCodMateriaParalelo/{id}/{idParalelo}")
+    public List<MateriaCursoDocumentoDto> listarMateriaDocumentoDtoByCodMateria(@PathVariable("id") Integer codMateriaParalelo,@PathVariable("idParalelo") Integer idParalelo) throws Exception {
+        return objService.getAllByCodMateriaParalelo(codMateriaParalelo,idParalelo);
     }
     @GetMapping("/listarDocumentos/{id}")
     public Set<Documento> listarDocumentosByCodMateria(@PathVariable("id") Integer codMateriaParalelo) throws Exception {

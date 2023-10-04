@@ -62,8 +62,8 @@ public class MateriaParaleloDocumentoServiceImpl implements MateriaParaleloDocum
     }
 
     @Override
-    public List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo) {
-        return repo.finDocumentoRutaByCodMateriaParalelo(codMateriaParalelo);
+    public List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo, Integer idParalelo) {
+        return repo.finDocumentoRutaByCodMateriaParalelo(codMateriaParalelo,idParalelo);
     }
 
     @Override

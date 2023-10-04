@@ -13,5 +13,5 @@ public interface MateriaParaleloDocumentoRepository extends JpaRepository<Materi
 	@Transactional
 	void deleteByCodMateriaParaleloAndCodDocumento(Integer materia, Integer codDocumento);
 	@Query(name = "MateriaDocumentoDto.findByCodMateriaParalelo", nativeQuery = true)
-	List<MateriaCursoDocumentoDto> finDocumentoRutaByCodMateriaParalelo(Integer codMateriaParalelo);
+	List<MateriaCursoDocumentoDto> finDocumentoRutaByCodMateriaParalelo(Integer codMateriaParalelo, Integer idParalelo);
 }

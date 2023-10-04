@@ -20,7 +20,7 @@ public interface MateriaParaleloDocumentoService {
 
     List<MateriaParaleloDocumento> getAll();
 
-    List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo);
+    List<MateriaCursoDocumentoDto> getAllByCodMateriaParalelo(Integer codMateriaParalelo,Integer idParalelo);
 
     Optional<MateriaParaleloDocumento> findById(Integer id);
 
