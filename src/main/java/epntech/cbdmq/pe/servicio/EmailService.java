@@ -83,7 +83,7 @@ public class EmailService {
         }
         String Path = RUTA_PLANTILLAS + "templates-formacion/template-convocatoria.html";
         String linkRespaldo = URLDESCARGA + "/link/" + codigoDocumento;
-        String link = "192.168.0.184:8084/inscripcion";
+        String link = "192.168.0.164:8084/inscripcion";
 
         String htmlTemplate = readFile(Path);
         htmlTemplate = htmlTemplate.replace("${nombre}", convocatoria.getNombre());
